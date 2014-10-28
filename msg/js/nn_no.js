@@ -1,4 +1,4 @@
-goog.provide('Blockly.Msg.no_no');
+goog.provide('Blockly.Msg.nn_no');
 goog.require('Blockly.Msg');
 Blockly.Msg.ADD_COMMENT = "Legg til kommentar";
 Blockly.Msg.CHANGE_VALUE_TITLE = "Bytt verdi:";
@@ -324,7 +324,7 @@ Blockly.Msg.TEXT_JOIN_HELPURL = "https://code.google.com/p/blockly/wiki/Text#Tex
 Blockly.Msg.TEXT_JOIN_TITLE_CREATEWITH = "lag tekst med";
 Blockly.Msg.TEXT_JOIN_TOOLTIP = "Opprett en tekst ved å sette sammen et antall elementer.";
 Blockly.Msg.TEXT_LENGTH_HELPURL = "https://code.google.com/p/blockly/wiki/Text#Text_modification";
-Blockly.Msg.TEXT_LENGTH_TITLE = "lengden på %1";
+Blockly.Msg.TEXT_LENGTH_TITLE = "lengden av %1";
 Blockly.Msg.TEXT_LENGTH_TOOLTIP = "Returnerer antall bokstaver (inkludert mellomrom) i den angitte teksten.";
 Blockly.Msg.TEXT_PRINT_HELPURL = "https://code.google.com/p/blockly/wiki/Text#Printing_text";
 Blockly.Msg.TEXT_PRINT_TITLE = "skriv ut %1";

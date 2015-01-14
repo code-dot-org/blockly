@@ -4385,6 +4385,236 @@ Blockly.FieldDropdown.prototype.dispose = function() {
   Blockly.FieldDropdown.superClass_.dispose.call(this)
 };
 goog.provide("Blockly.Msg");
+goog.provide("goog.math");
+goog.require("goog.array");
+goog.require("goog.asserts");
+goog.math.randomInt = function(a) {
+  return Math.floor(Math.random() * a)
+};
+goog.math.uniformRandom = function(a, b) {
+  return a + Math.random() * (b - a)
+};
+goog.math.clamp = function(value, min, max) {
+  return Math.min(Math.max(value, min), max)
+};
+goog.math.modulo = function(a, b) {
+  var r = a % b;
+  return r * b < 0 ? r + b : r
+};
+goog.math.lerp = function(a, b, x) {
+  return a + x * (b - a)
+};
+goog.math.nearlyEquals = function(a, b, opt_tolerance) {
+  return Math.abs(a - b) <= (opt_tolerance || 1E-6)
+};
+goog.math.standardAngle = function(angle) {
+  return goog.math.modulo(angle, 360)
+};
+goog.math.toRadians = function(angleDegrees) {
+  return angleDegrees * Math.PI / 180
+};
+goog.math.toDegrees = function(angleRadians) {
+  return angleRadians * 180 / Math.PI
+};
+goog.math.angleDx = function(degrees, radius) {
+  return radius * Math.cos(goog.math.toRadians(degrees))
+};
+goog.math.angleDy = function(degrees, radius) {
+  return radius * Math.sin(goog.math.toRadians(degrees))
+};
+goog.math.angle = function(x1, y1, x2, y2) {
+  return goog.math.standardAngle(goog.math.toDegrees(Math.atan2(y2 - y1, x2 - x1)))
+};
+goog.math.angleDifference = function(startAngle, endAngle) {
+  var d = goog.math.standardAngle(endAngle) - goog.math.standardAngle(startAngle);
+  if(d > 180) {
+    d = d - 360
+  }else {
+    if(d <= -180) {
+      d = 360 + d
+    }
+  }
+  return d
+};
+goog.math.sign = function(x) {
+  return x == 0 ? 0 : x < 0 ? -1 : 1
+};
+goog.math.longestCommonSubsequence = function(array1, array2, opt_compareFn, opt_collectorFn) {
+  var compare = opt_compareFn || function(a, b) {
+    return a == b
+  };
+  var collect = opt_collectorFn || function(i1, i2) {
+    return array1[i1]
+  };
+  var length1 = array1.length;
+  var length2 = array2.length;
+  var arr = [];
+  for(var i = 0;i < length1 + 1;i++) {
+    arr[i] = [];
+    arr[i][0] = 0
+  }
+  for(var j = 0;j < length2 + 1;j++) {
+    arr[0][j] = 0
+  }
+  for(i = 1;i <= length1;i++) {
+    for(j = 1;j <= length2;j++) {
+      if(compare(array1[i - 1], array2[j - 1])) {
+        arr[i][j] = arr[i - 1][j - 1] + 1
+      }else {
+        arr[i][j] = Math.max(arr[i - 1][j], arr[i][j - 1])
+      }
+    }
+  }
+  var result = [];
+  var i = length1, j = length2;
+  while(i > 0 && j > 0) {
+    if(compare(array1[i - 1], array2[j - 1])) {
+      result.unshift(collect(i - 1, j - 1));
+      i--;
+      j--
+    }else {
+      if(arr[i - 1][j] > arr[i][j - 1]) {
+        i--
+      }else {
+        j--
+      }
+    }
+  }
+  return result
+};
+goog.math.sum = function(var_args) {
+  return(goog.array.reduce(arguments, function(sum, value) {
+    return sum + value
+  }, 0))
+};
+goog.math.average = function(var_args) {
+  return goog.math.sum.apply(null, arguments) / arguments.length
+};
+goog.math.sampleVariance = function(var_args) {
+  var sampleSize = arguments.length;
+  if(sampleSize < 2) {
+    return 0
+  }
+  var mean = goog.math.average.apply(null, arguments);
+  var variance = goog.math.sum.apply(null, goog.array.map(arguments, function(val) {
+    return Math.pow(val - mean, 2)
+  })) / (sampleSize - 1);
+  return variance
+};
+goog.math.standardDeviation = function(var_args) {
+  return Math.sqrt(goog.math.sampleVariance.apply(null, arguments))
+};
+goog.math.isInt = function(num) {
+  return isFinite(num) && num % 1 == 0
+};
+goog.math.isFiniteNumber = function(num) {
+  return isFinite(num) && !isNaN(num)
+};
+goog.math.log10Floor = function(num) {
+  if(num > 0) {
+    var x = Math.round(Math.log(num) * Math.LOG10E);
+    return x - (Math.pow(10, x) > num)
+  }
+  return num == 0 ? -Infinity : NaN
+};
+goog.math.safeFloor = function(num, opt_epsilon) {
+  goog.asserts.assert(!goog.isDef(opt_epsilon) || opt_epsilon > 0);
+  return Math.floor(num + (opt_epsilon || 2E-15))
+};
+goog.math.safeCeil = function(num, opt_epsilon) {
+  goog.asserts.assert(!goog.isDef(opt_epsilon) || opt_epsilon > 0);
+  return Math.ceil(num - (opt_epsilon || 2E-15))
+};
+goog.provide("goog.math.Coordinate");
+goog.require("goog.math");
+goog.math.Coordinate = function(opt_x, opt_y) {
+  this.x = goog.isDef(opt_x) ? opt_x : 0;
+  this.y = goog.isDef(opt_y) ? opt_y : 0
+};
+goog.math.Coordinate.prototype.clone = function() {
+  return new goog.math.Coordinate(this.x, this.y)
+};
+if(goog.DEBUG) {
+  goog.math.Coordinate.prototype.toString = function() {
+    return"(" + this.x + ", " + this.y + ")"
+  }
+}
+goog.math.Coordinate.equals = function(a, b) {
+  if(a == b) {
+    return true
+  }
+  if(!a || !b) {
+    return false
+  }
+  return a.x == b.x && a.y == b.y
+};
+goog.math.Coordinate.distance = function(a, b) {
+  var dx = a.x - b.x;
+  var dy = a.y - b.y;
+  return Math.sqrt(dx * dx + dy * dy)
+};
+goog.math.Coordinate.magnitude = function(a) {
+  return Math.sqrt(a.x * a.x + a.y * a.y)
+};
+goog.math.Coordinate.azimuth = function(a) {
+  return goog.math.angle(0, 0, a.x, a.y)
+};
+goog.math.Coordinate.squaredDistance = function(a, b) {
+  var dx = a.x - b.x;
+  var dy = a.y - b.y;
+  return dx * dx + dy * dy
+};
+goog.math.Coordinate.difference = function(a, b) {
+  return new goog.math.Coordinate(a.x - b.x, a.y - b.y)
+};
+goog.math.Coordinate.sum = function(a, b) {
+  return new goog.math.Coordinate(a.x + b.x, a.y + b.y)
+};
+goog.math.Coordinate.prototype.ceil = function() {
+  this.x = Math.ceil(this.x);
+  this.y = Math.ceil(this.y);
+  return this
+};
+goog.math.Coordinate.prototype.floor = function() {
+  this.x = Math.floor(this.x);
+  this.y = Math.floor(this.y);
+  return this
+};
+goog.math.Coordinate.prototype.round = function() {
+  this.x = Math.round(this.x);
+  this.y = Math.round(this.y);
+  return this
+};
+goog.math.Coordinate.prototype.translate = function(tx, opt_ty) {
+  if(tx instanceof goog.math.Coordinate) {
+    this.x += tx.x;
+    this.y += tx.y
+  }else {
+    this.x += tx;
+    if(goog.isNumber(opt_ty)) {
+      this.y += opt_ty
+    }
+  }
+  return this
+};
+goog.math.Coordinate.prototype.scale = function(sx, opt_sy) {
+  var sy = goog.isNumber(opt_sy) ? opt_sy : sx;
+  this.x *= sx;
+  this.y *= sy;
+  return this
+};
+goog.math.Coordinate.prototype.rotateRadians = function(radians, opt_center) {
+  var center = opt_center || new goog.math.Coordinate(0, 0);
+  var x = this.x;
+  var y = this.y;
+  var cos = Math.cos(radians);
+  var sin = Math.sin(radians);
+  this.x = (x - center.x) * cos - (y - center.y) * sin + center.x;
+  this.y = (x - center.x) * sin + (y - center.y) * cos + center.y
+};
+goog.math.Coordinate.prototype.rotateDegrees = function(degrees, opt_center) {
+  this.rotateRadians(goog.math.toRadians(degrees), opt_center)
+};
 goog.provide("Blockly.Xml");
 Blockly.Xml.blockSpaceToDom = function(blockSpace) {
   var xml = Blockly.isMsie() ? document.createElementNS(null, "xml") : document.createElement("xml");
@@ -5145,7 +5375,405 @@ Blockly.Scrollbar.insertAfter_ = function(newNode, refNode) {
     parentNode.appendChild(newNode)
   }
 };
+goog.provide("goog.math.Size");
+goog.math.Size = function(width, height) {
+  this.width = width;
+  this.height = height
+};
+goog.math.Size.equals = function(a, b) {
+  if(a == b) {
+    return true
+  }
+  if(!a || !b) {
+    return false
+  }
+  return a.width == b.width && a.height == b.height
+};
+goog.math.Size.prototype.clone = function() {
+  return new goog.math.Size(this.width, this.height)
+};
+if(goog.DEBUG) {
+  goog.math.Size.prototype.toString = function() {
+    return"(" + this.width + " x " + this.height + ")"
+  }
+}
+goog.math.Size.prototype.getLongest = function() {
+  return Math.max(this.width, this.height)
+};
+goog.math.Size.prototype.getShortest = function() {
+  return Math.min(this.width, this.height)
+};
+goog.math.Size.prototype.area = function() {
+  return this.width * this.height
+};
+goog.math.Size.prototype.perimeter = function() {
+  return(this.width + this.height) * 2
+};
+goog.math.Size.prototype.aspectRatio = function() {
+  return this.width / this.height
+};
+goog.math.Size.prototype.isEmpty = function() {
+  return!this.area()
+};
+goog.math.Size.prototype.ceil = function() {
+  this.width = Math.ceil(this.width);
+  this.height = Math.ceil(this.height);
+  return this
+};
+goog.math.Size.prototype.fitsInside = function(target) {
+  return this.width <= target.width && this.height <= target.height
+};
+goog.math.Size.prototype.floor = function() {
+  this.width = Math.floor(this.width);
+  this.height = Math.floor(this.height);
+  return this
+};
+goog.math.Size.prototype.round = function() {
+  this.width = Math.round(this.width);
+  this.height = Math.round(this.height);
+  return this
+};
+goog.math.Size.prototype.scale = function(sx, opt_sy) {
+  var sy = goog.isNumber(opt_sy) ? opt_sy : sx;
+  this.width *= sx;
+  this.height *= sy;
+  return this
+};
+goog.math.Size.prototype.scaleToFit = function(target) {
+  var s = this.aspectRatio() > target.aspectRatio() ? target.width / this.width : target.height / this.height;
+  return this.scale(s)
+};
+goog.provide("goog.math.Box");
+goog.require("goog.math.Coordinate");
+goog.math.Box = function(top, right, bottom, left) {
+  this.top = top;
+  this.right = right;
+  this.bottom = bottom;
+  this.left = left
+};
+goog.math.Box.boundingBox = function(var_args) {
+  var box = new goog.math.Box(arguments[0].y, arguments[0].x, arguments[0].y, arguments[0].x);
+  for(var i = 1;i < arguments.length;i++) {
+    var coord = arguments[i];
+    box.top = Math.min(box.top, coord.y);
+    box.right = Math.max(box.right, coord.x);
+    box.bottom = Math.max(box.bottom, coord.y);
+    box.left = Math.min(box.left, coord.x)
+  }
+  return box
+};
+goog.math.Box.prototype.clone = function() {
+  return new goog.math.Box(this.top, this.right, this.bottom, this.left)
+};
+if(goog.DEBUG) {
+  goog.math.Box.prototype.toString = function() {
+    return"(" + this.top + "t, " + this.right + "r, " + this.bottom + "b, " + this.left + "l)"
+  }
+}
+goog.math.Box.prototype.contains = function(other) {
+  return goog.math.Box.contains(this, other)
+};
+goog.math.Box.prototype.expand = function(top, opt_right, opt_bottom, opt_left) {
+  if(goog.isObject(top)) {
+    this.top -= top.top;
+    this.right += top.right;
+    this.bottom += top.bottom;
+    this.left -= top.left
+  }else {
+    this.top -= top;
+    this.right += opt_right;
+    this.bottom += opt_bottom;
+    this.left -= opt_left
+  }
+  return this
+};
+goog.math.Box.prototype.expandToInclude = function(box) {
+  this.left = Math.min(this.left, box.left);
+  this.top = Math.min(this.top, box.top);
+  this.right = Math.max(this.right, box.right);
+  this.bottom = Math.max(this.bottom, box.bottom)
+};
+goog.math.Box.equals = function(a, b) {
+  if(a == b) {
+    return true
+  }
+  if(!a || !b) {
+    return false
+  }
+  return a.top == b.top && (a.right == b.right && (a.bottom == b.bottom && a.left == b.left))
+};
+goog.math.Box.contains = function(box, other) {
+  if(!box || !other) {
+    return false
+  }
+  if(other instanceof goog.math.Box) {
+    return other.left >= box.left && (other.right <= box.right && (other.top >= box.top && other.bottom <= box.bottom))
+  }
+  return other.x >= box.left && (other.x <= box.right && (other.y >= box.top && other.y <= box.bottom))
+};
+goog.math.Box.relativePositionX = function(box, coord) {
+  if(coord.x < box.left) {
+    return coord.x - box.left
+  }else {
+    if(coord.x > box.right) {
+      return coord.x - box.right
+    }
+  }
+  return 0
+};
+goog.math.Box.relativePositionY = function(box, coord) {
+  if(coord.y < box.top) {
+    return coord.y - box.top
+  }else {
+    if(coord.y > box.bottom) {
+      return coord.y - box.bottom
+    }
+  }
+  return 0
+};
+goog.math.Box.distance = function(box, coord) {
+  var x = goog.math.Box.relativePositionX(box, coord);
+  var y = goog.math.Box.relativePositionY(box, coord);
+  return Math.sqrt(x * x + y * y)
+};
+goog.math.Box.intersects = function(a, b) {
+  return a.left <= b.right && (b.left <= a.right && (a.top <= b.bottom && b.top <= a.bottom))
+};
+goog.math.Box.intersectsWithPadding = function(a, b, padding) {
+  return a.left <= b.right + padding && (b.left <= a.right + padding && (a.top <= b.bottom + padding && b.top <= a.bottom + padding))
+};
+goog.math.Box.prototype.ceil = function() {
+  this.top = Math.ceil(this.top);
+  this.right = Math.ceil(this.right);
+  this.bottom = Math.ceil(this.bottom);
+  this.left = Math.ceil(this.left);
+  return this
+};
+goog.math.Box.prototype.floor = function() {
+  this.top = Math.floor(this.top);
+  this.right = Math.floor(this.right);
+  this.bottom = Math.floor(this.bottom);
+  this.left = Math.floor(this.left);
+  return this
+};
+goog.math.Box.prototype.round = function() {
+  this.top = Math.round(this.top);
+  this.right = Math.round(this.right);
+  this.bottom = Math.round(this.bottom);
+  this.left = Math.round(this.left);
+  return this
+};
+goog.math.Box.prototype.translate = function(tx, opt_ty) {
+  if(tx instanceof goog.math.Coordinate) {
+    this.left += tx.x;
+    this.right += tx.x;
+    this.top += tx.y;
+    this.bottom += tx.y
+  }else {
+    this.left += tx;
+    this.right += tx;
+    if(goog.isNumber(opt_ty)) {
+      this.top += opt_ty;
+      this.bottom += opt_ty
+    }
+  }
+  return this
+};
+goog.math.Box.prototype.scale = function(sx, opt_sy) {
+  var sy = goog.isNumber(opt_sy) ? opt_sy : sx;
+  this.left *= sx;
+  this.right *= sx;
+  this.top *= sy;
+  this.bottom *= sy;
+  return this
+};
+goog.provide("goog.math.Rect");
+goog.require("goog.math.Box");
+goog.require("goog.math.Coordinate");
+goog.require("goog.math.Size");
+goog.math.Rect = function(x, y, w, h) {
+  this.left = x;
+  this.top = y;
+  this.width = w;
+  this.height = h
+};
+goog.math.Rect.prototype.clone = function() {
+  return new goog.math.Rect(this.left, this.top, this.width, this.height)
+};
+goog.math.Rect.prototype.toBox = function() {
+  var right = this.left + this.width;
+  var bottom = this.top + this.height;
+  return new goog.math.Box(this.top, right, bottom, this.left)
+};
+goog.math.Rect.createFromBox = function(box) {
+  return new goog.math.Rect(box.left, box.top, box.right - box.left, box.bottom - box.top)
+};
+if(goog.DEBUG) {
+  goog.math.Rect.prototype.toString = function() {
+    return"(" + this.left + ", " + this.top + " - " + this.width + "w x " + this.height + "h)"
+  }
+}
+goog.math.Rect.equals = function(a, b) {
+  if(a == b) {
+    return true
+  }
+  if(!a || !b) {
+    return false
+  }
+  return a.left == b.left && (a.width == b.width && (a.top == b.top && a.height == b.height))
+};
+goog.math.Rect.prototype.intersection = function(rect) {
+  var x0 = Math.max(this.left, rect.left);
+  var x1 = Math.min(this.left + this.width, rect.left + rect.width);
+  if(x0 <= x1) {
+    var y0 = Math.max(this.top, rect.top);
+    var y1 = Math.min(this.top + this.height, rect.top + rect.height);
+    if(y0 <= y1) {
+      this.left = x0;
+      this.top = y0;
+      this.width = x1 - x0;
+      this.height = y1 - y0;
+      return true
+    }
+  }
+  return false
+};
+goog.math.Rect.intersection = function(a, b) {
+  var x0 = Math.max(a.left, b.left);
+  var x1 = Math.min(a.left + a.width, b.left + b.width);
+  if(x0 <= x1) {
+    var y0 = Math.max(a.top, b.top);
+    var y1 = Math.min(a.top + a.height, b.top + b.height);
+    if(y0 <= y1) {
+      return new goog.math.Rect(x0, y0, x1 - x0, y1 - y0)
+    }
+  }
+  return null
+};
+goog.math.Rect.intersects = function(a, b) {
+  return a.left <= b.left + b.width && (b.left <= a.left + a.width && (a.top <= b.top + b.height && b.top <= a.top + a.height))
+};
+goog.math.Rect.prototype.intersects = function(rect) {
+  return goog.math.Rect.intersects(this, rect)
+};
+goog.math.Rect.difference = function(a, b) {
+  var intersection = goog.math.Rect.intersection(a, b);
+  if(!intersection || (!intersection.height || !intersection.width)) {
+    return[a.clone()]
+  }
+  var result = [];
+  var top = a.top;
+  var height = a.height;
+  var ar = a.left + a.width;
+  var ab = a.top + a.height;
+  var br = b.left + b.width;
+  var bb = b.top + b.height;
+  if(b.top > a.top) {
+    result.push(new goog.math.Rect(a.left, a.top, a.width, b.top - a.top));
+    top = b.top;
+    height -= b.top - a.top
+  }
+  if(bb < ab) {
+    result.push(new goog.math.Rect(a.left, bb, a.width, ab - bb));
+    height = bb - top
+  }
+  if(b.left > a.left) {
+    result.push(new goog.math.Rect(a.left, top, b.left - a.left, height))
+  }
+  if(br < ar) {
+    result.push(new goog.math.Rect(br, top, ar - br, height))
+  }
+  return result
+};
+goog.math.Rect.prototype.difference = function(rect) {
+  return goog.math.Rect.difference(this, rect)
+};
+goog.math.Rect.prototype.boundingRect = function(rect) {
+  var right = Math.max(this.left + this.width, rect.left + rect.width);
+  var bottom = Math.max(this.top + this.height, rect.top + rect.height);
+  this.left = Math.min(this.left, rect.left);
+  this.top = Math.min(this.top, rect.top);
+  this.width = right - this.left;
+  this.height = bottom - this.top
+};
+goog.math.Rect.boundingRect = function(a, b) {
+  if(!a || !b) {
+    return null
+  }
+  var clone = a.clone();
+  clone.boundingRect(b);
+  return clone
+};
+goog.math.Rect.prototype.contains = function(another) {
+  if(another instanceof goog.math.Rect) {
+    return this.left <= another.left && (this.left + this.width >= another.left + another.width && (this.top <= another.top && this.top + this.height >= another.top + another.height))
+  }else {
+    return another.x >= this.left && (another.x <= this.left + this.width && (another.y >= this.top && another.y <= this.top + this.height))
+  }
+};
+goog.math.Rect.prototype.squaredDistance = function(point) {
+  var dx = point.x < this.left ? this.left - point.x : Math.max(point.x - (this.left + this.width), 0);
+  var dy = point.y < this.top ? this.top - point.y : Math.max(point.y - (this.top + this.height), 0);
+  return dx * dx + dy * dy
+};
+goog.math.Rect.prototype.distance = function(point) {
+  return Math.sqrt(this.squaredDistance(point))
+};
+goog.math.Rect.prototype.getSize = function() {
+  return new goog.math.Size(this.width, this.height)
+};
+goog.math.Rect.prototype.getTopLeft = function() {
+  return new goog.math.Coordinate(this.left, this.top)
+};
+goog.math.Rect.prototype.getCenter = function() {
+  return new goog.math.Coordinate(this.left + this.width / 2, this.top + this.height / 2)
+};
+goog.math.Rect.prototype.getBottomRight = function() {
+  return new goog.math.Coordinate(this.left + this.width, this.top + this.height)
+};
+goog.math.Rect.prototype.ceil = function() {
+  this.left = Math.ceil(this.left);
+  this.top = Math.ceil(this.top);
+  this.width = Math.ceil(this.width);
+  this.height = Math.ceil(this.height);
+  return this
+};
+goog.math.Rect.prototype.floor = function() {
+  this.left = Math.floor(this.left);
+  this.top = Math.floor(this.top);
+  this.width = Math.floor(this.width);
+  this.height = Math.floor(this.height);
+  return this
+};
+goog.math.Rect.prototype.round = function() {
+  this.left = Math.round(this.left);
+  this.top = Math.round(this.top);
+  this.width = Math.round(this.width);
+  this.height = Math.round(this.height);
+  return this
+};
+goog.math.Rect.prototype.translate = function(tx, opt_ty) {
+  if(tx instanceof goog.math.Coordinate) {
+    this.left += tx.x;
+    this.top += tx.y
+  }else {
+    this.left += tx;
+    if(goog.isNumber(opt_ty)) {
+      this.top += opt_ty
+    }
+  }
+  return this
+};
+goog.math.Rect.prototype.scale = function(sx, opt_sy) {
+  var sy = goog.isNumber(opt_sy) ? opt_sy : sx;
+  this.left *= sx;
+  this.width *= sx;
+  this.top *= sy;
+  this.height *= sy;
+  return this
+};
 goog.provide("Blockly.Trashcan");
+goog.require("goog.math.Rect");
 Blockly.Trashcan = function(blockSpace) {
   this.blockSpace_ = blockSpace;
   this.extraYOffset_ = 0
@@ -5156,6 +5784,7 @@ Blockly.Trashcan.prototype.WIDTH_ = 70;
 Blockly.Trashcan.prototype.HEIGHT_ = 70;
 Blockly.Trashcan.prototype.MARGIN_TOP_ = 15;
 Blockly.Trashcan.prototype.MARGIN_SIDE_ = 22;
+Blockly.Trashcan.prototype.MARGIN_HOTSPOT_ = 25;
 Blockly.Trashcan.prototype.isOpen = false;
 Blockly.Trashcan.prototype.radius = 50;
 Blockly.Trashcan.prototype.svgGroup_ = null;
@@ -5202,21 +5831,9 @@ Blockly.Trashcan.prototype.position_ = function() {
 Blockly.Trashcan.prototype.setYOffset = function(pixelOffset) {
   this.extraYOffset_ = pixelOffset
 };
-Blockly.Trashcan.prototype.onMouseMove = function(e) {
-  if(!this.svgGroup_) {
-    return
-  }
-  var mouseXY = Blockly.mouseToSvg(e, this.blockSpace_.blockSpaceEditor.svg_);
-  var trashXY = Blockly.getSvgXY_(this.svgGroup_, this.blockSpace_.blockSpaceEditor.svg_);
-  if(Blockly.ieVersion() && Blockly.ieVersion() <= 10) {
-    mouseXY = {"x":e.clientX, "y":e.clientY};
-    var trashBB = document.getElementById("trashcan").getBoundingClientRect();
-    trashXY = {"x":trashBB.left, "y":trashBB.top}
-  }
-  var over = mouseXY.x + this.radius > trashXY.x && (mouseXY.x < trashXY.x + this.WIDTH_ + this.radius && (mouseXY.y + this.radius > trashXY.y && mouseXY.y < trashXY.y + this.HEIGHT_ + this.radius));
-  if(this.isOpen != over) {
-    this.setOpen_(over)
-  }
+Blockly.Trashcan.prototype.getRect = function() {
+  var trashXY = Blockly.getSvgXY_(this.svgGroup_);
+  return new goog.math.Rect(trashXY.x - this.MARGIN_HOTSPOT_, trashXY.y - this.MARGIN_HOTSPOT_, this.WIDTH_ + 2 * this.MARGIN_HOTSPOT_, this.HEIGHT_ + 2 * this.MARGIN_HOTSPOT_)
 };
 Blockly.Trashcan.prototype.setOpen_ = function(state) {
   if(this.isOpen == state) {
@@ -5239,12 +5856,15 @@ goog.provide("Blockly.BlockSpace");
 goog.require("Blockly.ScrollbarPair");
 goog.require("Blockly.Trashcan");
 goog.require("Blockly.Xml");
+goog.require("goog.array");
+goog.require("goog.math.Coordinate");
 Blockly.BlockSpace = function(blockSpaceEditor, getMetrics, setMetrics) {
   this.blockSpaceEditor = blockSpaceEditor;
   this.getMetrics = getMetrics;
   this.setMetrics = setMetrics;
   this.isFlyout = false;
   this.topBlocks_ = [];
+  this.deleteAreas_ = [];
   this.maxBlocks = Infinity;
   this.events = new goog.events.EventTarget;
   Blockly.ConnectionDB.init(this);
@@ -5303,6 +5923,10 @@ Blockly.BlockSpace.prototype.dispose = function() {
   }
   this.svgBlockCanvas_ = null;
   this.svgBubbleCanvas_ = null;
+  if(this.flyout_) {
+    this.flyout_.dispose();
+    this.flyout_ = null
+  }
   if(this.trashcan) {
     this.trashcan.dispose();
     this.trashcan = null
@@ -5493,6 +6117,40 @@ Blockly.BlockSpace.prototype.remainingCapacity = function() {
   }
   return this.maxBlocks - this.getAllBlocks().length
 };
+Blockly.BlockSpace.prototype.recordDeleteAreas = function() {
+  this.deleteAreas_ = [];
+  if(this.trashcan) {
+    goog.array.extend(this.deleteAreas_, this.trashcan.getRect());
+    this.deleteAreaTrash_ = this.trashcan.getRect()
+  }else {
+    this.deleteAreaTrash_ = null
+  }
+  if(this.flyout_) {
+    goog.array.extend(this.deleteAreas_, this.flyout_.getRect())
+  }
+  if(this.blockSpaceEditor) {
+    goog.array.extend(this.deleteAreas_, this.blockSpaceEditor.getDeleteAreas())
+  }
+};
+Blockly.BlockSpace.prototype.isDeleteArea = function(e) {
+  var mouseXY = Blockly.mouseToSvg(e);
+  var xy = new goog.math.Coordinate(mouseXY.x, mouseXY.y);
+  if(this.deleteAreaTrash_) {
+    if(this.deleteAreaTrash_.contains(xy)) {
+      this.trashcan.setOpen_(true)
+    }else {
+      this.trashcan.setOpen_(false)
+    }
+  }
+  for(var i = 0, area;area = this.deleteAreas_[i];i++) {
+    if(area.contains(xy)) {
+      this.blockSpaceEditor.setCursor(Blockly.Css.Cursor.DELETE);
+      return true
+    }
+  }
+  this.blockSpaceEditor.setCursor(Blockly.Css.Cursor.CLOSED);
+  return false
+};
 goog.provide("goog.string.StringBuffer");
 goog.string.StringBuffer = function(opt_a1, var_args) {
   if(opt_a1 != null) {
@@ -5520,633 +6178,6 @@ goog.string.StringBuffer.prototype.getLength = function() {
 };
 goog.string.StringBuffer.prototype.toString = function() {
   return this.buffer_
-};
-goog.provide("goog.math");
-goog.require("goog.array");
-goog.require("goog.asserts");
-goog.math.randomInt = function(a) {
-  return Math.floor(Math.random() * a)
-};
-goog.math.uniformRandom = function(a, b) {
-  return a + Math.random() * (b - a)
-};
-goog.math.clamp = function(value, min, max) {
-  return Math.min(Math.max(value, min), max)
-};
-goog.math.modulo = function(a, b) {
-  var r = a % b;
-  return r * b < 0 ? r + b : r
-};
-goog.math.lerp = function(a, b, x) {
-  return a + x * (b - a)
-};
-goog.math.nearlyEquals = function(a, b, opt_tolerance) {
-  return Math.abs(a - b) <= (opt_tolerance || 1E-6)
-};
-goog.math.standardAngle = function(angle) {
-  return goog.math.modulo(angle, 360)
-};
-goog.math.toRadians = function(angleDegrees) {
-  return angleDegrees * Math.PI / 180
-};
-goog.math.toDegrees = function(angleRadians) {
-  return angleRadians * 180 / Math.PI
-};
-goog.math.angleDx = function(degrees, radius) {
-  return radius * Math.cos(goog.math.toRadians(degrees))
-};
-goog.math.angleDy = function(degrees, radius) {
-  return radius * Math.sin(goog.math.toRadians(degrees))
-};
-goog.math.angle = function(x1, y1, x2, y2) {
-  return goog.math.standardAngle(goog.math.toDegrees(Math.atan2(y2 - y1, x2 - x1)))
-};
-goog.math.angleDifference = function(startAngle, endAngle) {
-  var d = goog.math.standardAngle(endAngle) - goog.math.standardAngle(startAngle);
-  if(d > 180) {
-    d = d - 360
-  }else {
-    if(d <= -180) {
-      d = 360 + d
-    }
-  }
-  return d
-};
-goog.math.sign = function(x) {
-  return x == 0 ? 0 : x < 0 ? -1 : 1
-};
-goog.math.longestCommonSubsequence = function(array1, array2, opt_compareFn, opt_collectorFn) {
-  var compare = opt_compareFn || function(a, b) {
-    return a == b
-  };
-  var collect = opt_collectorFn || function(i1, i2) {
-    return array1[i1]
-  };
-  var length1 = array1.length;
-  var length2 = array2.length;
-  var arr = [];
-  for(var i = 0;i < length1 + 1;i++) {
-    arr[i] = [];
-    arr[i][0] = 0
-  }
-  for(var j = 0;j < length2 + 1;j++) {
-    arr[0][j] = 0
-  }
-  for(i = 1;i <= length1;i++) {
-    for(j = 1;j <= length2;j++) {
-      if(compare(array1[i - 1], array2[j - 1])) {
-        arr[i][j] = arr[i - 1][j - 1] + 1
-      }else {
-        arr[i][j] = Math.max(arr[i - 1][j], arr[i][j - 1])
-      }
-    }
-  }
-  var result = [];
-  var i = length1, j = length2;
-  while(i > 0 && j > 0) {
-    if(compare(array1[i - 1], array2[j - 1])) {
-      result.unshift(collect(i - 1, j - 1));
-      i--;
-      j--
-    }else {
-      if(arr[i - 1][j] > arr[i][j - 1]) {
-        i--
-      }else {
-        j--
-      }
-    }
-  }
-  return result
-};
-goog.math.sum = function(var_args) {
-  return(goog.array.reduce(arguments, function(sum, value) {
-    return sum + value
-  }, 0))
-};
-goog.math.average = function(var_args) {
-  return goog.math.sum.apply(null, arguments) / arguments.length
-};
-goog.math.sampleVariance = function(var_args) {
-  var sampleSize = arguments.length;
-  if(sampleSize < 2) {
-    return 0
-  }
-  var mean = goog.math.average.apply(null, arguments);
-  var variance = goog.math.sum.apply(null, goog.array.map(arguments, function(val) {
-    return Math.pow(val - mean, 2)
-  })) / (sampleSize - 1);
-  return variance
-};
-goog.math.standardDeviation = function(var_args) {
-  return Math.sqrt(goog.math.sampleVariance.apply(null, arguments))
-};
-goog.math.isInt = function(num) {
-  return isFinite(num) && num % 1 == 0
-};
-goog.math.isFiniteNumber = function(num) {
-  return isFinite(num) && !isNaN(num)
-};
-goog.math.log10Floor = function(num) {
-  if(num > 0) {
-    var x = Math.round(Math.log(num) * Math.LOG10E);
-    return x - (Math.pow(10, x) > num)
-  }
-  return num == 0 ? -Infinity : NaN
-};
-goog.math.safeFloor = function(num, opt_epsilon) {
-  goog.asserts.assert(!goog.isDef(opt_epsilon) || opt_epsilon > 0);
-  return Math.floor(num + (opt_epsilon || 2E-15))
-};
-goog.math.safeCeil = function(num, opt_epsilon) {
-  goog.asserts.assert(!goog.isDef(opt_epsilon) || opt_epsilon > 0);
-  return Math.ceil(num - (opt_epsilon || 2E-15))
-};
-goog.provide("goog.math.Coordinate");
-goog.require("goog.math");
-goog.math.Coordinate = function(opt_x, opt_y) {
-  this.x = goog.isDef(opt_x) ? opt_x : 0;
-  this.y = goog.isDef(opt_y) ? opt_y : 0
-};
-goog.math.Coordinate.prototype.clone = function() {
-  return new goog.math.Coordinate(this.x, this.y)
-};
-if(goog.DEBUG) {
-  goog.math.Coordinate.prototype.toString = function() {
-    return"(" + this.x + ", " + this.y + ")"
-  }
-}
-goog.math.Coordinate.equals = function(a, b) {
-  if(a == b) {
-    return true
-  }
-  if(!a || !b) {
-    return false
-  }
-  return a.x == b.x && a.y == b.y
-};
-goog.math.Coordinate.distance = function(a, b) {
-  var dx = a.x - b.x;
-  var dy = a.y - b.y;
-  return Math.sqrt(dx * dx + dy * dy)
-};
-goog.math.Coordinate.magnitude = function(a) {
-  return Math.sqrt(a.x * a.x + a.y * a.y)
-};
-goog.math.Coordinate.azimuth = function(a) {
-  return goog.math.angle(0, 0, a.x, a.y)
-};
-goog.math.Coordinate.squaredDistance = function(a, b) {
-  var dx = a.x - b.x;
-  var dy = a.y - b.y;
-  return dx * dx + dy * dy
-};
-goog.math.Coordinate.difference = function(a, b) {
-  return new goog.math.Coordinate(a.x - b.x, a.y - b.y)
-};
-goog.math.Coordinate.sum = function(a, b) {
-  return new goog.math.Coordinate(a.x + b.x, a.y + b.y)
-};
-goog.math.Coordinate.prototype.ceil = function() {
-  this.x = Math.ceil(this.x);
-  this.y = Math.ceil(this.y);
-  return this
-};
-goog.math.Coordinate.prototype.floor = function() {
-  this.x = Math.floor(this.x);
-  this.y = Math.floor(this.y);
-  return this
-};
-goog.math.Coordinate.prototype.round = function() {
-  this.x = Math.round(this.x);
-  this.y = Math.round(this.y);
-  return this
-};
-goog.math.Coordinate.prototype.translate = function(tx, opt_ty) {
-  if(tx instanceof goog.math.Coordinate) {
-    this.x += tx.x;
-    this.y += tx.y
-  }else {
-    this.x += tx;
-    if(goog.isNumber(opt_ty)) {
-      this.y += opt_ty
-    }
-  }
-  return this
-};
-goog.math.Coordinate.prototype.scale = function(sx, opt_sy) {
-  var sy = goog.isNumber(opt_sy) ? opt_sy : sx;
-  this.x *= sx;
-  this.y *= sy;
-  return this
-};
-goog.math.Coordinate.prototype.rotateRadians = function(radians, opt_center) {
-  var center = opt_center || new goog.math.Coordinate(0, 0);
-  var x = this.x;
-  var y = this.y;
-  var cos = Math.cos(radians);
-  var sin = Math.sin(radians);
-  this.x = (x - center.x) * cos - (y - center.y) * sin + center.x;
-  this.y = (x - center.x) * sin + (y - center.y) * cos + center.y
-};
-goog.math.Coordinate.prototype.rotateDegrees = function(degrees, opt_center) {
-  this.rotateRadians(goog.math.toRadians(degrees), opt_center)
-};
-goog.provide("goog.math.Box");
-goog.require("goog.math.Coordinate");
-goog.math.Box = function(top, right, bottom, left) {
-  this.top = top;
-  this.right = right;
-  this.bottom = bottom;
-  this.left = left
-};
-goog.math.Box.boundingBox = function(var_args) {
-  var box = new goog.math.Box(arguments[0].y, arguments[0].x, arguments[0].y, arguments[0].x);
-  for(var i = 1;i < arguments.length;i++) {
-    var coord = arguments[i];
-    box.top = Math.min(box.top, coord.y);
-    box.right = Math.max(box.right, coord.x);
-    box.bottom = Math.max(box.bottom, coord.y);
-    box.left = Math.min(box.left, coord.x)
-  }
-  return box
-};
-goog.math.Box.prototype.clone = function() {
-  return new goog.math.Box(this.top, this.right, this.bottom, this.left)
-};
-if(goog.DEBUG) {
-  goog.math.Box.prototype.toString = function() {
-    return"(" + this.top + "t, " + this.right + "r, " + this.bottom + "b, " + this.left + "l)"
-  }
-}
-goog.math.Box.prototype.contains = function(other) {
-  return goog.math.Box.contains(this, other)
-};
-goog.math.Box.prototype.expand = function(top, opt_right, opt_bottom, opt_left) {
-  if(goog.isObject(top)) {
-    this.top -= top.top;
-    this.right += top.right;
-    this.bottom += top.bottom;
-    this.left -= top.left
-  }else {
-    this.top -= top;
-    this.right += opt_right;
-    this.bottom += opt_bottom;
-    this.left -= opt_left
-  }
-  return this
-};
-goog.math.Box.prototype.expandToInclude = function(box) {
-  this.left = Math.min(this.left, box.left);
-  this.top = Math.min(this.top, box.top);
-  this.right = Math.max(this.right, box.right);
-  this.bottom = Math.max(this.bottom, box.bottom)
-};
-goog.math.Box.equals = function(a, b) {
-  if(a == b) {
-    return true
-  }
-  if(!a || !b) {
-    return false
-  }
-  return a.top == b.top && (a.right == b.right && (a.bottom == b.bottom && a.left == b.left))
-};
-goog.math.Box.contains = function(box, other) {
-  if(!box || !other) {
-    return false
-  }
-  if(other instanceof goog.math.Box) {
-    return other.left >= box.left && (other.right <= box.right && (other.top >= box.top && other.bottom <= box.bottom))
-  }
-  return other.x >= box.left && (other.x <= box.right && (other.y >= box.top && other.y <= box.bottom))
-};
-goog.math.Box.relativePositionX = function(box, coord) {
-  if(coord.x < box.left) {
-    return coord.x - box.left
-  }else {
-    if(coord.x > box.right) {
-      return coord.x - box.right
-    }
-  }
-  return 0
-};
-goog.math.Box.relativePositionY = function(box, coord) {
-  if(coord.y < box.top) {
-    return coord.y - box.top
-  }else {
-    if(coord.y > box.bottom) {
-      return coord.y - box.bottom
-    }
-  }
-  return 0
-};
-goog.math.Box.distance = function(box, coord) {
-  var x = goog.math.Box.relativePositionX(box, coord);
-  var y = goog.math.Box.relativePositionY(box, coord);
-  return Math.sqrt(x * x + y * y)
-};
-goog.math.Box.intersects = function(a, b) {
-  return a.left <= b.right && (b.left <= a.right && (a.top <= b.bottom && b.top <= a.bottom))
-};
-goog.math.Box.intersectsWithPadding = function(a, b, padding) {
-  return a.left <= b.right + padding && (b.left <= a.right + padding && (a.top <= b.bottom + padding && b.top <= a.bottom + padding))
-};
-goog.math.Box.prototype.ceil = function() {
-  this.top = Math.ceil(this.top);
-  this.right = Math.ceil(this.right);
-  this.bottom = Math.ceil(this.bottom);
-  this.left = Math.ceil(this.left);
-  return this
-};
-goog.math.Box.prototype.floor = function() {
-  this.top = Math.floor(this.top);
-  this.right = Math.floor(this.right);
-  this.bottom = Math.floor(this.bottom);
-  this.left = Math.floor(this.left);
-  return this
-};
-goog.math.Box.prototype.round = function() {
-  this.top = Math.round(this.top);
-  this.right = Math.round(this.right);
-  this.bottom = Math.round(this.bottom);
-  this.left = Math.round(this.left);
-  return this
-};
-goog.math.Box.prototype.translate = function(tx, opt_ty) {
-  if(tx instanceof goog.math.Coordinate) {
-    this.left += tx.x;
-    this.right += tx.x;
-    this.top += tx.y;
-    this.bottom += tx.y
-  }else {
-    this.left += tx;
-    this.right += tx;
-    if(goog.isNumber(opt_ty)) {
-      this.top += opt_ty;
-      this.bottom += opt_ty
-    }
-  }
-  return this
-};
-goog.math.Box.prototype.scale = function(sx, opt_sy) {
-  var sy = goog.isNumber(opt_sy) ? opt_sy : sx;
-  this.left *= sx;
-  this.right *= sx;
-  this.top *= sy;
-  this.bottom *= sy;
-  return this
-};
-goog.provide("goog.math.Size");
-goog.math.Size = function(width, height) {
-  this.width = width;
-  this.height = height
-};
-goog.math.Size.equals = function(a, b) {
-  if(a == b) {
-    return true
-  }
-  if(!a || !b) {
-    return false
-  }
-  return a.width == b.width && a.height == b.height
-};
-goog.math.Size.prototype.clone = function() {
-  return new goog.math.Size(this.width, this.height)
-};
-if(goog.DEBUG) {
-  goog.math.Size.prototype.toString = function() {
-    return"(" + this.width + " x " + this.height + ")"
-  }
-}
-goog.math.Size.prototype.getLongest = function() {
-  return Math.max(this.width, this.height)
-};
-goog.math.Size.prototype.getShortest = function() {
-  return Math.min(this.width, this.height)
-};
-goog.math.Size.prototype.area = function() {
-  return this.width * this.height
-};
-goog.math.Size.prototype.perimeter = function() {
-  return(this.width + this.height) * 2
-};
-goog.math.Size.prototype.aspectRatio = function() {
-  return this.width / this.height
-};
-goog.math.Size.prototype.isEmpty = function() {
-  return!this.area()
-};
-goog.math.Size.prototype.ceil = function() {
-  this.width = Math.ceil(this.width);
-  this.height = Math.ceil(this.height);
-  return this
-};
-goog.math.Size.prototype.fitsInside = function(target) {
-  return this.width <= target.width && this.height <= target.height
-};
-goog.math.Size.prototype.floor = function() {
-  this.width = Math.floor(this.width);
-  this.height = Math.floor(this.height);
-  return this
-};
-goog.math.Size.prototype.round = function() {
-  this.width = Math.round(this.width);
-  this.height = Math.round(this.height);
-  return this
-};
-goog.math.Size.prototype.scale = function(sx, opt_sy) {
-  var sy = goog.isNumber(opt_sy) ? opt_sy : sx;
-  this.width *= sx;
-  this.height *= sy;
-  return this
-};
-goog.math.Size.prototype.scaleToFit = function(target) {
-  var s = this.aspectRatio() > target.aspectRatio() ? target.width / this.width : target.height / this.height;
-  return this.scale(s)
-};
-goog.provide("goog.math.Rect");
-goog.require("goog.math.Box");
-goog.require("goog.math.Coordinate");
-goog.require("goog.math.Size");
-goog.math.Rect = function(x, y, w, h) {
-  this.left = x;
-  this.top = y;
-  this.width = w;
-  this.height = h
-};
-goog.math.Rect.prototype.clone = function() {
-  return new goog.math.Rect(this.left, this.top, this.width, this.height)
-};
-goog.math.Rect.prototype.toBox = function() {
-  var right = this.left + this.width;
-  var bottom = this.top + this.height;
-  return new goog.math.Box(this.top, right, bottom, this.left)
-};
-goog.math.Rect.createFromBox = function(box) {
-  return new goog.math.Rect(box.left, box.top, box.right - box.left, box.bottom - box.top)
-};
-if(goog.DEBUG) {
-  goog.math.Rect.prototype.toString = function() {
-    return"(" + this.left + ", " + this.top + " - " + this.width + "w x " + this.height + "h)"
-  }
-}
-goog.math.Rect.equals = function(a, b) {
-  if(a == b) {
-    return true
-  }
-  if(!a || !b) {
-    return false
-  }
-  return a.left == b.left && (a.width == b.width && (a.top == b.top && a.height == b.height))
-};
-goog.math.Rect.prototype.intersection = function(rect) {
-  var x0 = Math.max(this.left, rect.left);
-  var x1 = Math.min(this.left + this.width, rect.left + rect.width);
-  if(x0 <= x1) {
-    var y0 = Math.max(this.top, rect.top);
-    var y1 = Math.min(this.top + this.height, rect.top + rect.height);
-    if(y0 <= y1) {
-      this.left = x0;
-      this.top = y0;
-      this.width = x1 - x0;
-      this.height = y1 - y0;
-      return true
-    }
-  }
-  return false
-};
-goog.math.Rect.intersection = function(a, b) {
-  var x0 = Math.max(a.left, b.left);
-  var x1 = Math.min(a.left + a.width, b.left + b.width);
-  if(x0 <= x1) {
-    var y0 = Math.max(a.top, b.top);
-    var y1 = Math.min(a.top + a.height, b.top + b.height);
-    if(y0 <= y1) {
-      return new goog.math.Rect(x0, y0, x1 - x0, y1 - y0)
-    }
-  }
-  return null
-};
-goog.math.Rect.intersects = function(a, b) {
-  return a.left <= b.left + b.width && (b.left <= a.left + a.width && (a.top <= b.top + b.height && b.top <= a.top + a.height))
-};
-goog.math.Rect.prototype.intersects = function(rect) {
-  return goog.math.Rect.intersects(this, rect)
-};
-goog.math.Rect.difference = function(a, b) {
-  var intersection = goog.math.Rect.intersection(a, b);
-  if(!intersection || (!intersection.height || !intersection.width)) {
-    return[a.clone()]
-  }
-  var result = [];
-  var top = a.top;
-  var height = a.height;
-  var ar = a.left + a.width;
-  var ab = a.top + a.height;
-  var br = b.left + b.width;
-  var bb = b.top + b.height;
-  if(b.top > a.top) {
-    result.push(new goog.math.Rect(a.left, a.top, a.width, b.top - a.top));
-    top = b.top;
-    height -= b.top - a.top
-  }
-  if(bb < ab) {
-    result.push(new goog.math.Rect(a.left, bb, a.width, ab - bb));
-    height = bb - top
-  }
-  if(b.left > a.left) {
-    result.push(new goog.math.Rect(a.left, top, b.left - a.left, height))
-  }
-  if(br < ar) {
-    result.push(new goog.math.Rect(br, top, ar - br, height))
-  }
-  return result
-};
-goog.math.Rect.prototype.difference = function(rect) {
-  return goog.math.Rect.difference(this, rect)
-};
-goog.math.Rect.prototype.boundingRect = function(rect) {
-  var right = Math.max(this.left + this.width, rect.left + rect.width);
-  var bottom = Math.max(this.top + this.height, rect.top + rect.height);
-  this.left = Math.min(this.left, rect.left);
-  this.top = Math.min(this.top, rect.top);
-  this.width = right - this.left;
-  this.height = bottom - this.top
-};
-goog.math.Rect.boundingRect = function(a, b) {
-  if(!a || !b) {
-    return null
-  }
-  var clone = a.clone();
-  clone.boundingRect(b);
-  return clone
-};
-goog.math.Rect.prototype.contains = function(another) {
-  if(another instanceof goog.math.Rect) {
-    return this.left <= another.left && (this.left + this.width >= another.left + another.width && (this.top <= another.top && this.top + this.height >= another.top + another.height))
-  }else {
-    return another.x >= this.left && (another.x <= this.left + this.width && (another.y >= this.top && another.y <= this.top + this.height))
-  }
-};
-goog.math.Rect.prototype.squaredDistance = function(point) {
-  var dx = point.x < this.left ? this.left - point.x : Math.max(point.x - (this.left + this.width), 0);
-  var dy = point.y < this.top ? this.top - point.y : Math.max(point.y - (this.top + this.height), 0);
-  return dx * dx + dy * dy
-};
-goog.math.Rect.prototype.distance = function(point) {
-  return Math.sqrt(this.squaredDistance(point))
-};
-goog.math.Rect.prototype.getSize = function() {
-  return new goog.math.Size(this.width, this.height)
-};
-goog.math.Rect.prototype.getTopLeft = function() {
-  return new goog.math.Coordinate(this.left, this.top)
-};
-goog.math.Rect.prototype.getCenter = function() {
-  return new goog.math.Coordinate(this.left + this.width / 2, this.top + this.height / 2)
-};
-goog.math.Rect.prototype.getBottomRight = function() {
-  return new goog.math.Coordinate(this.left + this.width, this.top + this.height)
-};
-goog.math.Rect.prototype.ceil = function() {
-  this.left = Math.ceil(this.left);
-  this.top = Math.ceil(this.top);
-  this.width = Math.ceil(this.width);
-  this.height = Math.ceil(this.height);
-  return this
-};
-goog.math.Rect.prototype.floor = function() {
-  this.left = Math.floor(this.left);
-  this.top = Math.floor(this.top);
-  this.width = Math.floor(this.width);
-  this.height = Math.floor(this.height);
-  return this
-};
-goog.math.Rect.prototype.round = function() {
-  this.left = Math.round(this.left);
-  this.top = Math.round(this.top);
-  this.width = Math.round(this.width);
-  this.height = Math.round(this.height);
-  return this
-};
-goog.math.Rect.prototype.translate = function(tx, opt_ty) {
-  if(tx instanceof goog.math.Coordinate) {
-    this.left += tx.x;
-    this.top += tx.y
-  }else {
-    this.left += tx;
-    if(goog.isNumber(opt_ty)) {
-      this.top += opt_ty
-    }
-  }
-  return this
-};
-goog.math.Rect.prototype.scale = function(sx, opt_sy) {
-  var sy = goog.isNumber(opt_sy) ? opt_sy : sx;
-  this.left *= sx;
-  this.width *= sx;
-  this.top *= sy;
-  this.height *= sy;
-  return this
 };
 goog.provide("goog.dom.vendor");
 goog.require("goog.string");
@@ -12517,7 +12548,7 @@ Blockly.Bubble.prototype.bubbleMouseDown_ = function(e) {
       return
     }
   }
-  this.blockSpace_.blockSpaceEditor.setCursorHand_(true);
+  this.blockSpace_.blockSpaceEditor.setCursor(Blockly.CSS.Cursor.CLOSED);
   if(Blockly.RTL) {
     this.dragDeltaX = this.relativeLeft_ + e.clientX
   }else {
@@ -12546,7 +12577,7 @@ Blockly.Bubble.prototype.resizeMouseDown_ = function(e) {
   if(Blockly.isRightButton(e)) {
     return
   }
-  this.blockSpace_.blockSpaceEditor.setCursorHand_(true);
+  this.blockSpace_.blockSpaceEditor.setCursor(Blockly.Css.Cursor.CLOSED);
   if(Blockly.RTL) {
     this.resizeDeltaWidth = this.width_ + e.clientX
   }else {
@@ -12817,16 +12848,16 @@ Blockly.Mutator.prototype.createEditor_ = function() {
   this.blockSpace_ = new Blockly.BlockSpace(blockSpaceEditor, function() {
     return mutator.getFlyoutMetrics_()
   }, null);
-  this.flyout_ = new Blockly.Flyout(blockSpaceEditor);
-  this.flyout_.autoClose = false;
-  this.svgDialog_.appendChild(this.flyout_.createDom());
+  this.blockSpace_.flyout_ = new Blockly.Flyout(blockSpaceEditor);
+  this.blockSpace_.flyout_.autoClose = false;
+  this.svgDialog_.appendChild(this.blockSpace_.flyout_.createDom());
   this.svgDialog_.appendChild(this.blockSpace_.createDom());
   return this.svgDialog_
 };
 Blockly.Mutator.prototype.resizeBubble_ = function() {
   var doubleBorderWidth = 2 * Blockly.Bubble.BORDER_WIDTH;
   var blockSpaceSize = this.blockSpace_.getCanvas().getBBox();
-  var flyoutMetrics = this.flyout_.getMetrics_();
+  var flyoutMetrics = this.blockSpace_.flyout_.getMetrics_();
   var width;
   if(Blockly.RTL) {
     width = -blockSpaceSize.x
@@ -12854,8 +12885,8 @@ Blockly.Mutator.prototype.setVisible = function(visible) {
   if(visible) {
     this.bubble_ = new Blockly.Bubble(this.block_.blockSpace, this.createEditor_(), this.block_.svg_.svgGroup_, this.iconX_, this.iconY_, null, null);
     var thisObj = this;
-    this.flyout_.init(this.blockSpace_, false);
-    this.flyout_.show(this.quarkXml_);
+    this.blockSpace_.flyout_.init(this.blockSpace_, false);
+    this.blockSpace_.flyout_.show(this.quarkXml_);
     this.rootBlock_ = this.block_.decompose(this.blockSpace_);
     var blocks = this.rootBlock_.getDescendants();
     for(var i = 0, child;child = blocks[i];i++) {
@@ -12863,8 +12894,8 @@ Blockly.Mutator.prototype.setVisible = function(visible) {
     }
     this.rootBlock_.setMovable(false);
     this.rootBlock_.setDeletable(false);
-    var margin = this.flyout_.CORNER_RADIUS * 2;
-    var x = this.flyout_.width_ + margin;
+    var margin = this.blockSpace_.flyout_.CORNER_RADIUS * 2;
+    var x = this.blockSpace_.flyout_.width_ + margin;
     if(Blockly.RTL) {
       x = -x
     }
@@ -12883,8 +12914,6 @@ Blockly.Mutator.prototype.setVisible = function(visible) {
   }else {
     this.svgDialog_ = null;
     this.svgBackground_ = null;
-    this.flyout_.dispose();
-    this.flyout_ = null;
     this.blockSpace_.dispose();
     this.blockSpace_ = null;
     this.rootBlock_ = null;
@@ -12908,12 +12937,8 @@ Blockly.Mutator.prototype.blockSpaceChanged_ = function() {
     for(var b = 0, block;block = blocks[b];b++) {
       var blockXY = block.getRelativeToSurfaceXY();
       var blockHW = block.getHeightWidth();
-      if(Blockly.RTL ? blockXY.x > -this.flyout_.width_ + MARGIN : blockXY.x < this.flyout_.width_ - MARGIN) {
-        block.dispose(false, true)
-      }else {
-        if(blockXY.y + blockHW.height < MARGIN) {
-          block.moveBy(0, MARGIN - blockHW.height - blockXY.y)
-        }
+      if(blockXY.y + blockHW.height < MARGIN) {
+        block.moveBy(0, MARGIN - blockHW.height - blockXY.y)
       }
     }
   }
@@ -14170,7 +14195,10 @@ Blockly.Block.terminateDrag_ = function() {
     }
   }
   if(selected) {
-    selected.blockSpace.fireChangeEvent()
+    selected.blockSpace.fireChangeEvent();
+    selected.blockSpace.blockSpaceEditor.setCursor(Blockly.Css.Cursor.OPEN)
+  }else {
+    Blockly.Css.setCursor(Blockly.Css.Cursor.OPEN, null)
   }
   Blockly.Block.dragMode_ = Blockly.Block.DRAG_MODE_NOT_DRAGGING
 };
@@ -14326,7 +14354,7 @@ Blockly.Block.prototype.onMouseDown_ = function(e) {
       return
     }else {
       Blockly.removeAllRanges();
-      this.blockSpace.blockSpaceEditor.setCursorHand_(true);
+      this.blockSpace.blockSpaceEditor.setCursor(Blockly.Css.Cursor.CLOSED);
       var xy = this.getRelativeToSurfaceXY();
       this.startDragX = xy.x;
       this.startDragY = xy.y;
@@ -14357,6 +14385,7 @@ Blockly.Block.prototype.onMouseDown_ = function(e) {
   e.stopPropagation()
 };
 Blockly.Block.prototype.onMouseUp_ = function(e) {
+  var thisBlockSpace = this.blockSpace;
   Blockly.BlockSpaceEditor.terminateDrag_();
   if(Blockly.selected && Blockly.highlightedConnection_) {
     Blockly.localConnection_.connect(Blockly.highlightedConnection_);
@@ -14369,16 +14398,16 @@ Blockly.Block.prototype.onMouseUp_ = function(e) {
       }
       inferiorConnection.sourceBlock_.svg_.connectionUiEffect()
     }
-    if(this.blockSpace.trashcan && this.blockSpace.trashcan.isOpen) {
-      this.blockSpace.trashcan.close()
+    if(thisBlockSpace.trashcan) {
+      thisBlockSpace.trashcan.close()
     }
   }else {
-    if(this.blockSpace.trashcan && this.blockSpace.trashcan.isOpen) {
-      var trashcan = this.blockSpace.trashcan;
-      goog.Timer.callOnce(trashcan.close, 100, trashcan);
-      if(Blockly.selected) {
-        Blockly.selected.dispose(false, true)
+    if(Blockly.selected && (Blockly.selected.areBlockAndDescendantsDeletable() && thisBlockSpace.isDeleteArea(e))) {
+      var trashcan = thisBlockSpace.trashcan;
+      if(trashcan) {
+        goog.Timer.callOnce(trashcan.close, 100, trashcan)
       }
+      Blockly.selected.dispose(false, true);
       Blockly.fireUiEvent(window, "resize")
     }
   }
@@ -14386,6 +14415,7 @@ Blockly.Block.prototype.onMouseUp_ = function(e) {
     Blockly.highlightedConnection_.unhighlight();
     Blockly.highlightedConnection_ = null
   }
+  thisBlockSpace.blockSpaceEditor.setCursor(Blockly.Css.Cursor.OPEN)
 };
 Blockly.Block.prototype.showHelp_ = function() {
   var url = goog.isFunction(this.helpUrl) ? this.helpUrl() : this.helpUrl;
@@ -14596,7 +14626,8 @@ Blockly.Block.prototype.onMouseMove_ = function(e) {
       var firstImmovableBlockHandler = this.generateReconnector_(this.previousConnection);
       this.setParent(null);
       this.setDraggingHandleImmovable_(true, firstImmovableBlockHandler);
-      this.moveToFrontOfBlockSpace_()
+      this.moveToFrontOfBlockSpace_();
+      this.blockSpace.recordDeleteAreas()
     }
   }
   if(Blockly.Block.dragMode_ == Blockly.Block.DRAG_MODE_FREELY_DRAGGING) {
@@ -14630,8 +14661,8 @@ Blockly.Block.prototype.onMouseMove_ = function(e) {
       Blockly.highlightedConnection_ = closestConnection;
       Blockly.localConnection_ = localConnection
     }
-    if(this.blockSpace.trashcan && this.isDeletable()) {
-      this.blockSpace.trashcan.onMouseMove(e)
+    if(this.areBlockAndDescendantsDeletable()) {
+      this.blockSpace.isDeleteArea(e)
     }
   }
   e.stopPropagation()
@@ -14746,6 +14777,12 @@ Blockly.Block.prototype.getDescendants = function() {
     blocks = blocks.concat(child.getDescendants())
   }
   return blocks
+};
+Blockly.Block.prototype.areBlockAndDescendantsDeletable = function() {
+  var deleteBlockedByChildren = this.childBlocks_.some(function(child) {
+    return!child.areBlockAndDescendantsDeletable()
+  });
+  return this.isDeletable() && !deleteBlockedByChildren
 };
 Blockly.Block.prototype.isDeletable = function() {
   return this.deletable_ && !Blockly.readOnly
@@ -15297,6 +15334,7 @@ Blockly.Block.prototype.setVisible = function(visible) {
 goog.provide("Blockly.Flyout");
 goog.require("Blockly.Block");
 goog.require("Blockly.Comment");
+goog.require("goog.math.Rect");
 Blockly.Flyout = function(blockSpaceEditor, opt_static) {
   var flyout = this;
   this.blockSpaceEditor_ = blockSpaceEditor;
@@ -15578,7 +15616,7 @@ Blockly.Flyout.prototype.blockMouseDown_ = function(block) {
     if(Blockly.isRightButton(e)) {
     }else {
       Blockly.removeAllRanges();
-      flyout.blockSpace_.blockSpaceEditor.setCursorHand_(true);
+      flyout.blockSpace_.blockSpaceEditor.setCursor(Blockly.Css.Cursor.CLOSED);
       Blockly.Flyout.startDragMouseX_ = e.clientX;
       Blockly.Flyout.startDragMouseY_ = e.clientY;
       Blockly.Flyout.startBlock_ = block;
@@ -15644,11 +15682,7 @@ Blockly.Flyout.prototype.createBlockFunc_ = function(originBlock) {
     if(flyout.autoClose) {
       flyout.hide()
     }else {
-      flyout.filterForCapacity_();
-      if(Blockly.hasConcreteBlocks) {
-        originBlock.setVisible(false);
-        originBlock.setDisabled(true)
-      }
+      flyout.filterForCapacity_()
     }
     block.onMouseDown_(e)
   }
@@ -15659,10 +15693,7 @@ Blockly.Flyout.prototype.filterForCapacity_ = function() {
   for(var i = 0, block;block = blocks[i];i++) {
     var allBlocks = block.getDescendants();
     var disabled = allBlocks.length > remainingCapacity;
-    if(Blockly.hasConcreteBlocks && !disabled) {
-    }else {
-      block.setDisabled(disabled)
-    }
+    block.setDisabled(disabled)
   }
 };
 Blockly.Flyout.terminateDrag_ = function() {
@@ -15679,25 +15710,16 @@ Blockly.Flyout.terminateDrag_ = function() {
   Blockly.Flyout.startBlock_ = null;
   Blockly.Flyout.startFlyout_ = null
 };
-Blockly.Flyout.prototype.onBlockDropped = function(originBlock) {
-  var self = this;
-  if(Blockly.hasConcreteBlocks) {
-    originBlock.getChildren().forEach(function(child) {
-      self.onBlockDropped(child)
-    });
-    var blocks = this.blockSpace_.getAllBlocks();
-    for(var i = 0, block;block = blocks[i];i++) {
-      if(block.type === originBlock.type) {
-        block.setVisible(true);
-        block.setDisabled(false);
-        break
-      }
-    }
-  }
-  originBlock.dispose(false, true)
-};
 Blockly.Flyout.prototype.setEnabled = function(enabled) {
   this.enabled_ = enabled
+};
+Blockly.Flyout.prototype.getRect = function() {
+  var BIG_NUM = 1E7;
+  var x = Blockly.getSvgXY_(this.svgGroup_).x;
+  if(!Blockly.RTL) {
+    x -= BIG_NUM
+  }
+  return new goog.math.Rect(x, -BIG_NUM, BIG_NUM + this.width_, this.height_ + 2 * BIG_NUM)
 };
 goog.provide("goog.structs");
 goog.require("goog.array");
@@ -18051,6 +18073,7 @@ goog.require("goog.events.BrowserFeature");
 goog.require("goog.style");
 goog.require("goog.ui.tree.TreeControl");
 goog.require("goog.ui.tree.TreeNode");
+goog.require("goog.math.Rect");
 Blockly.Toolbox = function(blockSpaceEditor) {
   this.blockSpaceEditor_ = blockSpaceEditor;
   this.createDom(this.blockSpaceEditor_.svg_)
@@ -18137,6 +18160,15 @@ Blockly.Toolbox.prototype.populate_ = function() {
 };
 Blockly.Toolbox.prototype.clearSelection = function() {
   this.tree_.setSelectedItem(null)
+};
+Blockly.Toolbox.prototype.getRect = function() {
+  var BIG_NUM = 1E7;
+  var left = -BIG_NUM;
+  if(Blockly.RTL) {
+    var svgSize = Blockly.svgSize();
+    left = svgSize.width - this.width
+  }
+  return new goog.math.Rect(left, -BIG_NUM, BIG_NUM + this.width, 2 * BIG_NUM)
 };
 Blockly.Toolbox.TreeControl = function(toolbox, html, opt_config, opt_domHelper) {
   goog.ui.tree.TreeControl.call(this, html, opt_config, opt_domHelper);
@@ -19006,17 +19038,7 @@ Blockly.FunctionEditor.prototype.create_ = function() {
   this.container_ = document.createElement("div");
   this.container_.setAttribute("id", "modalContainer");
   goog.dom.getElement("blockly").appendChild(this.container_);
-  var self = this;
-  Blockly.modalBlockSpaceEditor = new Blockly.BlockSpaceEditor(this.container_, function() {
-    var metrics = Blockly.mainBlockSpace.getMetrics();
-    var contractDivHeight = self.contractDiv_ ? self.contractDiv_.getBoundingClientRect().height : 0;
-    var topOffset = FRAME_MARGIN_TOP + Blockly.Bubble.BORDER_WIDTH + FRAME_HEADER_HEIGHT;
-    metrics.absoluteLeft += FRAME_MARGIN_SIDE + Blockly.Bubble.BORDER_WIDTH + 1;
-    metrics.absoluteTop += topOffset + contractDivHeight;
-    metrics.viewWidth -= (FRAME_MARGIN_SIDE + Blockly.Bubble.BORDER_WIDTH) * 2;
-    metrics.viewHeight -= FRAME_MARGIN_TOP + Blockly.Bubble.BORDER_WIDTH + topOffset;
-    return metrics
-  });
+  Blockly.modalBlockSpaceEditor = new Blockly.BlockSpaceEditor(this.container_, goog.bind(this.calculateMetrics_, this));
   Blockly.modalBlockSpace = Blockly.modalBlockSpaceEditor.blockSpace;
   Blockly.modalBlockSpace.customFlyoutMetrics_ = Blockly.mainBlockSpace.getMetrics;
   Blockly.modalBlockSpaceEditor.addChangeListener(Blockly.mainBlockSpace.fireChangeEvent);
@@ -19054,8 +19076,18 @@ Blockly.FunctionEditor.prototype.create_ = function() {
   this.onResizeWrapper_ = Blockly.bindEvent_(window, goog.events.EventType.RESIZE, this, this.position_);
   Blockly.modalBlockSpaceEditor.svgResize()
 };
+Blockly.FunctionEditor.prototype.calculateMetrics_ = function() {
+  var metrics = Blockly.mainBlockSpace.getMetrics();
+  var contractDivHeight = this.contractDiv_ ? this.contractDiv_.getBoundingClientRect().height : 0;
+  var topOffset = FRAME_MARGIN_TOP + Blockly.Bubble.BORDER_WIDTH + FRAME_HEADER_HEIGHT;
+  metrics.absoluteLeft += FRAME_MARGIN_SIDE + Blockly.Bubble.BORDER_WIDTH + 1;
+  metrics.absoluteTop += topOffset + contractDivHeight;
+  metrics.viewWidth -= (FRAME_MARGIN_SIDE + Blockly.Bubble.BORDER_WIDTH) * 2;
+  metrics.viewHeight -= FRAME_MARGIN_TOP + Blockly.Bubble.BORDER_WIDTH + topOffset;
+  return metrics
+};
 Blockly.FunctionEditor.prototype.layOutBlockSpaceItems_ = function() {
-  if(!this.functionDefinitionBlock) {
+  if(!this.functionDefinitionBlock || !this.isOpen()) {
     return
   }
   var currentX = Blockly.RTL ? Blockly.modalBlockSpace.getMetrics().viewWidth - FRAME_MARGIN_SIDE : FRAME_MARGIN_SIDE;
@@ -19063,6 +19095,8 @@ Blockly.FunctionEditor.prototype.layOutBlockSpaceItems_ = function() {
   currentY += this.flyout_.getHeight();
   this.flyout_.customYOffset = currentY;
   this.flyout_.position_();
+  Blockly.modalBlockSpace.trashcan.setYOffset(currentY);
+  Blockly.modalBlockSpace.trashcan.position_();
   currentY += FRAME_MARGIN_TOP;
   this.functionDefinitionBlock.moveTo(currentX, currentY)
 };
@@ -20645,21 +20679,31 @@ Blockly.SVGHeader.prototype.setPositionSize = function(yOffset, width, height) {
   var thirdTextHeight = this.textElement_.getBBox().height / 3;
   this.textElement_.setAttribute("y", rectangleMiddleY + thirdTextHeight)
 };
+Blockly.SVGHeader.prototype.setText = function(text) {
+  this.textElement_.textContent = text
+};
 Blockly.SVGHeader.prototype.removeSelf = function() {
   goog.dom.removeNode(this.svgGroup_)
 };
 Blockly.ExampleBlockView = function(block, exampleIndex, onCollapseCallback) {
   this.block = block;
-  var exampleNumber = Blockly.ExampleBlockView.START_EXAMPLE_COUNT_AT + exampleIndex;
-  this.header = new Blockly.SVGHeader(block.blockSpace.svgBlockCanvas_, {headerText:"Example " + exampleNumber, onMouseDown:this.toggleCollapse_, onMouseDownContext:this});
+  this.exampleNumber = Blockly.ExampleBlockView.START_EXAMPLE_COUNT_AT + exampleIndex;
+  this.header = new Blockly.SVGHeader(block.blockSpace.svgBlockCanvas_, {headerText:this.textForCurrentState_(), onMouseDown:this.toggleCollapse_, onMouseDownContext:this});
   this.collapsed_ = false;
   this.onCollapseCallback_ = onCollapseCallback
 };
 Blockly.ExampleBlockView.START_EXAMPLE_COUNT_AT = 1;
+Blockly.ExampleBlockView.DOWN_TRIANGLE_CHARACTER = "\u25bc";
+Blockly.ExampleBlockView.RIGHT_TRIANGLE_CHARACTER = "\u25b6";
+Blockly.ExampleBlockView.prototype.textForCurrentState_ = function() {
+  var arrow = this.collapsed_ ? Blockly.ExampleBlockView.RIGHT_TRIANGLE_CHARACTER : Blockly.ExampleBlockView.DOWN_TRIANGLE_CHARACTER;
+  return arrow + " " + Blockly.Msg.EXAMPLE + " " + this.exampleNumber
+};
 Blockly.ExampleBlockView.prototype.toggleCollapse_ = function() {
   this.collapsed_ = !this.collapsed_;
   this.block.setUserVisible(!this.collapsed_);
-  this.onCollapseCallback_()
+  this.onCollapseCallback_();
+  this.header.setText(this.textForCurrentState_())
 };
 Blockly.ExampleBlockView.prototype.placeStartingAt = function(currentX, currentY, width, headerHeight) {
   this.header.setPositionSize(currentY, width, headerHeight);
@@ -22396,6 +22440,15 @@ Blockly.FieldTextInput.prototype.showEditor_ = function() {
   Blockly.WidgetDiv.show(this, this.widgetDispose_());
   var div = Blockly.WidgetDiv.DIV;
   var htmlInput = goog.dom.createDom("input", "blocklyHtmlInput");
+  if(this.changeHandler_ === Blockly.FieldTextInput.numberValidator) {
+    htmlInput.setAttribute("type", "number");
+    htmlInput.setAttribute("step", "any")
+  }else {
+    if(this.changeHandler_ === Blockly.FieldTextInput.nonnegativeIntegerValidator) {
+      htmlInput.setAttribute("type", "number");
+      htmlInput.setAttribute("pattern", "\\d*")
+    }
+  }
   Blockly.FieldTextInput.htmlInput_ = htmlInput;
   div.appendChild(htmlInput);
   htmlInput.value = htmlInput.defaultValue = this.text_;
@@ -22408,6 +22461,9 @@ Blockly.FieldTextInput.prototype.showEditor_ = function() {
   }else {
     htmlInput.select()
   }
+  htmlInput.onKeyUpWrapper_ = Blockly.bindEvent_(htmlInput, "keydown", this, function(e) {
+    e.stopPropagation()
+  });
   htmlInput.onKeyUpWrapper_ = Blockly.bindEvent_(htmlInput, "keyup", this, this.onHtmlInputChange_);
   htmlInput.onKeyPressWrapper_ = Blockly.bindEvent_(htmlInput, "keypress", this, this.onHtmlInputChange_);
   var blockSpaceSvg = this.sourceBlock_.blockSpace.getCanvas();
@@ -22643,6 +22699,7 @@ Blockly.CodeGenerator.prototype.addReservedWords = function(words) {
 };
 goog.provide("Blockly.BlockSpaceEditor");
 goog.require("Blockly.BlockSpace");
+goog.require("goog.array");
 Blockly.BlockSpaceEditor = function(container, opt_getMetrics, opt_setMetrics) {
   if(opt_getMetrics) {
     this.getBlockSpaceMetrics_ = opt_getMetrics
@@ -22692,7 +22749,8 @@ Blockly.BlockSpaceEditor.prototype.createDom_ = function(container) {
   this.blockSpace.maxBlocks = Blockly.maxBlocks;
   svg.appendChild(this.blockSpace.createDom());
   if(!Blockly.readOnly) {
-    this.addToolboxOrFlyout_()
+    this.addToolboxOrFlyout_();
+    this.addChangeListener(this.bumpOrDeleteOutOfBoundsBlocks_)
   }
   this.setEnableToolbox = function(enabled) {
     if(this.flyout_) {
@@ -22720,10 +22778,19 @@ Blockly.BlockSpaceEditor.prototype.addFlyout_ = function() {
   var flyoutSvg = flyout.createDom();
   flyout.init(this.blockSpace, true);
   flyout.autoClose = false;
-  goog.dom.insertSiblingBefore(flyoutSvg, this.blockSpace.svgGroup_);
-  this.addChangeListener(this.flyoutBumpOrDeleteOutOfBoundsBlocks_)
+  goog.dom.insertSiblingBefore(flyoutSvg, this.blockSpace.svgGroup_)
 };
-Blockly.BlockSpaceEditor.prototype.flyoutBumpOrDeleteOutOfBoundsBlocks_ = function() {
+Blockly.BlockSpaceEditor.prototype.getDeleteAreas = function() {
+  var deleteAreas = [];
+  if(this.flyout_) {
+    goog.array.extend(deleteAreas, this.flyout_.getRect())
+  }
+  if(this.toolbox) {
+    goog.array.extend(deleteAreas, this.toolbox.getRect())
+  }
+  return deleteAreas
+};
+Blockly.BlockSpaceEditor.prototype.bumpOrDeleteOutOfBoundsBlocks_ = function() {
   if(Blockly.Block.isDragging()) {
     return
   }
@@ -22733,16 +22800,13 @@ Blockly.BlockSpaceEditor.prototype.flyoutBumpOrDeleteOutOfBoundsBlocks_ = functi
     return
   }
   var MARGIN = 25;
+  var MARGIN_TOP = 15;
   var overflow;
   var blocks = this.blockSpace.getTopBlocks(false);
   for(var b = 0, block;block = blocks[b];b++) {
     var blockXY = block.getRelativeToSurfaceXY();
     var blockHW = block.getHeightWidth();
-    if(block.isDeletable() && (Blockly.RTL ? blockXY.x - 2 * metrics.viewLeft - metrics.viewWidth : -blockXY.x) > MARGIN * 2) {
-      this.flyout_.onBlockDropped(block);
-      return
-    }
-    overflow = metrics.viewTop + MARGIN - blockHW.height - blockXY.y;
+    overflow = metrics.viewTop + MARGIN_TOP - blockXY.y;
     if(overflow > 0) {
       block.moveBy(0, overflow)
     }
@@ -22852,6 +22916,9 @@ Blockly.BlockSpaceEditor.prototype.getToolboxWidth = function() {
   }
   return width
 };
+Blockly.BlockSpaceEditor.prototype.setCursor = function(cursorType) {
+  Blockly.Css.setCursor(cursorType, this.svg_)
+};
 Blockly.BlockSpaceEditor.prototype.onMouseDown_ = function(e) {
   Blockly.BlockSpaceEditor.terminateDrag_();
   this.hideChaff();
@@ -22873,7 +22940,7 @@ Blockly.BlockSpaceEditor.prototype.onMouseDown_ = function(e) {
   }
 };
 Blockly.BlockSpaceEditor.prototype.onMouseUp_ = function(e) {
-  this.setCursorHand_(false);
+  this.setCursor(Blockly.Css.Cursor.OPEN);
   this.blockSpace.dragMode = false
 };
 Blockly.BlockSpaceEditor.prototype.onMouseMove_ = function(e) {
@@ -22995,19 +23062,6 @@ Blockly.BlockSpaceEditor.prototype.hideChaff = function(opt_allowToolbox) {
   if(this.toolbox && (!opt_allowToolbox && (this.toolbox.flyout_ && this.toolbox.flyout_.autoClose))) {
     this.toolbox.clearSelection()
   }
-};
-Blockly.BlockSpaceEditor.prototype.setCursorHand_ = function(closed) {
-  if(Blockly.readOnly) {
-    return
-  }
-  var cursor = "";
-  if(closed) {
-    cursor = "url(" + Blockly.assetUrl("media/handclosed.cur") + ") 7 3, auto"
-  }
-  if(Blockly.selected) {
-    Blockly.selected.getSvgRoot().style.cursor = cursor
-  }
-  this.svg_.style.cursor = cursor
 };
 Blockly.BlockSpaceEditor.prototype.getBlockSpaceMetrics_ = function() {
   var blockBox, leftEdge, rightEdge, topEdge, bottomEdge;
@@ -23260,25 +23314,62 @@ goog.cssom.getAllCss_ = function(styleSheet, isTextOutput) {
 };
 goog.provide("Blockly.Css");
 goog.require("goog.cssom");
+Blockly.Css.Cursor = {OPEN:"handopen", CLOSED:"handclosed", DELETE:"handdelete"};
+Blockly.Css.currentCursor_ = "";
+Blockly.Css.styleSheet_ = null;
 Blockly.Css.inject = function() {
   var text = Blockly.Css.CONTENT.join("\n");
-  text = text.replace("%HAND_OPEN_PATH%", Blockly.assetUrl("media/handopen.cur")).replace("%TREE_PATH%", Blockly.assetUrl("media/tree.png")).replace("%SPRITES_PATH%", Blockly.assetUrl("media/sprites.png"));
-  goog.cssom.addCssText(text)
+  text = text.replace("%HAND_OPEN_PATH%", Blockly.assetUrl("media/handopen.cur")).replace("%HAND_CLOSED_PATH%", Blockly.assetUrl("media/handclosed.cur")).replace("%HAND_DELETE_PATH%", Blockly.assetUrl("media/handdelete.cur")).replace("%TREE_PATH%", Blockly.assetUrl("media/tree.png")).replace("%SPRITES_PATH%", Blockly.assetUrl("media/sprites.png"));
+  Blockly.Css.styleSheet_ = goog.cssom.addCssText(text).sheet;
+  Blockly.Css.setCursor(Blockly.Css.Cursor.OPEN)
 };
-Blockly.Css.CONTENT = ["#blockly {", "  border: 1px solid #ddd;", "}", "#blockly .userHidden {", "  display: none;", "}", "#blockly.readonly .userHidden {", "  display: inline;", "}", "#blockly.readonly {", "  border: 0;", "}", "#blockly.edit .userHidden {", "  display: inline;", "  fill-opacity: 0.5;", "}", "#blockly.edit .userHidden .blocklyPath {", "  fill-opacity: 0.5;", "}", "#blockly.edit .userHidden .blocklyPathDark, #blockly.edit .userHidden .blocklyPathLight {", "  display: none;", "}", 
-".blocklySvg {", "  cursor: pointer;", "  background-color: #fff;", "  overflow: hidden;", "}", "g.blocklyDraggable {", "  -ms-touch-action: none;", "  touch-action: none;", "}", ".blocklyWidgetDiv {", "  position: absolute;", "  display: none;", "  z-index: 999;", "}", ".blocklyDraggable {", "  /* Hotspot coordinates are baked into the CUR file, but they are still", "     required in the CSS due to a Chrome bug.", "     http://code.google.com/p/chromium/issues/detail?id=1446 */", "  cursor: url(%HAND_OPEN_PATH%) 8 5, auto;", 
-"}", ".blocklyResizeSE {", "  fill: #aaa;", "  cursor: se-resize;", "}", ".blocklyResizeSW {", "  fill: #aaa;", "  cursor: sw-resize;", "}", ".blocklyResizeLine {", "  stroke-width: 1;", "  stroke: #888;", "}", ".blocklyHighlightedConnectionPath {", "  stroke-width: 4px;", "  stroke: #fc3;", "  fill: none;", "}", ".blocklyPathLight {", "  fill: none;", "  stroke-width: 2;", "  stroke-linecap: round;", "}", ".blocklySpotlight>.blocklyPath {", "  fill: #fc3;", "}", ".blocklySelected:not(.blocklyUndeletable)>.blocklyPath {", 
-"  stroke-width: 3px;", "  stroke: #fc3;", "}", ".blocklySelected:not(.blocklyUndeletable)>.blocklyPathLight {", "  display: none;", "}", ".blocklyUndeletable>.blocklyEditableText>rect {", "  fill-opacity: 1.0;", "  fill: #ffdb74;", "}", ".blocklyDragging>.blocklyPath,", ".blocklyDragging>.blocklyPathLight {", "  fill-opacity: 0.8;", "  stroke-opacity: 0.8;", "}", ".blocklyDragging>.blocklyPathDark {", "  display: none;", "}", ".blocklyDisabled>.blocklyPath {", "  fill-opacity: 0.50;", "  stroke-opacity: 0.50;", 
-"}", ".blocklyDisabled>.blocklyPathLight,", ".blocklyDisabled>.blocklyPathDark {", "  display: none;", "}", ".blocklyText {", "  cursor: default;", "  font-family: sans-serif;", "  font-size: 11pt;", "  fill: #fff;", "}", ".blackBlocklyText {", "  cursor: default;", "  font-family: sans-serif;", "  font-size: 11pt;", "  fill: #333;", "}", ".blocklyNonEditableText>text {", "  pointer-events: none;", "}", ".blocklyNonEditableText>rect,", ".blocklyEditableText>rect {", "  fill: #fff;", "  fill-opacity: 0.6;", 
-"}", ".blocklyNonEditableText>text,", ".blocklyEditableText>text {", "  fill: #000;", "}", ".blocklyEditableText:hover>rect {", "  stroke-width: 2;", "  stroke: #fff;", "}", "/*", " * Don't allow users to select text.  It gets annoying when trying to", " * drag a block and selected text moves instead.", " */", ".blocklySvg text {", "  -moz-user-select: none;", "  -webkit-user-select: none;", "  user-select: none;", "  cursor: inherit;", "}", ".blocklyHidden {", "  display: none;", "}", ".blocklyFieldDropdown:not(.blocklyHidden) {", 
-"  display: block;", "}", ".blocklyTooltipBackground {", "  fill: #ffffc7;", "  stroke-width: 1px;", "  stroke: #d8d8d8;", "}", ".blocklyTooltipShadow,", ".blocklyContextMenuShadow,", ".blocklyDropdownMenuShadow {", "  fill: #bbb;", "  filter: url(#blocklyShadowFilter);", "}", ".blocklyTooltipText {", "  font-family: sans-serif;", "  font-size: 9pt;", "  fill: #000;", "}", "#modalEditorClose:hover>rect {", "  fill: #0094ca;", "}", ".blocklyIconShield {", "  cursor: default;", "  fill: #00c;", "  stroke-width: 1px;", 
-"  stroke: #ccc;", "}", ".blocklyIconGroup:hover>.blocklyIconShield {", "  fill: #00f;", "  stroke: #fff;", "}", ".blocklyIconGroup:hover>.blocklyIconMark {", "  fill: #fff;", "}", ".blocklyIconMark {", "  cursor: default !important;", "  font-family: sans-serif;", "  font-size: 9pt;", "  font-weight: bold;", "  fill: #ccc;", "  text-anchor: middle;", "}", ".blocklyWarningBody {", "}", ".blocklyMinimalBody {", "  margin: 0;", "  padding: 0;", "}", ".blocklyCommentTextarea {", "  margin: 0;", "  padding: 2px;", 
-"  border: 0;", "  resize: none;", "  background-color: #ffc;", "}", ".blocklyHtmlInput {", "  font-family: sans-serif;", "  font-size: 11pt;", "  border: none;", "  outline: none;", "  width: 100%", "}", ".blocklyContextMenuBackground,", ".blocklyMutatorBackground {", "  fill: #fff;", "  stroke-width: 1;", "  stroke: #ddd;", "}", ".newFunctionDiv {", "  position: absolute;", "  top: 120px;", "  left: 600px;", "}", ".blocklyContextMenuOptions>.blocklyMenuDiv,", ".blocklyContextMenuOptions>.blocklyMenuDivDisabled,", 
+Blockly.Css.setCursor = function(cursor, opt_svg) {
+  if(Blockly.readOnly) {
+    return
+  }
+  if(Blockly.Css.currentCursor_ != cursor) {
+    Blockly.Css.currentCursor_ = cursor;
+    if(cursor == Blockly.Css.Cursor.OPEN) {
+      var xy = "8 5"
+    }else {
+      var xy = "7 3"
+    }
+    var cursorRuleRHS = "url(" + Blockly.assetUrl("media/" + cursor + ".cur") + ") " + xy + ", auto";
+    var rule = ".blocklyDraggable {\ncursor: " + cursorRuleRHS + ";\n}\n";
+    var ruleIndex = 0;
+    if(Blockly.Css.styleSheet_ && Blockly.Css.styleSheet_.cssRules.length > ruleIndex) {
+      goog.cssom.replaceCssRule("", rule, Blockly.Css.styleSheet_, ruleIndex)
+    }
+  }
+  var setCursorOnBackgroundElement = function(element) {
+    if(cursor == Blockly.Css.Cursor.OPEN) {
+      element.style.cursor = ""
+    }else {
+      element.style.cursor = cursorRuleRHS
+    }
+  };
+  var toolboxen = document.getElementsByClassName("blocklyToolboxDiv");
+  for(var i = 0, toolbox;toolbox = toolboxen[i];i++) {
+    setCursorOnBackgroundElement(toolbox)
+  }
+  if(opt_svg) {
+    setCursorOnBackgroundElement(opt_svg)
+  }
+};
+Blockly.Css.CONTENT = [".blocklyDraggable {", "}", "#blockly {", "  border: 1px solid #ddd;", "}", "#blockly .userHidden {", "  display: none;", "}", "#blockly.readonly .userHidden {", "  display: inline;", "}", "#blockly.readonly {", "  border: 0;", "}", "#blockly.edit .userHidden {", "  display: inline;", "  fill-opacity: 0.5;", "}", "#blockly.edit .userHidden .blocklyPath {", "  fill-opacity: 0.5;", "}", "#blockly.edit .userHidden .blocklyPathDark, #blockly.edit .userHidden .blocklyPathLight {", 
+"  display: none;", "}", ".blocklySvg {", "  cursor: pointer;", "  background-color: #fff;", "  overflow: hidden;", "}", "g.blocklyDraggable {", "  -ms-touch-action: none;", "  touch-action: none;", "}", ".blocklyWidgetDiv {", "  position: absolute;", "  display: none;", "  z-index: 999;", "}", ".blocklyResizeSE {", "  fill: #aaa;", "  cursor: se-resize;", "}", ".blocklyResizeSW {", "  fill: #aaa;", "  cursor: sw-resize;", "}", ".blocklyResizeLine {", "  stroke-width: 1;", "  stroke: #888;", "}", 
+".blocklyHighlightedConnectionPath {", "  stroke-width: 4px;", "  stroke: #fc3;", "  fill: none;", "}", ".blocklyPathLight {", "  fill: none;", "  stroke-width: 2;", "  stroke-linecap: round;", "}", ".blocklySpotlight>.blocklyPath {", "  fill: #fc3;", "}", ".blocklySelected:not(.blocklyUndeletable)>.blocklyPath {", "  stroke-width: 3px;", "  stroke: #fc3;", "}", ".blocklySelected:not(.blocklyUndeletable)>.blocklyPathLight {", "  display: none;", "}", ".blocklyUndeletable>.blocklyEditableText>rect {", 
+"  fill-opacity: 1.0;", "  fill: #ffdb74;", "}", ".blocklyDragging>.blocklyPath,", ".blocklyDragging>.blocklyPathLight {", "  fill-opacity: 0.8;", "  stroke-opacity: 0.8;", "}", ".blocklyDragging>.blocklyPathDark {", "  display: none;", "}", ".blocklyDisabled>.blocklyPath {", "  fill-opacity: 0.50;", "  stroke-opacity: 0.50;", "}", ".blocklyDisabled>.blocklyPathLight,", ".blocklyDisabled>.blocklyPathDark {", "  display: none;", "}", ".blocklyText {", "  cursor: default;", "  font-family: sans-serif;", 
+"  font-size: 11pt;", "  fill: #fff;", "}", ".blackBlocklyText {", "  cursor: default;", "  font-family: sans-serif;", "  font-size: 11pt;", "  fill: #333;", "}", ".blocklyNonEditableText>text {", "  pointer-events: none;", "}", ".blocklyNonEditableText>rect,", ".blocklyEditableText>rect {", "  fill: #fff;", "  fill-opacity: 0.6;", "}", ".blocklyNonEditableText>text,", ".blocklyEditableText>text {", "  fill: #000;", "}", ".blocklyEditableText:hover>rect {", "  stroke-width: 2;", "  stroke: #fff;", 
+"}", "/*", " * Don't allow users to select text.  It gets annoying when trying to", " * drag a block and selected text moves instead.", " */", ".blocklySvg text {", "  -moz-user-select: none;", "  -webkit-user-select: none;", "  user-select: none;", "  cursor: inherit;", "}", ".blocklyHidden {", "  display: none;", "}", ".blocklyFieldDropdown:not(.blocklyHidden) {", "  display: block;", "}", ".blocklyTooltipBackground {", "  fill: #ffffc7;", "  stroke-width: 1px;", "  stroke: #d8d8d8;", "}", ".blocklyTooltipShadow,", 
+".blocklyContextMenuShadow,", ".blocklyDropdownMenuShadow {", "  fill: #bbb;", "  filter: url(#blocklyShadowFilter);", "}", ".blocklyTooltipText {", "  font-family: sans-serif;", "  font-size: 9pt;", "  fill: #000;", "}", "#modalEditorClose:hover>rect {", "  fill: #0094ca;", "}", ".blocklyIconShield {", "  cursor: default;", "  fill: #00c;", "  stroke-width: 1px;", "  stroke: #ccc;", "}", ".blocklyIconGroup:hover>.blocklyIconShield {", "  fill: #00f;", "  stroke: #fff;", "}", ".blocklyIconGroup:hover>.blocklyIconMark {", 
+"  fill: #fff;", "}", ".blocklyIconMark {", "  cursor: default !important;", "  font-family: sans-serif;", "  font-size: 9pt;", "  font-weight: bold;", "  fill: #ccc;", "  text-anchor: middle;", "}", ".blocklyWarningBody {", "}", ".blocklyMinimalBody {", "  margin: 0;", "  padding: 0;", "}", ".blocklyCommentTextarea {", "  margin: 0;", "  padding: 2px;", "  border: 0;", "  resize: none;", "  background-color: #ffc;", "}", ".blocklyHtmlInput {", "  font-family: sans-serif;", "  font-size: 11pt;", 
+"  border: none;", "  outline: none;", "  width: 100%;", "  -moz-appearance: textfield;", "}", ".blocklyHtmlInput::-webkit-inner-spin-button, .blocklyHtmlInput::-webkit-outer-spin-button {", "  -webkit-appearance: none;", "}", ".blocklyContextMenuBackground,", ".blocklyMutatorBackground {", "  fill: #fff;", "  stroke-width: 1;", "  stroke: #ddd;", "}", ".newFunctionDiv {", "  position: absolute;", "  top: 120px;", "  left: 600px;", "}", ".blocklyContextMenuOptions>.blocklyMenuDiv,", ".blocklyContextMenuOptions>.blocklyMenuDivDisabled,", 
 ".blocklyDropdownMenuOptions>.blocklyMenuDiv {", "  fill: #fff;", "}", ".blocklyContextMenuOptions>.blocklyMenuDiv:hover>rect,", ".blocklyDropdownMenuOptions>.blocklyMenuDiv:hover>rect {", "  fill: #57e;", "}", ".blocklyMenuSelected>rect {", "  fill: #57e;", "}", ".blocklyMenuText {", "  cursor: default !important;", "  font-family: sans-serif;", "  font-size: 15px; /* All context menu sizes are based on pixels. */", "  fill: #000;", "}", ".blocklyContextMenuOptions>.blocklyMenuDiv:hover>.blocklyMenuText,", 
-".blocklyDropdownMenuOptions>.blocklyMenuDiv:hover>.blocklyMenuText {", "  fill: #fff;", "}", ".blocklyMenuSelected>.blocklyMenuText {", "  fill: #fff;", "}", ".blocklyMenuDivDisabled>.blocklyMenuText {", "  fill: #ccc;", "}", ".blocklyFlyoutBackground {", "  fill: #ddd;", "  fill-opacity: 0.8;", "}", ".blocklyColourBackground {", "  fill: #666;", "}", ".blocklyScrollbarBackground {", "  fill: #fff;", "  stroke-width: 1;", "  stroke: #e4e4e4;", "}", ".blocklyScrollbarKnob {", "  fill: #ccc;", "}", 
-".blocklyScrollbarBackground:hover+.blocklyScrollbarKnob,", ".blocklyScrollbarKnob:hover {", "  fill: #bbb;", "}", ".blocklyInvalidInput {", "  background: #faa;", "}", ".blocklyAngleCircle {", "  stroke: #444;", "  stroke-width: 1;", "  fill: #ddd;", "  fill-opacity: 0.8;", "}", ".blocklyAngleMarks {", "  stroke: #444;", "  stroke-width: 1;", "}", ".blocklyAngleGuage {", "  fill: #d00;", "  fill-opacity: 0.8;  ", "}", ".blocklyContextMenu {", "  border-radius: 4px;", "}", ".blocklyDropdownMenu {", 
-"  padding: 0 !important;", "  position: relative !important;", "}", ".blocklyRectangularDropdownMenu .goog-menuitem {", "  height: 100%;", "  padding: 0 !important;", "  border-radius: 5px;", "  margin-bottom: 4px !important;", "}", ".fieldRectangularDropdownBackdrop {", "  fill: #fff;", "  fill-opacity: 0.6;", "}", ".blocklyRectangularDropdownArrow {", "  fill: #7965a1;", "  font-size: 20px !important;", "}", ".blocklyRectangularDropdownMenu .goog-menuitem-highlight, .goog-menuitem-hover {", "  border-color: #7965a1 !important;", 
-"  border-style: dotted !important;", "  border-width: 0px !important;", "  margin: -4px -4px 0 !important;", "  border-width: 4px !important;", "  border-style: solid !important;", "  padding-bottom: 0px !important;", "  padding-top: 0px !important;", "}", ".blocklyRectangularDropdownMenu img {", "  -webkit-border-radius: 5px;", "  -moz-border-radius: 5px;", "  border-radius: 5px;", "}", ".blocklyRectangularDropdownMenu {", "  border-radius: 5px;", "  box-shadow: none !important;", "}", ".goog-option-selected .goog-menuitem-checkbox,", 
+".blocklyDropdownMenuOptions>.blocklyMenuDiv:hover>.blocklyMenuText {", "  fill: #fff;", "}", ".blocklyMenuSelected>.blocklyMenuText {", "  fill: #fff;", "}", ".blocklyMenuDivDisabled>.blocklyMenuText {", "  fill: #ccc;", "}", ".blocklyFlyoutBackground {", "  fill: #ddd;", "  fill-opacity: 0.8;", "}", ".blocklyBackground {", "  fill: #666;", "}", ".blocklyScrollbarBackground {", "  fill: #fff;", "  stroke-width: 1;", "  stroke: #e4e4e4;", "}", ".blocklyScrollbarKnob {", "  fill: #ccc;", "}", ".blocklyScrollbarBackground:hover+.blocklyScrollbarKnob,", 
+".blocklyScrollbarKnob:hover {", "  fill: #bbb;", "}", ".blocklyInvalidInput {", "  background: #faa;", "}", ".blocklyAngleCircle {", "  stroke: #444;", "  stroke-width: 1;", "  fill: #ddd;", "  fill-opacity: 0.8;", "}", ".blocklyAngleMarks {", "  stroke: #444;", "  stroke-width: 1;", "}", ".blocklyAngleGuage {", "  fill: #d00;", "  fill-opacity: 0.8;  ", "}", ".blocklyContextMenu {", "  border-radius: 4px;", "}", ".blocklyDropdownMenu {", "  padding: 0 !important;", "  position: relative !important;", 
+"}", ".blocklyRectangularDropdownMenu .goog-menuitem {", "  height: 100%;", "  padding: 0 !important;", "  border-radius: 5px;", "  margin-bottom: 4px !important;", "}", ".fieldRectangularDropdownBackdrop {", "  fill: #fff;", "  fill-opacity: 0.6;", "}", ".blocklyRectangularDropdownArrow {", "  fill: #7965a1;", "  font-size: 20px !important;", "}", ".blocklyRectangularDropdownMenu .goog-menuitem-highlight, .goog-menuitem-hover {", "  border-color: #7965a1 !important;", "  border-style: dotted !important;", 
+"  border-width: 0px !important;", "  margin: -4px -4px 0 !important;", "  border-width: 4px !important;", "  border-style: solid !important;", "  padding-bottom: 0px !important;", "  padding-top: 0px !important;", "}", ".blocklyRectangularDropdownMenu img {", "  -webkit-border-radius: 5px;", "  -moz-border-radius: 5px;", "  border-radius: 5px;", "}", ".blocklyRectangularDropdownMenu {", "  border-radius: 5px;", "  box-shadow: none !important;", "}", ".goog-option-selected .goog-menuitem-checkbox,", 
 ".goog-option-selected .goog-menuitem-icon {", "}", "/* Category tree in Toolbox. */", ".blocklyToolboxDiv {", "  background-color: #ddd;", "  display: none;", "  overflow-x: visible;", "  overflow-y: auto;", "  position: absolute;", "}", ".blocklyTreeRoot {", "  padding: 4px 0;", "}", ".blocklyTreeRoot:focus {", "  outline: none;", "}", ".blocklyTreeRow {", "  line-height: 22px;", "  height: 22px;", "  padding-right: 1em;", "  white-space: nowrap;", "}", '.blocklyToolboxDiv[dir="RTL"] .blocklyTreeRow {', 
 "  padding-right: 0;", "  padding-left: 1em !important;", "}", ".blocklyTreeRow:hover {", "  background-color: #e4e4e4;", "}", ".blocklyTreeIcon {", "  height: 16px;", "  width: 16px;", "  vertical-align: middle;", "  background-image: url(%TREE_PATH%);", "}", ".blocklyTreeIconClosedLtr {", "  background-position: -32px -1px;", "}", ".blocklyTreeIconClosedRtl {", "  background-position: 0px -1px;", "}", ".blocklyTreeIconOpen {", "  background-position: -16px -1px;", "}", ".blocklyTreeIconNone {", 
 "  background-position: -48px -1px;", "}", ".blocklyTreeSelected>.blocklyTreeIconClosedLtr {", "  background-position: -32px -17px;", "}", ".blocklyTreeSelected>.blocklyTreeIconClosedRtl {", "  background-position: 0px -17px;", "}", ".blocklyTreeSelected>.blocklyTreeIconOpen {", "  background-position: -16px -17px;", "}", ".blocklyTreeSelected>.blocklyTreeIconNone {", "  background-position: -48px -17px;", "}", ".blocklyTreeLabel {", "  cursor: default;", "  font-family: sans-serif;", "  font-size: 16px;", 
@@ -23325,7 +23416,6 @@ Blockly.parseOptions_ = function(options) {
     var hasCategories = false;
     var hasTrashcan = false;
     var hasCollapse = false;
-    var hasConcreteBlocks = false;
     var grayOutUndeletableBlocks = false;
     var tree = null
   }else {
@@ -23357,21 +23447,16 @@ Blockly.parseOptions_ = function(options) {
   }
   var varsInGlobals = !!options["varsInGlobals"];
   if(tree && !hasCategories) {
-    var hasScrollbars = false;
-    var hasConcreteBlocks = options["concreteBlocks"];
-    if(hasConcreteBlocks === undefined) {
-      hasConcreteBlocks = false
-    }
+    var hasScrollbars = false
   }else {
     var hasScrollbars = options["scrollbars"];
     if(hasScrollbars === undefined) {
       hasScrollbars = false
     }
-    var hasConcreteBlocks = false
   }
   return{RTL:!!options["rtl"], collapse:hasCollapse, readOnly:readOnly, maxBlocks:options["maxBlocks"] || Infinity, assetUrl:options["assetUrl"] || function(path) {
     return"./" + path
-  }, hasCategories:hasCategories, hasScrollbars:hasScrollbars, hasConcreteBlocks:hasConcreteBlocks, hasTrashcan:hasTrashcan, varsInGlobals:varsInGlobals, languageTree:tree, disableParamEditing:options["disableParamEditing"] || false, disableVariableEditing:options["disableVariableEditing"] || false, useModalFunctionEditor:options["useModalFunctionEditor"] || false, useContractEditor:options["useContractEditor"] || false, defaultNumExampleBlocks:options["defaultNumExampleBlocks"] || 0, grayOutUndeletableBlocks:grayOutUndeletableBlocks, 
+  }, hasCategories:hasCategories, hasScrollbars:hasScrollbars, hasTrashcan:hasTrashcan, varsInGlobals:varsInGlobals, languageTree:tree, disableParamEditing:options["disableParamEditing"] || false, disableVariableEditing:options["disableVariableEditing"] || false, useModalFunctionEditor:options["useModalFunctionEditor"] || false, useContractEditor:options["useContractEditor"] || false, defaultNumExampleBlocks:options["defaultNumExampleBlocks"] || 0, grayOutUndeletableBlocks:grayOutUndeletableBlocks, 
   editBlocks:options["editBlocks"] || false}
 };
 Blockly.initUISounds_ = function() {

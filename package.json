@@ -1,12 +1,26 @@
 {
-  "name": "@cdo/blockly-core",
+  "name": "@code-dot-org/blockly-core",
   "version": "0.0.1",
-  "description": "blockly-core testrunner dependencies",
+  "description": "Code.org fork of google/blockly for use within the Code Studio learning environment.",
+  "repository": {
+    "type": "git",
+    "url": "http://github.com/code-dot-org/blockly.git"
+  },
   "engines": {
     "node": ">=0.10.25 <0.13",
     "npm": "^2.9.1"
   },
+  "files": [
+    "build-output",
+    "i18n",
+    "media"
+  ],
   "scripts": {
+    "build": "./deploy.sh",
+    "build:dev": "./deploy.sh debug",
+    "postversion": "git push && git push --tags && npm publish",
+    "preversion": "npm run build:dev && npm run build",
+    "test": "./test.sh"
   },
   "devDependencies": {
     "phantomjs-prebuilt": "^2.1.3"

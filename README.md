@@ -1,4 +1,4 @@
-# Blockly Core (Code Studio fork)
+# Blockly (Code Studio fork)
 
 This is a fork of [Blockly](https://code.google.com/p/blockly/), an open source visual programming environment.
 
@@ -30,7 +30,7 @@ Major additions and changes in this fork:
 ## Installation
 
 ```
-cd blockly-core
+cd blockly
 npm install
 ./deploy.sh
 ```
@@ -47,7 +47,26 @@ There is a playground manual testing page at [tests/playground.html](./tests/pla
 
 This is the most typical use case for code-dot-org fork development.
 
-[Apps (aka Blockly apps)](https://github.com/code-dot-org/code-dot-org/tree/staging/apps) is a set of blockly apps built on top of blockly-core. Follow the [building with core instructions](https://github.com/code-dot-org/code-dot-org/tree/staging/apps#full-build-with-blockly-core-changes) in that repository to build blockly-core into apps.
+[Apps (aka Code Studio)](https://github.com/code-dot-org/code-dot-org/tree/staging/apps) is a set of blockly apps built on top of blockly, which installs and references this package via NPM. The easiest pathway for local development is to use [npm-link](https://docs.npmjs.com/cli/link):
+
+```
+cd {blockly repo directory}
+npm link
+cd {code-dot-org repo directory}/apps
+npm link @code-dot-org/blockly
+```
+
+Apps will now reference your local blockly repository rather than the npm package. If you then make local changes to your repo, you can simply rebuild blockly (via `./deploy`) and then apps (via `npm run build`) to communicate those changes to apps.
+
+### Publishing changes
+
+To publish a new version to npm switch to the master branch, use `npm login` to sign in as an account with access to the `@code-dot-org` scope, then `npm version [major|minor|patch]` for the appropriate version bump.  This will do the following:
+
+* Run linting and tests to verify your local repo.
+* Rebuild the release package.
+* Bump the version, adding a corresponding commit and version tag.
+* Push the commit and tag to github.
+* Publish the new release package to npm.
 
 #### Testing changes
 
@@ -63,6 +82,6 @@ There are three ways the test suites can be run:
 
 ##### Other tests covering this package
 
-[Blockly apps](https://github.com/code-dot-org/code-dot-org/tree/staging/apps) contains many tests that target features of blockly-core in the context of the code.org curriculum apps.
+[Blockly apps](https://github.com/code-dot-org/code-dot-org/tree/staging/apps) contains many tests that target features of blockly in the context of the code.org curriculum apps.
 
-Additionally, [Dashboard's UI tests](https://github.com/code-dot-org/code-dot-org/tree/staging/dashboard/test/ui) cover certain features of blockly-core through Cucumber / Selenium scenarios.
+Additionally, [Dashboard's UI tests](https://github.com/code-dot-org/code-dot-org/tree/staging/dashboard/test/ui) cover certain features of blockly through Cucumber / Selenium scenarios.

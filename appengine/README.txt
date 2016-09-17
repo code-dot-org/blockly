@@ -16,7 +16,6 @@ blockly/
  |- README.txt
  |- storage.js
  |- storage.py
- |- closure-library-read-only/
  `- static/
      |- apps/
      |- core/

@@ -2,12 +2,15 @@
 if [[ $1 == "debug" ]]; then
   echo "Building blockly core in debug mode"
   echo "Outputting to build-output/blockly_uncompressed.js, build-output/javascript_uncompressed.js and build-output/blocks_uncompressed.js"
-  python node_modules/google-closure-library/closure/bin/build/closurebuilder.py \
-  --root=node_modules/google-closure-library/ --root=core/ \
-  --compiler_jar=node_modules/google-closure-compiler/compiler.jar --compiler_flags="--compilation_level=WHITESPACE_ONLY" \
-  --compiler_flags="--formatting=PRETTY_PRINT" \
-  --namespace="Blockly" --output_mode=compiled \
-  > build-output/blockly_uncompressed.js
+
+  echo -e '// Do not edit this generated file\n"use strict";\n' > build-output/blockly_uncompressed.js
+  java -jar node_modules/google-closure-compiler/compiler.jar \
+  --compilation_level=WHITESPACE_ONLY \
+  --entry_point Blockly \
+  --formatting=PRETTY_PRINT \
+  --js core/ node_modules/google-closure-library/closure/ \
+  --only_closure_dependencies \
+  >> build-output/blockly_uncompressed.js
 
   echo -e '// Do not edit this generated file\n"use strict";\n' > build-output/javascript_uncompressed.js
   java -jar node_modules/google-closure-compiler/compiler.jar \
@@ -25,10 +28,15 @@ if [[ $1 == "debug" ]]; then
   echo "Done building build-output/blockly_uncompressed.js, build-output/javascript_uncompressed.js and build-output/blocks_uncompressed.js"
 
 else
-  python node_modules/google-closure-library/closure/bin/build/closurebuilder.py \
-  --root=node_modules/google-closure-library/ --root=core/ \
-  --compiler_jar=node_modules/google-closure-compiler/compiler.jar --namespace="Blockly" --output_mode=compiled \
-  > build-output/blockly_compressed.js
+  echo "Building blockly core in production mode"
+  echo "Outputting to build-output/blockly_compressed.js, build-output/javascript_compressed.js and build-output/blocks_compressed.js"
+
+  echo -e '// Do not edit this generated file\n"use strict";\n' > build-output/blockly_compressed.js
+  java -jar node_modules/google-closure-compiler/compiler.jar \
+  --entry_point Blockly \
+  --js core/ node_modules/google-closure-library/closure/ \
+  --only_closure_dependencies \
+  >> build-output/blockly_compressed.js
 
   echo -e '// Do not edit this generated file\n"use strict";\n' > build-output/javascript_compressed.js
   java -jar node_modules/google-closure-compiler/compiler.jar --flagfile generators/bld_flags.txt \
@@ -46,4 +54,3 @@ fi
 
 # Run blockly-core tests with every build
 ./test.sh
-

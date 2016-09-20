@@ -1,6 +1,7 @@
 'use strict';
 
 goog.provide('Blockly.ExampleView');
+goog.require('goog.dom.classes');
 
 /** @const */ var NO_RESULT_TEXT = "";
 /** @const */ var SUCCESS_TEXT = "Matches definition.";

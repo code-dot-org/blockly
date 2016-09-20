@@ -18,8 +18,9 @@
   "scripts": {
     "build": "./deploy.sh",
     "build:dev": "./deploy.sh debug",
+    "preversion": "npm run test",
+    "version": "npm run build:dev && npm run build && git add -A build-output",
     "postversion": "git push && git push --tags && npm publish",
-    "preversion": "npm run build:dev && npm run build",
     "test": "./test.sh"
   },
   "devDependencies": {

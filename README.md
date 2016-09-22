@@ -1,5 +1,8 @@
 # Blockly (Code Studio fork)
 
+[![npm version](https://img.shields.io/npm/v/@code-dot-org/blockly.svg)](https://www.npmjs.com/package/@code-dot-org/blockly)
+[![CircleCI](https://circleci.com/gh/code-dot-org/blockly.svg?style=shield)](https://circleci.com/gh/code-dot-org/blockly)
+
 This is a fork of [Blockly](https://code.google.com/p/blockly/), an open source visual programming environment.
 
 Major additions and changes in this fork:

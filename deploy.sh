@@ -31,7 +31,9 @@ else
   echo "Building blockly core in production mode"
   echo "Outputting to build-output/blockly_compressed.js, build-output/javascript_compressed.js and build-output/blocks_compressed.js"
 
-  echo -e '// Do not edit this generated file\n"use strict";\n' > build-output/blockly_compressed.js
+  # TODO adding "use strict" to this file breaks apps tests in
+  # code-dot-org. Figure out why.
+  echo -e '// Do not edit this generated file\n' > build-output/blockly_compressed.js
   java -jar node_modules/google-closure-compiler/compiler.jar \
   --entry_point Blockly \
   --js core/ node_modules/google-closure-library/closure/ \

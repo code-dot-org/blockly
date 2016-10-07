@@ -99,6 +99,10 @@ Blockly.Css.setCursor = function(cursor, opt_svg) {
  * Array making up the CSS content for Blockly.
  */
 Blockly.Css.CONTENT = [
+  '.blocklyFieldAngleTextInput {',
+  '  border: 1px solid #ccc;',
+  '  margin-top: -10px;',
+  '}',
   '.blocklyFieldAngleDropdown {',
   '  box-shadow: 4px 4px 6px #bbb;',
   '  border-style: solid;',

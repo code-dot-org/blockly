@@ -80,7 +80,7 @@ Blockly.FieldDropdown.prototype.CURSOR = 'default';
  * Create a dropdown menu under the text.
  * @private
  */
-Blockly.FieldDropdown.prototype.showEditor_ = function() {
+Blockly.FieldDropdown.prototype.showEditor_ = function(container) {
   Blockly.WidgetDiv.show(this, null);
   var thisField = this;
 
@@ -102,7 +102,7 @@ Blockly.FieldDropdown.prototype.showEditor_ = function() {
     Blockly.WidgetDiv.hideIfOwner(thisField);
   }
 
-  var menu = new goog.ui.Menu();
+  this.menu_ = new goog.ui.Menu();
   var options = this.getOptions();
   for (var x = 0; x < options.length; x++) {
     var text = options[x][0];  // Human-readable text.
@@ -110,27 +110,27 @@ Blockly.FieldDropdown.prototype.showEditor_ = function() {
     var menuItem = new goog.ui.MenuItem(text);
     menuItem.setValue(value);
     menuItem.setCheckable(true);
-    menu.addItem(menuItem);
+    this.menu_.addItem(menuItem);
     menuItem.setChecked(value === this.value_);
   }
-  goog.events.listen(menu, goog.ui.Component.EventType.ACTION, callback);
+  goog.events.listen(this.menu_, goog.ui.Component.EventType.ACTION, callback);
   // Record windowSize and scrollOffset before adding menu.
   var windowSize = goog.dom.getViewportSize();
   var scrollOffset = goog.style.getViewportPageOffset(document);
   var xy = Blockly.getAbsoluteXY_(/** @type {!Element} */ (this.borderRect_), this.getRootSVGElement_());
   var borderBBox = this.borderRect_.getBBox();
-  var div = Blockly.WidgetDiv.DIV;
+  var div = container || Blockly.WidgetDiv.DIV;
 
   // IE will scroll the bottom of the page into view to show this element
   // before we move it, so hide it until we've repositioned.
   div.style.visibility = "hidden";
-  menu.render(div);
-  menu.setAllowAutoFocus(true);
-  var menuDom = menu.getElement();
+  this.menu_.render(div);
+  this.menu_.setAllowAutoFocus(true);
+  var menuDom = this.menu_.getElement();
   Blockly.addClass_(menuDom, 'blocklyDropdownMenu');
   // display menu items without shortcuts
   Blockly.addClass_(menuDom, 'goog-menu-noaccel');
-  menuDom.style.borderColor = 'hsla(' + this.sourceBlock_.getColour() + ', ' +
+  (container || menuDom).style.borderColor = 'hsla(' + this.sourceBlock_.getColour() + ', ' +
     this.sourceBlock_.getSaturation() * 100 + '%, ' +
     this.sourceBlock_.getValue() * 100 + '%' + ', 0.5)';
   menuDom.style.overflowY = "auto";

@@ -62,6 +62,7 @@ Blockly.AngleHelper = function(direction, opt_options) {
 
 Blockly.AngleHelper.prototype.setAngle = function(angle) {
   this.angle = this.snap_(angle);
+  this.update_();
 };
 
 Blockly.AngleHelper.prototype.getAngle = function() {
@@ -167,10 +168,6 @@ Blockly.AngleHelper.prototype.update_ = function() {
   var arcStart = this.turnRight ? 0 : -this.angle;
   var arcEnd = this.turnRight ? this.angle : 0;
   this.arc.setAttribute('d', Blockly.AngleHelper.describeArc(this.center.x, this.center.y, 20, arcStart, arcEnd));
-
-  if (this.onUpdate) {
-    this.onUpdate();
-  }
 };
 
 Blockly.AngleHelper.prototype.startDrag_ = function() {
@@ -189,7 +186,10 @@ Blockly.AngleHelper.prototype.updateDrag_ = function(e) {
   }
 
   this.setAngle(angle);
-  this.update_();
+
+  if (this.onUpdate) {
+    this.onUpdate();
+  }
 };
 
 Blockly.AngleHelper.prototype.stopDrag_ = function() {
@@ -272,8 +272,8 @@ Blockly.AngleHelper.polarToCartesian = function(centerX, centerY, radius, angleI
   var angleInRadians = angleInDegrees * Math.PI / 180.0;
 
   return {
-    x: centerX + (radius * Math.cos(angleInRadians)),
-    y: centerY + (radius * Math.sin(angleInRadians))
+    x: Math.round(centerX + (radius * Math.cos(angleInRadians))),
+    y: Math.round(centerY + (radius * Math.sin(angleInRadians)))
   };
 };
 

@@ -354,11 +354,11 @@ goog.inherits(Blockly.Toolbox.TreeNode, goog.ui.tree.TreeNode);
 
 /**
  * Do not show the +/- icon.
- * @return {string} The source for the icon.
+ * @return {goog.html.SafeHtml} The source for the icon.
  * @override
  */
-Blockly.Toolbox.TreeNode.prototype.getExpandIconHtml = function() {
-  return '<span></span>';
+Blockly.Toolbox.TreeNode.prototype.getExpandIconSafeHtml = function() {
+  return goog.html.SafeHtml.create('span');
 };
 
 /**

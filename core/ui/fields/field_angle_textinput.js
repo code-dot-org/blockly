@@ -5,7 +5,7 @@
 'use strict';
 
 goog.provide('Blockly.FieldAngleTextInput');
-goog.require('Blockly.FieldAngleTextInput');
+goog.require('Blockly.FieldTextInput');
 goog.require('Blockly.AngleHelper');
 
 /**

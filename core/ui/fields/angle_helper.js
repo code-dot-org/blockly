@@ -4,6 +4,7 @@
 'use strict';
 
 goog.provide('Blockly.AngleHelper');
+goog.require('goog.math.Vec2');
 
 /**
  * Simple widget to help visualize angles.
@@ -32,24 +33,20 @@ Blockly.AngleHelper = function(direction, opt_options) {
   this.width = opt_options.width || 150;
   this.dragging = opt_options.dragging || false;
   this.strokeWidth = opt_options.strokeWidth || 3;
+  this.snapPoints = opt_options.snapPoints && opt_options.snapPoints.map(function (point) {
+    return Math.round(parseInt(point));
+  });
 
-  this.snapPoints = opt_options.snapPoints ?
-    Blockly.AngleHelper.normalizeSnapPoints(opt_options.snapPoints) :
-    undefined;
-
-  this.center = {
-    x: this.width / 2,
-    y: this.height / 2
-  };
+  this.center = new goog.math.Vec2(this.width / 2, this.height / 2);
 
   var circumference = Math.min(this.height, this.width);
-  this.lineLength = (circumference / 2) - this.circleR - this.strokeWidth;
+  this.lineLength = new goog.math.Vec2((circumference / 2) - this.circleR - this.strokeWidth, 0);
 
-  this.circleCenter = Blockly.AngleHelper.polarToCartesian(
-    this.center.x,
-    this.center.y,
-    this.lineLength,
-    this.turnRight ? this.angle : -this.angle
+  this.circleCenter = this.center.clone().add(this.lineLength)
+  this.circleCenter = goog.math.Vec2.rotateAroundPoint(
+    this.circleCenter,
+    this.center,
+    goog.math.toRadians(this.turnRight ? this.angle : -this.angle)
   );
 
   this.arc;
@@ -86,7 +83,7 @@ Blockly.AngleHelper.prototype.init = function(svgContainer) {
     'stroke': '#4d575f',
     'stroke-width': this.strokeWidth,
     'stroke-linecap': 'round',
-    'x1': this.center.x - this.lineLength,
+    'x1': this.center.x - this.lineLength.x,
     'x2': this.center.x,
     'y1': this.center.y,
     'y2': this.center.y
@@ -98,7 +95,7 @@ Blockly.AngleHelper.prototype.init = function(svgContainer) {
     'stroke-width': this.strokeWidth,
     'stroke-linecap': 'round',
     'x1': this.center.x,
-    'x2': this.center.x + this.lineLength,
+    'x2': this.center.x + this.lineLength.x,
     'y1': this.center.y,
     'y2': this.center.y,
   }, this.svg);
@@ -113,9 +110,9 @@ Blockly.AngleHelper.prototype.init = function(svgContainer) {
   for (var a = 15; a < 360; a += 15) {
     Blockly.createSvgElement('line', {
       'stroke-linecap': 'round',
-      'x1': this.center.x + this.lineLength,
+      'x1': this.center.x + this.lineLength.x,
       'y1': this.center.y,
-      'x2': this.center.x + this.lineLength - (a % 90 == 0 ? 15 : a % 45 == 0 ? 10 : 5),
+      'x2': this.center.x + this.lineLength.x - (a % 90 == 0 ? 15 : a % 45 == 0 ? 10 : 5),
       'y2': this.center.y,
       'class': 'blocklyAngleMarks',
       'transform': 'rotate(' + a + ', ' + this.center.x + ', ' + this.center.y + ')'
@@ -152,11 +149,10 @@ Blockly.AngleHelper.prototype.init = function(svgContainer) {
  * onUpdate callback
  */
 Blockly.AngleHelper.prototype.update_ = function() {
-  this.circleCenter = Blockly.AngleHelper.polarToCartesian(
-    this.center.x,
-    this.center.y,
-    this.lineLength,
-    this.turnRight ? this.angle : -this.angle
+  this.circleCenter = goog.math.Vec2.rotateAroundPoint(
+    this.center.clone().add(this.lineLength),
+    this.center,
+    goog.math.toRadians(this.turnRight ? this.angle : -this.angle)
   );
 
   this.variableLine.setAttribute('x2', this.circleCenter.x);
@@ -165,9 +161,9 @@ Blockly.AngleHelper.prototype.update_ = function() {
   this.circle.setAttribute('cx', this.circleCenter.x);
   this.circle.setAttribute('cy', this.circleCenter.y);
 
-  var arcStart = this.turnRight ? 0 : -this.angle;
-  var arcEnd = this.turnRight ? this.angle : 0;
-  this.arc.setAttribute('d', Blockly.AngleHelper.describeArc(this.center.x, this.center.y, 20, arcStart, arcEnd));
+  var arcStart = 0;
+  var arcEnd = this.turnRight ? this.angle : -this.angle;
+  this.arc.setAttribute('d', Blockly.AngleHelper.describeArc(this.center, 20, arcStart, arcEnd));
 };
 
 Blockly.AngleHelper.prototype.startDrag_ = function() {
@@ -179,10 +175,11 @@ Blockly.AngleHelper.prototype.updateDrag_ = function(e) {
     return;
   }
 
-  var angle = Math.atan2(e.offsetY - this.center.y, e.offsetX - this.center.x) * (180 / Math.PI);
+  //var angle = Math.atan2(e.offsetY - this.center.y, e.offsetX - this.center.x) * (180 / Math.PI);
+  var angle = goog.math.angle(this.center.x, this.center.y, e.offsetX, e.offsetY);
 
   if (!this.turnRight) {
-    angle *= -1;
+    angle = goog.math.standardAngle(-angle);
   }
 
   this.setAngle(angle);
@@ -206,14 +203,12 @@ Blockly.AngleHelper.prototype.snap_ = function(val) {
     return Math.round(val);
   }
 
-  // normalize from the range [0, 360] to [-180, 180], as we did when we
-  // created this.snapPoints
-  val = val > 180 ? val - 360 : val;
-
   // return the point closest to the source
   return this.snapPoints.reduce(function(prev, curr) {
-    return (Math.abs(curr.normalized - val) < Math.abs(prev.normalized - val) ? curr : prev);
-  }).original;
+    var currDiff = Math.abs(goog.math.angleDifference(curr, val));
+    var prevDiff = Math.abs(goog.math.angleDifference(prev, val));
+    return currDiff < prevDiff ? curr : prev;
+  });
 };
 
 Blockly.AngleHelper.prototype.dispose = function() {
@@ -237,61 +232,29 @@ Blockly.AngleHelper.prototype.dispose = function() {
 };
 
 /**
- * @typedef {Object} NormalizedSnapPoint
- * @property {number} original
- * @property {number} normalized
- */
-
-/**
- * Normalize the given set of angles from the range [0, 360] to [-180, 180]
- * so our distance calculations work, but retain the original for
- * eventual return.
- * @param {number[]} snapPoints
- * @return {NormalizedSnapPoint[]}
- */
-Blockly.AngleHelper.normalizeSnapPoints = function(snapPoints) {
-  return snapPoints.map(function(point) {
-    var value = parseInt(point);
-    return {
-      original: value,
-      normalized: value > 180 ? value - 360 : value
-    };
-  });
-};
-
-/**
- * Convert the given polar coordinates to cartesian coordinates.
- * from http://stackoverflow.com/a/18473154/1810460
- * @param {number} centerX
- * @param {number} centerY
- * @param {number} radius
- * @param {number} angleInDegrees
- * @return {object} x and y cartesian coordinates
- */
-Blockly.AngleHelper.polarToCartesian = function(centerX, centerY, radius, angleInDegrees) {
-  var angleInRadians = angleInDegrees * Math.PI / 180.0;
-
-  return {
-    x: Math.round(centerX + (radius * Math.cos(angleInRadians))),
-    y: Math.round(centerY + (radius * Math.sin(angleInRadians)))
-  };
-};
-
-/**
  * Create an SVG path string describing the given arc
- * @param {number} x - center of arc
- * @param {number} y - center of arc
+ * @param {goog.math.Vec2} center
  * @param {number} radius
  * @param {number} startAngle
  * @param {number} endAngle
  * @return {String} path
  */
-Blockly.AngleHelper.describeArc = function(x, y, radius, startAngle, endAngle) {
-  var start = Blockly.AngleHelper.polarToCartesian(x, y, radius, endAngle);
-  var end = Blockly.AngleHelper.polarToCartesian(x, y, radius, startAngle);
+Blockly.AngleHelper.describeArc = function(center, radius, startAngle, endAngle) {
+  var vector = center.clone().add(new goog.math.Vec2(radius, 0));
+  var start = goog.math.Vec2.rotateAroundPoint(vector, center, goog.math.toRadians(startAngle));
+  var end = goog.math.Vec2.rotateAroundPoint(vector, center, goog.math.toRadians(endAngle));
 
-  var largeArcFlag = endAngle - startAngle <= 180 ? '0' : '1';
-  var sweepFlag = endAngle - startAngle >= 0 ? '0' : '1';
+  start.round();
+  end.round();
+
+  // largeArcFlag should be set if the angle to be drawn is greater than
+  // 180 degrees; it determines which "direction" the arc travels around
+  // the circle.
+  var largeArcFlag = Math.abs(startAngle - endAngle) > 180 ? '1' : '0';
+
+  // Sweep flag determines if the if the arc is moving at "positive"
+  // angles or "negative" ones.
+  var sweepFlag = endAngle - startAngle < 0 ? '0' : '1';
 
   var d = [
     'M', start.x, start.y,

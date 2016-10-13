@@ -1,48 +1,63 @@
 'use strict';
 
-function test_polarToCartesian() {
-  
-  function evaluate(angle, expected) {
-    var actual = Blockly.AngleHelper.polarToCartesian(0, 0, 100, angle);
+function test_snap() {
+  var points = [0, 45, 90, 180, 270, 359];
 
-    assertEquals(actual.x, expected.x);
-    assertEquals(actual.y, expected.y);
-  }
-
-  var tests = [
-    [-180, {x: -100, y: 0}],
-    [0, {x: 100, y: 0}],
-    [180, {x: -100, y: 0}],
-    [45, {x: 71, y: 71}],
-    [90, {x: 0, y: 100}],
-  ];
-
-  tests.forEach(function(test) {
-    evaluate(test[0], test[1]);
+  var angleHelper = new Blockly.AngleHelper('', {
+    snapPoints: points
   });
+
+  for (var i = 0; i < 360; i++) {
+    var expected;
+    switch(true) {
+      case (i < 23):
+        expected = 0;
+        break;
+      case (i < 68):
+        expected = 45;
+        break;
+      case (i < 136):
+        expected = 90;
+        break;
+      case (i < 226):
+        expected = 180;
+        break;
+      case (i < 315):
+        expected = 270;
+        break;
+      default:
+        expected = 359;
+        break;
+    }
+
+    var actual = angleHelper.snap_(i);
+    assertEquals(expected, actual);
+  }
 }
 
 function test_describeArc() {
+  var center = new goog.math.Vec2(0, 0);
+
   function evaluate(startAngle, endAngle, expected) {
-    var actual = Blockly.AngleHelper.describeArc(0, 0, 100, startAngle, endAngle);
+    var actual = Blockly.AngleHelper.describeArc(center, 100, startAngle, endAngle);
     assertEquals(expected, actual);
   }
 
 
   var tests = [
-    [0, 0, "M 100 0 A 100 100 0 0 0 100 0"],
-    [0, 45, "M 71 71 A 100 100 0 0 0 100 0"],
-    [0, 90, "M 0 100 A 100 100 0 0 0 100 0"],
-    [0, 180, "M -100 0 A 100 100 0 0 0 100 0"],
-    [0, 270, "M 0 -100 A 100 100 0 1 0 100 0"],
-    [0, 360, "M 100 0 A 100 100 0 1 0 100 0"],
-    [0, 450, "M 0 100 A 100 100 0 1 0 100 0"],
-    [0, -45, "M 71 -71 A 100 100 0 0 1 100 0"],
-    [0, -90, "M 0 -100 A 100 100 0 0 1 100 0"],
-    [0, -180, "M -100 0 A 100 100 0 0 1 100 0"],
-    [0, -270, "M 0 100 A 100 100 0 0 1 100 0"],
-    [0, -360, "M 100 0 A 100 100 0 0 1 100 0"],
-    [0, -450, "M 0 -100 A 100 100 0 0 1 100 0"],
+    [0, 0, "M 100 0 A 100 100 0 0 1 100 0"],
+    [0, 45, "M 100 0 A 100 100 0 0 1 71 71"],
+    [0, 90, "M 100 0 A 100 100 0 0 1 0 100"],
+    [0, 180, "M 100 0 A 100 100 0 0 1 -100 0"],
+    [0, 270, "M 100 0 A 100 100 0 1 1 0 -100"],
+    [0, 360, "M 100 0 A 100 100 0 1 1 100 0"],
+    [0, 450, "M 100 0 A 100 100 0 1 1 0 100"],
+    [0, -45, "M 100 0 A 100 100 0 0 0 71 -71"],
+    [0, -90, "M 100 0 A 100 100 0 0 0 0 -100"],
+    [0, -180, "M 100 0 A 100 100 0 0 0 -100 0"],
+    [0, -270, "M 100 0 A 100 100 0 1 0 0 100"],
+    [0, -360, "M 100 0 A 100 100 0 1 0 100 0"],
+    [0, -450, "M 100 0 A 100 100 0 1 0 0 -100"],
   ];
 
   tests.forEach(function(test) {

@@ -106,16 +106,19 @@ Blockly.AngleHelper.prototype.init = function(svgContainer) {
     'stroke-width': this.strokeWidth_,
   }, this.svg_);
 
-  // Draw markers around the edge.
-  for (var a = 15; a < 360; a += 15) {
+  // Draw markers every 15 degrees around the edge.
+  for (var angle = 15; angle < 360; angle += 15) {
+    // define three marker sizes; 5px, 10px, and 15px at angles modulo
+    // 15, 45, and 90 degrees, respectively.
+    var markerSize = (angle % 90 == 0 ? 15 : angle % 45 == 0 ? 10 : 5);
     Blockly.createSvgElement('line', {
       'stroke-linecap': 'round',
       'x1': this.center_.x + this.lineLength_.x,
       'y1': this.center_.y,
-      'x2': this.center_.x + this.lineLength_.x - (a % 90 == 0 ? 15 : a % 45 == 0 ? 10 : 5),
+      'x2': this.center_.x + this.lineLength_.x - markerSize,
       'y2': this.center_.y,
       'class': 'blocklyAngleMarks',
-      'transform': 'rotate(' + a + ', ' + this.center_.x + ', ' + this.center_.y + ')'
+      'transform': 'rotate(' + angle + ', ' + this.center_.x + ', ' + this.center_.y + ')'
     }, this.svg_);
   }
 

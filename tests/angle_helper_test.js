@@ -43,7 +43,6 @@ function test_describeArc() {
     assertEquals(expected, actual);
   }
 
-
   var tests = [
     [0, 0, "M 100 0 A 100 100 0 0 1 100 0"],
     [0, 45, "M 100 0 A 100 100 0 0 1 71 71"],

@@ -78,6 +78,7 @@ Blockly.AngleHelper.prototype.init = function(svgContainer) {
   }, svgContainer);
   this.mouseMoveWrapper_ = Blockly.bindEvent_(this.svg_, 'mousemove', this, this.updateDrag_);
   this.mouseUpWrapper_ = Blockly.bindEvent_(this.svg_, 'mouseup', this, this.stopDrag_);
+  this.mouseDownWrapper_ = Blockly.bindEvent_(this.svg_, 'mousedown', this, this.startDrag_);
 
   Blockly.createSvgElement('line', {
     'stroke': '#4d575f',
@@ -141,7 +142,6 @@ Blockly.AngleHelper.prototype.init = function(svgContainer) {
     'stroke-width': this.strokeWidth_,
     'style': 'cursor: move;',
   }, this.svg_);
-  this.mouseDownWrapper_ = Blockly.bindEvent_(this.circle_, 'mousedown', this, this.startDrag_);
 
   this.update_();
 };
@@ -178,8 +178,19 @@ Blockly.AngleHelper.prototype.updateDrag_ = function(e) {
     return;
   }
 
-  //var angle = Math.atan2(e.offsetY - this.center_.y, e.offsetX - this.center_.x) * (180 / Math.PI);
-  var angle = goog.math.angle(this.center_.x, this.center_.y, e.offsetX, e.offsetY);
+  // try to use offset if we can; touch events don't provide us with an
+  // offset, so calculate it ourselves if we cannot.
+  var x, y;
+  if (e.offsetX && e.offsetY) {
+    x = e.offsetX;
+    y = e.offsetY;
+  } else {
+    var rect = this.svg_.getBoundingClientRect();
+    x = e.clientX - rect.left;
+    y = e.clientY - rect.top;
+  }
+
+  var angle = goog.math.angle(this.center_.x, this.center_.y, x, y);
 
   if (!this.turnRight_) {
     angle = goog.math.standardAngle(-angle);
@@ -190,6 +201,9 @@ Blockly.AngleHelper.prototype.updateDrag_ = function(e) {
   if (this.onUpdate_) {
     this.onUpdate_();
   }
+
+  e.stopPropagation();
+  e.preventDefault();
 };
 
 Blockly.AngleHelper.prototype.stopDrag_ = function() {

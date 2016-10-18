@@ -19,7 +19,7 @@ goog.require('Blockly.AngleHelper');
  * @constructor
  */
 Blockly.FieldAngleTextInput = function(directionTitleName, text) {
-  this.angleHelper;
+  this.angleHelper = null;
   this.directionTitleName = directionTitleName;
   Blockly.FieldAngleTextInput.superClass_.constructor.call(this,
       text, Blockly.FieldTextInput.numberValidator);

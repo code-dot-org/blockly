@@ -8,7 +8,7 @@ goog.require('Blockly.FieldDropdown');
 goog.require('Blockly.AngleHelper');
 
 Blockly.FieldAngleDropdown = function(directionTitleName, menuGenerator, opt_changeHandler) {
-  this.angleHelper;
+  this.angleHelper = null;
   this.directionTitleName = directionTitleName;
   Blockly.FieldAngleDropdown.superClass_.constructor.call(this,
       menuGenerator, opt_changeHandler);

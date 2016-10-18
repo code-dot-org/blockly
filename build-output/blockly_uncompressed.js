@@ -20742,7 +20742,7 @@ goog.inherits(Blockly.FieldDropdown, Blockly.Field);
 Blockly.FieldDropdown.CHECKMARK_OVERHANG = 25;
 Blockly.FieldDropdown.NO_OPTIONS_MESSAGE = "uninitialized";
 Blockly.FieldDropdown.prototype.CURSOR = "default";
-Blockly.FieldDropdown.prototype.showEditor_ = function() {
+Blockly.FieldDropdown.prototype.showEditor_ = function(container) {
   Blockly.WidgetDiv.show(this, null);
   var thisField = this;
   function callback(e) {
@@ -20761,7 +20761,7 @@ Blockly.FieldDropdown.prototype.showEditor_ = function() {
     }
     Blockly.WidgetDiv.hideIfOwner(thisField);
   }
-  var menu = new goog.ui.Menu;
+  this.menu_ = new goog.ui.Menu;
   var options = this.getOptions();
   for (var x = 0;x < options.length;x++) {
     var text = options[x][0];
@@ -20769,22 +20769,22 @@ Blockly.FieldDropdown.prototype.showEditor_ = function() {
     var menuItem = new goog.ui.MenuItem(text);
     menuItem.setValue(value);
     menuItem.setCheckable(true);
-    menu.addItem(menuItem);
+    this.menu_.addItem(menuItem);
     menuItem.setChecked(value === this.value_);
   }
-  goog.events.listen(menu, goog.ui.Component.EventType.ACTION, callback);
+  goog.events.listen(this.menu_, goog.ui.Component.EventType.ACTION, callback);
   var windowSize = goog.dom.getViewportSize();
   var scrollOffset = goog.style.getViewportPageOffset(document);
   var xy = Blockly.getAbsoluteXY_((this.borderRect_), this.getRootSVGElement_());
   var borderBBox = this.borderRect_.getBBox();
-  var div = Blockly.WidgetDiv.DIV;
+  var div = container || Blockly.WidgetDiv.DIV;
   div.style.visibility = "hidden";
-  menu.render(div);
-  menu.setAllowAutoFocus(true);
-  var menuDom = menu.getElement();
+  this.menu_.render(div);
+  this.menu_.setAllowAutoFocus(true);
+  var menuDom = this.menu_.getElement();
   Blockly.addClass_(menuDom, "blocklyDropdownMenu");
   Blockly.addClass_(menuDom, "goog-menu-noaccel");
-  menuDom.style.borderColor = "hsla(" + this.sourceBlock_.getColour() + ", " + this.sourceBlock_.getSaturation() * 100 + "%, " + this.sourceBlock_.getValue() * 100 + "%" + ", 0.5)";
+  (container || menuDom).style.borderColor = "hsla(" + this.sourceBlock_.getColour() + ", " + this.sourceBlock_.getSaturation() * 100 + "%, " + this.sourceBlock_.getValue() * 100 + "%" + ", 0.5)";
   menuDom.style.overflowY = "auto";
   menuDom.style["max-height"] = "250px";
   var menuSize = goog.style.getSize(menuDom);
@@ -20909,6 +20909,216 @@ Blockly.FieldDropdown.prototype.setText = function(text) {
 Blockly.FieldDropdown.prototype.dispose = function() {
   Blockly.WidgetDiv.hideIfOwner(this);
   Blockly.FieldDropdown.superClass_.dispose.call(this);
+};
+goog.provide("Blockly.AngleHelper");
+goog.require("goog.math.Vec2");
+Blockly.AngleHelper = function(direction, opt_options) {
+  opt_options = opt_options || {};
+  this.turnRight_ = direction === "turnRight";
+  this.arcColour_ = opt_options.arcColour || "#949ca2";
+  this.angle_ = opt_options.angle || 0;
+  this.circleR_ = opt_options.circleR || 10;
+  this.height_ = opt_options.height || 150;
+  this.width_ = opt_options.width || 150;
+  this.dragging_ = opt_options.dragging || false;
+  this.strokeWidth_ = opt_options.strokeWidth || 3;
+  this.snapPoints_ = opt_options.snapPoints && opt_options.snapPoints.map(function(point) {
+    return Math.round(parseInt(point));
+  });
+  this.center_ = new goog.math.Vec2(this.width_ / 2, this.height_ / 2);
+  var circumference = Math.min(this.height_, this.width_);
+  this.lineLength_ = new goog.math.Vec2(circumference / 2 - this.circleR_ - this.strokeWidth_, 0);
+  this.circleCenter_ = this.center_.clone().add(this.lineLength_);
+  this.circleCenter_ = goog.math.Vec2.rotateAroundPoint(this.circleCenter_, this.center_, goog.math.toRadians(this.turnRight_ ? this.angle_ : -this.angle_));
+  this.arc_ = null;
+  this.circle_ = null;
+  this.svg_ = null;
+  this.variableLine_ = null;
+  this.onUpdate_ = opt_options.onUpdate;
+};
+Blockly.AngleHelper.prototype.setAngle = function(angle) {
+  this.angle_ = this.snap_(angle);
+  this.update_();
+};
+Blockly.AngleHelper.prototype.getAngle = function() {
+  return this.angle_;
+};
+Blockly.AngleHelper.prototype.init = function(svgContainer) {
+  this.svg_ = Blockly.createSvgElement("svg", {"xmlns":"http://www.w3.org/2000/svg", "xmlns:html":"http://www.w3.org/1999/xhtml", "xmlns:xlink":"http://www.w3.org/1999/xlink", "version":"1.1", "height":this.height_ + "px", "width":this.width_ + "px", "style":"background: rgb(255, 255, 255);"}, svgContainer);
+  this.mouseMoveWrapper_ = Blockly.bindEvent_(this.svg_, "mousemove", this, this.updateDrag_);
+  this.mouseUpWrapper_ = Blockly.bindEvent_(this.svg_, "mouseup", this, this.stopDrag_);
+  this.mouseDownWrapper_ = Blockly.bindEvent_(this.svg_, "mousedown", this, this.startDrag_);
+  Blockly.createSvgElement("line", {"stroke":"#4d575f", "stroke-width":this.strokeWidth_, "stroke-linecap":"round", "x1":this.center_.x - this.lineLength_.x, "x2":this.center_.x, "y1":this.center_.y, "y2":this.center_.y}, this.svg_);
+  Blockly.createSvgElement("line", {"stroke":"#949ca2", "stroke-dasharray":"6,6", "stroke-width":this.strokeWidth_, "stroke-linecap":"round", "x1":this.center_.x, "x2":this.center_.x + this.lineLength_.x, "y1":this.center_.y, "y2":this.center_.y}, this.svg_);
+  this.arc_ = Blockly.createSvgElement("path", {"stroke":this.arcColour_, "fill":"none", "stroke-width":this.strokeWidth_}, this.svg_);
+  for (var angle = 15;angle < 360;angle += 15) {
+    var markerSize = angle % 90 == 0 ? 15 : angle % 45 == 0 ? 10 : 5;
+    Blockly.createSvgElement("line", {"stroke-linecap":"round", "x1":this.center_.x + this.lineLength_.x, "y1":this.center_.y, "x2":this.center_.x + this.lineLength_.x - markerSize, "y2":this.center_.y, "class":"blocklyAngleMarks", "transform":"rotate(" + angle + ", " + this.center_.x + ", " + this.center_.y + ")"}, this.svg_);
+  }
+  this.variableLine_ = Blockly.createSvgElement("line", {"stroke":"#4d575f", "stroke-width":this.strokeWidth_, "stroke-linecap":"round", "x1":this.center_.x, "x2":this.circleCenter_.x, "y1":this.center_.y, "y2":this.circleCenter_.y}, this.svg_);
+  this.circle_ = Blockly.createSvgElement("circle", {"cx":this.circleCenter_.x, "cy":this.circleCenter_.y, "fill":"#a69bc1", "r":this.circleR_, "stroke":"#4d575f", "stroke-width":this.strokeWidth_, "style":"cursor: move;"}, this.svg_);
+  this.update_();
+};
+Blockly.AngleHelper.prototype.update_ = function() {
+  this.circleCenter_ = goog.math.Vec2.rotateAroundPoint(this.center_.clone().add(this.lineLength_), this.center_, goog.math.toRadians(this.turnRight_ ? this.angle_ : -this.angle_));
+  this.variableLine_.setAttribute("x2", this.circleCenter_.x);
+  this.variableLine_.setAttribute("y2", this.circleCenter_.y);
+  this.circle_.setAttribute("cx", this.circleCenter_.x);
+  this.circle_.setAttribute("cy", this.circleCenter_.y);
+  var arcStart = 0;
+  var arcEnd = this.turnRight_ ? this.angle_ : -this.angle_;
+  this.arc_.setAttribute("d", Blockly.AngleHelper.describeArc(this.center_, 20, arcStart, arcEnd));
+};
+Blockly.AngleHelper.prototype.startDrag_ = function() {
+  this.dragging_ = true;
+};
+Blockly.AngleHelper.prototype.updateDrag_ = function(e) {
+  if (!this.dragging_) {
+    return;
+  }
+  var x, y;
+  if (e.offsetX && e.offsetY) {
+    x = e.offsetX;
+    y = e.offsetY;
+  } else {
+    var rect = this.svg_.getBoundingClientRect();
+    x = e.clientX - rect.left;
+    y = e.clientY - rect.top;
+  }
+  var angle = goog.math.angle(this.center_.x, this.center_.y, x, y);
+  if (!this.turnRight_) {
+    angle = goog.math.standardAngle(-angle);
+  }
+  this.setAngle(angle);
+  if (this.onUpdate_) {
+    this.onUpdate_();
+  }
+  e.stopPropagation();
+  e.preventDefault();
+};
+Blockly.AngleHelper.prototype.stopDrag_ = function() {
+  this.dragging_ = false;
+};
+Blockly.AngleHelper.prototype.snap_ = function(val) {
+  if (!this.snapPoints_) {
+    return Math.round(val);
+  }
+  return this.snapPoints_.reduce(function(prev, curr) {
+    var currDiff = Math.abs(goog.math.angleDifference(curr, val));
+    var prevDiff = Math.abs(goog.math.angleDifference(prev, val));
+    return currDiff < prevDiff ? curr : prev;
+  });
+};
+Blockly.AngleHelper.prototype.dispose = function() {
+  if (this.mouseDownWrapper_) {
+    Blockly.unbindEvent_(this.mouseDownWrapper_);
+    this.mouseDownWrapper_ = null;
+  }
+  if (this.mouseUpWrapper_) {
+    Blockly.unbindEvent_(this.mouseUpWrapper_);
+    this.mouseUpWrapper_ = null;
+  }
+  if (this.mouseMoveWrapper_) {
+    Blockly.unbindEvent_(this.mouseMoveWrapper_);
+    this.mouseMoveWrapper_ = null;
+  }
+  goog.dom.removeNode(this.svg_);
+  this.arc_ = null;
+  this.circle_ = null;
+  this.svg_ = null;
+  this.variableLine_ = null;
+};
+Blockly.AngleHelper.describeArc = function(center, radius, startAngle, endAngle) {
+  var vector = center.clone().add(new goog.math.Vec2(radius, 0));
+  var start = goog.math.Vec2.rotateAroundPoint(vector, center, goog.math.toRadians(startAngle));
+  var end = goog.math.Vec2.rotateAroundPoint(vector, center, goog.math.toRadians(endAngle));
+  start.round();
+  end.round();
+  var largeArcFlag = Math.abs(startAngle - endAngle) > 180 ? "1" : "0";
+  var sweepFlag = endAngle - startAngle < 0 ? "0" : "1";
+  var d = ["M", start.x, start.y, "A", radius, radius, 0, largeArcFlag, sweepFlag, end.x, end.y].join(" ");
+  return d;
+};
+goog.provide("Blockly.FieldAngleDropdown");
+goog.require("Blockly.FieldDropdown");
+goog.require("Blockly.AngleHelper");
+Blockly.FieldAngleDropdown = function(directionTitleName, menuGenerator, opt_changeHandler) {
+  this.angleHelper = null;
+  this.directionTitleName = directionTitleName;
+  Blockly.FieldAngleDropdown.superClass_.constructor.call(this, menuGenerator, opt_changeHandler);
+};
+goog.inherits(Blockly.FieldAngleDropdown, Blockly.FieldDropdown);
+Blockly.FieldAngleDropdown.prototype.showEditor_ = function() {
+  var div = Blockly.WidgetDiv.DIV;
+  var container = goog.dom.createDom("div", "blocklyFieldAngleDropdown");
+  div.appendChild(container);
+  Blockly.FieldAngleDropdown.superClass_.showEditor_.call(this, container);
+  var menuDom = this.menu_.getElement();
+  var menuSize = goog.style.getSize(menuDom);
+  var angleHelperHeight = menuSize.height;
+  var angleHelperWidth = Math.min(menuSize.height, 150);
+  container.style.height = angleHelperHeight + "px";
+  var svgContainer = goog.dom.createDom("div");
+  container.appendChild(svgContainer);
+  var dir = this.sourceBlock_.getTitleValue(this.directionTitleName);
+  this.angleHelper = new Blockly.AngleHelper(dir, {onUpdate:function() {
+    this.setValue(this.angleHelper.getAngle().toString());
+    this.menu_.getItems().forEach(function(menuItem) {
+      menuItem.setChecked(menuItem.getValue() === this.value_);
+    }, this);
+  }.bind(this), snapPoints:this.getOptions().map(function(option) {
+    return parseInt(option[1]);
+  }), arcColour:this.sourceBlock_.getHexColour(), height:angleHelperHeight, width:angleHelperWidth, angle:parseInt(this.getValue())});
+  this.angleHelper.init(svgContainer);
+  goog.events.listen(this.menu_, goog.ui.Component.EventType.HIGHLIGHT, function(e) {
+    var menuItem = e.target;
+    if (menuItem) {
+      var value = menuItem.getValue();
+      this.angleHelper.setAngle(parseInt(value));
+    }
+  }.bind(this));
+  return div;
+};
+Blockly.FieldAngleDropdown.prototype.dispose = function() {
+  if (this.angleHelper) {
+    this.angleHelper.dispose();
+  }
+  Blockly.FieldAngleDropdown.superClass_.dispose.call(this);
+};
+goog.provide("Blockly.FieldAngleTextInput");
+goog.require("Blockly.FieldTextInput");
+goog.require("Blockly.AngleHelper");
+Blockly.FieldAngleTextInput = function(directionTitleName, text) {
+  this.angleHelper = null;
+  this.directionTitleName = directionTitleName;
+  Blockly.FieldAngleTextInput.superClass_.constructor.call(this, text, Blockly.FieldTextInput.numberValidator);
+};
+goog.inherits(Blockly.FieldAngleTextInput, Blockly.FieldTextInput);
+Blockly.FieldAngleTextInput.SIZE = 150;
+Blockly.FieldAngleTextInput.prototype.dispose = function() {
+  if (this.angleHelper) {
+    this.angleHelper.dispose();
+  }
+  Blockly.FieldAngleTextInput.superClass_.dispose.call(this);
+};
+Blockly.FieldAngleTextInput.prototype.showEditor_ = function() {
+  Blockly.FieldAngleTextInput.superClass_.showEditor_.call(this);
+  var div = Blockly.WidgetDiv.DIV;
+  var container = goog.dom.createDom("div", "blocklyFieldAngleTextInput");
+  container.style.height = Blockly.FieldAngleTextInput.SIZE + "px";
+  container.style.width = Blockly.FieldAngleTextInput.SIZE + "px";
+  div.appendChild(container);
+  var dir = this.sourceBlock_.getTitleValue(this.directionTitleName);
+  this.angleHelper = new Blockly.AngleHelper(dir, {onUpdate:function() {
+    var value = this.angleHelper.getAngle().toString();
+    this.setText(value);
+    Blockly.FieldTextInput.htmlInput_.value = value;
+  }.bind(this), arcColour:this.sourceBlock_.getHexColour(), height:Blockly.FieldAngleTextInput.SIZE, width:Blockly.FieldAngleTextInput.SIZE, angle:parseInt(this.getValue())});
+  this.angleHelper.init(container);
+};
+Blockly.FieldAngleTextInput.prototype.onHtmlInputChange_ = function(e) {
+  Blockly.FieldAngleTextInput.superClass_.onHtmlInputChange_.call(this, e);
+  this.angleHelper.setAngle(parseInt(this.getText()));
 };
 goog.provide("Blockly.FieldIcon");
 goog.require("Blockly.FieldLabel");
@@ -24351,8 +24561,8 @@ Blockly.Toolbox.TreeNode = function(toolbox, html, opt_config, opt_domHelper) {
   goog.events.listen(this.toolbox_.tree_, goog.ui.tree.BaseNode.EventType.COLLAPSE, resize);
 };
 goog.inherits(Blockly.Toolbox.TreeNode, goog.ui.tree.TreeNode);
-Blockly.Toolbox.TreeNode.prototype.getExpandIconHtml = function() {
-  return "<span></span>";
+Blockly.Toolbox.TreeNode.prototype.getExpandIconSafeHtml = function() {
+  return goog.html.SafeHtml.create("span");
 };
 Blockly.Toolbox.TreeNode.prototype.getExpandIconElement = function() {
   return null;
@@ -28902,8 +29112,9 @@ Blockly.Css.setCursor = function(cursor, opt_svg) {
     }
   }
 };
-Blockly.Css.CONTENT = [".blocklyLimit rect {", " fill: #a69bc1;", "}", ".blocklyLimit .blocklyText {", " font-size: 10pt;", " fill: #fff;", "}", ".blocklyUnused .blocklyLimit rect {", " fill: #c6cacd;", "}", ".blocklyUnused .blocklyLimit .blocklyText {", " fill: #5b6770", "}", ".blocklyUnused .blocklyPath, .blocklyUnused .blocklyPathDark, .blocklyUnused .blocklyPathLight, .blocklyUnused .blocklyEditableText {", " opacity: 0.25;", "}", ".blocklyUnused .blocklyUnusedFrame {", " transition: opacity 2s;", 
-" opacity: 0.8;", "}", ".blocklyUnused .blocklyUnusedFrame .blocklyText {", " fill: #000;", "}", ".blocklyUnused .blocklyUnusedFrame.hidden {", " opacity: 0;", " visibility: hidden", "}", ".blocklyUnused .blocklyHelp {", " cursor: pointer;", "}", ".blocklyUnused .blocklyHelp .blocklyText {", " fill: #fff;", " font-size: 10pt;", " text-anchor: middle;", " dominant-baseline: central;", "}", ".blocklyDraggable {", "  cursor: url(%CURSOR_OPEN_PATH%) 8 5, auto;", "}", ".dragging, .dragging .blocklySvg, .dragging .blocklyDraggable {", 
+Blockly.Css.CONTENT = [".blocklyFieldAngleTextInput {", "  border: 1px solid #ccc;", "  margin-top: -10px;", "}", ".blocklyFieldAngleDropdown {", "  box-shadow: 4px 4px 6px #bbb;", "  border-style: solid;", "  border-width: 1px;", "}", ".blocklyFieldAngleDropdown > div {", "  float: left;", "}", ".blocklyFieldAngleDropdown .goog-menu {", "  box-shadow: none;", "  border-style: none;", "}", ".blocklyFieldAngleDropdown .goog-menu::after {", "  content: '';", "  border-left: 1px solid #949ca2;", "  position: absolute;", 
+"  height: 80%;", "  right: 0;", "  top: 10%;", "}", ".blocklyLimit rect {", " fill: #a69bc1;", "}", ".blocklyLimit .blocklyText {", " font-size: 10pt;", " fill: #fff;", "}", ".blocklyUnused .blocklyLimit rect {", " fill: #c6cacd;", "}", ".blocklyUnused .blocklyLimit .blocklyText {", " fill: #5b6770", "}", ".blocklyUnused .blocklyPath, .blocklyUnused .blocklyPathDark, .blocklyUnused .blocklyPathLight, .blocklyUnused .blocklyEditableText {", " opacity: 0.25;", "}", ".blocklyUnused .blocklyUnusedFrame {", 
+" transition: opacity 2s;", " opacity: 0.8;", "}", ".blocklyUnused .blocklyUnusedFrame .blocklyText {", " fill: #000;", "}", ".blocklyUnused .blocklyUnusedFrame.hidden {", " opacity: 0;", " visibility: hidden", "}", ".blocklyUnused .blocklyHelp {", " cursor: pointer;", "}", ".blocklyUnused .blocklyHelp .blocklyText {", " fill: #fff;", " font-size: 10pt;", " text-anchor: middle;", " dominant-baseline: central;", "}", ".blocklyDraggable {", "  cursor: url(%CURSOR_OPEN_PATH%) 8 5, auto;", "}", ".dragging, .dragging .blocklySvg, .dragging .blocklyDraggable {", 
 "  cursor: url(%CURSOR_CLOSED_PATH%) 7 3, auto !important;", "}", "#%CONTAINER_ID% {", "  border: 1px solid #ddd;", "}", "#%CONTAINER_ID% .userHidden {", "  display: none;", "}", "#%CONTAINER_ID% .hiddenFlyout {", "  display: none !important;", "}", "#%CONTAINER_ID%.edit .userHidden {", "  display: inline;", "  fill-opacity: 0.5;", "}", "#%CONTAINER_ID%.edit .userHidden .blocklyPath {", "  fill-opacity: 0.5;", "}", "#%CONTAINER_ID%.edit .userHidden .blocklyPathDark, #%CONTAINER_ID%.edit .userHidden .blocklyPathLight {", 
 "  display: none;", "}", ".blocklySvg {", "  cursor: pointer;", "  background-color: #fff;", "  overflow: hidden;", "}", "g.blocklyDraggable {", "  -ms-touch-action: none;", "  touch-action: none;", "}", ".blocklyWidgetDiv {", "  position: absolute;", "  display: none;", "  z-index: 999;", "}", ".blocklyResizeSE {", "  fill: #aaa;", "  cursor: se-resize;", "}", ".blocklyResizeSW {", "  fill: #aaa;", "  cursor: sw-resize;", "}", ".blocklyResizeLine {", "  stroke-width: 1;", "  stroke: #888;", "}", 
 ".blocklyHighlightedConnectionPath {", "  stroke-width: 4px;", "  stroke: #fc3;", "  fill: none;", "}", ".blocklyPathLight {", "  fill: none;", "  stroke-width: 2;", "  stroke-linecap: round;", "}", ".blocklySpotlight>.blocklyPath {", "  fill: #fc3;", "}", ".blocklySelected:not(.blocklyUndeletable)>.blocklyPath {", "  stroke-width: 3px;", "  stroke: #fc3;", "}", ".blocklySelected:not(.blocklyUndeletable)>.blocklyPathLight {", "  display: none;", "}", ".blocklyUndeletable>.blocklyEditableText>rect {", 
@@ -29536,6 +29747,8 @@ goog.require("Blockly.FieldCheckbox");
 goog.require("Blockly.FieldColour");
 goog.require("Blockly.FieldColourDropdown");
 goog.require("Blockly.FieldDropdown");
+goog.require("Blockly.FieldAngleDropdown");
+goog.require("Blockly.FieldAngleTextInput");
 goog.require("Blockly.FieldIcon");
 goog.require("Blockly.FieldImage");
 goog.require("Blockly.FieldImageDropdown");

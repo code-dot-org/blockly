@@ -15,7 +15,7 @@ goog.addDependency('../../../../blocks/variables.js', ['Blockly.Blocks.variables
 goog.addDependency('../../../../core/code_generation/generator.js', ['Blockly.CodeGenerator', 'Blockly.Generator'], ['Blockly.Block'], false);
 goog.addDependency('../../../../core/code_generation/names.js', ['Blockly.Names'], [], false);
 goog.addDependency('../../../../core/connections/connection.js', ['Blockly.Connection', 'Blockly.ConnectionDB'], ['Blockly.BlockSpace', 'goog.array', 'goog.string'], false);
-goog.addDependency('../../../../core/initialization/blockly.js', ['Blockly'], ['Blockly.Block', 'Blockly.BlockSpace', 'Blockly.BlockValueType', 'Blockly.Blocks', 'Blockly.Connection', 'Blockly.ContractEditor', 'Blockly.DomainEditor', 'Blockly.DomainNameInput', 'Blockly.FieldAngle', 'Blockly.FieldCheckbox', 'Blockly.FieldColour', 'Blockly.FieldColourDropdown', 'Blockly.FieldDropdown', 'Blockly.FieldIcon', 'Blockly.FieldImage', 'Blockly.FieldImageDropdown', 'Blockly.FieldParameter', 'Blockly.FieldRectangularDropdown', 'Blockly.FieldTextInput', 'Blockly.FieldVariable', 'Blockly.FunctionEditor', 'Blockly.FunctionalBlockUtils', 'Blockly.FunctionalTypeColors', 'Blockly.Generator', 'Blockly.ImageDimensionCache', 'Blockly.Msg', 'Blockly.Procedures', 'Blockly.Toolbox', 'Blockly.TypeDropdown', 'Blockly.WidgetDiv', 'Blockly.inject', 'Blockly.utils', 'goog.color', 'goog.dom', 'goog.events', 'goog.string', 'goog.ui.ColorPicker', 'goog.ui.tree.TreeControl', 'goog.userAgent'], false);
+goog.addDependency('../../../../core/initialization/blockly.js', ['Blockly'], ['Blockly.Block', 'Blockly.BlockSpace', 'Blockly.BlockValueType', 'Blockly.Blocks', 'Blockly.Connection', 'Blockly.ContractEditor', 'Blockly.DomainEditor', 'Blockly.DomainNameInput', 'Blockly.FieldAngle', 'Blockly.FieldAngleDropdown', 'Blockly.FieldAngleTextInput', 'Blockly.FieldCheckbox', 'Blockly.FieldColour', 'Blockly.FieldColourDropdown', 'Blockly.FieldDropdown', 'Blockly.FieldIcon', 'Blockly.FieldImage', 'Blockly.FieldImageDropdown', 'Blockly.FieldParameter', 'Blockly.FieldRectangularDropdown', 'Blockly.FieldTextInput', 'Blockly.FieldVariable', 'Blockly.FunctionEditor', 'Blockly.FunctionalBlockUtils', 'Blockly.FunctionalTypeColors', 'Blockly.Generator', 'Blockly.ImageDimensionCache', 'Blockly.Msg', 'Blockly.Procedures', 'Blockly.Toolbox', 'Blockly.TypeDropdown', 'Blockly.WidgetDiv', 'Blockly.inject', 'Blockly.utils', 'goog.color', 'goog.dom', 'goog.events', 'goog.string', 'goog.ui.ColorPicker', 'goog.ui.tree.TreeControl', 'goog.userAgent'], false);
 goog.addDependency('../../../../core/initialization/inject.js', ['Blockly.inject'], ['Blockly.BlockSpaceEditor', 'Blockly.Css', 'goog.dom'], false);
 goog.addDependency('../../../../core/namespaces/blocks.js', ['Blockly.Blocks'], [], false);
 goog.addDependency('../../../../core/namespaces/msg.js', ['Blockly.Msg'], [], false);
@@ -45,15 +45,18 @@ goog.addDependency('../../../../core/ui/contract_editor/contract_editor.js', ['B
 goog.addDependency('../../../../core/ui/contract_editor/contract_editor_section_view.js', ['Blockly.ContractEditorSectionView'], [], false);
 goog.addDependency('../../../../core/ui/contract_editor/domain_editor.js', ['Blockly.DomainEditor'], ['Blockly.DomainNameInput', 'Blockly.TypeDropdown', 'Blockly.XButton', 'goog.dom'], false);
 goog.addDependency('../../../../core/ui/contract_editor/domain_name_input.js', ['Blockly.DomainNameInput'], [], false);
-goog.addDependency('../../../../core/ui/contract_editor/example_view.js', ['Blockly.ExampleView'], [], false);
+goog.addDependency('../../../../core/ui/contract_editor/example_view.js', ['Blockly.ExampleView'], ['goog.dom.classes'], false);
 goog.addDependency('../../../../core/ui/contract_editor/svg_header.js', ['Blockly.SvgHeader'], [], false);
 goog.addDependency('../../../../core/ui/contract_editor/svg_highlight_box.js', ['Blockly.SvgHighlightBox'], [], false);
 goog.addDependency('../../../../core/ui/contract_editor/svg_text_button.js', ['Blockly.SvgTextButton'], [], false);
 goog.addDependency('../../../../core/ui/contract_editor/type_dropdown.js', ['Blockly.TypeDropdown'], [], false);
 goog.addDependency('../../../../core/ui/contract_editor/x_button.js', ['Blockly.XButton'], [], false);
 goog.addDependency('../../../../core/ui/css.js', ['Blockly.Css'], ['goog.cssom'], false);
+goog.addDependency('../../../../core/ui/fields/angle_helper.js', ['Blockly.AngleHelper'], [], false);
 goog.addDependency('../../../../core/ui/fields/field.js', ['Blockly.Field'], ['Blockly.BlockSvg'], false);
 goog.addDependency('../../../../core/ui/fields/field_angle.js', ['Blockly.FieldAngle'], ['Blockly.FieldTextInput'], false);
+goog.addDependency('../../../../core/ui/fields/field_angle_dropdown.js', ['Blockly.FieldAngleDropdown'], ['Blockly.AngleHelper', 'Blockly.FieldDropdown'], false);
+goog.addDependency('../../../../core/ui/fields/field_angle_textinput.js', ['Blockly.FieldAngleTextInput'], ['Blockly.AngleHelper', 'Blockly.FieldAngleTextInput'], false);
 goog.addDependency('../../../../core/ui/fields/field_checkbox.js', ['Blockly.FieldCheckbox'], ['Blockly.Field'], false);
 goog.addDependency('../../../../core/ui/fields/field_colour.js', ['Blockly.FieldColour'], ['Blockly.Field', 'goog.ui.ColorPicker'], false);
 goog.addDependency('../../../../core/ui/fields/field_colour_dropdown.js', ['Blockly.FieldColourDropdown'], ['Blockly.Field', 'Blockly.FieldRectangularDropdown'], false);

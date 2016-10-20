@@ -2135,10 +2135,12 @@ Blockly.Block.prototype.appendValueInput = function(name) {
  * Shortcut for appending a statement input row.
  * @param {string} name Language-neutral identifier which may used to find this
  *     input again.  Should be unique to this block.
+ * @param {?number} spacing extra space to place below the input's statement
  * @return {!Blockly.Input} The input object created.
  */
-Blockly.Block.prototype.appendStatementInput = function(name) {
-  return this.appendInput_(Blockly.NEXT_STATEMENT, name);
+Blockly.Block.prototype.appendStatementInput = function(name, spacing) {
+  spacing = spacing || 0;
+  return this.appendInput_(Blockly.NEXT_STATEMENT, name, spacing);
 };
 
 /**
@@ -2218,16 +2220,18 @@ Blockly.Block.prototype.interpolateMsg = function(msg, var_args) {
  *     Blockly.DUMMY_INPUT.
  * @param {string} name Language-neutral identifier which may used to find this
  *     input again.  Should be unique to this block.
+ * @param {?number} spacing extra space to put below this input's last statement
  * @return {!Blockly.Input} The input object created.
  * @private
  */
-Blockly.Block.prototype.appendInput_ = function(type, name) {
+Blockly.Block.prototype.appendInput_ = function(type, name, spacing) {
+  spacing = spacing || 0;
   var connection = null;
   if (type === Blockly.INPUT_VALUE || type === Blockly.NEXT_STATEMENT ||
     type === Blockly.FUNCTIONAL_INPUT) {
     connection = new Blockly.Connection(this, type);
   }
-  var input = new Blockly.Input(type, name, this, connection);
+  var input = new Blockly.Input(type, name, this, connection, spacing);
   // Append input to list.
   this.inputList.push(input);
   if (this.rendered) {

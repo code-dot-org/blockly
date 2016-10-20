@@ -38,9 +38,10 @@ goog.require('Blockly.FieldLabel');
  *     input again.
  * @param {!Blockly.Block} block The block containing this input.
  * @param {Blockly.Connection} connection Optional connection for this input.
+ * @param {number} spacing optional extra space to render below this input
  * @constructor
  */
-Blockly.Input = function(type, name, block, connection) {
+Blockly.Input = function(type, name, block, connection, spacing) {
   this.type = type;
   this.name = name;
   this.sourceBlock_ = block;
@@ -54,6 +55,7 @@ Blockly.Input = function(type, name, block, connection) {
     saturation: null,
     value: null
   };
+  this.extraSpacing_ = spacing;
 };
 
 /**
@@ -229,6 +231,13 @@ Blockly.Input.prototype.setHSV = function (hue, saturation, value) {
 Blockly.Input.prototype.getHexColour = function() {
   return Blockly.makeColour(this.colour_.hue, this.colour_.saturation,
     this.colour_.value);
+};
+
+/**
+ * @return {number} extra spacing to leave below last statement in an input.
+ */
+Blockly.Input.prototype.getExtraSpacing = function() {
+  return this.extraSpacing_;
 };
 
 Blockly.Input.prototype.matchesBlock = function (block) {

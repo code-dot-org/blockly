@@ -822,8 +822,9 @@ function thickenInlineRows (inputRows) {
 
 /**
  * Calculate the render width and height of a given input
+ * @param {Blockly.Input} input given input
  */
-function inputRenderSize (input) {
+function inputRenderSize(input) {
   // Compute minimum input size.
   var renderHeight = BS.MIN_BLOCK_Y;
   var renderWidth = BS.TAB_WIDTH + BS.SEP_SPACE_X;
@@ -837,6 +838,7 @@ function inputRenderSize (input) {
     var bBox = linkedBlock.getHeightWidth();
     renderHeight = Math.max(renderHeight, bBox.height);
     renderWidth = Math.max(renderWidth, bBox.width);
+    renderHeight += input.getExtraSpacing();
   }
 
   return {

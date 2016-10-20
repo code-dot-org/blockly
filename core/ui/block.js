@@ -2135,12 +2135,13 @@ Blockly.Block.prototype.appendValueInput = function(name) {
  * Shortcut for appending a statement input row.
  * @param {string} name Language-neutral identifier which may used to find this
  *     input again.  Should be unique to this block.
- * @param {?number} spacing extra space to place below the input's statement
+ * @param {?number} trailingSpacing Extra space to leave below the input's last
+ *     block.
  * @return {!Blockly.Input} The input object created.
  */
-Blockly.Block.prototype.appendStatementInput = function(name, spacing) {
-  spacing = spacing || 0;
-  return this.appendInput_(Blockly.NEXT_STATEMENT, name, spacing);
+Blockly.Block.prototype.appendStatementInput = function(name, trailingSpacing) {
+  trailingSpacing = trailingSpacing || 0;
+  return this.appendInput_(Blockly.NEXT_STATEMENT, name, trailingSpacing);
 };
 
 /**

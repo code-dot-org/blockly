@@ -838,7 +838,7 @@ function inputRenderSize(input) {
     var bBox = linkedBlock.getHeightWidth();
     renderHeight = Math.max(renderHeight, bBox.height);
     renderWidth = Math.max(renderWidth, bBox.width);
-    renderHeight += input.getExtraSpacing();
+    renderHeight += input.getStatementTrailingSpace();
   }
 
   return {

@@ -3331,6 +3331,7 @@ function inputRenderSize(input) {
     var bBox = linkedBlock.getHeightWidth();
     renderHeight = Math.max(renderHeight, bBox.height);
     renderWidth = Math.max(renderWidth, bBox.width);
+    renderHeight += input.getExtraSpacing();
   }
   return {width:renderWidth, height:renderHeight};
 }
@@ -15385,7 +15386,7 @@ Blockly.FieldLabel.prototype.setTooltip = function(newTip) {
 goog.provide("Blockly.Input");
 goog.require("Blockly.Connection");
 goog.require("Blockly.FieldLabel");
-Blockly.Input = function(type, name, block, connection) {
+Blockly.Input = function(type, name, block, connection, spacing) {
   this.type = type;
   this.name = name;
   this.sourceBlock_ = block;
@@ -15395,6 +15396,7 @@ Blockly.Input = function(type, name, block, connection) {
   this.inline_ = false;
   this.visible_ = true;
   this.colour_ = {hue:null, saturation:null, value:null};
+  this.extraSpacing_ = spacing;
 };
 Blockly.Input.prototype.appendTitle = function(title, opt_name) {
   if (!title && !opt_name) {
@@ -15502,6 +15504,9 @@ Blockly.Input.prototype.setHSV = function(hue, saturation, value) {
 };
 Blockly.Input.prototype.getHexColour = function() {
   return Blockly.makeColour(this.colour_.hue, this.colour_.saturation, this.colour_.value);
+};
+Blockly.Input.prototype.getExtraSpacing = function() {
+  return this.extraSpacing_;
 };
 Blockly.Input.prototype.matchesBlock = function(block) {
   if (block.getColour() !== this.colour_.hue) {
@@ -17852,8 +17857,9 @@ Blockly.Block.prototype.toString = function(opt_maxLength) {
 Blockly.Block.prototype.appendValueInput = function(name) {
   return this.appendInput_(Blockly.INPUT_VALUE, name);
 };
-Blockly.Block.prototype.appendStatementInput = function(name) {
-  return this.appendInput_(Blockly.NEXT_STATEMENT, name);
+Blockly.Block.prototype.appendStatementInput = function(name, spacing) {
+  spacing = spacing || 0;
+  return this.appendInput_(Blockly.NEXT_STATEMENT, name, spacing);
 };
 Blockly.Block.prototype.appendDummyInput = function(opt_name) {
   return this.appendInput_(Blockly.DUMMY_INPUT, opt_name || "");
@@ -17886,12 +17892,13 @@ Blockly.Block.prototype.interpolateMsg = function(msg, var_args) {
   }
   this.setInputsInline(!msg.match(/%1\s*$/));
 };
-Blockly.Block.prototype.appendInput_ = function(type, name) {
+Blockly.Block.prototype.appendInput_ = function(type, name, spacing) {
+  spacing = spacing || 0;
   var connection = null;
   if (type === Blockly.INPUT_VALUE || type === Blockly.NEXT_STATEMENT || type === Blockly.FUNCTIONAL_INPUT) {
     connection = new Blockly.Connection(this, type);
   }
-  var input = new Blockly.Input(type, name, this, connection);
+  var input = new Blockly.Input(type, name, this, connection, spacing);
   this.inputList.push(input);
   if (this.rendered) {
     this.render();

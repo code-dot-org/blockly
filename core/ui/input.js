@@ -37,10 +37,12 @@ goog.require('Blockly.FieldLabel');
  * @param {string} name Language-neutral identifier which may used to find this
  *     input again.
  * @param {!Blockly.Block} block The block containing this input.
- * @param {Blockly.Connection} connection Optional connection for this input.
+ * @param {?Blockly.Connection} connection Optional connection for this input.
+ * @param {?number} statementTrailingSpace Optional extra space to render below
+ *     this input.
  * @constructor
  */
-Blockly.Input = function(type, name, block, connection) {
+Blockly.Input = function(type, name, block, connection, statementTrailingSpace) {
   this.type = type;
   this.name = name;
   this.sourceBlock_ = block;
@@ -54,6 +56,11 @@ Blockly.Input = function(type, name, block, connection) {
     saturation: null,
     value: null
   };
+  /**
+   * Extra space to leave trailing the last block in a statement input.
+   * @private {number}
+   */
+  this.statementTrailingSpace_ = statementTrailingSpace || 0;
 };
 
 /**
@@ -229,6 +236,13 @@ Blockly.Input.prototype.setHSV = function (hue, saturation, value) {
 Blockly.Input.prototype.getHexColour = function() {
   return Blockly.makeColour(this.colour_.hue, this.colour_.saturation,
     this.colour_.value);
+};
+
+/**
+ * @return {number} extra spacing to leave below last statement in an input.
+ */
+Blockly.Input.prototype.getStatementTrailingSpace = function() {
+  return this.statementTrailingSpace_;
 };
 
 Blockly.Input.prototype.matchesBlock = function (block) {

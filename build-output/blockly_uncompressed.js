@@ -3331,7 +3331,7 @@ function inputRenderSize(input) {
     var bBox = linkedBlock.getHeightWidth();
     renderHeight = Math.max(renderHeight, bBox.height);
     renderWidth = Math.max(renderWidth, bBox.width);
-    renderHeight += input.getExtraSpacing();
+    renderHeight += input.getStatementTrailingSpace();
   }
   return {width:renderWidth, height:renderHeight};
 }
@@ -15386,7 +15386,7 @@ Blockly.FieldLabel.prototype.setTooltip = function(newTip) {
 goog.provide("Blockly.Input");
 goog.require("Blockly.Connection");
 goog.require("Blockly.FieldLabel");
-Blockly.Input = function(type, name, block, connection, spacing) {
+Blockly.Input = function(type, name, block, connection, statementTrailingSpace) {
   this.type = type;
   this.name = name;
   this.sourceBlock_ = block;
@@ -15396,7 +15396,7 @@ Blockly.Input = function(type, name, block, connection, spacing) {
   this.inline_ = false;
   this.visible_ = true;
   this.colour_ = {hue:null, saturation:null, value:null};
-  this.extraSpacing_ = spacing;
+  this.statementTrailingSpace_ = statementTrailingSpace || 0;
 };
 Blockly.Input.prototype.appendTitle = function(title, opt_name) {
   if (!title && !opt_name) {
@@ -15505,8 +15505,8 @@ Blockly.Input.prototype.setHSV = function(hue, saturation, value) {
 Blockly.Input.prototype.getHexColour = function() {
   return Blockly.makeColour(this.colour_.hue, this.colour_.saturation, this.colour_.value);
 };
-Blockly.Input.prototype.getExtraSpacing = function() {
-  return this.extraSpacing_;
+Blockly.Input.prototype.getStatementTrailingSpace = function() {
+  return this.statementTrailingSpace_;
 };
 Blockly.Input.prototype.matchesBlock = function(block) {
   if (block.getColour() !== this.colour_.hue) {
@@ -17857,9 +17857,9 @@ Blockly.Block.prototype.toString = function(opt_maxLength) {
 Blockly.Block.prototype.appendValueInput = function(name) {
   return this.appendInput_(Blockly.INPUT_VALUE, name);
 };
-Blockly.Block.prototype.appendStatementInput = function(name, spacing) {
-  spacing = spacing || 0;
-  return this.appendInput_(Blockly.NEXT_STATEMENT, name, spacing);
+Blockly.Block.prototype.appendStatementInput = function(name, trailingSpacing) {
+  trailingSpacing = trailingSpacing || 0;
+  return this.appendInput_(Blockly.NEXT_STATEMENT, name, trailingSpacing);
 };
 Blockly.Block.prototype.appendDummyInput = function(opt_name) {
   return this.appendInput_(Blockly.DUMMY_INPUT, opt_name || "");
@@ -25093,17 +25093,18 @@ Blockly.BlockSpaceEditor.prototype.init_ = function() {
 };
 Blockly.BlockSpaceEditor.prototype.detectBrokenControlPoints = function() {
   if (goog.userAgent.WEBKIT) {
-    var path = Blockly.createSvgElement("path", {"d":"m 0,0 c 0,-5 0,-5 0,0 H 50 V 50 z"}, this.svg_);
+    var container = Blockly.createSvgElement("g", {}, this.svg_);
+    Blockly.createSvgElement("path", {"d":"m 0,0 c 0,-5 0,-5 0,0 H 50 V 50 z"}, container);
     if (Blockly.isMsie() || Blockly.isTrident()) {
-      path.style.display = "inline";
-      path.bBox_ = {x:path.getBBox().x, y:path.getBBox().y, width:path.scrollWidth, height:path.scrollHeight};
+      container.style.display = "inline";
+      container.bBox_ = {x:container.getBBox().x, y:container.getBBox().y, width:container.scrollWidth, height:container.scrollHeight};
     } else {
-      path.bBox_ = path.getBBox();
+      container.bBox_ = container.getBBox();
     }
-    if (path.bBox_.height > 50) {
+    if (container.bBox_.height > 50) {
       Blockly.BROKEN_CONTROL_POINTS = true;
     }
-    this.svg_.removeChild(path);
+    this.svg_.removeChild(container);
   }
 };
 Blockly.BlockSpaceEditor.prototype.svgSize = function() {

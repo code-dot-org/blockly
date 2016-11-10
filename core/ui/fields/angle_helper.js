@@ -261,9 +261,6 @@ Blockly.AngleHelper.describeArc = function(center, radius, startAngle, endAngle)
   var start = goog.math.Vec2.rotateAroundPoint(vector, center, goog.math.toRadians(startAngle));
   var end = goog.math.Vec2.rotateAroundPoint(vector, center, goog.math.toRadians(endAngle));
 
-  start.round();
-  end.round();
-
   // largeArcFlag should be set if the angle to be drawn is greater than
   // 180 degrees; it determines which "direction" the arc travels around
   // the circle.

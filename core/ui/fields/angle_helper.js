@@ -112,8 +112,10 @@ Blockly.AngleHelper.prototype.init = function(svgContainer) {
     // define three marker sizes; 5px, 10px, and 15px at angles modulo
     // 15, 45, and 90 degrees, respectively.
     var markerSize = (angle % 90 == 0 ? 15 : angle % 45 == 0 ? 10 : 5);
+    var isOnPrimaryHalf = this.turnRight_ ? angle < 180 : angle > 180;
     Blockly.createSvgElement('line', {
       'stroke-linecap': 'round',
+      'stroke-opacity': isOnPrimaryHalf ? 1 : 0.3,
       'x1': this.center_.x + this.lineLength_.x,
       'y1': this.center_.y,
       'x2': this.center_.x + this.lineLength_.x - markerSize,

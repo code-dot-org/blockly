@@ -271,8 +271,8 @@ Blockly.AngleHelper.describeArc = function(center, radius, startAngle, endAngle)
   var sweepFlag = endAngle - startAngle < 0 ? '0' : '1';
 
   var d = [
-    'M', start.x, start.y,
-    'A', radius, radius, 0, largeArcFlag, sweepFlag, end.x, end.y
+    'M', start.x.toFixed(2), start.y.toFixed(2),
+    'A', radius, radius, 0, largeArcFlag, sweepFlag, end.x.toFixed(2), end.y.toFixed(2)
   ].join(' ');
 
   return d;

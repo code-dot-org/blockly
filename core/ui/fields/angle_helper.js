@@ -54,11 +54,47 @@ Blockly.AngleHelper = function(direction, opt_options) {
   this.svg_ = null;
   this.variableLine_ = null;
 
+  this.animationInterval_ = null;
+
   this.onUpdate_ = opt_options.onUpdate;
 };
 
-Blockly.AngleHelper.prototype.setAngle = function(angle) {
-  this.angle_ = this.snap_(angle);
+/**
+ * Animate the angle change. Used when an external change causes the angle to change
+ * potentially by a lot; a smooth transition helps better visualize the change.
+ *
+ * @param {number} targetAngle
+ * @param {number=200} animationDuration
+ */
+Blockly.AngleHelper.prototype.animateAngleChange = function(targetAngle, animationDuration) {
+  animationDuration = animationDuration || 200;
+  var minSteps = animationDuration / 10;
+
+  var totalDiff = targetAngle - this.getAngle();
+  var steps = Math.min(Math.abs(totalDiff), minSteps);
+  var timePerStep = animationDuration / steps;
+  var diffPerStep = totalDiff / steps;
+
+  clearInterval(this.animationInterval_);
+  this.animationInterval_ = setInterval(function () {
+    if (Math.abs(this.getAngle() - targetAngle) < 1) {
+      this.setAngle(targetAngle);
+      clearInterval(this.animationInterval_);
+    } else {
+      var newAngle = this.getAngle() + diffPerStep;
+      this.setAngle(newAngle, true);
+    }
+  }.bind(this), timePerStep);
+};
+
+/**
+ * Set the current angle and update the visualization appropriately
+ *
+ * @param {number} angle
+ * @param {boolean=false} skipSnap - should we ignore our snapping configuration?
+ */
+Blockly.AngleHelper.prototype.setAngle = function(angle, skipSnap) {
+  this.angle_ = skipSnap ? angle : this.snap_(angle);
   this.update_();
 };
 

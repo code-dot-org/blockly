@@ -56,7 +56,7 @@ Blockly.FieldAngleDropdown.prototype.showEditor_ = function() {
     var menuItem = e.target;
     if (menuItem) {
       var value = menuItem.getValue();
-      this.angleHelper.setAngle(parseInt(value));
+      this.angleHelper.animateAngleChange(parseInt(value));
     }
   }.bind(this));
   return div;

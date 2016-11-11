@@ -20941,10 +20941,29 @@ Blockly.AngleHelper = function(direction, opt_options) {
   this.circle_ = null;
   this.svg_ = null;
   this.variableLine_ = null;
+  this.animationInterval_ = null;
   this.onUpdate_ = opt_options.onUpdate;
 };
-Blockly.AngleHelper.prototype.setAngle = function(angle) {
-  this.angle_ = this.snap_(angle);
+Blockly.AngleHelper.prototype.animateAngleChange = function(targetAngle, animationDuration) {
+  animationDuration = animationDuration || 200;
+  var minSteps = animationDuration / 10;
+  var totalDiff = targetAngle - this.getAngle();
+  var steps = Math.min(Math.abs(totalDiff), minSteps);
+  var timePerStep = animationDuration / steps;
+  var diffPerStep = totalDiff / steps;
+  clearInterval(this.animationInterval_);
+  this.animationInterval_ = setInterval(function() {
+    if (Math.abs(this.getAngle() - targetAngle) < 1) {
+      this.setAngle(targetAngle);
+      clearInterval(this.animationInterval_);
+    } else {
+      var newAngle = this.getAngle() + diffPerStep;
+      this.setAngle(newAngle, true);
+    }
+  }.bind(this), timePerStep);
+};
+Blockly.AngleHelper.prototype.setAngle = function(angle, skipSnap) {
+  this.angle_ = skipSnap ? angle : this.snap_(angle);
   this.update_();
 };
 Blockly.AngleHelper.prototype.getAngle = function() {
@@ -20960,7 +20979,8 @@ Blockly.AngleHelper.prototype.init = function(svgContainer) {
   this.arc_ = Blockly.createSvgElement("path", {"stroke":this.arcColour_, "fill":"none", "stroke-width":this.strokeWidth_}, this.svg_);
   for (var angle = 15;angle < 360;angle += 15) {
     var markerSize = angle % 90 == 0 ? 15 : angle % 45 == 0 ? 10 : 5;
-    Blockly.createSvgElement("line", {"stroke-linecap":"round", "x1":this.center_.x + this.lineLength_.x, "y1":this.center_.y, "x2":this.center_.x + this.lineLength_.x - markerSize, "y2":this.center_.y, "class":"blocklyAngleMarks", "transform":"rotate(" + angle + ", " + this.center_.x + ", " + this.center_.y + ")"}, this.svg_);
+    var isOnPrimaryHalf = this.turnRight_ ? angle < 180 : angle > 180;
+    Blockly.createSvgElement("line", {"stroke-linecap":"round", "stroke-opacity":isOnPrimaryHalf ? 1 : .3, "x1":this.center_.x + this.lineLength_.x, "y1":this.center_.y, "x2":this.center_.x + this.lineLength_.x - markerSize, "y2":this.center_.y, "class":"blocklyAngleMarks", "transform":"rotate(" + angle + ", " + this.center_.x + ", " + this.center_.y + ")"}, this.svg_);
   }
   this.variableLine_ = Blockly.createSvgElement("line", {"stroke":"#4d575f", "stroke-width":this.strokeWidth_, "stroke-linecap":"round", "x1":this.center_.x, "x2":this.circleCenter_.x, "y1":this.center_.y, "y2":this.circleCenter_.y}, this.svg_);
   this.circle_ = Blockly.createSvgElement("circle", {"cx":this.circleCenter_.x, "cy":this.circleCenter_.y, "fill":"#a69bc1", "r":this.circleR_, "stroke":"#4d575f", "stroke-width":this.strokeWidth_, "style":"cursor: move;"}, this.svg_);
@@ -21039,11 +21059,9 @@ Blockly.AngleHelper.describeArc = function(center, radius, startAngle, endAngle)
   var vector = center.clone().add(new goog.math.Vec2(radius, 0));
   var start = goog.math.Vec2.rotateAroundPoint(vector, center, goog.math.toRadians(startAngle));
   var end = goog.math.Vec2.rotateAroundPoint(vector, center, goog.math.toRadians(endAngle));
-  start.round();
-  end.round();
   var largeArcFlag = Math.abs(startAngle - endAngle) > 180 ? "1" : "0";
   var sweepFlag = endAngle - startAngle < 0 ? "0" : "1";
-  var d = ["M", start.x, start.y, "A", radius, radius, 0, largeArcFlag, sweepFlag, end.x, end.y].join(" ");
+  var d = ["M", start.x.toFixed(2), start.y.toFixed(2), "A", radius, radius, 0, largeArcFlag, sweepFlag, end.x.toFixed(2), end.y.toFixed(2)].join(" ");
   return d;
 };
 goog.provide("Blockly.FieldAngleDropdown");
@@ -21081,7 +21099,7 @@ Blockly.FieldAngleDropdown.prototype.showEditor_ = function() {
     var menuItem = e.target;
     if (menuItem) {
       var value = menuItem.getValue();
-      this.angleHelper.setAngle(parseInt(value));
+      this.angleHelper.animateAngleChange(parseInt(value));
     }
   }.bind(this));
   return div;
@@ -21125,7 +21143,7 @@ Blockly.FieldAngleTextInput.prototype.showEditor_ = function() {
 };
 Blockly.FieldAngleTextInput.prototype.onHtmlInputChange_ = function(e) {
   Blockly.FieldAngleTextInput.superClass_.onHtmlInputChange_.call(this, e);
-  this.angleHelper.setAngle(parseInt(this.getText()));
+  this.angleHelper.animateAngleChange(parseInt(this.getText()));
 };
 goog.provide("Blockly.FieldIcon");
 goog.require("Blockly.FieldLabel");

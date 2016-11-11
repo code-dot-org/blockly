@@ -299,9 +299,6 @@ Blockly.AngleHelper.describeArc = function(center, radius, startAngle, endAngle)
   var start = goog.math.Vec2.rotateAroundPoint(vector, center, goog.math.toRadians(startAngle));
   var end = goog.math.Vec2.rotateAroundPoint(vector, center, goog.math.toRadians(endAngle));
 
-  start.round();
-  end.round();
-
   // largeArcFlag should be set if the angle to be drawn is greater than
   // 180 degrees; it determines which "direction" the arc travels around
   // the circle.
@@ -312,8 +309,8 @@ Blockly.AngleHelper.describeArc = function(center, radius, startAngle, endAngle)
   var sweepFlag = endAngle - startAngle < 0 ? '0' : '1';
 
   var d = [
-    'M', start.x, start.y,
-    'A', radius, radius, 0, largeArcFlag, sweepFlag, end.x, end.y
+    'M', start.x.toFixed(2), start.y.toFixed(2),
+    'A', radius, radius, 0, largeArcFlag, sweepFlag, end.x.toFixed(2), end.y.toFixed(2)
   ].join(' ');
 
   return d;

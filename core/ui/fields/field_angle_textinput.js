@@ -66,5 +66,5 @@ Blockly.FieldAngleTextInput.prototype.showEditor_ = function() {
 
 Blockly.FieldAngleTextInput.prototype.onHtmlInputChange_ = function(e) {
   Blockly.FieldAngleTextInput.superClass_.onHtmlInputChange_.call(this, e);
-  this.angleHelper.setAngle(parseInt(this.getText()));
+  this.angleHelper.animateAngleChange(parseInt(this.getText()));
 };

@@ -26,6 +26,7 @@ function test_setBlockNotDisconnectable() {
 
   var blockSpace = Blockly.mainBlockSpace;
   var block1 = new Blockly.Block(blockSpace);
+  block1.setFunctional(true);
   block1.initSvg();
   var block2 = new Blockly.Block(blockSpace);
   block2.initSvg();

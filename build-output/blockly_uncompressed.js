@@ -16784,6 +16784,7 @@ Blockly.Block.prototype.initSvg = function() {
   this.setCurrentlyHidden(this.currentlyHidden_);
   this.moveToFrontOfMainCanvas_();
   this.setIsUnused();
+  this.render();
 };
 Blockly.Block.prototype.getSvgRoot = function() {
   return this.svg_ && this.svg_.getRootElement();

@@ -148,6 +148,9 @@ Blockly.Xml.blockToDom = function(block, ignoreChildBlocks) {
   if (!block.isUserVisible()) {
     element.setAttribute('uservisible', false);
   }
+  if (block.inputCount) {
+    element.setAttribute('inputcount', String(block.inputCount));
+  }
   if (block.isNextConnectionDisabled()) {
     element.setAttribute('next_connection_disabled', true);
   }
@@ -368,6 +371,10 @@ Blockly.Xml.domToBlock = function(blockSpace, xmlBlock) {
   var userCreated = xmlBlock.getAttribute('usercreated');
   if (userCreated) {
     block.userCreated = (userCreated === 'true');
+  }
+  var inputCount = xmlBlock.getAttribute('inputcount');
+  if (inputCount) {
+    block.setInputCount(inputCount);
   }
   var limit = xmlBlock.getAttribute('limit');
   var shouldShowLimits = Blockly.editBlocks ? !blockSpace.isFlyout : blockSpace.isFlyout;

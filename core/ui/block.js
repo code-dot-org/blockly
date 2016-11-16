@@ -974,6 +974,10 @@ Blockly.Block.prototype.showContextMenu_ = function(e) {
       }
     };
     options.push(limitOption);
+
+    if (this.getCustomContextMenuItems) {
+      options = options.concat(this.getCustomContextMenuItems());
+    }
   }
 
   // Allow the block to add or modify options.
@@ -2442,6 +2446,10 @@ Blockly.Block.prototype.setWarningText = function(text) {
     // Adding or removing a warning icon will cause the block to change shape.
     this.bumpNeighbours_();
   }
+};
+
+Blockly.Block.prototype.setInputCount = function(inputCount) {
+  this.inputCount = parseInt(inputCount);
 };
 
 Blockly.Block.prototype.svgInitialized = function() {

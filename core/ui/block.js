@@ -2317,9 +2317,15 @@ Blockly.Block.prototype.moveInputBefore = function(name, refName) {
 Blockly.Block.prototype.removeInput = function(name, opt_quiet) {
   for (var x = 0, input; input = this.inputList[x]; x++) {
     if (input.name == name) {
-      if (input.connection && input.connection.targetConnection) {
-        // Disconnect any attached block.
-        input.connection.targetBlock().setParent(null);
+      if (input.connection) {
+        if (input.connection === Blockly.highlightedConnection_) {
+          input.connection.unhighlight();
+          Blockly.highlightedConnection_ = null;
+        }
+        if (input.connection.targetConnection) {
+          // Disconnect any attached block.
+          input.connection.targetBlock().setParent(null);
+        }
       }
       input.dispose();
       this.inputList.splice(x, 1);

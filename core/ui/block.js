@@ -1211,9 +1211,13 @@ Blockly.Block.prototype.moveBlockBeingDragged_ = function (mouseX, mouseY) {
     }
 
     // Remove connection highlighting if needed.
+    var oldConnection = null;
     if (Blockly.highlightedConnection_ &&
       Blockly.highlightedConnection_ != closestConnection) {
       Blockly.highlightedConnection_.unhighlight();
+      oldConnection = Blockly.highlightedConnection_;
+      oldConnection.sourceBlock_.pendingConnection(
+          oldConnection, closestConnection);
       Blockly.highlightedConnection_ = null;
       Blockly.localConnection_ = null;
     }
@@ -1222,8 +1226,11 @@ Blockly.Block.prototype.moveBlockBeingDragged_ = function (mouseX, mouseY) {
       closestConnection != Blockly.highlightedConnection_) {
       closestConnection.highlight();
       Blockly.highlightedConnection_ = closestConnection;
+      closestConnection.sourceBlock_.pendingConnection(
+          oldConnection, closestConnection);
       Blockly.localConnection_ = localConnection;
     }
+
     // Provide visual indication of whether the block will be
     // deleted if dropped here.
     if (this.areBlockAndDescendantsDeletable()) {
@@ -1231,6 +1238,9 @@ Blockly.Block.prototype.moveBlockBeingDragged_ = function (mouseX, mouseY) {
     }
   }
 };
+
+Blockly.Block.prototype.pendingConnection =
+    function(oldConnection, newConnection) {};
 
 /**
  * Drag this block to follow the mouse.

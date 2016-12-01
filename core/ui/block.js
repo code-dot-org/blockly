@@ -1239,6 +1239,10 @@ Blockly.Block.prototype.moveBlockBeingDragged_ = function (mouseX, mouseY) {
   }
 };
 
+/**
+ * This is called when a block is dragged to or away from one of this block's
+ * inputs. Override in subclasses if needed.
+ */
 Blockly.Block.prototype.pendingConnection =
     function(oldConnection, newConnection) {};
 

@@ -93,8 +93,9 @@ Blockly.FieldDropdown.prototype.showEditor_ = function(container) {
     var menuItem = e.target;
     if (menuItem) {
       var value = menuItem.getValue();
-      if (thisField.changeHandler_) {
-        // Call any change handler, and allow it to override.
+      if (thisField.changeHandler_ && !thisField.alwaysCallChangeHandler_) {
+        // Call any change handler, and allow it to override. This happens
+        // inside setValue if alwaysCallChangeHandler_ is true.
         var override = thisField.changeHandler_(value);
         if (override !== undefined) {
           value = override;
@@ -247,7 +248,7 @@ Blockly.FieldDropdown.prototype.getValue = function() {
 Blockly.FieldDropdown.prototype.setValue = function(newValue) {
   if (this.alwaysCallChangeHandler_ && this.changeHandler_) {
     var override = this.changeHandler_(newValue);
-    if (override) {
+    if (override !== undefined) {
       newValue = override;
     }
   }

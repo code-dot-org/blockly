@@ -36,14 +36,19 @@ goog.require('goog.array');
  *     for a dropdown list, or a function which generates these options.
  * @param {Function} opt_changeHandler A function that is executed when a new
  *     option is selected.
+ * @param {boolean} opt_alwaysCallChangeHandler Whether or not to call
+ *     opt_changeHandler when the value is set by something other than UI
+ *     interaction
  * @extends {Blockly.Field}
  * @constructor
  */
-Blockly.FieldDropdown = function(menuGenerator, opt_changeHandler) {
+Blockly.FieldDropdown = function(menuGenerator, opt_changeHandler,
+    opt_alwaysCallChangeHandler) {
   this.menuGenerator_ = menuGenerator ||
     [[Blockly.FieldDropdown.NO_OPTIONS_MESSAGE,
       Blockly.FieldDropdown.NO_OPTIONS_MESSAGE]];
   this.changeHandler_ = opt_changeHandler;
+  this.alwaysCallChangeHandler = !!opt_alwaysCallChangeHandler;
   this.trimOptions_();
   var firstTuple = this.getOptions()[0];
   this.value_ = firstTuple[1];

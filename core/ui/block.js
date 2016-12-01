@@ -1844,6 +1844,12 @@ Blockly.Block.prototype.getTitleValue = function(name) {
  */
 Blockly.Block.prototype.setTitleValue = function(newValue, name) {
   var title = this.getTitle_(name);
+  if (title.changeHandler_) {
+    var override = title.changeHandler_(newValue);
+    if (override) {
+      newValue = override;
+    }
+  }
   if (title) {
     title.setValue(newValue);
   } else {

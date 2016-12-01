@@ -48,7 +48,7 @@ Blockly.FieldDropdown = function(menuGenerator, opt_changeHandler,
     [[Blockly.FieldDropdown.NO_OPTIONS_MESSAGE,
       Blockly.FieldDropdown.NO_OPTIONS_MESSAGE]];
   this.changeHandler_ = opt_changeHandler;
-  this.alwaysCallChangeHandler = !!opt_alwaysCallChangeHandler;
+  this.alwaysCallChangeHandler_ = !!opt_alwaysCallChangeHandler;
   this.trimOptions_();
   var firstTuple = this.getOptions()[0];
   this.value_ = firstTuple[1];
@@ -245,6 +245,12 @@ Blockly.FieldDropdown.prototype.getValue = function() {
  * @param {string} newValue New value to set.
  */
 Blockly.FieldDropdown.prototype.setValue = function(newValue) {
+  if (this.alwaysCallChangeHandler_ && this.changeHandler_) {
+    var override = this.changeHandler_(newValue);
+    if (override) {
+      newValue = override;
+    }
+  }
   this.value_ = newValue;
   // Look up and display the human-readable text.
   var options = this.getOptions();

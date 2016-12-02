@@ -36,14 +36,19 @@ goog.require('goog.array');
  *     for a dropdown list, or a function which generates these options.
  * @param {Function} opt_changeHandler A function that is executed when a new
  *     option is selected.
+ * @param {boolean} opt_alwaysCallChangeHandler Whether or not to call
+ *     opt_changeHandler when the value is set by something other than UI
+ *     interaction
  * @extends {Blockly.Field}
  * @constructor
  */
-Blockly.FieldDropdown = function(menuGenerator, opt_changeHandler) {
+Blockly.FieldDropdown = function(menuGenerator, opt_changeHandler,
+    opt_alwaysCallChangeHandler) {
   this.menuGenerator_ = menuGenerator ||
     [[Blockly.FieldDropdown.NO_OPTIONS_MESSAGE,
       Blockly.FieldDropdown.NO_OPTIONS_MESSAGE]];
   this.changeHandler_ = opt_changeHandler;
+  this.alwaysCallChangeHandler_ = !!opt_alwaysCallChangeHandler;
   this.trimOptions_();
   var firstTuple = this.getOptions()[0];
   this.value_ = firstTuple[1];
@@ -88,8 +93,9 @@ Blockly.FieldDropdown.prototype.showEditor_ = function(container) {
     var menuItem = e.target;
     if (menuItem) {
       var value = menuItem.getValue();
-      if (thisField.changeHandler_) {
-        // Call any change handler, and allow it to override.
+      if (thisField.changeHandler_ && !thisField.alwaysCallChangeHandler_) {
+        // Call any change handler, and allow it to override. This happens
+        // inside setValue if alwaysCallChangeHandler_ is true.
         var override = thisField.changeHandler_(value);
         if (override !== undefined) {
           value = override;
@@ -240,6 +246,12 @@ Blockly.FieldDropdown.prototype.getValue = function() {
  * @param {string} newValue New value to set.
  */
 Blockly.FieldDropdown.prototype.setValue = function(newValue) {
+  if (this.alwaysCallChangeHandler_ && this.changeHandler_) {
+    var override = this.changeHandler_(newValue);
+    if (override !== undefined) {
+      newValue = override;
+    }
+  }
   this.value_ = newValue;
   // Look up and display the human-readable text.
   var options = this.getOptions();

@@ -6511,6 +6511,9 @@ Blockly.Xml.blockToDom = function(block, ignoreChildBlocks) {
   if (!block.isUserVisible()) {
     element.setAttribute("uservisible", false);
   }
+  if (block.inputCount) {
+    element.setAttribute("inputcount", String(block.inputCount));
+  }
   if (block.isNextConnectionDisabled()) {
     element.setAttribute("next_connection_disabled", true);
   }
@@ -6643,6 +6646,10 @@ Blockly.Xml.domToBlock = function(blockSpace, xmlBlock) {
   var userCreated = xmlBlock.getAttribute("usercreated");
   if (userCreated) {
     block.userCreated = userCreated === "true";
+  }
+  var inputCount = xmlBlock.getAttribute("inputcount");
+  if (inputCount) {
+    block.setInputCount(inputCount);
   }
   var limit = xmlBlock.getAttribute("limit");
   var shouldShowLimits = Blockly.editBlocks ? !blockSpace.isFlyout : blockSpace.isFlyout;
@@ -17177,6 +17184,9 @@ Blockly.Block.prototype.showContextMenu_ = function(e) {
       block.blockSpace.blockSpaceEditor.blockLimits.setLimit(block.type, prompt("New Limit", getCurrentLimit()));
     }};
     options.push(limitOption);
+    if (this.getCustomContextMenuItems) {
+      options = options.concat(this.getCustomContextMenuItems());
+    }
   }
   if (this.customContextMenu && !block.isInFlyout) {
     this.customContextMenu(options);
@@ -18049,6 +18059,9 @@ Blockly.Block.prototype.setWarningText = function(text) {
     this.render();
     this.bumpNeighbours_();
   }
+};
+Blockly.Block.prototype.setInputCount = function(inputCount) {
+  this.inputCount = parseInt(inputCount);
 };
 Blockly.Block.prototype.svgInitialized = function() {
   return !!this.svg_;

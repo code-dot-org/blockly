@@ -17332,20 +17332,26 @@ Blockly.Block.prototype.moveBlockBeingDragged_ = function(mouseX, mouseY) {
         radiusConnection = neighbour.radius;
       }
     }
+    var oldConnection = null;
     if (Blockly.highlightedConnection_ && Blockly.highlightedConnection_ != closestConnection) {
       Blockly.highlightedConnection_.unhighlight();
+      oldConnection = Blockly.highlightedConnection_;
+      oldConnection.sourceBlock_.pendingConnection(oldConnection, closestConnection);
       Blockly.highlightedConnection_ = null;
       Blockly.localConnection_ = null;
     }
     if (closestConnection && closestConnection != Blockly.highlightedConnection_) {
       closestConnection.highlight();
       Blockly.highlightedConnection_ = closestConnection;
+      closestConnection.sourceBlock_.pendingConnection(oldConnection, closestConnection);
       Blockly.localConnection_ = localConnection;
     }
     if (this.areBlockAndDescendantsDeletable()) {
       this.blockSpace.isDeleteArea(mouseX, mouseY, this.startDragMouseX);
     }
   }
+};
+Blockly.Block.prototype.pendingConnection = function(oldConnection, newConnection) {
 };
 Blockly.Block.prototype.onMouseMove_ = function(e) {
   if (e.type == "mousemove" && e.clientX <= 1 && e.clientY == 0 && e.button == 0) {
@@ -17957,8 +17963,14 @@ Blockly.Block.prototype.moveInputBefore = function(name, refName) {
 Blockly.Block.prototype.removeInput = function(name, opt_quiet) {
   for (var x = 0, input;input = this.inputList[x];x++) {
     if (input.name == name) {
-      if (input.connection && input.connection.targetConnection) {
-        input.connection.targetBlock().setParent(null);
+      if (input.connection) {
+        if (input.connection === Blockly.highlightedConnection_) {
+          input.connection.unhighlight();
+          Blockly.highlightedConnection_ = null;
+        }
+        if (input.connection.targetConnection) {
+          input.connection.targetBlock().setParent(null);
+        }
       }
       input.dispose();
       this.inputList.splice(x, 1);
@@ -20749,9 +20761,10 @@ Blockly.FieldColourDropdown.prototype.updatePreviewDimensions_ = function(previe
 goog.provide("Blockly.FieldDropdown");
 goog.require("Blockly.Field");
 goog.require("goog.array");
-Blockly.FieldDropdown = function(menuGenerator, opt_changeHandler) {
+Blockly.FieldDropdown = function(menuGenerator, opt_changeHandler, opt_alwaysCallChangeHandler) {
   this.menuGenerator_ = menuGenerator || [[Blockly.FieldDropdown.NO_OPTIONS_MESSAGE, Blockly.FieldDropdown.NO_OPTIONS_MESSAGE]];
   this.changeHandler_ = opt_changeHandler;
+  this.alwaysCallChangeHandler_ = !!opt_alwaysCallChangeHandler;
   this.trimOptions_();
   var firstTuple = this.getOptions()[0];
   this.value_ = firstTuple[1];
@@ -20770,7 +20783,7 @@ Blockly.FieldDropdown.prototype.showEditor_ = function(container) {
     var menuItem = e.target;
     if (menuItem) {
       var value = menuItem.getValue();
-      if (thisField.changeHandler_) {
+      if (thisField.changeHandler_ && !thisField.alwaysCallChangeHandler_) {
         var override = thisField.changeHandler_(value);
         if (override !== undefined) {
           value = override;
@@ -20876,6 +20889,12 @@ Blockly.FieldDropdown.prototype.getValue = function() {
   return this.value_;
 };
 Blockly.FieldDropdown.prototype.setValue = function(newValue) {
+  if (this.alwaysCallChangeHandler_ && this.changeHandler_) {
+    var override = this.changeHandler_(newValue);
+    if (override !== undefined) {
+      newValue = override;
+    }
+  }
   this.value_ = newValue;
   var options = this.getOptions();
   for (var x = 0;x < options.length;x++) {

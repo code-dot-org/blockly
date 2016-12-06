@@ -125,6 +125,7 @@ Blockly.BlockSpace.EVENTS.EVENT_BLOCKS_IMPORTED = 'blocksImported';
  * @type {string}
  */
 Blockly.BlockSpace.EVENTS.BLOCK_SPACE_CHANGE = 'blockSpaceChange';
+Blockly.BlockSpace.EVENTS.BLOCK_SPACE_SCROLLED = 'blockSpaceScrolled';
 
 /**
  * Fired by Code Studio when the run button is clicked.
@@ -1138,6 +1139,7 @@ Blockly.BlockSpace.prototype.scrollTo = function (newScrollX, newScrollY) {
 
   // Set the scrollbar position, which will auto-scroll the canvas
   this.scrollbarPair.set(newScrollX, newScrollY);
+  this.events.dispatchEvent(Blockly.BlockSpace.EVENTS.BLOCK_SPACE_SCROLLED);
 };
 
 /**

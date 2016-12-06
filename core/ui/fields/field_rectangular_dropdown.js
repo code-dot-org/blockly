@@ -165,6 +165,15 @@ Blockly.FieldRectangularDropdown.prototype.showMenu_ = function() {
   this.pointArrowUp_();
 };
 
+Blockly.FieldRectangularDropdown.prototype.hideMenu_ = function() {
+  if (this.blockSpaceScrolledListenKey_) {
+    this.sourceBlock_.blockSpace.events.unlistenByKey(this.blockSpaceScrolledListenKey_);
+    this.blockSpaceScrolledListenKey_ = null;
+  }
+
+  this.pointArrowDown_();
+};
+
 Blockly.FieldRectangularDropdown.prototype.menuAlreadyShowing_ = function() {
   return (
     this.menu_ &&
@@ -216,14 +225,12 @@ Blockly.FieldRectangularDropdown.prototype.generateMenuItemSelectedHandler_ = fu
 Blockly.FieldRectangularDropdown.prototype.generateMenuClosedHandler_ = function () {
   var fieldRectangularDropdown = this;
   return function() {
-    fieldRectangularDropdown.pointArrowDown_();
+    fieldRectangularDropdown.hideMenu_();
   };
 };
 
 Blockly.FieldRectangularDropdown.prototype.addPositionAndShowMenu = function (menu) {
   // Record windowSize and scrollOffset before adding menu.
-  var windowSize = goog.dom.getViewportSize();
-  var scrollOffset = goog.style.getViewportPageOffset(document);
   var widgetDiv = Blockly.WidgetDiv.DIV;
 
   // IE will scroll the bottom of the page into view to show this element
@@ -251,9 +258,31 @@ Blockly.FieldRectangularDropdown.prototype.addPositionAndShowMenu = function (me
     Blockly.addClass_(menuDom, 'blocklyGridDropdownMenu');
   }
 
-  var menuPosition = this.calculateMenuPosition_(this.previewElement_, multipleColumns);
-  Blockly.WidgetDiv.position(menuPosition.x, menuPosition.y, windowSize, scrollOffset);
+  var positionBelow = multipleColumns;
+  this.updatePosition(positionBelow);
+
+  // if we are attached to a block, recalculate our position when the
+  // block's blockspace gets scrolled.
+  if (this.sourceBlock_) {
+    var events = this.sourceBlock_.blockSpace.events;
+
+    if (!this.blockSpaceScrolledListenKey_) {
+      this.blockSpaceScrolledListenKey_ = events.listen(
+        Blockly.BlockSpace.EVENTS.BLOCK_SPACE_SCROLLED,
+        this.updatePosition.bind(this, positionBelow)
+      );
+    }
+  }
+
   widgetDiv.style.visibility = "visible";
+};
+
+Blockly.FieldRectangularDropdown.prototype.updatePosition = function (positionBelow) {
+  var windowSize = goog.dom.getViewportSize();
+  var scrollOffset = goog.style.getViewportPageOffset(document);
+
+  var menuPosition = this.calculateMenuPosition_(this.previewElement_, positionBelow);
+  Blockly.WidgetDiv.position(menuPosition.x, menuPosition.y, windowSize, scrollOffset);
 };
 
 /**

@@ -81,6 +81,7 @@ Blockly.Block = function(blockSpace, prototypeName, htmlId) {
   this.nextConnectionDisabled_ = false;
   this.collapsed_ = false;
   this.dragging_ = false;
+  this.bumpingEnabled_ = true;
 
   // Used to hide function blocks when not in modal workspace. This property
   // is not serialized/deserialized.
@@ -1290,13 +1291,21 @@ Blockly.Block.prototype.generateReconnector_ = function(earlierConnection) {
   };
 };
 
+Blockly.Block.prototype.enableBumping = function() {
+  this.bumpingEnabled_ = true;
+};
+
+Blockly.Block.prototype.disableBumping = function() {
+  this.bumpingEnabled_ = false;
+};
+
 /**
  * Bump unconnected blocks out of alignment.  Two blocks which aren't actually
  * connected should not coincidentally line up on screen.
  * @private
  */
 Blockly.Block.prototype.bumpNeighbours_ = function() {
-  if (Blockly.Block.isDragging() || !Blockly.BUMP_UNCONNECTED) {
+  if (Blockly.Block.isDragging() || !Blockly.BUMP_UNCONNECTED || !this.bumpingEnabled_) {
     // Don't bump blocks during a drag.
     return;
   }

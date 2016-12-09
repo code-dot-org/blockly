@@ -328,13 +328,18 @@ Blockly.Xml.domToBlockSpace = function(blockSpace, xml) {
  * blockSpace.
  * @param {!Blockly.BlockSpace} blockSpace The blockSpace.
  * @param {!Element} xmlBlock XML block element.
+ * @param {boolean=} dragging Whether the new block is going to be dragging
+ *   upon creation.
  * @return {!Blockly.Block} The root block created.
  */
-Blockly.Xml.domToBlock = function(blockSpace, xmlBlock) {
+Blockly.Xml.domToBlock = function(blockSpace, xmlBlock, dragging) {
   var prototypeName = xmlBlock.getAttribute('type');
   var id = xmlBlock.getAttribute('id');
   var block = new Blockly.Block(blockSpace, prototypeName, id);
   block.initSvg();
+  if (dragging) {
+    block.disableBumping();
+  }
 
   var inline = xmlBlock.getAttribute('inline');
   if (inline) {
@@ -482,6 +487,7 @@ Blockly.Xml.domToBlock = function(blockSpace, xmlBlock) {
   } else {
     block.render();
   }
+  block.enableBumping();
   return block;
 };
 

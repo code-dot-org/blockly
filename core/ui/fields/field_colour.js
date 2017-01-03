@@ -98,7 +98,7 @@ Blockly.FieldColour.COLUMNS = 7;
  * @private
  */
 Blockly.FieldColour.prototype.showEditor_ = function() {
-  Blockly.WidgetDiv.show(this, Blockly.FieldColour.widgetDispose_);
+  this.showWidgetDiv_();
   var div = Blockly.WidgetDiv.DIV;
   // Create the palette using Closure.
   var picker = new goog.ui.ColorPicker();
@@ -107,30 +107,7 @@ Blockly.FieldColour.prototype.showEditor_ = function() {
   picker.render(div);
   picker.setSelectedColor(this.getValue());
 
-  // Position the palette to line up with the field.
-  var xy = Blockly.getAbsoluteXY_(/** @type {!Element} */ (this.borderRect_), this.
-    getRootSVGElement_());
-  if (navigator.userAgent.indexOf("MSIE") >= 0 || navigator.userAgent.indexOf("Trident") >= 0) {
-      this.borderRect_.style.display = "inline";   /* reqd for IE */
-      var borderBBox = {
-          x: this.borderRect_.getBBox().x,
-          y: this.borderRect_.getBBox().y,
-          width: this.borderRect_.scrollWidth,
-          height: this.borderRect_.scrollHeight
-      };
-  }
-  else {
-      var borderBBox = this.borderRect_.getBBox();
-  }
-  if (Blockly.RTL) {
-    xy.x += borderBBox.width;
-  }
-  xy.y += borderBBox.height - 1;
-  if (Blockly.RTL) {
-    xy.x -= div.offsetWidth;
-  }
-  div.style.left = xy.x + 'px';
-  div.style.top = xy.y + 'px';
+  this.positionWidgetDiv();
 
   // Configure event handler.
   var thisObj = this;
@@ -153,11 +130,47 @@ Blockly.FieldColour.prototype.showEditor_ = function() {
 };
 
 /**
- * Hide the colour palette.
- * @private
+ * @override
  */
-Blockly.FieldColour.widgetDispose_ = function() {
-  if (Blockly.FieldColour.changeEventKey_) {
-    goog.events.unlistenByKey(Blockly.FieldColour.changeEventKey_);
+Blockly.FieldColour.prototype.positionWidgetDiv = function() {
+  // Position the palette to line up with the field.
+  var xy = Blockly.getAbsoluteXY_(/** @type {!Element} */ (this.borderRect_), this.
+    getRootSVGElement_());
+  if (navigator.userAgent.indexOf("MSIE") >= 0 || navigator.userAgent.indexOf("Trident") >= 0) {
+      this.borderRect_.style.display = "inline";   /* reqd for IE */
+      var borderBBox = {
+          x: this.borderRect_.getBBox().x,
+          y: this.borderRect_.getBBox().y,
+          width: this.borderRect_.scrollWidth,
+          height: this.borderRect_.scrollHeight
+      };
   }
+  else {
+      var borderBBox = this.borderRect_.getBBox();
+  }
+  if (Blockly.RTL) {
+    xy.x += borderBBox.width;
+  }
+  xy.y += borderBBox.height - 1;
+  if (Blockly.RTL) {
+    xy.x -= div.offsetWidth;
+  }
+
+  var windowSize = goog.dom.getViewportSize();
+  var scrollOffset = goog.style.getViewportPageOffset(document);
+  Blockly.WidgetDiv.position(xy.x, xy.y, windowSize, scrollOffset);
+}
+
+/**
+ * Hide the colour palette.
+ * @override
+ */
+Blockly.FieldColour.prototype.generateWidgetDisposeHandler_ = function() {
+  var superWidgetDisposeHandler_ = Blockly.FieldRectangularDropdown.superClass_.generateWidgetDisposeHandler_.call(this);
+  return function() {
+    superWidgetDisposeHandler_();
+    if (Blockly.FieldColour.changeEventKey_) {
+      goog.events.unlistenByKey(Blockly.FieldColour.changeEventKey_);
+    }
+  }.bind(this);
 };

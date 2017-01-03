@@ -87,7 +87,7 @@ Blockly.FieldTextInput.prototype.setText = function(text) {
  * @private
  */
 Blockly.FieldTextInput.prototype.showEditor_ = function() {
-  Blockly.WidgetDiv.show(this, this.widgetDispose_());
+  this.showWidgetDiv_();
   var div = Blockly.WidgetDiv.DIV;
   // Create the input.
   var htmlInput = goog.dom.createDom('input', 'blocklyHtmlInput');
@@ -202,6 +202,13 @@ Blockly.FieldTextInput.prototype.resizeEditor_ = function() {
       var bBox = this.fieldGroup_.getBBox();
   }
   div.style.width = bBox.width + 'px';
+  this.positionWidgetDiv();
+};
+
+/**
+ * @override
+ */
+Blockly.FieldTextInput.prototype.positionWidgetDiv = function() {
   var xy = Blockly.getAbsoluteXY_(/** @type {!Element} */ (this.borderRect_), this.getRootSVGElement_());
   // In RTL mode block titles and LTR input titles the left edge moves,
   // whereas the right edge is fixed.  Reposition the editor.
@@ -226,38 +233,40 @@ Blockly.FieldTextInput.prototype.resizeEditor_ = function() {
   if (goog.userAgent.WEBKIT) {
     xy.y -= 3;
   }
-  div.style.left = xy.x + 'px';
-  div.style.top = xy.y + 'px';
+
+  var windowSize = goog.dom.getViewportSize();
+  var scrollOffset = goog.style.getViewportPageOffset(document);
+  Blockly.WidgetDiv.position(xy.x, xy.y, windowSize, scrollOffset);
 };
 
 /**
  * Close the editor, save the results, and dispose of the editable
  * text field's elements.
- * @return {!Function} Closure to call on destruction of the WidgetDiv.
- * @private
+ * @override
  */
-Blockly.FieldTextInput.prototype.widgetDispose_ = function() {
-  var thisField = this;
+Blockly.FieldTextInput.prototype.generateWidgetDisposeHandler_ = function() {
+  var superWidgetDisposeHandler_ = Blockly.FieldRectangularDropdown.superClass_.generateWidgetDisposeHandler_.call(this);
   return function() {
+    superWidgetDisposeHandler_();
     var htmlInput = Blockly.FieldTextInput.htmlInput_;
     // Save the edit (if it validates).
     var text = htmlInput.value;
-    if (thisField.changeHandler_) {
-      text = thisField.changeHandler_(text);
+    if (this.changeHandler_) {
+      text = this.changeHandler_(text);
       if (text === null) {
         // Invalid edit.
         text = htmlInput.defaultValue;
       }
     }
-    thisField.setText(text);
-    thisField.sourceBlock_.rendered && thisField.sourceBlock_.render();
+    this.setText(text);
+    this.sourceBlock_.rendered && this.sourceBlock_.render();
     Blockly.unbindEvent_(htmlInput.onKeyUpWrapper_);
     Blockly.unbindEvent_(htmlInput.onKeyPressWrapper_);
     Blockly.unbindEvent_(htmlInput.onBlockSpaceChangeWrapper_);
     Blockly.FieldTextInput.htmlInput_ = null;
     // Delete the width property.
     Blockly.WidgetDiv.DIV.style.width = 'auto';
-  };
+  }.bind(this);
 };
 
 /**

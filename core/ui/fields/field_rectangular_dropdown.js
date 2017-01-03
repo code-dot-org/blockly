@@ -158,7 +158,7 @@ Blockly.FieldRectangularDropdown.prototype.setArrowDirection_ = function(up) {
 };
 
 Blockly.FieldRectangularDropdown.prototype.showMenu_ = function() {
-  Blockly.WidgetDiv.show(this, this.generateMenuClosedHandler_());
+  this.showWidgetDiv_();
   this.menu_ = this.createMenuWithChoices_(this.choices_);
   goog.events.listen(this.menu_, goog.ui.Component.EventType.ACTION, this.generateMenuItemSelectedHandler_());
   this.addPositionAndShowMenu(this.menu_);
@@ -166,10 +166,6 @@ Blockly.FieldRectangularDropdown.prototype.showMenu_ = function() {
 };
 
 Blockly.FieldRectangularDropdown.prototype.hideMenu_ = function() {
-  if (this.blockSpaceScrolledListenKey_) {
-    this.sourceBlock_.blockSpace.events.unlistenByKey(this.blockSpaceScrolledListenKey_);
-    this.blockSpaceScrolledListenKey_ = null;
-  }
 
   this.pointArrowDown_();
 };
@@ -222,11 +218,15 @@ Blockly.FieldRectangularDropdown.prototype.generateMenuItemSelectedHandler_ = fu
   };
 };
 
-Blockly.FieldRectangularDropdown.prototype.generateMenuClosedHandler_ = function () {
-  var fieldRectangularDropdown = this;
+/**
+ * @override
+ */
+Blockly.FieldRectangularDropdown.prototype.generateWidgetDisposeHandler_ = function () {
+  var superWidgetDisposeHandler_ = Blockly.FieldRectangularDropdown.superClass_.generateWidgetDisposeHandler_.call(this);
   return function() {
-    fieldRectangularDropdown.hideMenu_();
-  };
+    superWidgetDisposeHandler_();
+    this.hideMenu_();
+  }.bind(this);
 };
 
 Blockly.FieldRectangularDropdown.prototype.addPositionAndShowMenu = function (menu) {
@@ -258,30 +258,23 @@ Blockly.FieldRectangularDropdown.prototype.addPositionAndShowMenu = function (me
     Blockly.addClass_(menuDom, 'blocklyGridDropdownMenu');
   }
 
-  var positionBelow = multipleColumns;
-  this.updatePosition(positionBelow);
-
-  // if we are attached to a block, recalculate our position when the
-  // block's blockspace gets scrolled.
-  if (this.sourceBlock_) {
-    var events = this.sourceBlock_.blockSpace.events;
-
-    if (!this.blockSpaceScrolledListenKey_) {
-      this.blockSpaceScrolledListenKey_ = events.listen(
-        Blockly.BlockSpace.EVENTS.BLOCK_SPACE_SCROLLED,
-        this.updatePosition.bind(this, positionBelow)
-      );
-    }
-  }
+  this.positionWidgetDiv();
 
   widgetDiv.style.visibility = "visible";
 };
 
-Blockly.FieldRectangularDropdown.prototype.updatePosition = function (positionBelow) {
+/**
+ * @override
+ */
+Blockly.FieldRectangularDropdown.prototype.positionWidgetDiv = function () {
+  var numberOfColumns = chooseNumberOfColumns(this.menu_.getChildCount());
+  var positionBelow = numberOfColumns > 1;
+
+  var menuPosition = this.calculateMenuPosition_(this.previewElement_, positionBelow);
+
   var windowSize = goog.dom.getViewportSize();
   var scrollOffset = goog.style.getViewportPageOffset(document);
 
-  var menuPosition = this.calculateMenuPosition_(this.previewElement_, positionBelow);
   Blockly.WidgetDiv.position(menuPosition.x, menuPosition.y, windowSize, scrollOffset);
 };
 

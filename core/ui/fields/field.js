@@ -374,3 +374,43 @@ Blockly.Field.prototype.onClick_ = function(e) {
 Blockly.Field.prototype.setTooltip = function(newTip) {
   // Non-abstract sub-classes may wish to implement this.  See FieldLabel.
 };
+
+Blockly.Field.prototype.positionWidgetDiv = function() {
+  // intentional noop; overridden by child classes
+};
+
+Blockly.Field.prototype.showWidgetDiv_ = function() {
+  Blockly.WidgetDiv.show(this, this.generateWidgetDisposeHandler_());
+
+  // if we are attached to a block, recalculate our position when the
+  // block's blockspace gets scrolled.
+  if (this.sourceBlock_ &&
+      this.sourceBlock_.blockSpace &&
+      this.sourceBlock_.blockSpace.events) {
+    var events = this.sourceBlock_.blockSpace.events;
+
+    if (!this.blockSpaceScrolledListenKey_) {
+      this.blockSpaceScrolledListenKey_ = events.listen(
+          Blockly.BlockSpace.EVENTS.BLOCK_SPACE_SCROLLED,
+          this.positionWidgetDiv.bind(this));
+    }
+  }
+};
+
+/**
+ * Generates a function which will be called when the widget is closed,
+ * to be used as an onDispose handler.
+ * @return {function}
+ */
+Blockly.Field.prototype.generateWidgetDisposeHandler_ = function() {
+  return function () {
+    if (this.blockSpaceScrolledListenKey_ &&
+        this.sourceBlock_ &&
+        this.sourceBlock_.blockSpace &&
+        this.sourceBlock_.blockSpace.events) {
+      this.sourceBlock_.blockSpace.events.unlistenByKey(
+          this.blockSpaceScrolledListenKey_);
+      this.blockSpaceScrolledListenKey_ = null;
+    }
+  }.bind(this);
+};

@@ -299,6 +299,15 @@ Blockly.Block.isFreelyDragging = function() {
 };
 
 /**
+ * Pretend that we've already started dragging a block. This ensures that any
+ * methods called between now and onMouseDown behave as though a block is being
+ * dragged, e.g. skipping neighbour bumping.
+ */
+Blockly.Block.startDragging = function() {
+  Blockly.Block.dragMode_ = Blockly.Block.DRAG_MODE_INSIDE_STICKY_RADIUS;
+}
+
+/**
  * Wrapper function called when a mouseUp occurs during a drag operation.
  * @type {BindData}
  * @private

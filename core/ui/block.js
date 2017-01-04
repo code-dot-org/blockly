@@ -299,6 +299,15 @@ Blockly.Block.isFreelyDragging = function() {
 };
 
 /**
+ * Pretend that we've already started dragging a block. This ensures that any
+ * methods called between now and onMouseDown behave as though a block is being
+ * dragged, e.g. skipping neighbour bumping.
+ */
+Blockly.Block.startDragging = function() {
+  Blockly.Block.dragMode_ = Blockly.Block.DRAG_MODE_INSIDE_STICKY_RADIUS;
+}
+
+/**
  * Wrapper function called when a mouseUp occurs during a drag operation.
  * @type {BindData}
  * @private
@@ -1211,9 +1220,13 @@ Blockly.Block.prototype.moveBlockBeingDragged_ = function (mouseX, mouseY) {
     }
 
     // Remove connection highlighting if needed.
+    var oldConnection = null;
     if (Blockly.highlightedConnection_ &&
       Blockly.highlightedConnection_ != closestConnection) {
       Blockly.highlightedConnection_.unhighlight();
+      oldConnection = Blockly.highlightedConnection_;
+      oldConnection.sourceBlock_.pendingConnection(
+          oldConnection, closestConnection);
       Blockly.highlightedConnection_ = null;
       Blockly.localConnection_ = null;
     }
@@ -1222,8 +1235,11 @@ Blockly.Block.prototype.moveBlockBeingDragged_ = function (mouseX, mouseY) {
       closestConnection != Blockly.highlightedConnection_) {
       closestConnection.highlight();
       Blockly.highlightedConnection_ = closestConnection;
+      closestConnection.sourceBlock_.pendingConnection(
+          oldConnection, closestConnection);
       Blockly.localConnection_ = localConnection;
     }
+
     // Provide visual indication of whether the block will be
     // deleted if dropped here.
     if (this.areBlockAndDescendantsDeletable()) {
@@ -1231,6 +1247,13 @@ Blockly.Block.prototype.moveBlockBeingDragged_ = function (mouseX, mouseY) {
     }
   }
 };
+
+/**
+ * This is called when a block is dragged to or away from one of this block's
+ * inputs. Override in subclasses if needed.
+ */
+Blockly.Block.prototype.pendingConnection =
+    function(oldConnection, newConnection) {};
 
 /**
  * Drag this block to follow the mouse.
@@ -2303,9 +2326,15 @@ Blockly.Block.prototype.moveInputBefore = function(name, refName) {
 Blockly.Block.prototype.removeInput = function(name, opt_quiet) {
   for (var x = 0, input; input = this.inputList[x]; x++) {
     if (input.name == name) {
-      if (input.connection && input.connection.targetConnection) {
-        // Disconnect any attached block.
-        input.connection.targetBlock().setParent(null);
+      if (input.connection) {
+        if (input.connection === Blockly.highlightedConnection_) {
+          input.connection.unhighlight();
+          Blockly.highlightedConnection_ = null;
+        }
+        if (input.connection.targetConnection) {
+          // Disconnect any attached block.
+          input.connection.targetBlock().setParent(null);
+        }
       }
       input.dispose();
       this.inputList.splice(x, 1);

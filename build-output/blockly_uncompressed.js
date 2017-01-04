@@ -16806,6 +16806,9 @@ Blockly.Block.isDragging = function() {
 Blockly.Block.isFreelyDragging = function() {
   return Blockly.Block.dragMode_ === Blockly.Block.DRAG_MODE_FREELY_DRAGGING;
 };
+Blockly.Block.startDragging = function() {
+  Blockly.Block.dragMode_ = Blockly.Block.DRAG_MODE_INSIDE_STICKY_RADIUS;
+};
 Blockly.Block.onMouseUpWrapper_ = null;
 Blockly.Block.onMouseMoveWrapper_ = null;
 Blockly.Block.terminateDrag_ = function() {
@@ -21654,6 +21657,7 @@ Blockly.Flyout.prototype.createBlockFunc_ = function(originBlock) {
     }
     var xml = Blockly.Xml.blockToDom(originBlock);
     var targetBlockSpace = flyout.targetBlockSpace_;
+    Blockly.Block.startDragging();
     var block = Blockly.Xml.domToBlock(targetBlockSpace, xml);
     var svgRootOld = originBlock.getSvgRoot();
     if (!svgRootOld) {

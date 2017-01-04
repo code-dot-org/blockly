@@ -826,8 +826,11 @@ Blockly.Css.CONTENT = [
    * If a menu doesn't have items with shortcuts, leave just enough room for
    * submenu arrows, if they are rendered.
    */
-  '.goog-menu-noaccel .goog-menuitem {',
+  '.goog-menu-noaccel .goog-menuitem:not(.goog-menuitem-rtl) {',
   '  padding-right: 20px;',
+  '}',
+  '.goog-menu-noaccel .goog-menuitem.goog-menuitem-rtl {',
+  '  padding-left: 20px;',
   '}',
 
   '.goog-menuitem-content {',

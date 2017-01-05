@@ -6791,6 +6791,7 @@ Blockly.BlockSpace.DEBUG_EVENTS = false;
 Blockly.BlockSpace.EVENTS = {};
 Blockly.BlockSpace.EVENTS.EVENT_BLOCKS_IMPORTED = "blocksImported";
 Blockly.BlockSpace.EVENTS.BLOCK_SPACE_CHANGE = "blockSpaceChange";
+Blockly.BlockSpace.EVENTS.BLOCK_SPACE_SCROLLED = "blockSpaceScrolled";
 Blockly.BlockSpace.EVENTS.RUN_BUTTON_CLICKED = "runButtonClicked";
 Blockly.BlockSpace.SCAN_ANGLE = 3;
 Blockly.BlockSpace.AUTO_LAYOUT_PADDING_TOP = 16;
@@ -7308,6 +7309,7 @@ Blockly.BlockSpace.prototype.scrollTo = function(newScrollX, newScrollY) {
   newScrollX = goog.math.clamp(newScrollX, 0, maxScrollOffsets.x);
   newScrollY = goog.math.clamp(newScrollY, 0, maxScrollOffsets.y);
   this.scrollbarPair.set(newScrollX, newScrollY);
+  this.events.dispatchEvent(Blockly.BlockSpace.EVENTS.BLOCK_SPACE_SCROLLED);
 };
 Blockly.BlockSpace.prototype.currentlyScrollable = function() {
   var maxOffsets = this.getMaxScrollOffsets();
@@ -15177,6 +15179,25 @@ Blockly.Field.prototype.onClick_ = function(e) {
 };
 Blockly.Field.prototype.setTooltip = function(newTip) {
 };
+Blockly.Field.prototype.positionWidgetDiv = function() {
+};
+Blockly.Field.prototype.showWidgetDiv_ = function() {
+  Blockly.WidgetDiv.show(this, this.generateWidgetDisposeHandler_());
+  if (this.sourceBlock_ && this.sourceBlock_.blockSpace && this.sourceBlock_.blockSpace.events) {
+    var events = this.sourceBlock_.blockSpace.events;
+    if (!this.blockSpaceScrolledListenKey_) {
+      this.blockSpaceScrolledListenKey_ = events.listen(Blockly.BlockSpace.EVENTS.BLOCK_SPACE_SCROLLED, this.positionWidgetDiv.bind(this));
+    }
+  }
+};
+Blockly.Field.prototype.generateWidgetDisposeHandler_ = function() {
+  return function() {
+    if (this.blockSpaceScrolledListenKey_ && this.sourceBlock_ && this.sourceBlock_.blockSpace && this.sourceBlock_.blockSpace.events) {
+      this.sourceBlock_.blockSpace.events.unlistenByKey(this.blockSpaceScrolledListenKey_);
+      this.blockSpaceScrolledListenKey_ = null;
+    }
+  }.bind(this);
+};
 goog.provide("Blockly.Tooltip");
 Blockly.Tooltip.visible = false;
 Blockly.Tooltip.mouseOutPid_ = 0;
@@ -18331,7 +18352,7 @@ Blockly.FieldTextInput.prototype.setText = function(text) {
   Blockly.Field.prototype.setText.call(this, text);
 };
 Blockly.FieldTextInput.prototype.showEditor_ = function() {
-  Blockly.WidgetDiv.show(this, this.widgetDispose_());
+  this.showWidgetDiv_();
   var div = Blockly.WidgetDiv.DIV;
   var htmlInput = goog.dom.createDom("input", "blocklyHtmlInput");
   if (this.changeHandler_ === Blockly.FieldTextInput.numberValidator) {
@@ -18408,6 +18429,9 @@ Blockly.FieldTextInput.prototype.resizeEditor_ = function() {
     var bBox = this.fieldGroup_.getBBox()
   }
   div.style.width = bBox.width + "px";
+  this.positionWidgetDiv();
+};
+Blockly.FieldTextInput.prototype.positionWidgetDiv = function() {
   var xy = Blockly.getAbsoluteXY_((this.borderRect_), this.getRootSVGElement_());
   if (Blockly.RTL) {
     if (navigator.userAgent.indexOf("MSIE") >= 0 || navigator.userAgent.indexOf("Trident") >= 0) {
@@ -18423,28 +18447,30 @@ Blockly.FieldTextInput.prototype.resizeEditor_ = function() {
   if (goog.userAgent.WEBKIT) {
     xy.y -= 3;
   }
-  div.style.left = xy.x + "px";
-  div.style.top = xy.y + "px";
+  var windowSize = goog.dom.getViewportSize();
+  var scrollOffset = goog.style.getViewportPageOffset(document);
+  Blockly.WidgetDiv.position(xy.x, xy.y, windowSize, scrollOffset);
 };
-Blockly.FieldTextInput.prototype.widgetDispose_ = function() {
-  var thisField = this;
+Blockly.FieldTextInput.prototype.generateWidgetDisposeHandler_ = function() {
+  var superWidgetDisposeHandler_ = Blockly.FieldRectangularDropdown.superClass_.generateWidgetDisposeHandler_.call(this);
   return function() {
+    superWidgetDisposeHandler_();
     var htmlInput = Blockly.FieldTextInput.htmlInput_;
     var text = htmlInput.value;
-    if (thisField.changeHandler_) {
-      text = thisField.changeHandler_(text);
+    if (this.changeHandler_) {
+      text = this.changeHandler_(text);
       if (text === null) {
         text = htmlInput.defaultValue;
       }
     }
-    thisField.setText(text);
-    thisField.sourceBlock_.rendered && thisField.sourceBlock_.render();
+    this.setText(text);
+    this.sourceBlock_.rendered && this.sourceBlock_.render();
     Blockly.unbindEvent_(htmlInput.onKeyUpWrapper_);
     Blockly.unbindEvent_(htmlInput.onKeyPressWrapper_);
     Blockly.unbindEvent_(htmlInput.onBlockSpaceChangeWrapper_);
     Blockly.FieldTextInput.htmlInput_ = null;
     Blockly.WidgetDiv.DIV.style.width = "auto";
-  };
+  }.bind(this);
 };
 Blockly.FieldTextInput.prototype.isKeyboardInputField_ = function() {
   return true;
@@ -20330,29 +20356,14 @@ Blockly.FieldColour.prototype.setValue = function(colour) {
 Blockly.FieldColour.COLOURS = goog.ui.ColorPicker.SIMPLE_GRID_COLORS;
 Blockly.FieldColour.COLUMNS = 7;
 Blockly.FieldColour.prototype.showEditor_ = function() {
-  Blockly.WidgetDiv.show(this, Blockly.FieldColour.widgetDispose_);
+  this.showWidgetDiv_();
   var div = Blockly.WidgetDiv.DIV;
   var picker = new goog.ui.ColorPicker;
   picker.setSize(Blockly.FieldColour.COLUMNS);
   picker.setColors(Blockly.FieldColour.COLOURS);
   picker.render(div);
   picker.setSelectedColor(this.getValue());
-  var xy = Blockly.getAbsoluteXY_((this.borderRect_), this.getRootSVGElement_());
-  if (navigator.userAgent.indexOf("MSIE") >= 0 || navigator.userAgent.indexOf("Trident") >= 0) {
-    this.borderRect_.style.display = "inline";
-    var borderBBox = {x:this.borderRect_.getBBox().x, y:this.borderRect_.getBBox().y, width:this.borderRect_.scrollWidth, height:this.borderRect_.scrollHeight};
-  } else {
-    var borderBBox = this.borderRect_.getBBox()
-  }
-  if (Blockly.RTL) {
-    xy.x += borderBBox.width;
-  }
-  xy.y += borderBBox.height - 1;
-  if (Blockly.RTL) {
-    xy.x -= div.offsetWidth;
-  }
-  div.style.left = xy.x + "px";
-  div.style.top = xy.y + "px";
+  this.positionWidgetDiv();
   var thisObj = this;
   Blockly.FieldColour.changeEventKey_ = goog.events.listen(picker, goog.ui.ColorPicker.EventType.CHANGE, function(event) {
     var colour = event.target.getSelectedColor() || "#000000";
@@ -20368,10 +20379,33 @@ Blockly.FieldColour.prototype.showEditor_ = function() {
     }
   });
 };
-Blockly.FieldColour.widgetDispose_ = function() {
-  if (Blockly.FieldColour.changeEventKey_) {
-    goog.events.unlistenByKey(Blockly.FieldColour.changeEventKey_);
+Blockly.FieldColour.prototype.positionWidgetDiv = function() {
+  var xy = Blockly.getAbsoluteXY_((this.borderRect_), this.getRootSVGElement_());
+  if (navigator.userAgent.indexOf("MSIE") >= 0 || navigator.userAgent.indexOf("Trident") >= 0) {
+    this.borderRect_.style.display = "inline";
+    var borderBBox = {x:this.borderRect_.getBBox().x, y:this.borderRect_.getBBox().y, width:this.borderRect_.scrollWidth, height:this.borderRect_.scrollHeight};
+  } else {
+    var borderBBox = this.borderRect_.getBBox()
   }
+  if (Blockly.RTL) {
+    xy.x += borderBBox.width;
+  }
+  xy.y += borderBBox.height - 1;
+  if (Blockly.RTL) {
+    xy.x -= div.offsetWidth;
+  }
+  var windowSize = goog.dom.getViewportSize();
+  var scrollOffset = goog.style.getViewportPageOffset(document);
+  Blockly.WidgetDiv.position(xy.x, xy.y, windowSize, scrollOffset);
+};
+Blockly.FieldColour.prototype.generateWidgetDisposeHandler_ = function() {
+  var superWidgetDisposeHandler_ = Blockly.FieldRectangularDropdown.superClass_.generateWidgetDisposeHandler_.call(this);
+  return function() {
+    superWidgetDisposeHandler_();
+    if (Blockly.FieldColour.changeEventKey_) {
+      goog.events.unlistenByKey(Blockly.FieldColour.changeEventKey_);
+    }
+  }.bind(this);
 };
 goog.provide("Blockly.ImageDimensionCache");
 Blockly.ImageDimensionCache.imageDimensions_ = {};
@@ -20565,11 +20599,14 @@ Blockly.FieldRectangularDropdown.prototype.setArrowDirection_ = function(up) {
   this.arrowCharacter_.firstChild.nodeValue = up ? Blockly.FieldRectangularDropdown.UP_ARROW_CHARACTER : Blockly.FieldRectangularDropdown.DOWN_ARROW_CHARACTER;
 };
 Blockly.FieldRectangularDropdown.prototype.showMenu_ = function() {
-  Blockly.WidgetDiv.show(this, this.generateMenuClosedHandler_());
+  this.showWidgetDiv_();
   this.menu_ = this.createMenuWithChoices_(this.choices_);
   goog.events.listen(this.menu_, goog.ui.Component.EventType.ACTION, this.generateMenuItemSelectedHandler_());
   this.addPositionAndShowMenu(this.menu_);
   this.pointArrowUp_();
+};
+Blockly.FieldRectangularDropdown.prototype.hideMenu_ = function() {
+  this.pointArrowDown_();
 };
 Blockly.FieldRectangularDropdown.prototype.menuAlreadyShowing_ = function() {
   return this.menu_ && Blockly.WidgetDiv.isOwner(this) && Blockly.WidgetDiv.isVisible();
@@ -20611,15 +20648,14 @@ Blockly.FieldRectangularDropdown.prototype.generateMenuItemSelectedHandler_ = fu
     Blockly.WidgetDiv.hideIfOwner(fieldRectanglularDropdown);
   };
 };
-Blockly.FieldRectangularDropdown.prototype.generateMenuClosedHandler_ = function() {
-  var fieldRectangularDropdown = this;
+Blockly.FieldRectangularDropdown.prototype.generateWidgetDisposeHandler_ = function() {
+  var superWidgetDisposeHandler_ = Blockly.FieldRectangularDropdown.superClass_.generateWidgetDisposeHandler_.call(this);
   return function() {
-    fieldRectangularDropdown.pointArrowDown_();
-  };
+    superWidgetDisposeHandler_();
+    this.hideMenu_();
+  }.bind(this);
 };
 Blockly.FieldRectangularDropdown.prototype.addPositionAndShowMenu = function(menu) {
-  var windowSize = goog.dom.getViewportSize();
-  var scrollOffset = goog.style.getViewportPageOffset(document);
   var widgetDiv = Blockly.WidgetDiv.DIV;
   widgetDiv.style.visibility = "hidden";
   menu.render(widgetDiv);
@@ -20639,9 +20675,16 @@ Blockly.FieldRectangularDropdown.prototype.addPositionAndShowMenu = function(men
     menuDom.style.width = widthPerMenuItem * numberOfColumns + marginWidth + "px";
     Blockly.addClass_(menuDom, "blocklyGridDropdownMenu");
   }
-  var menuPosition = this.calculateMenuPosition_(this.previewElement_, multipleColumns);
-  Blockly.WidgetDiv.position(menuPosition.x, menuPosition.y, windowSize, scrollOffset);
+  this.positionWidgetDiv();
   widgetDiv.style.visibility = "visible";
+};
+Blockly.FieldRectangularDropdown.prototype.positionWidgetDiv = function() {
+  var numberOfColumns = chooseNumberOfColumns(this.menu_.getChildCount());
+  var positionBelow = numberOfColumns > 1;
+  var menuPosition = this.calculateMenuPosition_(this.previewElement_, positionBelow);
+  var windowSize = goog.dom.getViewportSize();
+  var scrollOffset = goog.style.getViewportPageOffset(document);
+  Blockly.WidgetDiv.position(menuPosition.x, menuPosition.y, windowSize, scrollOffset);
 };
 Blockly.FieldRectangularDropdown.prototype.calculateMenuPosition_ = function(dropdownTargetElement, positionBelow) {
   var previewTopLeft = Blockly.getAbsoluteXY_(dropdownTargetElement, this.getRootSVGElement_());
@@ -20780,7 +20823,7 @@ Blockly.FieldDropdown.CHECKMARK_OVERHANG = 25;
 Blockly.FieldDropdown.NO_OPTIONS_MESSAGE = "uninitialized";
 Blockly.FieldDropdown.prototype.CURSOR = "default";
 Blockly.FieldDropdown.prototype.showEditor_ = function(container) {
-  Blockly.WidgetDiv.show(this, null);
+  this.showWidgetDiv_();
   var thisField = this;
   function callback(e) {
     var menuItem = e.target;
@@ -20810,10 +20853,6 @@ Blockly.FieldDropdown.prototype.showEditor_ = function(container) {
     menuItem.setChecked(value === this.value_);
   }
   goog.events.listen(this.menu_, goog.ui.Component.EventType.ACTION, callback);
-  var windowSize = goog.dom.getViewportSize();
-  var scrollOffset = goog.style.getViewportPageOffset(document);
-  var xy = Blockly.getAbsoluteXY_((this.borderRect_), this.getRootSVGElement_());
-  var borderBBox = this.borderRect_.getBBox();
   var div = container || Blockly.WidgetDiv.DIV;
   div.style.visibility = "hidden";
   this.menu_.render(div);
@@ -20824,7 +20863,15 @@ Blockly.FieldDropdown.prototype.showEditor_ = function(container) {
   (container || menuDom).style.borderColor = "hsla(" + this.sourceBlock_.getColour() + ", " + this.sourceBlock_.getSaturation() * 100 + "%, " + this.sourceBlock_.getValue() * 100 + "%" + ", 0.5)";
   menuDom.style.overflowY = "auto";
   menuDom.style["max-height"] = "250px";
-  var menuSize = goog.style.getSize(menuDom);
+  this.positionWidgetDiv();
+  div.style.visibility = "visible";
+};
+Blockly.FieldDropdown.prototype.positionWidgetDiv = function() {
+  var windowSize = goog.dom.getViewportSize();
+  var scrollOffset = goog.style.getViewportPageOffset(document);
+  var xy = Blockly.getAbsoluteXY_((this.borderRect_), this.getRootSVGElement_());
+  var borderBBox = this.borderRect_.getBBox();
+  var menuSize = goog.style.getSize(this.menu_.getElement());
   if (xy.y + menuSize.height + borderBBox.height >= windowSize.height + scrollOffset.y) {
     xy.y -= menuSize.height;
   } else {
@@ -20846,7 +20893,6 @@ Blockly.FieldDropdown.prototype.showEditor_ = function(container) {
     xy.y -= scrollOffset.y;
   }
   Blockly.WidgetDiv.position(xy.x, xy.y, windowSize, scrollOffset);
-  div.style.visibility = "visible";
 };
 Blockly.FieldDropdown.prototype.trimOptions_ = function() {
   this.prefixTitle = null;
@@ -29204,13 +29250,13 @@ Blockly.Css.CONTENT = [".blocklyFieldAngleTextInput {", "  border: 1px solid #cc
 "#modalContainer > svg * {", "  pointer-events: visiblePainted;", "}", "/*", " * Copyright 2007 The Closure Library Authors. All Rights Reserved.", " *", " * Use of this source code is governed by the Apache License, Version 2.0.", " * See the COPYING file for details.", " */", "/* Author: pupius@google.com (Daniel Pupius) */", "/*", " Styles to make the colorpicker look like the old gmail color picker", " NOTE: without CSS scoping this will override styles defined in palette.css", "*/", ".goog-palette {", 
 "  outline: none;", "  cursor: default;", "}", ".goog-palette-table {", "  border: 1px solid #666;", "  border-collapse: collapse;", "}", ".goog-palette-cell {", "  height: 25px;", "  width: 25px;", "  margin: 0;", "  border: 0;", "  text-align: center;", "  vertical-align: middle;", "  border-right: 1px solid #666;", "  font-size: 1px;", "}", ".goog-palette-colorswatch {", "  position: relative;", "  height: 25px;", "  width: 25px;", "  border: 1px solid #666;", "}", ".goog-palette-cell-hover .goog-palette-colorswatch {", 
 "  border: 1px solid #FFF;", "}", ".goog-palette-cell-selected .goog-palette-colorswatch {", "  border: 1px solid #000;", "  color: #fff;", "}", ".goog-menu {", "  background: #fff;", "  border-color: #ccc #666 #666 #ccc;", "  border-style: solid;", "  border-width: 1px;", "  cursor: default;", "  font: normal 13px Arial, sans-serif;", "  margin: 0;", "  outline: none;", "  padding: 4px 0;", "  position: absolute;", "  z-index: 20000;", "}", ".goog-menuitem {", "  color: #000;", "  font: normal 13px Arial, sans-serif;", 
-"  list-style: none;", "  margin: 0;", "  padding: 4px 7em 4px 28px;", "  white-space: nowrap;", "}", ".goog-menuitem.goog-menuitem-rtl {", "  padding-left: 7em;", "  padding-right: 28px;", "}", ".goog-menu-nocheckbox .goog-menuitem,", ".goog-menu-noicon .goog-menuitem {", "  padding-left: 12px;", "}", ".goog-menu-noaccel .goog-menuitem {", "  padding-right: 20px;", "}", ".goog-menuitem-content {", "  color: #000;", "  font-size: 15px;", "}", ".goog-menuitem-disabled .goog-menuitem-accel,", ".goog-menuitem-disabled .goog-menuitem-content {", 
-"  color: #ccc !important;", "}", ".goog-menuitem-disabled .goog-menuitem-icon {", "  opacity: 0.3;", "  -moz-opacity: 0.3;", "  filter: alpha(opacity=30);", "}", ".goog-menuitem-highlight,", ".goog-menuitem-hover {", "  background-color: #d6e9f8;", "  border-color: #d6e9f8;", "  border-style: dotted;", "  border-width: 1px 0;", "  padding-bottom: 3px;", "  padding-top: 3px;", "}", ".goog-menuitem-checkbox,", ".goog-menuitem-icon {", "  background-repeat: no-repeat;", "  height: 16px;", "  left: 6px;", 
-"  position: absolute;", "  right: auto;", "  vertical-align: middle;", "  width: 16px;", "}", ".goog-menuitem-rtl .goog-menuitem-checkbox,", ".goog-menuitem-rtl .goog-menuitem-icon {", "  left: auto;", "  right: 6px;", "}", ".goog-option-selected .goog-menuitem-checkbox,", ".goog-option-selected .goog-menuitem-icon {", "}", ".goog-menuitem-accel {", "  color: #999;", "  direction: ltr;", "  left: auto;", "  padding: 0 6px;", "  position: absolute;", "  right: 0;", "  text-align: right;", "}", ".goog-menuitem-rtl .goog-menuitem-accel {", 
-"  left: 0;", "  right: auto;", "  text-align: left;", "}", ".goog-menuitem-mnemonic-hint {", "  text-decoration: underline;", "}", ".goog-menuitem-mnemonic-separator {", "  color: #999;", "  font-size: 12px;", "  padding-left: 4px;", "}", ".goog-menuseparator {", "  border-top: 1px solid #ccc;", "  margin: 4px 0;", "  padding: 0;", "}", ".goog-flat-menu-button {", "  background-color: #fff;", "  border: 1px solid #c9c9c9;", "  color: #333;", "  cursor: pointer;", "  font: normal 95%;", "  list-style: none;", 
-"  margin: 0 2px;", "  outline: none;", "  padding: 1px 4px;", "  position: relative;", "  text-decoration: none;", "  vertical-align: middle;", "}", ".goog-flat-menu-button-disabled * {", "  border-color: #ccc;", "  color: #999;", "  cursor: default;", "}", ".goog-flat-menu-button-hover {", "  border-color: #9cf #69e #69e #7af !important; /* Hover border wins. */", "}", ".goog-flat-menu-button-active {", "  background-color: #bbb;", "  background-position: bottom left;", "}", ".goog-flat-menu-button-focused {", 
-"  border-color: #bbb;", "}", ".goog-flat-menu-button-caption {", "  padding-right: 10px;", "  vertical-align: top;", "}", ".goog-flat-menu-button-dropdown {", "  /* Client apps may override the URL at which they serve the sprite. */", "  background: url(https://ssl.gstatic.com/editor/editortoolbar.png) no-repeat -388px 0;", "  position: absolute;", "  right: 2px;", "  top: 0;", "  vertical-align: top;", "  width: 7px;", "}", ".goog-inline-block {", "  position: relative;", "  display: -moz-inline-box; /* Ignored by FF3 and later. */", 
-"  display: inline-block;", "}", ""];
+"  list-style: none;", "  margin: 0;", "  padding: 4px 7em 4px 28px;", "  white-space: nowrap;", "}", ".goog-menuitem.goog-menuitem-rtl {", "  padding-left: 7em;", "  padding-right: 28px;", "}", ".goog-menu-nocheckbox .goog-menuitem,", ".goog-menu-noicon .goog-menuitem {", "  padding-left: 12px;", "}", ".goog-menu-noaccel .goog-menuitem:not(.goog-menuitem-rtl) {", "  padding-right: 20px;", "}", ".goog-menu-noaccel .goog-menuitem.goog-menuitem-rtl {", "  padding-left: 20px;", "}", ".goog-menuitem-content {", 
+"  color: #000;", "  font-size: 15px;", "}", ".goog-menuitem-disabled .goog-menuitem-accel,", ".goog-menuitem-disabled .goog-menuitem-content {", "  color: #ccc !important;", "}", ".goog-menuitem-disabled .goog-menuitem-icon {", "  opacity: 0.3;", "  -moz-opacity: 0.3;", "  filter: alpha(opacity=30);", "}", ".goog-menuitem-highlight,", ".goog-menuitem-hover {", "  background-color: #d6e9f8;", "  border-color: #d6e9f8;", "  border-style: dotted;", "  border-width: 1px 0;", "  padding-bottom: 3px;", 
+"  padding-top: 3px;", "}", ".goog-menuitem-checkbox,", ".goog-menuitem-icon {", "  background-repeat: no-repeat;", "  height: 16px;", "  left: 6px;", "  position: absolute;", "  right: auto;", "  vertical-align: middle;", "  width: 16px;", "}", ".goog-menuitem-rtl .goog-menuitem-checkbox,", ".goog-menuitem-rtl .goog-menuitem-icon {", "  left: auto;", "  right: 6px;", "}", ".goog-option-selected .goog-menuitem-checkbox,", ".goog-option-selected .goog-menuitem-icon {", "}", ".goog-menuitem-accel {", 
+"  color: #999;", "  direction: ltr;", "  left: auto;", "  padding: 0 6px;", "  position: absolute;", "  right: 0;", "  text-align: right;", "}", ".goog-menuitem-rtl .goog-menuitem-accel {", "  left: 0;", "  right: auto;", "  text-align: left;", "}", ".goog-menuitem-mnemonic-hint {", "  text-decoration: underline;", "}", ".goog-menuitem-mnemonic-separator {", "  color: #999;", "  font-size: 12px;", "  padding-left: 4px;", "}", ".goog-menuseparator {", "  border-top: 1px solid #ccc;", "  margin: 4px 0;", 
+"  padding: 0;", "}", ".goog-flat-menu-button {", "  background-color: #fff;", "  border: 1px solid #c9c9c9;", "  color: #333;", "  cursor: pointer;", "  font: normal 95%;", "  list-style: none;", "  margin: 0 2px;", "  outline: none;", "  padding: 1px 4px;", "  position: relative;", "  text-decoration: none;", "  vertical-align: middle;", "}", ".goog-flat-menu-button-disabled * {", "  border-color: #ccc;", "  color: #999;", "  cursor: default;", "}", ".goog-flat-menu-button-hover {", "  border-color: #9cf #69e #69e #7af !important; /* Hover border wins. */", 
+"}", ".goog-flat-menu-button-active {", "  background-color: #bbb;", "  background-position: bottom left;", "}", ".goog-flat-menu-button-focused {", "  border-color: #bbb;", "}", ".goog-flat-menu-button-caption {", "  padding-right: 10px;", "  vertical-align: top;", "}", ".goog-flat-menu-button-dropdown {", "  /* Client apps may override the URL at which they serve the sprite. */", "  background: url(https://ssl.gstatic.com/editor/editortoolbar.png) no-repeat -388px 0;", "  position: absolute;", 
+"  right: 2px;", "  top: 0;", "  vertical-align: top;", "  width: 7px;", "}", ".goog-inline-block {", "  position: relative;", "  display: -moz-inline-box; /* Ignored by FF3 and later. */", "  display: inline-block;", "}", ""];
 goog.provide("Blockly.WidgetDiv");
 goog.require("Blockly.Css");
 goog.require("goog.dom");

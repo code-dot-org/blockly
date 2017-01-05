@@ -166,7 +166,6 @@ Blockly.FieldRectangularDropdown.prototype.showMenu_ = function() {
 };
 
 Blockly.FieldRectangularDropdown.prototype.hideMenu_ = function() {
-
   this.pointArrowDown_();
 };
 

@@ -56,9 +56,9 @@ function test_field_reposition_on_scroll() {
   var block = blockSpace.getTopBlocks()[0];
   var field = block.getTitle_("NUM");
 
-  window.positionWidgetDivCalled = false;
+  var positionWidgetDivCalled = false;
   field.positionWidgetDiv = function () {
-    window.positionWidgetDivCalled = true;
+    positionWidgetDivCalled = true;
   };
 
   // Widget will not be positioned until the field is opened, even if
@@ -70,7 +70,7 @@ function test_field_reposition_on_scroll() {
   assertEquals(positionWidgetDivCalled, true);
 
   // It will then be positioned again once the block space is scrolled
-  window.positionWidgetDivCalled = false;
+  positionWidgetDivCalled = false;
   blockSpace.events.dispatchEvent(Blockly.BlockSpace.EVENTS.BLOCK_SPACE_SCROLLED);
   assertEquals(positionWidgetDivCalled, true);
 

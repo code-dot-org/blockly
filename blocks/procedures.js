@@ -91,7 +91,7 @@ Blockly.Blocks.procedures_defnoreturn = {
     // Add description mutation
     if (this.description_) {
       var desc = document.createElement('description');
-      desc.innerHTML = this.description_;
+      desc.textContent = this.description_;
       container.appendChild(desc);
     }
     return container;
@@ -103,7 +103,7 @@ Blockly.Blocks.procedures_defnoreturn = {
       if (nodeName === 'arg') {
         this.parameterNames_.push(childNode.getAttribute('name'));
       } else if (nodeName === 'description') {
-        this.description_ = childNode.innerHTML;
+        this.description_ = childNode.textContent;
       }
     }
     this.updateParams_();

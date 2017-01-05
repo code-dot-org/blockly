@@ -158,11 +158,15 @@ Blockly.FieldRectangularDropdown.prototype.setArrowDirection_ = function(up) {
 };
 
 Blockly.FieldRectangularDropdown.prototype.showMenu_ = function() {
-  Blockly.WidgetDiv.show(this, this.generateMenuClosedHandler_());
+  this.showWidgetDiv_();
   this.menu_ = this.createMenuWithChoices_(this.choices_);
   goog.events.listen(this.menu_, goog.ui.Component.EventType.ACTION, this.generateMenuItemSelectedHandler_());
   this.addPositionAndShowMenu(this.menu_);
   this.pointArrowUp_();
+};
+
+Blockly.FieldRectangularDropdown.prototype.hideMenu_ = function() {
+  this.pointArrowDown_();
 };
 
 Blockly.FieldRectangularDropdown.prototype.menuAlreadyShowing_ = function() {
@@ -213,17 +217,19 @@ Blockly.FieldRectangularDropdown.prototype.generateMenuItemSelectedHandler_ = fu
   };
 };
 
-Blockly.FieldRectangularDropdown.prototype.generateMenuClosedHandler_ = function () {
-  var fieldRectangularDropdown = this;
+/**
+ * @override
+ */
+Blockly.FieldRectangularDropdown.prototype.generateWidgetDisposeHandler_ = function () {
+  var superWidgetDisposeHandler_ = Blockly.FieldRectangularDropdown.superClass_.generateWidgetDisposeHandler_.call(this);
   return function() {
-    fieldRectangularDropdown.pointArrowDown_();
-  };
+    superWidgetDisposeHandler_();
+    this.hideMenu_();
+  }.bind(this);
 };
 
 Blockly.FieldRectangularDropdown.prototype.addPositionAndShowMenu = function (menu) {
   // Record windowSize and scrollOffset before adding menu.
-  var windowSize = goog.dom.getViewportSize();
-  var scrollOffset = goog.style.getViewportPageOffset(document);
   var widgetDiv = Blockly.WidgetDiv.DIV;
 
   // IE will scroll the bottom of the page into view to show this element
@@ -251,9 +257,24 @@ Blockly.FieldRectangularDropdown.prototype.addPositionAndShowMenu = function (me
     Blockly.addClass_(menuDom, 'blocklyGridDropdownMenu');
   }
 
-  var menuPosition = this.calculateMenuPosition_(this.previewElement_, multipleColumns);
-  Blockly.WidgetDiv.position(menuPosition.x, menuPosition.y, windowSize, scrollOffset);
+  this.positionWidgetDiv();
+
   widgetDiv.style.visibility = "visible";
+};
+
+/**
+ * @override
+ */
+Blockly.FieldRectangularDropdown.prototype.positionWidgetDiv = function () {
+  var numberOfColumns = chooseNumberOfColumns(this.menu_.getChildCount());
+  var positionBelow = numberOfColumns > 1;
+
+  var menuPosition = this.calculateMenuPosition_(this.previewElement_, positionBelow);
+
+  var windowSize = goog.dom.getViewportSize();
+  var scrollOffset = goog.style.getViewportPageOffset(document);
+
+  Blockly.WidgetDiv.position(menuPosition.x, menuPosition.y, windowSize, scrollOffset);
 };
 
 /**

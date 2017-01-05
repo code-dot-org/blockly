@@ -86,7 +86,7 @@ Blockly.FieldDropdown.prototype.CURSOR = 'default';
  * @private
  */
 Blockly.FieldDropdown.prototype.showEditor_ = function(container) {
-  Blockly.WidgetDiv.show(this, null);
+  this.showWidgetDiv_();
   var thisField = this;
 
   function callback(e) {
@@ -120,11 +120,6 @@ Blockly.FieldDropdown.prototype.showEditor_ = function(container) {
     menuItem.setChecked(value === this.value_);
   }
   goog.events.listen(this.menu_, goog.ui.Component.EventType.ACTION, callback);
-  // Record windowSize and scrollOffset before adding menu.
-  var windowSize = goog.dom.getViewportSize();
-  var scrollOffset = goog.style.getViewportPageOffset(document);
-  var xy = Blockly.getAbsoluteXY_(/** @type {!Element} */ (this.borderRect_), this.getRootSVGElement_());
-  var borderBBox = this.borderRect_.getBBox();
   var div = container || Blockly.WidgetDiv.DIV;
 
   // IE will scroll the bottom of the page into view to show this element
@@ -142,10 +137,21 @@ Blockly.FieldDropdown.prototype.showEditor_ = function(container) {
   menuDom.style.overflowY = "auto";
   menuDom.style["max-height"] = "250px";
 
-  // Record menuSize after adding menu.
-  var menuSize = goog.style.getSize(menuDom);
+  this.positionWidgetDiv();
 
-  // Position the menu.
+  div.style.visibility = "visible";
+};
+
+/**
+ * @override
+ */
+Blockly.FieldDropdown.prototype.positionWidgetDiv = function() {
+  var windowSize = goog.dom.getViewportSize();
+  var scrollOffset = goog.style.getViewportPageOffset(document);
+  var xy = Blockly.getAbsoluteXY_(/** @type {!Element} */ (this.borderRect_), this.getRootSVGElement_());
+  var borderBBox = this.borderRect_.getBBox();
+  var menuSize = goog.style.getSize(this.menu_.getElement());
+
   // Flip menu vertically if off the bottom.
   if (xy.y + menuSize.height + borderBBox.height >=
       windowSize.height + scrollOffset.y) {
@@ -177,8 +183,7 @@ Blockly.FieldDropdown.prototype.showEditor_ = function(container) {
   }
 
   Blockly.WidgetDiv.position(xy.x, xy.y, windowSize, scrollOffset);
-  div.style.visibility = "visible";
-};
+}
 
 /**
  * Factor out common words in statically defined options.

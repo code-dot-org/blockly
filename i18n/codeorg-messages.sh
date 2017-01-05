@@ -2,9 +2,9 @@
 
 set -e
 
-locales_dir=blockly-core/i18n/locales
-core_dir=blockly-core
 apps_dir=apps
+core_dir=$apps_dir/node_modules/@code-dot-org/blockly
+locales_dir=$core_dir/i18n/locales
 
 locales=$(ls $locales_dir)
 

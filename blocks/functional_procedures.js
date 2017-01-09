@@ -92,17 +92,17 @@ Blockly.Blocks.functional_definition = {
     // Add description mutation
     if (this.description_) {
       var desc = document.createElement('description');
-      desc.innerHTML = this.description_;
+      desc.textContent = this.description_;
       container.appendChild(desc);
     }
     if (this.outputType_) {
       var outputTypeMutation = document.createElement('outputType');
-      outputTypeMutation.innerHTML = this.outputType_;
+      outputTypeMutation.textContent = this.outputType_;
       container.appendChild(outputTypeMutation);
     }
     if (this.isFunctionalVariable_) {
       var functionalVariableMutation = document.createElement('isfunctionalvariable');
-      functionalVariableMutation.innerHTML = 'true';
+      functionalVariableMutation.textContent = 'true';
       container.appendChild(functionalVariableMutation);
     }
     return container;

@@ -738,13 +738,13 @@ Blockly.Blocks.procedures_defnoreturn = {shouldHideIfInMainBlockSpace:function()
     c.setAttribute("name", this.parameterNames_[b]);
     a.appendChild(c);
   }
-  this.description_ && (b = document.createElement("description"), b.innerHTML = this.description_, a.appendChild(b));
+  this.description_ && (b = document.createElement("description"), b.textContent = this.description_, a.appendChild(b));
   return a;
 }, domToMutation:function(a) {
   this.parameterNames_ = [];
   for (var b = 0, c;c = a.childNodes[b];b++) {
     var d = c.nodeName.toLowerCase();
-    "arg" === d ? this.parameterNames_.push(c.getAttribute("name")) : "description" === d && (this.description_ = c.innerHTML);
+    "arg" === d ? this.parameterNames_.push(c.getAttribute("name")) : "description" === d && (this.description_ = c.textContent);
   }
   this.updateParams_();
 }, decompose:function(a) {
@@ -1286,9 +1286,9 @@ Blockly.Blocks.functional_definition = {shouldHideIfInMainBlockSpace:function() 
     this.parameterTypes_[b] && c.setAttribute("type", this.parameterTypes_[b]);
     a.appendChild(c);
   }
-  this.description_ && (b = document.createElement("description"), b.innerHTML = this.description_, a.appendChild(b));
-  this.outputType_ && (b = document.createElement("outputType"), b.innerHTML = this.outputType_, a.appendChild(b));
-  this.isFunctionalVariable_ && (b = document.createElement("isfunctionalvariable"), b.innerHTML = "true", a.appendChild(b));
+  this.description_ && (b = document.createElement("description"), b.textContent = this.description_, a.appendChild(b));
+  this.outputType_ && (b = document.createElement("outputType"), b.textContent = this.outputType_, a.appendChild(b));
+  this.isFunctionalVariable_ && (b = document.createElement("isfunctionalvariable"), b.textContent = "true", a.appendChild(b));
   return a;
 }, domToMutation:function(a) {
   this.parameterNames_ = [];

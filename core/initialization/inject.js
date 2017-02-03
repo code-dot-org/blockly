@@ -67,6 +67,7 @@ Blockly.inject = function(container, opt_options, opt_audioPlayer) {
    * @type {Blockly.BlockSpace}
    */
   Blockly.mainBlockSpace = Blockly.mainBlockSpaceEditor.blockSpace;
+  Blockly.fireUiEvent(document, Blockly.BlockSpace.EVENTS.MAIN_BLOCK_SPACE_CREATED);
 
   if (Blockly.useModalFunctionEditor) {
     /** @type {Blockly.FunctionEditor} */

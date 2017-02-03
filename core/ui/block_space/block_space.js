@@ -114,6 +114,15 @@ Blockly.BlockSpace.DEBUG_EVENTS = false;
 Blockly.BlockSpace.EVENTS = {};
 
 /**
+ * Called after the mainBlockSpace has been initialized and assigned to
+ * the Blockly.mainBlockSpace global attribute; can be used by
+ * components that want to make their own one-off blockspaces to ensure
+ * that they're preserving initialization order.
+ * @type {string}
+ */
+Blockly.BlockSpace.EVENTS.MAIN_BLOCK_SPACE_CREATED = 'mainBlockSpaceCreated';
+
+/**
  * Called after a blockspace has been populated with a set of blocks
  * (e.g. when using domToBlockSpace)
  * @type {string}

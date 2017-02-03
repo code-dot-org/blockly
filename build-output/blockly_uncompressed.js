@@ -6789,6 +6789,7 @@ Blockly.BlockSpace = function(blockSpaceEditor, getMetrics, setMetrics) {
 };
 Blockly.BlockSpace.DEBUG_EVENTS = false;
 Blockly.BlockSpace.EVENTS = {};
+Blockly.BlockSpace.EVENTS.MAIN_BLOCK_SPACE_CREATED = "mainBlockSpaceCreated";
 Blockly.BlockSpace.EVENTS.EVENT_BLOCKS_IMPORTED = "blocksImported";
 Blockly.BlockSpace.EVENTS.BLOCK_SPACE_CHANGE = "blockSpaceChange";
 Blockly.BlockSpace.EVENTS.BLOCK_SPACE_SCROLLED = "blockSpaceScrolled";
@@ -29324,6 +29325,7 @@ Blockly.inject = function(container, opt_options, opt_audioPlayer) {
   }
   Blockly.mainBlockSpaceEditor = new Blockly.BlockSpaceEditor(container);
   Blockly.mainBlockSpace = Blockly.mainBlockSpaceEditor.blockSpace;
+  Blockly.fireUiEvent(document, Blockly.BlockSpace.EVENTS.MAIN_BLOCK_SPACE_CREATED);
   if (Blockly.useModalFunctionEditor) {
     Blockly.functionEditor = new Blockly.FunctionEditor;
   } else {

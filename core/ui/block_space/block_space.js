@@ -220,14 +220,14 @@ Blockly.BlockSpace.createReadOnlyBlockSpace = function (container, xml, opt_opti
  * having already been created; most useful for delaying components that
  * want to make their own one-off blockspaces to ensure that they're
  * preserving initialization order.
+ * @param {function} callback - callback to be called when
+ *     mainBlockSpace is created, or immediately if it already exists
  */
 Blockly.BlockSpace.onMainBlockSpaceCreated = function (callback) {
   if (Blockly.mainBlockSpace) {
     callback();
   } else {
-    document.addEventListener(Blockly.BlockSpace.EVENTS.MAIN_BLOCK_SPACE_CREATED, function () {
-      callback();
-    });
+    document.addEventListener(Blockly.BlockSpace.EVENTS.MAIN_BLOCK_SPACE_CREATED, callback);
   }
 };
 

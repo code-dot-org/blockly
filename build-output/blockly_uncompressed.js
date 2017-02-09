@@ -6815,6 +6815,13 @@ Blockly.BlockSpace.createReadOnlyBlockSpace = function(container, xml, opt_optio
   Blockly.Xml.domToBlockSpace(blockSpace, xml);
   return blockSpace;
 };
+Blockly.BlockSpace.onMainBlockSpaceCreated = function(callback) {
+  if (Blockly.mainBlockSpace) {
+    callback();
+  } else {
+    document.addEventListener(Blockly.BlockSpace.EVENTS.MAIN_BLOCK_SPACE_CREATED, callback);
+  }
+};
 Blockly.BlockSpace.prototype.xOffsetFromView = 0;
 Blockly.BlockSpace.prototype.yOffsetFromView = 0;
 Blockly.BlockSpace.prototype.trashcan = null;

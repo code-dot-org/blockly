@@ -156,6 +156,7 @@ Blockly.parseOptions_ = function(options) {
     hasTrashcan: hasTrashcan,
     varsInGlobals: options['varsInGlobals'] || false,
     languageTree: tree,
+    disableIfElseEditing: options['disableIfElseEditing'] || false,
     disableParamEditing: options['disableParamEditing'] || false,
     disableVariableEditing: options['disableVariableEditing'] || false,
     useModalFunctionEditor: options['useModalFunctionEditor'] || false,

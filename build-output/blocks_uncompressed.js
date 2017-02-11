@@ -286,7 +286,7 @@ Blockly.Blocks.controls_if = {init:function() {
   this.appendStatementInput("DO0").appendTitle(Blockly.Msg.CONTROLS_IF_MSG_THEN);
   this.setPreviousStatement(!0);
   this.setNextStatement(!0);
-  this.setMutator(new Blockly.Mutator(["controls_if_elseif", "controls_if_else"]));
+  Blockly.disableIfElseEditing || this.setMutator(new Blockly.Mutator(["controls_if_elseif", "controls_if_else"]));
   var a = this;
   this.setTooltip(function() {
     if (a.elseifCount_ || a.elseCount_) {

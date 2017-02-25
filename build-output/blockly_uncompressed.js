@@ -6815,6 +6815,13 @@ Blockly.BlockSpace.createReadOnlyBlockSpace = function(container, xml, opt_optio
   Blockly.Xml.domToBlockSpace(blockSpace, xml);
   return blockSpace;
 };
+Blockly.BlockSpace.onMainBlockSpaceCreated = function(callback) {
+  if (Blockly.mainBlockSpace) {
+    callback();
+  } else {
+    document.addEventListener(Blockly.BlockSpace.EVENTS.MAIN_BLOCK_SPACE_CREATED, callback);
+  }
+};
 Blockly.BlockSpace.prototype.xOffsetFromView = 0;
 Blockly.BlockSpace.prototype.yOffsetFromView = 0;
 Blockly.BlockSpace.prototype.trashcan = null;
@@ -29379,8 +29386,8 @@ Blockly.parseOptions_ = function(options) {
   }
   return {RTL:!!options["rtl"], collapse:hasCollapse, readOnly:readOnly, showUnusedBlocks:showUnusedBlocks, maxBlocks:options["maxBlocks"] || Infinity, assetUrl:options["assetUrl"] || function(path) {
     return "./" + path;
-  }, hasCategories:hasCategories, hasHorizontalScrollbars:options["hasHorizontalScrollbars"], hasVerticalScrollbars:options["hasVerticalScrollbars"], customSimpleDialog:options["customSimpleDialog"], hasTrashcan:hasTrashcan, varsInGlobals:options["varsInGlobals"] || false, languageTree:tree, disableParamEditing:options["disableParamEditing"] || false, disableVariableEditing:options["disableVariableEditing"] || false, useModalFunctionEditor:options["useModalFunctionEditor"] || false, useContractEditor:options["useContractEditor"] || 
-  false, disableExamples:options["disableExamples"] || false, defaultNumExampleBlocks:options["defaultNumExampleBlocks"] || 0, grayOutUndeletableBlocks:grayOutUndeletableBlocks, editBlocks:options["editBlocks"] || false, showExampleTestButtons:options["showExampleTestButtons"] || false};
+  }, hasCategories:hasCategories, hasHorizontalScrollbars:options["hasHorizontalScrollbars"], hasVerticalScrollbars:options["hasVerticalScrollbars"], customSimpleDialog:options["customSimpleDialog"], hasTrashcan:hasTrashcan, varsInGlobals:options["varsInGlobals"] || false, languageTree:tree, disableIfElseEditing:options["disableIfElseEditing"] || false, disableParamEditing:options["disableParamEditing"] || false, disableVariableEditing:options["disableVariableEditing"] || false, useModalFunctionEditor:options["useModalFunctionEditor"] || 
+  false, useContractEditor:options["useContractEditor"] || false, disableExamples:options["disableExamples"] || false, defaultNumExampleBlocks:options["defaultNumExampleBlocks"] || 0, grayOutUndeletableBlocks:grayOutUndeletableBlocks, editBlocks:options["editBlocks"] || false, showExampleTestButtons:options["showExampleTestButtons"] || false};
 };
 Blockly.registerUISounds_ = function(audioPlayer) {
   audioPlayer.register({id:"click", mp3:Blockly.assetUrl("media/click.mp3"), wav:Blockly.assetUrl("media/click.wav"), ogg:Blockly.assetUrl("media/click.ogg")});

@@ -115,9 +115,8 @@ Blockly.BlockSpace.EVENTS = {};
 
 /**
  * Called after the mainBlockSpace has been initialized and assigned to
- * the Blockly.mainBlockSpace global attribute; can be used by
- * components that want to make their own one-off blockspaces to ensure
- * that they're preserving initialization order.
+ * the Blockly.mainBlockSpace global attribute, used by
+ * onMainBlockSpaceCreated
  * @type {string}
  */
 Blockly.BlockSpace.EVENTS.MAIN_BLOCK_SPACE_CREATED = 'mainBlockSpaceCreated';
@@ -214,6 +213,22 @@ Blockly.BlockSpace.createReadOnlyBlockSpace = function (container, xml, opt_opti
 
   Blockly.Xml.domToBlockSpace(blockSpace, xml);
   return blockSpace;
+};
+
+/**
+ * Simple helper for situations where we depend on the mainBlockSpace
+ * having already been created; most useful for delaying components that
+ * want to make their own one-off blockspaces to ensure that they're
+ * preserving initialization order.
+ * @param {function} callback - callback to be called when
+ *     mainBlockSpace is created, or immediately if it already exists
+ */
+Blockly.BlockSpace.onMainBlockSpaceCreated = function (callback) {
+  if (Blockly.mainBlockSpace) {
+    callback();
+  } else {
+    document.addEventListener(Blockly.BlockSpace.EVENTS.MAIN_BLOCK_SPACE_CREATED, callback);
+  }
 };
 
 /**
@@ -1312,4 +1327,3 @@ Blockly.BlockSpace.prototype.clearDebugDrawings = function () {
   this.debugCircles_ = {};
   this.debugRects_ = {};
 };
-

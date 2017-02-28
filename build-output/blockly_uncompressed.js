@@ -18449,7 +18449,7 @@ Blockly.FieldTextInput.prototype.positionWidgetDiv = function() {
       var borderBBox = this.borderRect_.getBBox()
     }
     xy.x += borderBBox.width;
-    xy.x -= div.offsetWidth;
+    xy.x -= Blockly.WidgetDiv.DIV.offsetWidth;
   }
   xy.y += 1;
   if (goog.userAgent.WEBKIT) {

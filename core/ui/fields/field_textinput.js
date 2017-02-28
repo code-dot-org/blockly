@@ -226,7 +226,7 @@ Blockly.FieldTextInput.prototype.positionWidgetDiv = function() {
           var borderBBox = this.borderRect_.getBBox();
       }
     xy.x += borderBBox.width;
-    xy.x -= div.offsetWidth;
+    xy.x -= Blockly.WidgetDiv.DIV.offsetWidth;
   }
   // Shift by a few pixels to line up exactly.
   xy.y += 1;

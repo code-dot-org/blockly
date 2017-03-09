@@ -187,6 +187,14 @@ Blockly.Connection.prototype.connect = function(connectTo) {
   if (!this.sourceBlock_.isUserVisible()) {
     this.sourceBlock_.setUserVisible(false);
   }
+
+  if (this.onConnect) {
+    this.onConnect(connectTo);
+  }
+
+  if (connectTo.onConnect) {
+    connectTo.onConnect(this);
+  }
 };
 
 /**

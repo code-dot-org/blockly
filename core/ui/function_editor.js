@@ -598,7 +598,7 @@ Blockly.FunctionEditor.prototype.create_ = function() {
  */
 Blockly.FunctionEditor.prototype.resizeUIComponents_ = function () {
   var metrics = this.modalBlockSpace.getMetrics();
-  this.resizeFrame_(metrics.viewWidth, metrics.viewHeight);
+  this.resizeFrame_(metrics);
   this.positionClippingRects_(metrics);
   this.positionSizeContractDom_(metrics.viewWidth);
   this.positionCloseButton_(metrics);
@@ -607,15 +607,18 @@ Blockly.FunctionEditor.prototype.resizeUIComponents_ = function () {
 
 /**
  * Resizes the editor background frame to the given width and height
- * @param {number} width
- * @param {number} height
+ * @param {Object} metrics - block space metrics
  * @private
  */
-Blockly.FunctionEditor.prototype.resizeFrame_ = function (width, height) {
+Blockly.FunctionEditor.prototype.resizeFrame_ = function (metrics) {
+  var width = metrics.viewWidth;
+  var height = metrics.viewHeight;
+  var top = metrics.absoluteTop - this.getBlockSpaceEditorToScreenTop_();
+  this.modalBackground_.setAttribute('transform', 'translate(0,' + top + ')');
   this.frameBase_.setAttribute('width',
-      width + 2 * Blockly.Bubble.BORDER_WIDTH);
+    width + 2 * Blockly.Bubble.BORDER_WIDTH);
   this.frameBase_.setAttribute('height',
-      height + 2 * Blockly.Bubble.BORDER_WIDTH + FRAME_HEADER_HEIGHT);
+    height + 2 * Blockly.Bubble.BORDER_WIDTH + FRAME_HEADER_HEIGHT);
   this.frameInner_.setAttribute('width', width);
   this.frameInner_.setAttribute('height', height);
   if (Blockly.RTL) {
@@ -866,7 +869,7 @@ Blockly.FunctionEditor.prototype.position_ = function() {
   }
 
   var metrics = this.modalBlockSpace.getMetrics();
-  this.resizeFrame_(metrics.viewWidth, metrics.viewHeight);
+  this.resizeFrame_(metrics);
   // Resize contract div width
   this.positionSizeContractDom_(metrics.viewWidth);
 

@@ -328,9 +328,22 @@ Blockly.BlockSpace.prototype.createDom = function() {
   this.svgGroup_ = Blockly.createSvgElement('g', {'class': 'svgGroup'}, null);
   this.clippingGroup_ = Blockly.createSvgElement('g', {'class': 'svgClippingGroup'}, this.svgGroup_);
   this.svgBlockCanvas_ = Blockly.createSvgElement('g', {'class': 'svgBlockCanvas'}, this.clippingGroup_);
-  this.svgDragCanvas_ = Blockly.createSvgElement('g', {'class': 'svgDragCanvas'}, this.svgGroup_);
   this.svgBubbleCanvas_ = Blockly.createSvgElement('g', {'class': 'svgBubbleCanvas'}, this.svgGroup_);
   this.svgDebugCanvas_ = Blockly.createSvgElement('g', {'class': 'svgDebugCanvas'}, this.svgGroup_);
+
+  // Create a separate SVG to contain blocks while dragging.
+  if (!Blockly.dragSvg) {
+    Blockly.dragSvg = Blockly.createSvgElement('svg', {
+      id: 'blocklyDragCanvas',
+      width: '100%',
+      height: '100%',
+      style: 'pointer-events: none; position: absolute; top: 0; left: 0;'
+    }, document.body);
+
+    Blockly.dragCanvas = Blockly.createSvgElement('g', {'class': 'svgDragCanvas'}, Blockly.dragSvg);
+  }
+  this.svgDragCanvas_ = Blockly.dragCanvas;
+
   this.fireChangeEvent();
   return this.svgGroup_;
 };

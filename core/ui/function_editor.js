@@ -93,6 +93,9 @@ Blockly.FunctionEditor.CLOSE_BUTTON_OVERHANG = 14;
 /** @type {number} */
 Blockly.FunctionEditor.RTL_CLOSE_BUTTON_OFFSET = 5;
 
+/** @type {number} */
+Blockly.FunctionEditor.BUTTON_TOP_OFFSET = -22;
+
 /**
  * The type of block to instantiate in the function editing area
  * @type {string}
@@ -595,24 +598,27 @@ Blockly.FunctionEditor.prototype.create_ = function() {
  */
 Blockly.FunctionEditor.prototype.resizeUIComponents_ = function () {
   var metrics = this.modalBlockSpace.getMetrics();
-  this.resizeFrame_(metrics.viewWidth, metrics.viewHeight);
+  this.resizeFrame_(metrics);
   this.positionClippingRects_(metrics);
   this.positionSizeContractDom_(metrics.viewWidth);
-  this.positionCloseButton_(metrics.absoluteLeft, metrics.viewWidth);
-  this.positionDeleteButton_(metrics.absoluteLeft, metrics.viewWidth);
+  this.positionCloseButton_(metrics);
+  this.positionDeleteButton_(metrics);
 };
 
 /**
  * Resizes the editor background frame to the given width and height
- * @param {number} width
- * @param {number} height
+ * @param {Object} metrics - block space metrics
  * @private
  */
-Blockly.FunctionEditor.prototype.resizeFrame_ = function (width, height) {
+Blockly.FunctionEditor.prototype.resizeFrame_ = function (metrics) {
+  var width = metrics.viewWidth;
+  var height = metrics.viewHeight;
+  var top = metrics.absoluteTop - this.getBlockSpaceEditorToScreenTop_();
+  this.modalBackground_.setAttribute('transform', 'translate(0,' + top + ')');
   this.frameBase_.setAttribute('width',
-      width + 2 * Blockly.Bubble.BORDER_WIDTH);
+    width + 2 * Blockly.Bubble.BORDER_WIDTH);
   this.frameBase_.setAttribute('height',
-      height + 2 * Blockly.Bubble.BORDER_WIDTH + FRAME_HEADER_HEIGHT);
+    height + 2 * Blockly.Bubble.BORDER_WIDTH + FRAME_HEADER_HEIGHT);
   this.frameInner_.setAttribute('width', width);
   this.frameInner_.setAttribute('height', height);
   if (Blockly.RTL) {
@@ -655,30 +661,26 @@ Blockly.FunctionEditor.prototype.positionSizeContractDom_ = function (viewWidth)
 
 /**
  * Position close button based on new metrics
- * @param {number} absoluteLeft
- * @param {number} viewWidth
+ * @param {Object} metrics - block space metrics
  * @private
  */
-Blockly.FunctionEditor.prototype.positionCloseButton_ = function (absoluteLeft,
-    viewWidth) {
+Blockly.FunctionEditor.prototype.positionCloseButton_ = function (metrics) {
   this.closeButton_.setAttribute('transform', 'translate(' +
       (Blockly.RTL ? Blockly.FunctionEditor.RTL_CLOSE_BUTTON_OFFSET :
-        absoluteLeft + viewWidth + Blockly.FunctionEditor.CLOSE_BUTTON_OVERHANG -
+        metrics.absoluteLeft + metrics.viewWidth + Blockly.FunctionEditor.CLOSE_BUTTON_OVERHANG -
       this.closeButton_.firstElementChild.getAttribute('width')) +
-      ',19)');
+      ',' + (metrics.absoluteTop + Blockly.FunctionEditor.BUTTON_TOP_OFFSET) + ')');
 };
 
 /**
  * Position close button based on new metrics
- * @param {number} absoluteLeft
- * @param {number} viewWidth
+ * @param {Object} metrics - block space metrics
  * @private
  */
-Blockly.FunctionEditor.prototype.positionDeleteButton_ = function (absoluteLeft,
-    viewWidth) {
+Blockly.FunctionEditor.prototype.positionDeleteButton_ = function (metrics) {
   var closeButtonWidth = this.closeButton_.firstElementChild.getAttribute('width');
   var deleteButtonWidth = this.deleteButton_.getButtonWidth();
-  var rightEdge = absoluteLeft + viewWidth;
+  var rightEdge = metrics.absoluteLeft + metrics.viewWidth;
   var closeButtonLeft = Blockly.FunctionEditor.CLOSE_BUTTON_OVERHANG -
       closeButtonWidth;
   var deleteButtonLeft = rightEdge + closeButtonLeft - deleteButtonWidth;
@@ -687,7 +689,7 @@ Blockly.FunctionEditor.prototype.positionDeleteButton_ = function (absoluteLeft,
   var rtlXOffset = Blockly.FunctionEditor.RTL_CLOSE_BUTTON_OFFSET +
       closeButtonWidth + Blockly.FunctionEditor.DELETE_BUTTON_MARGIN;
   var xPosition = (Blockly.RTL ? rtlXOffset : ltrXOffset);
-  this.deleteButton_.renderAt(xPosition, 19);
+  this.deleteButton_.renderAt(xPosition, metrics.absoluteTop + Blockly.FunctionEditor.BUTTON_TOP_OFFSET);
 };
 
 /**
@@ -867,7 +869,7 @@ Blockly.FunctionEditor.prototype.position_ = function() {
   }
 
   var metrics = this.modalBlockSpace.getMetrics();
-  this.resizeFrame_(metrics.viewWidth, metrics.viewHeight);
+  this.resizeFrame_(metrics);
   // Resize contract div width
   this.positionSizeContractDom_(metrics.viewWidth);
 

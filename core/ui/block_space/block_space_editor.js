@@ -915,12 +915,14 @@ Blockly.BlockSpaceEditor.prototype.setBlockSpaceMetrics_ = function(xyRatio) {
   if (goog.isNumber(xyRatio.y)) {
     this.blockSpace.yOffsetFromView = -blockSpaceSize.height * xyRatio.y;
   }
-  var translation = 'translate(' +
-    (this.blockSpace.xOffsetFromView + metrics.absoluteLeft) + ',' +
-    (this.blockSpace.yOffsetFromView + metrics.absoluteTop) + ')';
+  var x = this.blockSpace.xOffsetFromView + metrics.absoluteLeft;
+  var y = this.blockSpace.yOffsetFromView + metrics.absoluteTop;
+  var translation = 'translate(' + x + ',' + y + ')';
   this.blockSpace.getCanvas().setAttribute('transform', translation);
-  this.blockSpace.getDragCanvas().setAttribute('transform', translation);
   this.blockSpace.getBubbleCanvas().setAttribute('transform', translation);
+
+  var offset = Blockly.convertCoordinates(x, y, this.svg_, false);
+  this.blockSpace.getDragCanvas().setAttribute('transform', 'translate(' + offset.x + ',' + offset.y + ')');
 };
 
 /**
@@ -934,9 +936,11 @@ Blockly.BlockSpaceEditor.prototype.setBlockSpaceMetricsNoScroll_ = function() {
     var translation = 'translate(' + (metrics.absoluteLeft) + ',' +
       (metrics.absoluteTop) + ')';
     this.blockSpace.getCanvas().setAttribute('transform', translation);
-    this.blockSpace.getDragCanvas().setAttribute('transform', translation);
     this.blockSpace.getBubbleCanvas().setAttribute('transform',
       translation);
+
+    var offset = Blockly.convertCoordinates(metrics.absoluteLeft, metrics.absoluteTop, this.svg_, false);
+    this.blockSpace.getDragCanvas().setAttribute('transform', 'translate(' + offset.x + ',' + offset.y + ')');
   }
 };
 

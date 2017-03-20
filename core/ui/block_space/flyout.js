@@ -168,6 +168,7 @@ Blockly.Flyout.prototype.dispose = function() {
     Blockly.unbindEvent_(this.changeWrapper_);
     this.changeWrapper_ = null;
   }
+  this.blockSpace_.dispose();
   this.blockSpace_ = null;
   if (this.svgGroup_) {
     goog.dom.removeNode(this.svgGroup_);

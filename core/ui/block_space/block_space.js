@@ -339,10 +339,8 @@ Blockly.BlockSpace.prototype.createDom = function() {
       height: '100%',
       style: 'pointer-events: none; position: absolute; top: 0; left: 0;'
     }, document.body);
-
-    Blockly.dragCanvas = Blockly.createSvgElement('g', {'class': 'svgDragCanvas'}, Blockly.dragSvg);
   }
-  this.svgDragCanvas_ = Blockly.dragCanvas;
+  this.svgDragCanvas_ = Blockly.createSvgElement('g', {'class': 'svgDragCanvas'}, Blockly.dragSvg);
 
   this.fireChangeEvent();
   return this.svgGroup_;
@@ -372,6 +370,9 @@ Blockly.BlockSpace.prototype.dispose = function() {
   if (this.svgGroup_) {
     goog.dom.removeNode(this.svgGroup_);
     this.svgGroup_ = null;
+  }
+  if (this.svgDragCanvas_) {
+    goog.dom.removeNode(this.svgDragCanvas_);
   }
   this.svgBlockCanvas_ = null;
   this.svgDragCanvas_ = null;

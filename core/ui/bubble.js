@@ -42,7 +42,7 @@ goog.require('Blockly.BlockSpace');
  */
 Blockly.Bubble = function(blockSpace, content, shape,
                           anchorX, anchorY,
-                          bubbleWidth, bubbleHeight) {
+                          bubbleWidth, bubbleHeight, dragCanvas) {
   var angle = Blockly.Bubble.ARROW_ANGLE;
   if (Blockly.RTL) {
     angle = -angle;
@@ -52,6 +52,7 @@ Blockly.Bubble = function(blockSpace, content, shape,
   this.blockSpace_ = blockSpace;
   this.content_ = content;
   this.shape_ = shape;
+  this.dragCanvas_ = dragCanvas;
   var canvas = blockSpace.getBubbleCanvas();
   canvas.appendChild(this.createDom_(content, !!(bubbleWidth && bubbleHeight)));
 
@@ -443,6 +444,9 @@ Blockly.Bubble.prototype.positionBubble_ = function() {
   var top = this.relativeTop_ + this.anchorY_;
   this.bubbleGroup_.setAttribute('transform',
       'translate(' + left + ', ' + top + ')');
+
+  var offset = Blockly.convertCoordinates(Blockly.RTL ? this.blockSpaceWidth_ : 0, 0, this.content_, false);
+  this.dragCanvas_.setAttribute('transform', 'translate(' + offset.x + ',' + offset.y + ')');
 };
 
 /**

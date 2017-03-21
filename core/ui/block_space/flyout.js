@@ -249,9 +249,6 @@ Blockly.Flyout.prototype.setMetrics_ = function(yRatio) {
   var y = this.blockSpace_.yOffsetFromView + metrics.absoluteTop;
   this.blockSpace_.getCanvas().setAttribute('transform', 'translate(0,'
       + y + ')');
-
-  var offset = Blockly.convertCoordinates(0, y, Blockly.topMostSVGParent(this.svgGroup_), false);
-  this.blockSpace_.getDragCanvas().setAttribute('transform', 'translate(' + offset.x + ',' + offset.y + ')');
 };
 
 /**

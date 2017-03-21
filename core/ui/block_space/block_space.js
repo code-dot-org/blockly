@@ -337,7 +337,7 @@ Blockly.BlockSpace.prototype.createDom = function() {
       id: 'blocklyDragCanvas',
       width: '100%',
       height: '100%',
-      style: 'pointer-events: none; position: absolute; top: 0; left: 0;'
+      style: 'pointer-events: none; position: absolute; top: 0; left: 0; z-index: 10;'
     }, document.body);
   }
   this.svgDragCanvas_ = Blockly.createSvgElement('g', {'class': 'svgDragCanvas'}, Blockly.dragSvg);

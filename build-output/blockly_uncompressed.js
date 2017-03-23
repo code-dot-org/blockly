@@ -6858,9 +6858,12 @@ Blockly.BlockSpace.prototype.createDom = function() {
   this.svgGroup_ = Blockly.createSvgElement("g", {"class":"svgGroup"}, null);
   this.clippingGroup_ = Blockly.createSvgElement("g", {"class":"svgClippingGroup"}, this.svgGroup_);
   this.svgBlockCanvas_ = Blockly.createSvgElement("g", {"class":"svgBlockCanvas"}, this.clippingGroup_);
-  this.svgDragCanvas_ = Blockly.createSvgElement("g", {"class":"svgDragCanvas"}, this.svgGroup_);
   this.svgBubbleCanvas_ = Blockly.createSvgElement("g", {"class":"svgBubbleCanvas"}, this.svgGroup_);
   this.svgDebugCanvas_ = Blockly.createSvgElement("g", {"class":"svgDebugCanvas"}, this.svgGroup_);
+  if (!Blockly.dragSvg) {
+    Blockly.dragSvg = Blockly.createSvgElement("svg", {id:"blocklyDragCanvas", width:"100%", height:"100%", style:"pointer-events: none; position: absolute; top: 0; left: 0; z-index: 10;"}, document.body);
+  }
+  this.svgDragCanvas_ = Blockly.createSvgElement("g", {"class":"svgDragCanvas"}, Blockly.dragSvg);
   this.fireChangeEvent();
   return this.svgGroup_;
 };
@@ -6874,6 +6877,9 @@ Blockly.BlockSpace.prototype.dispose = function() {
   if (this.svgGroup_) {
     goog.dom.removeNode(this.svgGroup_);
     this.svgGroup_ = null;
+  }
+  if (this.svgDragCanvas_) {
+    goog.dom.removeNode(this.svgDragCanvas_);
   }
   this.svgBlockCanvas_ = null;
   this.svgDragCanvas_ = null;
@@ -7391,7 +7397,7 @@ Blockly.BlockSpace.prototype.clearDebugDrawings = function() {
 };
 goog.provide("Blockly.Bubble");
 goog.require("Blockly.BlockSpace");
-Blockly.Bubble = function(blockSpace, content, shape, anchorX, anchorY, bubbleWidth, bubbleHeight) {
+Blockly.Bubble = function(blockSpace, content, shape, anchorX, anchorY, bubbleWidth, bubbleHeight, dragCanvas) {
   var angle = Blockly.Bubble.ARROW_ANGLE;
   if (Blockly.RTL) {
     angle = -angle;
@@ -7400,6 +7406,7 @@ Blockly.Bubble = function(blockSpace, content, shape, anchorX, anchorY, bubbleWi
   this.blockSpace_ = blockSpace;
   this.content_ = content;
   this.shape_ = shape;
+  this.dragCanvas_ = dragCanvas;
   var canvas = blockSpace.getBubbleCanvas();
   canvas.appendChild(this.createDom_(content, !!(bubbleWidth && bubbleHeight)));
   this.setAnchorLocation(anchorX, anchorY);
@@ -7579,6 +7586,8 @@ Blockly.Bubble.prototype.positionBubble_ = function() {
   }
   var top = this.relativeTop_ + this.anchorY_;
   this.bubbleGroup_.setAttribute("transform", "translate(" + left + ", " + top + ")");
+  var offset = Blockly.convertCoordinates(Blockly.RTL ? this.blockSpaceWidth_ : 0, 0, this.content_, false);
+  this.dragCanvas_.setAttribute("transform", "translate(" + offset.x + "," + offset.y + ")");
 };
 Blockly.Bubble.prototype.getBubbleSize = function() {
   return {width:this.width_, height:this.height_};
@@ -15614,15 +15623,17 @@ Blockly.Mutator.prototype.resizeBubble_ = function() {
   if (Blockly.RTL) {
     var translation = "translate(" + this.blockSpaceWidth_ + ",0)";
     this.blockSpace_.getCanvas().setAttribute("transform", translation);
-    this.blockSpace_.getDragCanvas().setAttribute("transform", translation);
   }
+  var offset = Blockly.convertCoordinates(Blockly.RTL ? this.blockSpaceWidth_ : 0, 0, this.svgDialog_, false);
+  this.blockSpace_.getDragCanvas().setAttribute("transform", "translate(" + offset.x + "," + offset.y + ")");
 };
 Blockly.Mutator.prototype.setVisible = function(visible) {
   if (visible == this.isVisible()) {
     return;
   }
   if (visible) {
-    this.bubble_ = new Blockly.Bubble(this.block_.blockSpace, this.createEditor_(), this.block_.svg_.svgGroup_, this.iconX_, this.iconY_, null, null);
+    this.createEditor_();
+    this.bubble_ = new Blockly.Bubble(this.block_.blockSpace, this.svgDialog_, this.block_.svg_.svgGroup_, this.iconX_, this.iconY_, null, null, this.blockSpace_.getDragCanvas());
     var thisObj = this;
     this.blockSpace_.flyout_.init(this.blockSpace_, false);
     this.blockSpace_.flyout_.show(this.quarkXml_);
@@ -21405,6 +21416,7 @@ Blockly.Flyout.prototype.dispose = function() {
     Blockly.unbindEvent_(this.changeWrapper_);
     this.changeWrapper_ = null;
   }
+  this.blockSpace_.dispose();
   this.blockSpace_ = null;
   if (this.svgGroup_) {
     goog.dom.removeNode(this.svgGroup_);
@@ -21441,7 +21453,6 @@ Blockly.Flyout.prototype.setMetrics_ = function(yRatio) {
   }
   var y = this.blockSpace_.yOffsetFromView + metrics.absoluteTop;
   this.blockSpace_.getCanvas().setAttribute("transform", "translate(0," + y + ")");
-  this.blockSpace_.getDragCanvas().setAttribute("transform", "translate(0," + y + ")");
 };
 Blockly.Flyout.prototype.init = function(blockSpace, withScrollbars) {
   this.targetBlockSpace_ = blockSpace;
@@ -25418,18 +25429,22 @@ Blockly.BlockSpaceEditor.prototype.setBlockSpaceMetrics_ = function(xyRatio) {
   if (goog.isNumber(xyRatio.y)) {
     this.blockSpace.yOffsetFromView = -blockSpaceSize.height * xyRatio.y;
   }
-  var translation = "translate(" + (this.blockSpace.xOffsetFromView + metrics.absoluteLeft) + "," + (this.blockSpace.yOffsetFromView + metrics.absoluteTop) + ")";
+  var x = this.blockSpace.xOffsetFromView + metrics.absoluteLeft;
+  var y = this.blockSpace.yOffsetFromView + metrics.absoluteTop;
+  var translation = "translate(" + x + "," + y + ")";
   this.blockSpace.getCanvas().setAttribute("transform", translation);
-  this.blockSpace.getDragCanvas().setAttribute("transform", translation);
   this.blockSpace.getBubbleCanvas().setAttribute("transform", translation);
+  var offset = Blockly.convertCoordinates(x, y, this.svg_, false);
+  this.blockSpace.getDragCanvas().setAttribute("transform", "translate(" + offset.x + "," + offset.y + ")");
 };
 Blockly.BlockSpaceEditor.prototype.setBlockSpaceMetricsNoScroll_ = function() {
   var metrics = this.getBlockSpaceMetrics_();
   if (metrics) {
     var translation = "translate(" + metrics.absoluteLeft + "," + metrics.absoluteTop + ")";
     this.blockSpace.getCanvas().setAttribute("transform", translation);
-    this.blockSpace.getDragCanvas().setAttribute("transform", translation);
     this.blockSpace.getBubbleCanvas().setAttribute("transform", translation);
+    var offset = Blockly.convertCoordinates(metrics.absoluteLeft, metrics.absoluteTop, this.svg_, false);
+    this.blockSpace.getDragCanvas().setAttribute("transform", "translate(" + offset.x + "," + offset.y + ")");
   }
 };
 Blockly.BlockSpaceEditor.prototype.addChangeListener = function(func) {
@@ -25724,6 +25739,7 @@ Blockly.FunctionEditor.BLOCK_LAYOUT_TOP_MARGIN = Blockly.BlockSpaceEditor.BUMP_P
 Blockly.FunctionEditor.DELETE_BUTTON_MARGIN = 25;
 Blockly.FunctionEditor.CLOSE_BUTTON_OVERHANG = 14;
 Blockly.FunctionEditor.RTL_CLOSE_BUTTON_OFFSET = 5;
+Blockly.FunctionEditor.BUTTON_TOP_OFFSET = -22;
 Blockly.FunctionEditor.prototype.definitionBlockType = "procedures_defnoreturn";
 Blockly.FunctionEditor.prototype.parameterBlockType = "parameters_get";
 Blockly.FunctionEditor.prototype.autoOpenFunction = function(autoOpenFunction) {
@@ -26046,13 +26062,17 @@ Blockly.FunctionEditor.prototype.create_ = function() {
 };
 Blockly.FunctionEditor.prototype.resizeUIComponents_ = function() {
   var metrics = this.modalBlockSpace.getMetrics();
-  this.resizeFrame_(metrics.viewWidth, metrics.viewHeight);
+  this.resizeFrame_(metrics);
   this.positionClippingRects_(metrics);
   this.positionSizeContractDom_(metrics.viewWidth);
-  this.positionCloseButton_(metrics.absoluteLeft, metrics.viewWidth);
-  this.positionDeleteButton_(metrics.absoluteLeft, metrics.viewWidth);
+  this.positionCloseButton_(metrics);
+  this.positionDeleteButton_(metrics);
 };
-Blockly.FunctionEditor.prototype.resizeFrame_ = function(width, height) {
+Blockly.FunctionEditor.prototype.resizeFrame_ = function(metrics) {
+  var width = metrics.viewWidth;
+  var height = metrics.viewHeight;
+  var top = metrics.absoluteTop - this.getBlockSpaceEditorToScreenTop_();
+  this.modalBackground_.setAttribute("transform", "translate(0," + top + ")");
   this.frameBase_.setAttribute("width", width + 2 * Blockly.Bubble.BORDER_WIDTH);
   this.frameBase_.setAttribute("height", height + 2 * Blockly.Bubble.BORDER_WIDTH + FRAME_HEADER_HEIGHT);
   this.frameInner_.setAttribute("width", width);
@@ -26081,19 +26101,19 @@ Blockly.FunctionEditor.prototype.positionSizeContractDom_ = function(viewWidth) 
   this.contractDiv_.style.width = viewWidth + "px";
   this.positionFlyout_(0);
 };
-Blockly.FunctionEditor.prototype.positionCloseButton_ = function(absoluteLeft, viewWidth) {
-  this.closeButton_.setAttribute("transform", "translate(" + (Blockly.RTL ? Blockly.FunctionEditor.RTL_CLOSE_BUTTON_OFFSET : absoluteLeft + viewWidth + Blockly.FunctionEditor.CLOSE_BUTTON_OVERHANG - this.closeButton_.firstElementChild.getAttribute("width")) + ",19)");
+Blockly.FunctionEditor.prototype.positionCloseButton_ = function(metrics) {
+  this.closeButton_.setAttribute("transform", "translate(" + (Blockly.RTL ? Blockly.FunctionEditor.RTL_CLOSE_BUTTON_OFFSET : metrics.absoluteLeft + metrics.viewWidth + Blockly.FunctionEditor.CLOSE_BUTTON_OVERHANG - this.closeButton_.firstElementChild.getAttribute("width")) + "," + (metrics.absoluteTop + Blockly.FunctionEditor.BUTTON_TOP_OFFSET) + ")");
 };
-Blockly.FunctionEditor.prototype.positionDeleteButton_ = function(absoluteLeft, viewWidth) {
+Blockly.FunctionEditor.prototype.positionDeleteButton_ = function(metrics) {
   var closeButtonWidth = this.closeButton_.firstElementChild.getAttribute("width");
   var deleteButtonWidth = this.deleteButton_.getButtonWidth();
-  var rightEdge = absoluteLeft + viewWidth;
+  var rightEdge = metrics.absoluteLeft + metrics.viewWidth;
   var closeButtonLeft = Blockly.FunctionEditor.CLOSE_BUTTON_OVERHANG - closeButtonWidth;
   var deleteButtonLeft = rightEdge + closeButtonLeft - deleteButtonWidth;
   var ltrXOffset = deleteButtonLeft - Blockly.FunctionEditor.DELETE_BUTTON_MARGIN;
   var rtlXOffset = Blockly.FunctionEditor.RTL_CLOSE_BUTTON_OFFSET + closeButtonWidth + Blockly.FunctionEditor.DELETE_BUTTON_MARGIN;
   var xPosition = Blockly.RTL ? rtlXOffset : ltrXOffset;
-  this.deleteButton_.renderAt(xPosition, 19);
+  this.deleteButton_.renderAt(xPosition, metrics.absoluteTop + Blockly.FunctionEditor.BUTTON_TOP_OFFSET);
 };
 Blockly.FunctionEditor.prototype.getBlockSpaceEditorToScreenTop_ = function() {
   return this.getWindowBorderChromeHeight();
@@ -26170,7 +26190,7 @@ Blockly.FunctionEditor.prototype.position_ = function() {
     return;
   }
   var metrics = this.modalBlockSpace.getMetrics();
-  this.resizeFrame_(metrics.viewWidth, metrics.viewHeight);
+  this.resizeFrame_(metrics);
   this.positionSizeContractDom_(metrics.viewWidth);
   this.layOutBlockSpaceItems_();
   this.modalBlockSpaceEditor.svgResize();

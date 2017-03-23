@@ -328,9 +328,20 @@ Blockly.BlockSpace.prototype.createDom = function() {
   this.svgGroup_ = Blockly.createSvgElement('g', {'class': 'svgGroup'}, null);
   this.clippingGroup_ = Blockly.createSvgElement('g', {'class': 'svgClippingGroup'}, this.svgGroup_);
   this.svgBlockCanvas_ = Blockly.createSvgElement('g', {'class': 'svgBlockCanvas'}, this.clippingGroup_);
-  this.svgDragCanvas_ = Blockly.createSvgElement('g', {'class': 'svgDragCanvas'}, this.svgGroup_);
   this.svgBubbleCanvas_ = Blockly.createSvgElement('g', {'class': 'svgBubbleCanvas'}, this.svgGroup_);
   this.svgDebugCanvas_ = Blockly.createSvgElement('g', {'class': 'svgDebugCanvas'}, this.svgGroup_);
+
+  // Create a separate SVG to contain blocks while dragging.
+  if (!Blockly.dragSvg) {
+    Blockly.dragSvg = Blockly.createSvgElement('svg', {
+      id: 'blocklyDragCanvas',
+      width: '100%',
+      height: '100%',
+      style: 'pointer-events: none; position: absolute; top: 0; left: 0; z-index: 10;'
+    }, document.body);
+  }
+  this.svgDragCanvas_ = Blockly.createSvgElement('g', {'class': 'svgDragCanvas'}, Blockly.dragSvg);
+
   this.fireChangeEvent();
   return this.svgGroup_;
 };
@@ -359,6 +370,9 @@ Blockly.BlockSpace.prototype.dispose = function() {
   if (this.svgGroup_) {
     goog.dom.removeNode(this.svgGroup_);
     this.svgGroup_ = null;
+  }
+  if (this.svgDragCanvas_) {
+    goog.dom.removeNode(this.svgDragCanvas_);
   }
   this.svgBlockCanvas_ = null;
   this.svgDragCanvas_ = null;

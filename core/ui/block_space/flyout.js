@@ -168,6 +168,7 @@ Blockly.Flyout.prototype.dispose = function() {
     Blockly.unbindEvent_(this.changeWrapper_);
     this.changeWrapper_ = null;
   }
+  this.blockSpace_.dispose();
   this.blockSpace_ = null;
   if (this.svgGroup_) {
     goog.dom.removeNode(this.svgGroup_);
@@ -248,8 +249,6 @@ Blockly.Flyout.prototype.setMetrics_ = function(yRatio) {
   var y = this.blockSpace_.yOffsetFromView + metrics.absoluteTop;
   this.blockSpace_.getCanvas().setAttribute('transform', 'translate(0,'
       + y + ')');
-  this.blockSpace_.getDragCanvas().setAttribute('transform',
-      'translate(0,' + y + ')');
 };
 
 /**

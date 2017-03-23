@@ -148,8 +148,10 @@ Blockly.Mutator.prototype.resizeBubble_ = function() {
     // Scroll the blockSpace to always left-align.
     var translation = 'translate(' + this.blockSpaceWidth_ + ',0)';
     this.blockSpace_.getCanvas().setAttribute('transform', translation);
-    this.blockSpace_.getDragCanvas().setAttribute('transform', translation);
   }
+
+  var offset = Blockly.convertCoordinates(Blockly.RTL ? this.blockSpaceWidth_ : 0, 0, this.svgDialog_, false);
+  this.blockSpace_.getDragCanvas().setAttribute('transform', 'translate(' + offset.x + ',' + offset.y + ')');
 };
 
 /**
@@ -162,10 +164,11 @@ Blockly.Mutator.prototype.setVisible = function(visible) {
     return;
   }
   if (visible) {
+    this.createEditor_();
     // Create the bubble.
     this.bubble_ = new Blockly.Bubble(this.block_.blockSpace,
-        this.createEditor_(), this.block_.svg_.svgGroup_,
-        this.iconX_, this.iconY_, null, null);
+        this.svgDialog_, this.block_.svg_.svgGroup_,
+        this.iconX_, this.iconY_, null, null, this.blockSpace_.getDragCanvas());
     var thisObj = this;
     this.blockSpace_.flyout_.init(this.blockSpace_, false);
     this.blockSpace_.flyout_.show(this.quarkXml_);

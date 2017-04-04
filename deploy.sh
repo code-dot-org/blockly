@@ -38,6 +38,8 @@ else
   --entry_point Blockly \
   --js core/ node_modules/google-closure-library/closure/ \
   --only_closure_dependencies \
+  --source_map_include_content \
+  --create_source_map build-output/blockly_compressed.js.map \
   >> build-output/blockly_compressed.js
 
   echo -e '// Do not edit this generated file\n"use strict";\n' > build-output/javascript_compressed.js

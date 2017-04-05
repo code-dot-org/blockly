@@ -337,7 +337,6 @@ Blockly.BlockSpace.prototype.createDom = function() {
       id: 'blocklyDragCanvas',
       width: '100%',
       height: '100%',
-      style: 'pointer-events: none; display: none; position: absolute; top: 0; left: 0; z-index: 10;'
     }, document.body);
   }
   this.svgDragCanvas_ = Blockly.createSvgElement('g', {'class': 'svgDragCanvas'}, Blockly.dragSvg);
@@ -352,7 +351,7 @@ Blockly.BlockSpace.prototype.createDom = function() {
  */
 Blockly.BlockSpace.prototype.moveElementToDragCanvas = function(blockSVGElement) {
   this.getDragCanvas().appendChild(blockSVGElement);
-  Blockly.dragSvg.style.display = 'block';
+  Blockly.addClass_(Blockly.dragSvg, 'isDragging');
 };
 
 /**
@@ -361,7 +360,7 @@ Blockly.BlockSpace.prototype.moveElementToDragCanvas = function(blockSVGElement)
  */
 Blockly.BlockSpace.prototype.moveElementToMainCanvas = function(blockSVGElement) {
   this.getCanvas().appendChild(blockSVGElement);
-  Blockly.dragSvg.style.display = 'none';
+  Blockly.removeClass_(Blockly.dragSvg, 'isDragging');
 };
 
 /**

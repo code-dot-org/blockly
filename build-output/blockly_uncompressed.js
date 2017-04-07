@@ -650,7 +650,7 @@ goog.removeUid = function(obj) {
   } catch (ex) {
   }
 };
-goog.UID_PROPERTY_ = "closure_uid_" + (Math.random() * 1E9 >>> 0);
+goog.UID_PROPERTY_ = "closure_uid_" + (Math.random() * 1e9 >>> 0);
 goog.uidCounter_ = 0;
 goog.getHashCode = goog.getUid;
 goog.removeHashCode = goog.removeUid;
@@ -954,7 +954,7 @@ Blockly.BlockSvgUnused.prototype.initChildren = function() {
   this.frameText_ = Blockly.createSvgElement("text", {"class":"blocklyText", style:"font-size: 12pt", y:frameTextVerticalPosition, "dominant-baseline":"central"}, this.frameGroup_);
   this.frameText_.appendChild(document.createTextNode(Blockly.Msg.UNUSED_CODE));
   this.frameHelp_ = Blockly.createSvgElement("g", {"class":"blocklyHelp"}, this.frameGroup_);
-  Blockly.createSvgElement("circle", {fill:"#7665a0", r:FRAME_HEADER_HEIGHT * .75 * .5}, this.frameHelp_);
+  Blockly.createSvgElement("circle", {fill:"#7665a0", r:FRAME_HEADER_HEIGHT * 0.75 * 0.5}, this.frameHelp_);
   Blockly.createSvgElement("text", {"class":"blocklyText", y:Blockly.ieVersion() ? 4 : 0}, this.frameHelp_).appendChild(document.createTextNode("?"));
 };
 Blockly.BlockSvgUnused.prototype.getPadding = function() {
@@ -3012,7 +3012,7 @@ BS.NOTCH_PATH_WIDTH = 15;
 BS.JAGGED_TEETH = "l 8,0 0,4 8,4 -16,8 8,4";
 BS.JAGGED_TEETH_HEIGHT = 20;
 BS.TAB_PATH_DOWN = "v 5 c 0,10 -" + BS.TAB_WIDTH + ",-8 -" + BS.TAB_WIDTH + ",7.5 s " + BS.TAB_WIDTH + ",-2.5 " + BS.TAB_WIDTH + ",7.5";
-BS.TAB_PATH_DOWN_HIGHLIGHT_RTL = "v 6.5 m -" + BS.TAB_WIDTH * .98 + ",2.5 q -" + BS.TAB_WIDTH * .05 + ",10 " + BS.TAB_WIDTH * .27 + ",10 m " + BS.TAB_WIDTH * .71 + ",-2.5 v 1.5";
+BS.TAB_PATH_DOWN_HIGHLIGHT_RTL = "v 6.5 m -" + BS.TAB_WIDTH * 0.98 + ",2.5 q -" + BS.TAB_WIDTH * .05 + ",10 " + BS.TAB_WIDTH * .27 + ",10 m " + BS.TAB_WIDTH * .71 + ",-2.5 v 1.5";
 BS.TOP_LEFT_CORNER_START = "m 0," + BS.CORNER_RADIUS;
 BS.TOP_LEFT_CORNER_START_HIGHLIGHT_RTL = "m " + BS.DISTANCE_45_INSIDE + "," + BS.DISTANCE_45_INSIDE;
 BS.TOP_LEFT_CORNER_START_HIGHLIGHT_LTR = "m 1," + (BS.CORNER_RADIUS - 1);
@@ -3124,8 +3124,8 @@ Blockly.BlockSvg.prototype.updateColour = function() {
 };
 Blockly.BlockSvg.prototype.updateToColour_ = function(hexColour) {
   var rgb = goog.color.hexToRgb(hexColour);
-  var rgbLight = goog.color.lighten(rgb, .3);
-  var rgbDark = goog.color.darken(rgb, .4);
+  var rgbLight = goog.color.lighten(rgb, 0.3);
+  var rgbDark = goog.color.darken(rgb, 0.4);
   this.svgPathLight_.setAttribute("stroke", goog.color.rgbArrayToHex(rgbLight));
   this.svgPathDark_.setAttribute("fill", goog.color.rgbArrayToHex(rgbDark));
   this.svgPath_.setAttribute("fill", hexColour);
@@ -3166,7 +3166,7 @@ Blockly.BlockSvg.prototype.updateLimit = function(limit) {
   var textWidth = this.limitText_.getBBox ? Math.ceil(this.limitText_.getBBox().width) : HALF_BUBBLE_SIZE;
   var rectWidth = Math.max(textWidth + HALF_BUBBLE_SIZE, BUBBLE_SIZE);
   this.limitRect_.setAttribute("width", rectWidth);
-  this.limitText_.setAttribute("x", Math.round(rectWidth * .5) - HALF_BUBBLE_SIZE);
+  this.limitText_.setAttribute("x", Math.round(rectWidth * 0.5) - HALF_BUBBLE_SIZE);
 };
 Blockly.BlockSvg.prototype.addSelect = function() {
   Blockly.addClass_(this.svgGroup_, "blocklySelected");
@@ -3507,8 +3507,8 @@ Blockly.BlockSvg.prototype.renderDrawRightInputValue_ = function(renderInfo, inp
     renderInfo.highlight.push(BS.TAB_PATH_DOWN_HIGHLIGHT_RTL);
     renderInfo.highlight.push("v", row.height - BS.TAB_HEIGHT);
   } else {
-    renderInfo.highlight.push("M", inputRows.rightEdge - 4.2 + "," + (renderInfo.curY + BS.TAB_HEIGHT - .4));
-    renderInfo.highlight.push("l", BS.TAB_WIDTH * .42 + ",-1.8");
+    renderInfo.highlight.push("M", inputRows.rightEdge - 4.2 + "," + (renderInfo.curY + BS.TAB_HEIGHT - 0.4));
+    renderInfo.highlight.push("l", BS.TAB_WIDTH * 0.42 + ",-1.8");
   }
   connectionX = connectionsXY.x + oppositeIfRTL(inputRows.rightEdge + 1);
   connectionY = connectionsXY.y + renderInfo.curY;
@@ -3633,8 +3633,8 @@ Blockly.BlockSvg.prototype.renderDrawRightInline_ = function(renderInfo, inputRo
         renderInfo.highlightInline.push("M", renderInfo.curX - BS.SEP_SPACE_X + 1 + "," + (renderInfo.curY + BS.INLINE_PADDING_Y + 1));
         renderInfo.highlightInline.push("v", input.renderHeight);
         renderInfo.highlightInline.push("h", BS.TAB_WIDTH - input.renderWidth);
-        renderInfo.highlightInline.push("M", renderInfo.curX - input.renderWidth - BS.SEP_SPACE_X + 3.8 + "," + (renderInfo.curY + BS.INLINE_PADDING_Y + BS.TAB_HEIGHT - .4));
-        renderInfo.highlightInline.push("l", BS.TAB_WIDTH * .42 + ",-1.8");
+        renderInfo.highlightInline.push("M", renderInfo.curX - input.renderWidth - BS.SEP_SPACE_X + 3.8 + "," + (renderInfo.curY + BS.INLINE_PADDING_Y + BS.TAB_HEIGHT - 0.4));
+        renderInfo.highlightInline.push("l", BS.TAB_WIDTH * 0.42 + ",-1.8");
       }
       var connectionX = connectionsXY.x + oppositeIfRTL(renderInfo.curX + BS.TAB_WIDTH - BS.SEP_SPACE_X - input.renderWidth + 1);
       var connectionY = connectionsXY.y + renderInfo.curY + BS.INLINE_PADDING_Y;
@@ -3700,12 +3700,12 @@ Blockly.BlockSvg.prototype.renderDrawLeft_ = function(renderInfo) {
     renderInfo.core.push("V", BS.TAB_HEIGHT);
     renderInfo.core.push("c 0,-10 -" + BS.TAB_WIDTH + ",8 -" + BS.TAB_WIDTH + ",-7.5 s " + BS.TAB_WIDTH + ",2.5 " + BS.TAB_WIDTH + ",-7.5");
     if (Blockly.RTL) {
-      renderInfo.highlight.push("M", BS.TAB_WIDTH * -.3 + ",8.9");
-      renderInfo.highlight.push("l", BS.TAB_WIDTH * -.45 + ",-2.1");
+      renderInfo.highlight.push("M", BS.TAB_WIDTH * -0.3 + ",8.9");
+      renderInfo.highlight.push("l", BS.TAB_WIDTH * -0.45 + ",-2.1");
     } else {
       renderInfo.highlight.push("V", BS.TAB_HEIGHT - 1);
-      renderInfo.highlight.push("m", BS.TAB_WIDTH * -.92 + ",-1 q " + BS.TAB_WIDTH * -.19 + ",-5.5 0,-11");
-      renderInfo.highlight.push("m", BS.TAB_WIDTH * .92 + ",1 V 1 H 2");
+      renderInfo.highlight.push("m", BS.TAB_WIDTH * -0.92 + ",-1 q " + BS.TAB_WIDTH * -0.19 + ",-5.5 0,-11");
+      renderInfo.highlight.push("m", BS.TAB_WIDTH * 0.92 + ",1 V 1 H 2");
     }
   } else {
     if (!Blockly.RTL) {
@@ -3802,8 +3802,8 @@ Blockly.BlockSvgFunctional = function(block, options) {
 goog.inherits(Blockly.BlockSvgFunctional, Blockly.BlockSvg);
 Blockly.BlockSvgFunctional.prototype.initChildren = function() {
   var rgb = Blockly.makeColour(this.block_.getColour(), this.block_.getSaturation(), this.block_.getValue());
-  var lightColor = goog.color.lighten(goog.color.hexToRgb(rgb), .3);
-  var lighterColor = goog.color.lighten(goog.color.hexToRgb(rgb), .8);
+  var lightColor = goog.color.lighten(goog.color.hexToRgb(rgb), 0.3);
+  var lighterColor = goog.color.lighten(goog.color.hexToRgb(rgb), 0.8);
   Blockly.BlockSvgFunctional.superClass_.initChildren.call(this);
   var clip = Blockly.createSvgElement("clipPath", {id:"blockClip" + this.block_.id}, this.svgGroup_);
   this.blockClipRect_ = Blockly.createSvgElement("path", {}, clip);
@@ -3928,7 +3928,7 @@ Blockly.BlockSvgFunctional.prototype.updateToColour_ = function(hexColour) {
   if (!this.divider_) {
     return;
   }
-  var lightColor = goog.color.lighten(goog.color.hexToRgb(hexColour), .3);
+  var lightColor = goog.color.lighten(goog.color.hexToRgb(hexColour), 0.3);
   this.divider_.setAttribute("fill", goog.color.rgbArrayToHex(lightColor));
 };
 Blockly.BlockSvgFunctional.prototype.dispose = function() {
@@ -4142,7 +4142,7 @@ Blockly.ScrollbarSvg.prototype.onMouseDownBar_ = function(e) {
   var knobStart = this.horizontal_ ? knobXY.x : knobXY.y;
   var knobLength = parseFloat(this.svgKnob_.getAttribute(this.horizontal_ ? "width" : "height"));
   var knobValue = parseFloat(this.svgKnob_.getAttribute(this.horizontal_ ? "x" : "y"));
-  var pageLength = knobLength * .95;
+  var pageLength = knobLength * 0.95;
   if (mouseLocation <= knobStart) {
     knobValue -= pageLength;
   } else {
@@ -4250,7 +4250,7 @@ goog.math.lerp = function(a, b, x) {
   return a + x * (b - a);
 };
 goog.math.nearlyEquals = function(a, b, opt_tolerance) {
-  return Math.abs(a - b) <= (opt_tolerance || 1E-6);
+  return Math.abs(a - b) <= (opt_tolerance || 0.000001);
 };
 goog.math.standardAngle = function(angle) {
   return goog.math.modulo(angle, 360);
@@ -4376,11 +4376,11 @@ goog.math.log10Floor = function(num) {
 };
 goog.math.safeFloor = function(num, opt_epsilon) {
   goog.asserts.assert(!goog.isDef(opt_epsilon) || opt_epsilon > 0);
-  return Math.floor(num + (opt_epsilon || 2E-15));
+  return Math.floor(num + (opt_epsilon || 2e-15));
 };
 goog.math.safeCeil = function(num, opt_epsilon) {
   goog.asserts.assert(!goog.isDef(opt_epsilon) || opt_epsilon > 0);
-  return Math.ceil(num - (opt_epsilon || 2E-15));
+  return Math.ceil(num - (opt_epsilon || 2e-15));
 };
 goog.provide("goog.math.Coordinate");
 goog.require("goog.math");
@@ -5394,7 +5394,7 @@ goog.forwardDeclare("goog.events.EventLike");
 goog.forwardDeclare("goog.events.EventTarget");
 goog.events.Listenable = function() {
 };
-goog.events.Listenable.IMPLEMENTED_BY_PROP = "closure_listenable_" + (Math.random() * 1E6 | 0);
+goog.events.Listenable.IMPLEMENTED_BY_PROP = "closure_listenable_" + (Math.random() * 1e6 | 0);
 goog.events.Listenable.addImplementation = function(cls) {
   cls.prototype[goog.events.Listenable.IMPLEMENTED_BY_PROP] = true;
 };
@@ -5596,7 +5596,7 @@ goog.forwardDeclare("goog.debug.ErrorHandler");
 goog.forwardDeclare("goog.events.EventWrapper");
 goog.events.Key;
 goog.events.ListenableType;
-goog.events.LISTENER_MAP_PROP_ = "closure_lm_" + (Math.random() * 1E6 | 0);
+goog.events.LISTENER_MAP_PROP_ = "closure_lm_" + (Math.random() * 1e6 | 0);
 goog.events.onString_ = "on";
 goog.events.onStringMap_ = {};
 goog.events.CaptureSimulationMode = {OFF_AND_FAIL:0, OFF_AND_SILENT:1, ON:2};
@@ -5922,7 +5922,7 @@ goog.events.getListenerMap_ = function(src) {
   var listenerMap = src[goog.events.LISTENER_MAP_PROP_];
   return listenerMap instanceof goog.events.ListenerMap ? listenerMap : null;
 };
-goog.events.LISTENER_WRAPPER_PROP_ = "__closure_events_fn_" + (Math.random() * 1E9 >>> 0);
+goog.events.LISTENER_WRAPPER_PROP_ = "__closure_events_fn_" + (Math.random() * 1e9 >>> 0);
 goog.events.wrapListener = function(listener) {
   goog.asserts.assert(listener, "Listener can not be null.");
   if (goog.isFunction(listener)) {
@@ -6324,7 +6324,7 @@ Blockly.ScrollOnBlockDragHandler.prototype.stopAutoScrolling = function() {
   }
   this.activeAutoScroll_ = null;
 };
-var MS_PER_SEC = 1E3;
+var MS_PER_SEC = 1000;
 var MOUSE_SPEED_SLOW = .5;
 var MOUSE_SPEED_FAST = 1.6;
 var BLOCK_SPEED_SLOW = .28;
@@ -6333,7 +6333,7 @@ var MOUSE_START_DISTANCE = 0;
 var MOUSE_START_FAST_DISTANCE = 35;
 var BLOCK_START_DISTANCE = 0;
 var BLOCK_START_FAST_DISTANCE = 50;
-var OVERSIZE_BLOCK_THRESHOLD = .85;
+var OVERSIZE_BLOCK_THRESHOLD = 0.85;
 var FALLBACK_DRAG_MARGIN = 15;
 Blockly.ScrollOnBlockDragHandler.DEBUG = false;
 Blockly.ScrollOnBlockDragHandler.prototype.panIfOverEdge = function(block, mouseClientX, mouseClientY) {
@@ -6697,9 +6697,7 @@ Blockly.Xml.domToBlock = function(blockSpace, xmlBlock) {
         block.setTitleValue(xmlChild.textContent, name);
         break;
       case "value":
-      ;
       case "statement":
-      ;
       case "functional_input":
         input = block.getInput(name);
         if (!input) {
@@ -6735,7 +6733,6 @@ Blockly.Xml.domToBlock = function(blockSpace, xmlBlock) {
         }
         break;
       default:
-      ;
     }
   }
   var next = block.nextConnection && block.nextConnection.targetBlock();
@@ -6861,7 +6858,7 @@ Blockly.BlockSpace.prototype.createDom = function() {
   this.svgBubbleCanvas_ = Blockly.createSvgElement("g", {"class":"svgBubbleCanvas"}, this.svgGroup_);
   this.svgDebugCanvas_ = Blockly.createSvgElement("g", {"class":"svgDebugCanvas"}, this.svgGroup_);
   if (!Blockly.dragSvg) {
-    Blockly.dragSvg = Blockly.createSvgElement("svg", {id:"blocklyDragCanvas", width:"100%", height:"100%", style:"pointer-events: none; position: absolute; top: 0; left: 0; z-index: 10;"}, document.body);
+    Blockly.dragSvg = Blockly.createSvgElement("svg", {id:"blocklyDragCanvas", width:"100%", height:"100%"}, document.body);
   }
   this.svgDragCanvas_ = Blockly.createSvgElement("g", {"class":"svgDragCanvas"}, Blockly.dragSvg);
   this.fireChangeEvent();
@@ -6869,9 +6866,11 @@ Blockly.BlockSpace.prototype.createDom = function() {
 };
 Blockly.BlockSpace.prototype.moveElementToDragCanvas = function(blockSVGElement) {
   this.getDragCanvas().appendChild(blockSVGElement);
+  Blockly.addClass_(Blockly.dragSvg, "isDragging");
 };
 Blockly.BlockSpace.prototype.moveElementToMainCanvas = function(blockSVGElement) {
   this.getCanvas().appendChild(blockSVGElement);
+  Blockly.removeClass_(Blockly.dragSvg, "isDragging");
 };
 Blockly.BlockSpace.prototype.dispose = function() {
   if (this.svgGroup_) {
@@ -7180,7 +7179,7 @@ Blockly.BlockSpace.prototype.isDeleteArea = function(mouseX, mouseY, startDragX)
   return false;
 };
 Blockly.BlockSpace.prototype.hideDelete = function() {
-  var veryDistantX = Blockly.RTL ? -1E4 : 1E4;
+  var veryDistantX = Blockly.RTL ? -10000 : 10000;
   this.drawTrashZone(veryDistantX, 0);
 };
 Blockly.BlockSpace.prototype.drawTrashZone = function(x, startDragX) {
@@ -7227,7 +7226,7 @@ Blockly.BlockSpace.prototype.drawTrashZone = function(x, startDragX) {
   }
   var normalIntensity = 1;
   var INNER_TRASH_DISTANCE = 100;
-  var INNER_TRASH_NORMAL_INTENSITY = .8;
+  var INNER_TRASH_NORMAL_INTENSITY = 0.8;
   var INNER_TRASH_TRASHCAN_INTENSITY = 1 - INNER_TRASH_NORMAL_INTENSITY;
   if (pastThreshold) {
     if (xDifference <= 0) {
@@ -7569,7 +7568,7 @@ Blockly.Bubble.prototype.layoutBubble_ = function() {
         this.shape_.style.display = "inline";
         var bBox = {x:this.shape_.getBBox().x, y:this.shape_.getBBox().y, width:this.shape_.scrollWidth, height:this.shape_.scrollHeight};
       } else {
-        var bBox = (this.shape_).getBBox()
+        var bBox = (this.shape_).getBBox();
       }
       relativeTop = bBox.height;
     }
@@ -8897,7 +8896,7 @@ goog.i18n.bidi.normalizeHebrewQuote = function(str) {
 };
 goog.i18n.bidi.wordSeparatorRe_ = /\s+/;
 goog.i18n.bidi.hasNumeralsRe_ = /[\d\u06f0-\u06f9]/;
-goog.i18n.bidi.rtlDetectionThreshold_ = .4;
+goog.i18n.bidi.rtlDetectionThreshold_ = 0.40;
 goog.i18n.bidi.estimateDirection = function(str, opt_isHtml) {
   var rtlCount = 0;
   var totalCount = 0;
@@ -9977,53 +9976,29 @@ goog.dom.canHaveChildren = function(node) {
   }
   switch((node).tagName) {
     case String(goog.dom.TagName.APPLET):
-    ;
     case String(goog.dom.TagName.AREA):
-    ;
     case String(goog.dom.TagName.BASE):
-    ;
     case String(goog.dom.TagName.BR):
-    ;
     case String(goog.dom.TagName.COL):
-    ;
     case String(goog.dom.TagName.COMMAND):
-    ;
     case String(goog.dom.TagName.EMBED):
-    ;
     case String(goog.dom.TagName.FRAME):
-    ;
     case String(goog.dom.TagName.HR):
-    ;
     case String(goog.dom.TagName.IMG):
-    ;
     case String(goog.dom.TagName.INPUT):
-    ;
     case String(goog.dom.TagName.IFRAME):
-    ;
     case String(goog.dom.TagName.ISINDEX):
-    ;
     case String(goog.dom.TagName.KEYGEN):
-    ;
     case String(goog.dom.TagName.LINK):
-    ;
     case String(goog.dom.TagName.NOFRAMES):
-    ;
     case String(goog.dom.TagName.NOSCRIPT):
-    ;
     case String(goog.dom.TagName.META):
-    ;
     case String(goog.dom.TagName.OBJECT):
-    ;
     case String(goog.dom.TagName.PARAM):
-    ;
     case String(goog.dom.TagName.SCRIPT):
-    ;
     case String(goog.dom.TagName.SOURCE):
-    ;
     case String(goog.dom.TagName.STYLE):
-    ;
     case String(goog.dom.TagName.TRACK):
-    ;
     case String(goog.dom.TagName.WBR):
       return false;
   }
@@ -11666,7 +11641,7 @@ goog.events.EventTarget = function() {
 };
 goog.inherits(goog.events.EventTarget, goog.Disposable);
 goog.events.Listenable.addImplementation(goog.events.EventTarget);
-goog.events.EventTarget.MAX_ANCESTORS_ = 1E3;
+goog.events.EventTarget.MAX_ANCESTORS_ = 1000;
 goog.events.EventTarget.prototype.getParentEventTarget = function() {
   return this.parentEventTarget_;
 };
@@ -11848,7 +11823,6 @@ goog.ui.Component.getStateTransitionEvent = function(state, isEntering) {
     case goog.ui.Component.State.OPENED:
       return isEntering ? goog.ui.Component.EventType.OPEN : goog.ui.Component.EventType.CLOSE;
     default:
-    ;
   }
   throw Error(goog.ui.Component.Error.STATE_INVALID);
 };
@@ -12335,55 +12309,30 @@ goog.events.KeyCodes.isTextModifyingKeyEvent = function(e) {
   }
   switch(e.keyCode) {
     case goog.events.KeyCodes.ALT:
-    ;
     case goog.events.KeyCodes.CAPS_LOCK:
-    ;
     case goog.events.KeyCodes.CONTEXT_MENU:
-    ;
     case goog.events.KeyCodes.CTRL:
-    ;
     case goog.events.KeyCodes.DOWN:
-    ;
     case goog.events.KeyCodes.END:
-    ;
     case goog.events.KeyCodes.ESC:
-    ;
     case goog.events.KeyCodes.HOME:
-    ;
     case goog.events.KeyCodes.INSERT:
-    ;
     case goog.events.KeyCodes.LEFT:
-    ;
     case goog.events.KeyCodes.MAC_FF_META:
-    ;
     case goog.events.KeyCodes.META:
-    ;
     case goog.events.KeyCodes.NUMLOCK:
-    ;
     case goog.events.KeyCodes.NUM_CENTER:
-    ;
     case goog.events.KeyCodes.PAGE_DOWN:
-    ;
     case goog.events.KeyCodes.PAGE_UP:
-    ;
     case goog.events.KeyCodes.PAUSE:
-    ;
     case goog.events.KeyCodes.PHANTOM:
-    ;
     case goog.events.KeyCodes.PRINT_SCREEN:
-    ;
     case goog.events.KeyCodes.RIGHT:
-    ;
     case goog.events.KeyCodes.SCROLL_LOCK:
-    ;
     case goog.events.KeyCodes.SHIFT:
-    ;
     case goog.events.KeyCodes.UP:
-    ;
     case goog.events.KeyCodes.VK_NONAME:
-    ;
     case goog.events.KeyCodes.WIN_KEY:
-    ;
     case goog.events.KeyCodes.WIN_KEY_RIGHT:
       return false;
     case goog.events.KeyCodes.WIN_KEY_FF_LINUX:
@@ -12413,27 +12362,16 @@ goog.events.KeyCodes.firesKeyPressEvent = function(keyCode, opt_heldKeyCode, opt
   if ((goog.userAgent.WEBKIT || goog.userAgent.EDGE) && opt_ctrlKey && opt_shiftKey) {
     switch(keyCode) {
       case goog.events.KeyCodes.BACKSLASH:
-      ;
       case goog.events.KeyCodes.OPEN_SQUARE_BRACKET:
-      ;
       case goog.events.KeyCodes.CLOSE_SQUARE_BRACKET:
-      ;
       case goog.events.KeyCodes.TILDE:
-      ;
       case goog.events.KeyCodes.SEMICOLON:
-      ;
       case goog.events.KeyCodes.DASH:
-      ;
       case goog.events.KeyCodes.EQUALS:
-      ;
       case goog.events.KeyCodes.COMMA:
-      ;
       case goog.events.KeyCodes.PERIOD:
-      ;
       case goog.events.KeyCodes.SLASH:
-      ;
       case goog.events.KeyCodes.APOSTROPHE:
-      ;
       case goog.events.KeyCodes.SINGLE_QUOTE:
         return false;
     }
@@ -12464,45 +12402,25 @@ goog.events.KeyCodes.isCharacterKey = function(keyCode) {
   }
   switch(keyCode) {
     case goog.events.KeyCodes.SPACE:
-    ;
     case goog.events.KeyCodes.PLUS_SIGN:
-    ;
     case goog.events.KeyCodes.QUESTION_MARK:
-    ;
     case goog.events.KeyCodes.AT_SIGN:
-    ;
     case goog.events.KeyCodes.NUM_PLUS:
-    ;
     case goog.events.KeyCodes.NUM_MINUS:
-    ;
     case goog.events.KeyCodes.NUM_PERIOD:
-    ;
     case goog.events.KeyCodes.NUM_DIVISION:
-    ;
     case goog.events.KeyCodes.SEMICOLON:
-    ;
     case goog.events.KeyCodes.FF_SEMICOLON:
-    ;
     case goog.events.KeyCodes.DASH:
-    ;
     case goog.events.KeyCodes.EQUALS:
-    ;
     case goog.events.KeyCodes.FF_EQUALS:
-    ;
     case goog.events.KeyCodes.COMMA:
-    ;
     case goog.events.KeyCodes.PERIOD:
-    ;
     case goog.events.KeyCodes.SLASH:
-    ;
     case goog.events.KeyCodes.APOSTROPHE:
-    ;
     case goog.events.KeyCodes.SINGLE_QUOTE:
-    ;
     case goog.events.KeyCodes.OPEN_SQUARE_BRACKET:
-    ;
     case goog.events.KeyCodes.BACKSLASH:
-    ;
     case goog.events.KeyCodes.CLOSE_SQUARE_BRACKET:
       return true;
     default:
@@ -14526,7 +14444,6 @@ goog.ui.MenuItemRenderer.prototype.getClassForState = function(state) {
     case goog.ui.Component.State.HOVER:
       return this.getCompositeCssClass_(goog.ui.MenuItemRenderer.CompositeCssClassIndex_.HOVER);
     case goog.ui.Component.State.CHECKED:
-    ;
     case goog.ui.Component.State.SELECTED:
       return goog.getCssName("goog-option-selected");
     default:
@@ -15229,7 +15146,7 @@ Blockly.Tooltip.svgShadow_ = null;
 Blockly.Tooltip.OFFSET_X = 0;
 Blockly.Tooltip.OFFSET_Y = 10;
 Blockly.Tooltip.RADIUS_OK = 10;
-Blockly.Tooltip.HOVER_MS = 1E3;
+Blockly.Tooltip.HOVER_MS = 1000;
 Blockly.Tooltip.MARGINS = 5;
 Blockly.Tooltip.createDom = function() {
   var svgGroup = (Blockly.createSvgElement("g", {"class":"blocklyHidden"}, null));
@@ -15323,7 +15240,7 @@ Blockly.Tooltip.show_ = function() {
     Blockly.Tooltip.svgText_.style.display = "inline";
     var bBox = {x:Blockly.Tooltip.svgText_.getBBox().x, y:Blockly.Tooltip.svgText_.getBBox().y, width:Blockly.Tooltip.svgText_.scrollWidth, height:Blockly.Tooltip.svgText_.scrollHeight};
   } else {
-    var bBox = Blockly.Tooltip.svgText_.getBBox()
+    var bBox = Blockly.Tooltip.svgText_.getBBox();
   }
   var width = 2 * Blockly.Tooltip.MARGINS + bBox.width;
   var height = bBox.height;
@@ -15755,7 +15672,7 @@ Blockly.Warning.prototype.setVisible = function(visible) {
         var bBox = {x:paragraph.getBBox().x, y:paragraph.getBBox().y, width:paragraph.scrollWidth, height:paragraph.scrollHeight};
         var maxWidth = bBox.width;
       } else {
-        var maxWidth = paragraph.getBBox().width
+        var maxWidth = paragraph.getBBox().width;
       }
       for (var x = 0, textElement;textElement = paragraph.childNodes[x];x++) {
         textElement.setAttribute("text-anchor", "end");
@@ -16617,7 +16534,7 @@ goog.Timer.MAX_TIMEOUT_ = 2147483647;
 goog.Timer.INVALID_TIMEOUT_ID_ = -1;
 goog.Timer.prototype.enabled = false;
 goog.Timer.defaultTimerObject = goog.global;
-goog.Timer.intervalScale = .8;
+goog.Timer.intervalScale = 0.8;
 goog.Timer.prototype.timer_ = null;
 goog.Timer.prototype.getInterval = function() {
   return this.interval_;
@@ -16753,8 +16670,8 @@ Blockly.Block = function(blockSpace, prototypeName, htmlId) {
   this.editLabel_ = null;
   this.blockSpace = blockSpace;
   this.isInFlyout = blockSpace.isFlyout;
-  this.colourSaturation_ = .45;
-  this.colourValue_ = .65;
+  this.colourSaturation_ = 0.45;
+  this.colourValue_ = 0.65;
   this.fillPattern_ = null;
   this.blockSvgClass_ = Blockly.BlockSvg;
   this.customOptions_ = {};
@@ -18445,7 +18362,7 @@ Blockly.FieldTextInput.prototype.resizeEditor_ = function() {
     this.fieldGroup_.style.display = "inline";
     var bBox = {x:this.fieldGroup_.getBBox().x, y:this.fieldGroup_.getBBox().y, width:this.fieldGroup_.scrollWidth, height:this.fieldGroup_.scrollHeight};
   } else {
-    var bBox = this.fieldGroup_.getBBox()
+    var bBox = this.fieldGroup_.getBBox();
   }
   div.style.width = bBox.width + "px";
   this.positionWidgetDiv();
@@ -18457,7 +18374,7 @@ Blockly.FieldTextInput.prototype.positionWidgetDiv = function() {
       this.borderRect_.style.display = "inline";
       var borderBBox = {x:this.borderRect_.getBBox().x, y:this.borderRect_.getBBox().y, width:this.borderRect_.scrollWidth, height:this.borderRect_.scrollHeight};
     } else {
-      var borderBBox = this.borderRect_.getBBox()
+      var borderBBox = this.borderRect_.getBBox();
     }
     xy.x += borderBBox.width;
     xy.x -= Blockly.WidgetDiv.DIV.offsetWidth;
@@ -18754,7 +18671,7 @@ goog.color.rgbToHsl = function(r, g, b) {
   var min = Math.min(normR, normG, normB);
   var h = 0;
   var s = 0;
-  var l = .5 * (max + min);
+  var l = 0.5 * (max + min);
   if (max != min) {
     if (max == normR) {
       h = 60 * (normG - normB) / (max - min);
@@ -18767,7 +18684,7 @@ goog.color.rgbToHsl = function(r, g, b) {
         }
       }
     }
-    if (0 < l && l <= .5) {
+    if (0 < l && l <= 0.5) {
       s = (max - min) / (2 * l);
     } else {
       s = (max - min) / (2 - 2 * l);
@@ -18809,7 +18726,7 @@ goog.color.hslToRgb = function(h, s, l) {
   } else {
     var temp1 = 0;
     var temp2 = 0;
-    if (l < .5) {
+    if (l < 0.5) {
       temp2 = l * (1 + s);
     } else {
       temp2 = l + s - s * l;
@@ -18895,7 +18812,6 @@ goog.color.hsvToRgb = function(h, s, brightness) {
         blue = val2;
         break;
       case 6:
-      ;
       case 0:
         red = brightness;
         green = val3;
@@ -18963,24 +18879,24 @@ goog.color.hsvArrayToHex = function(hsv) {
 };
 goog.color.hslDistance = function(hsl1, hsl2) {
   var sl1, sl2;
-  if (hsl1[2] <= .5) {
+  if (hsl1[2] <= 0.5) {
     sl1 = hsl1[1] * hsl1[2];
   } else {
-    sl1 = hsl1[1] * (1 - hsl1[2]);
+    sl1 = hsl1[1] * (1.0 - hsl1[2]);
   }
-  if (hsl2[2] <= .5) {
+  if (hsl2[2] <= 0.5) {
     sl2 = hsl2[1] * hsl2[2];
   } else {
-    sl2 = hsl2[1] * (1 - hsl2[2]);
+    sl2 = hsl2[1] * (1.0 - hsl2[2]);
   }
-  var h1 = hsl1[0] / 360;
-  var h2 = hsl2[0] / 360;
-  var dh = (h1 - h2) * 2 * Math.PI;
+  var h1 = hsl1[0] / 360.0;
+  var h2 = hsl2[0] / 360.0;
+  var dh = (h1 - h2) * 2.0 * Math.PI;
   return (hsl1[2] - hsl2[2]) * (hsl1[2] - hsl2[2]) + sl1 * sl1 + sl2 * sl2 - 2 * sl1 * sl2 * Math.cos(dh);
 };
 goog.color.blend = function(rgb1, rgb2, factor) {
   factor = goog.math.clamp(factor, 0, 1);
-  return [Math.round(factor * rgb1[0] + (1 - factor) * rgb2[0]), Math.round(factor * rgb1[1] + (1 - factor) * rgb2[1]), Math.round(factor * rgb1[2] + (1 - factor) * rgb2[2])];
+  return [Math.round(factor * rgb1[0] + (1.0 - factor) * rgb2[0]), Math.round(factor * rgb1[1] + (1.0 - factor) * rgb2[1]), Math.round(factor * rgb1[2] + (1.0 - factor) * rgb2[2])];
 };
 goog.color.darken = function(rgb, factor) {
   var black = [0, 0, 0];
@@ -19001,7 +18917,7 @@ goog.color.highContrast = function(prime, suggestions) {
   return suggestionsWithDiff[0].color;
 };
 goog.color.yiqBrightness_ = function(rgb) {
-  return Math.round((rgb[0] * 299 + rgb[1] * 587 + rgb[2] * 114) / 1E3);
+  return Math.round((rgb[0] * 299 + rgb[1] * 587 + rgb[2] * 114) / 1000);
 };
 goog.color.yiqBrightnessDiff_ = function(rgb1, rgb2) {
   return Math.abs(goog.color.yiqBrightness_(rgb1) - goog.color.yiqBrightness_(rgb2));
@@ -20404,7 +20320,7 @@ Blockly.FieldColour.prototype.positionWidgetDiv = function() {
     this.borderRect_.style.display = "inline";
     var borderBBox = {x:this.borderRect_.getBBox().x, y:this.borderRect_.getBBox().y, width:this.borderRect_.scrollWidth, height:this.borderRect_.scrollHeight};
   } else {
-    var borderBBox = this.borderRect_.getBBox()
+    var borderBBox = this.borderRect_.getBBox();
   }
   if (Blockly.RTL) {
     xy.x += borderBBox.width;
@@ -20783,7 +20699,7 @@ Blockly.FieldRectangularDropdown.prototype.sendClickRectToFront_ = function() {
 Blockly.FieldRectangularDropdown.prototype.calculateBackdropColourWithoutAlpha_ = function() {
   var blockColour = this.sourceBlock_.getHexColour();
   var backdropOverlayColour = "#ffffff";
-  var backdropOverlayOpacity = .6;
+  var backdropOverlayOpacity = 0.6;
   return Blockly.mixColoursWithForegroundOpacity(backdropOverlayColour, blockColour, backdropOverlayOpacity);
 };
 goog.provide("Blockly.FieldColourDropdown");
@@ -20886,6 +20802,9 @@ Blockly.FieldDropdown.prototype.showEditor_ = function(container) {
   div.style.visibility = "visible";
 };
 Blockly.FieldDropdown.prototype.positionWidgetDiv = function() {
+  if (!this.sourceBlock_) {
+    return;
+  }
   var windowSize = goog.dom.getViewportSize();
   var scrollOffset = goog.style.getViewportPageOffset(document);
   var xy = Blockly.getAbsoluteXY_((this.borderRect_), this.getRootSVGElement_());
@@ -21081,7 +21000,7 @@ Blockly.AngleHelper.prototype.init = function(svgContainer) {
   for (var angle = 15;angle < 360;angle += 15) {
     var markerSize = angle % 90 == 0 ? 15 : angle % 45 == 0 ? 10 : 5;
     var isOnPrimaryHalf = this.turnRight_ ? angle < 180 : angle > 180;
-    Blockly.createSvgElement("line", {"stroke-linecap":"round", "stroke-opacity":isOnPrimaryHalf ? 1 : .3, "x1":this.center_.x + this.lineLength_.x, "y1":this.center_.y, "x2":this.center_.x + this.lineLength_.x - markerSize, "y2":this.center_.y, "class":"blocklyAngleMarks", "transform":"rotate(" + angle + ", " + this.center_.x + ", " + this.center_.y + ")"}, this.svg_);
+    Blockly.createSvgElement("line", {"stroke-linecap":"round", "stroke-opacity":isOnPrimaryHalf ? 1 : 0.3, "x1":this.center_.x + this.lineLength_.x, "y1":this.center_.y, "x2":this.center_.x + this.lineLength_.x - markerSize, "y2":this.center_.y, "class":"blocklyAngleMarks", "transform":"rotate(" + angle + ", " + this.center_.x + ", " + this.center_.y + ")"}, this.svg_);
   }
   this.variableLine_ = Blockly.createSvgElement("line", {"stroke":"#4d575f", "stroke-width":this.strokeWidth_, "stroke-linecap":"round", "x1":this.center_.x, "x2":this.circleCenter_.x, "y1":this.center_.y, "y2":this.circleCenter_.y}, this.svg_);
   this.circle_ = Blockly.createSvgElement("circle", {"cx":this.circleCenter_.x, "cy":this.circleCenter_.y, "fill":"#a69bc1", "r":this.circleR_, "stroke":"#4d575f", "stroke-width":this.strokeWidth_, "style":"cursor: move;"}, this.svg_);
@@ -21436,7 +21355,7 @@ Blockly.Flyout.prototype.getMetrics_ = function() {
       this.blockSpace_.getCanvas().style.display = "inline";
       var optionBox = {x:this.blockSpace_.getCanvas().getBBox().x, y:this.blockSpace_.getCanvas().getBBox().y, width:this.blockSpace_.getCanvas().scrollWidth, height:this.blockSpace_.getCanvas().scrollHeight};
     } else {
-      var optionBox = this.blockSpace_.getCanvas().getBBox()
+      var optionBox = this.blockSpace_.getCanvas().getBBox();
     }
   } catch (e) {
     var optionBox = {height:0, y:0};
@@ -21784,7 +21703,7 @@ Blockly.Flyout.prototype.setEnabled = function(enabled) {
   this.enabled_ = enabled;
 };
 Blockly.Flyout.prototype.getRect = function() {
-  var BIG_NUM = 1E7;
+  var BIG_NUM = 10000000;
   var x = Blockly.getSvgXY_(this.svgGroup_).x;
   if (!Blockly.RTL) {
     x -= BIG_NUM;
@@ -22575,7 +22494,6 @@ goog.debug.getStacktraceHelper_ = function(fn, visited) {
             argDesc = argDesc ? argDesc : "[fn]";
             break;
           case "undefined":
-          ;
           default:
             argDesc = typeof arg;
             break;
@@ -22779,7 +22697,7 @@ goog.debug.Logger.Level.prototype.toString = function() {
 };
 goog.debug.Logger.Level.OFF = new goog.debug.Logger.Level("OFF", Infinity);
 goog.debug.Logger.Level.SHOUT = new goog.debug.Logger.Level("SHOUT", 1200);
-goog.debug.Logger.Level.SEVERE = new goog.debug.Logger.Level("SEVERE", 1E3);
+goog.debug.Logger.Level.SEVERE = new goog.debug.Logger.Level("SEVERE", 1000);
 goog.debug.Logger.Level.WARNING = new goog.debug.Logger.Level("WARNING", 900);
 goog.debug.Logger.Level.INFO = new goog.debug.Logger.Level("INFO", 800);
 goog.debug.Logger.Level.CONFIG = new goog.debug.Logger.Level("CONFIG", 700);
@@ -22909,7 +22827,7 @@ goog.debug.Logger.prototype.log = function(level, msg, opt_exception) {
 };
 goog.debug.Logger.prototype.getLogRecord = function(level, msg, opt_exception) {
   if (goog.debug.LogBuffer.isBufferingEnabled()) {
-    var logRecord = goog.debug.LogBuffer.getInstance().addRecord(level, msg, this.name_)
+    var logRecord = goog.debug.LogBuffer.getInstance().addRecord(level, msg, this.name_);
   } else {
     logRecord = new goog.debug.LogRecord(level, String(msg), this.name_);
   }
@@ -24110,7 +24028,6 @@ goog.ui.tree.TypeAhead.prototype.handleNavigation = function(e) {
   var handled = false;
   switch(e.keyCode) {
     case goog.events.KeyCodes.DOWN:
-    ;
     case goog.events.KeyCodes.UP:
       if (e.ctrlKey) {
         this.jumpTo_(e.keyCode == goog.events.KeyCodes.DOWN ? goog.ui.tree.TypeAhead.Offset.DOWN : goog.ui.tree.TypeAhead.Offset.UP);
@@ -24632,7 +24549,7 @@ Blockly.Toolbox.prototype.clearSelection = function() {
   this.tree_.setSelectedItem(null);
 };
 Blockly.Toolbox.prototype.getRect = function() {
-  var BIG_NUM = 1E7;
+  var BIG_NUM = 10000000;
   var left = -BIG_NUM;
   if (Blockly.RTL) {
     var svgSize = Blockly.mainBlockSpaceEditor.svgSize();
@@ -25030,8 +24947,8 @@ Blockly.BlockSpaceEditor.prototype.populateSVGEffects_ = function(container) {
   var filter, feSpecularLighting, feMerge, pattern;
   filter = Blockly.createSvgElement("filter", {"id":"blocklyEmboss"}, defs);
   Blockly.createSvgElement("feGaussianBlur", {"in":"SourceAlpha", "stdDeviation":1, "result":"blur"}, filter);
-  feSpecularLighting = Blockly.createSvgElement("feSpecularLighting", {"in":"blur", "surfaceScale":1, "specularConstant":.5, "specularExponent":10, "lighting-color":"white", "result":"specOut"}, filter);
-  Blockly.createSvgElement("fePointLight", {"x":-5E3, "y":-1E4, "z":2E4}, feSpecularLighting);
+  feSpecularLighting = Blockly.createSvgElement("feSpecularLighting", {"in":"blur", "surfaceScale":1, "specularConstant":0.5, "specularExponent":10, "lighting-color":"white", "result":"specOut"}, filter);
+  Blockly.createSvgElement("fePointLight", {"x":-5000, "y":-10000, "z":20000}, feSpecularLighting);
   Blockly.createSvgElement("feComposite", {"in":"specOut", "in2":"SourceAlpha", "operator":"in", "result":"specOut"}, filter);
   Blockly.createSvgElement("feComposite", {"in":"SourceGraphic", "in2":"specOut", "operator":"arithmetic", "k1":0, "k2":1, "k3":1, "k4":0}, filter);
   filter = Blockly.createSvgElement("filter", {"id":"blocklyTrashcanShadowFilter", "height":"150%", "y":"-20%"}, defs);
@@ -26229,10 +26146,10 @@ goog.provide("Blockly.FunctionalTypeColors");
 goog.require("Blockly.BlockValueType");
 var typesToColors = {};
 typesToColors[Blockly.BlockValueType.NONE] = [0, 0, 0];
-typesToColors[Blockly.BlockValueType.NUMBER] = [192, 1, .99];
-typesToColors[Blockly.BlockValueType.STRING] = [180, 1, .6];
-typesToColors[Blockly.BlockValueType.IMAGE] = [285, 1, .8];
-typesToColors[Blockly.BlockValueType.BOOLEAN] = [90, 1, .4];
+typesToColors[Blockly.BlockValueType.NUMBER] = [192, 1.00, 0.99];
+typesToColors[Blockly.BlockValueType.STRING] = [180, 1.00, 0.60];
+typesToColors[Blockly.BlockValueType.IMAGE] = [285, 1.00, 0.80];
+typesToColors[Blockly.BlockValueType.BOOLEAN] = [90, 1.00, 0.4];
 Blockly.FunctionalTypeColors = typesToColors;
 Blockly.FunctionalBlockUtils.initTitledFunctionalBlock = function(block, title, type, args, config_opt) {
   config_opt = config_opt || {};
@@ -26362,7 +26279,7 @@ Blockly.ExampleView = function(dom, svg, contractEditor) {
   this.svgParent_ = svg;
   this.contractEditor_ = contractEditor;
   this.block_ = null;
-  this.horizontalLine = Blockly.createSvgElement("rect", {"fill":Blockly.ContractEditor.GRID_LINE_COLOR, "height":2}, this.svgParent_);
+  this.horizontalLine = Blockly.createSvgElement("rect", {"fill":Blockly.ContractEditor.GRID_LINE_COLOR, "height":2.0}, this.svgParent_);
   Blockly.svgIgnoreMouseEvents(this.horizontalLine);
   this.grayBackdrop = Blockly.createSvgElement("rect", {"fill":"#DDD"}, this.svgParent_, {"belowExisting":true});
   this.grayBackdrop.style.pointerEvents = "none";
@@ -26567,13 +26484,13 @@ Blockly.ContractDefinitionSection = function(canvasToDrawOn) {
   this.grayDefinitionBackground = Blockly.createSvgElement("rect", {"fill":"#DDD"}, this.definitionTableGroup);
   Blockly.svgIgnoreMouseEvents(this.grayDefinitionBackground);
   this.verticalDefinitionMidline = Blockly.createSvgElement("rect", {"fill":Blockly.ContractEditor.GRID_LINE_COLOR}, this.definitionTableGroup);
-  this.verticalDefinitionMidline.setAttribute("width", 2);
+  this.verticalDefinitionMidline.setAttribute("width", 2.0);
   Blockly.svgIgnoreMouseEvents(this.verticalDefinitionMidline);
   this.horizontalDefinitionTopLine = Blockly.createSvgElement("rect", {"fill":Blockly.ContractEditor.GRID_LINE_COLOR}, this.definitionTableGroup);
-  this.horizontalDefinitionTopLine.setAttribute("height", 2);
+  this.horizontalDefinitionTopLine.setAttribute("height", 2.0);
   Blockly.svgIgnoreMouseEvents(this.horizontalDefinitionTopLine);
   this.horizontalDefinitionBottomLine = Blockly.createSvgElement("rect", {"fill":Blockly.ContractEditor.GRID_LINE_COLOR}, this.definitionTableGroup);
-  this.horizontalDefinitionBottomLine.setAttribute("height", 2);
+  this.horizontalDefinitionBottomLine.setAttribute("height", 2.0);
   Blockly.svgIgnoreMouseEvents(this.horizontalDefinitionBottomLine);
 };
 Blockly.ContractDefinitionSection.prototype.handleCollapse = function(isNowCollapsed) {
@@ -26875,15 +26792,12 @@ goog.ui.ButtonRenderer.prototype.getAriaRole = function() {
 goog.ui.ButtonRenderer.prototype.updateAriaState = function(element, state, enable) {
   switch(state) {
     case goog.ui.Component.State.SELECTED:
-    ;
     case goog.ui.Component.State.CHECKED:
       goog.asserts.assert(element, "The button DOM element cannot be null.");
       goog.a11y.aria.setState(element, goog.a11y.aria.State.PRESSED, enable);
       break;
     default:
-    ;
     case goog.ui.Component.State.OPENED:
-    ;
     case goog.ui.Component.State.DISABLED:
       goog.ui.ButtonRenderer.base(this, "updateAriaState", element, state, enable);
       break;
@@ -28422,10 +28336,10 @@ Blockly.ContractEditor.prototype.create_ = function() {
   Blockly.svgIgnoreMouseEvents(this.resultText);
   this.examplesTableGroup = Blockly.createSvgElement("g", {}, canvasToDrawOn);
   this.topHorizontalLine = Blockly.createSvgElement("rect", {"fill":Blockly.ContractEditor.GRID_LINE_COLOR}, this.examplesTableGroup);
-  this.topHorizontalLine.setAttribute("height", 2);
+  this.topHorizontalLine.setAttribute("height", 2.0);
   Blockly.svgIgnoreMouseEvents(this.topHorizontalLine);
   this.verticalExampleMidline = Blockly.createSvgElement("rect", {"fill":Blockly.ContractEditor.GRID_LINE_COLOR}, this.examplesTableGroup);
-  this.verticalExampleMidline.setAttribute("width", 2);
+  this.verticalExampleMidline.setAttribute("width", 2.0);
   this.examplesSectionView_ = new Blockly.ContractEditorSectionView(canvasToDrawOn, {sectionNumber:2, headerHeight:HEADER_HEIGHT, headerText:"Examples", placeContentCallback:this.onPlaceExampleContent.bind(this), highlightBox:sharedHighlightBox, onCollapseCallback:goog.bind(function(isNowCollapsed) {
     this.exampleAreaDiv.style.display = isNowCollapsed ? "none" : "block";
     this.examplesTableGroup.style.display = isNowCollapsed ? "none" : "block";
@@ -29255,36 +29169,36 @@ Blockly.Css.CONTENT = [".blocklyFieldAngleTextInput {", "  border: 1px solid #cc
 "  cursor: url(%CURSOR_CLOSED_PATH%) 7 3, auto !important;", "}", "#%CONTAINER_ID% {", "  border: 1px solid #ddd;", "}", "#%CONTAINER_ID% .userHidden {", "  display: none;", "}", "#%CONTAINER_ID% .hiddenFlyout {", "  display: none !important;", "}", "#%CONTAINER_ID%.edit .userHidden {", "  display: inline;", "  fill-opacity: 0.5;", "}", "#%CONTAINER_ID%.edit .userHidden .blocklyPath {", "  fill-opacity: 0.5;", "}", "#%CONTAINER_ID%.edit .userHidden .blocklyPathDark, #%CONTAINER_ID%.edit .userHidden .blocklyPathLight {", 
 "  display: none;", "}", ".blocklySvg {", "  cursor: pointer;", "  background-color: #fff;", "  overflow: hidden;", "}", "g.blocklyDraggable {", "  -ms-touch-action: none;", "  touch-action: none;", "}", ".blocklyWidgetDiv {", "  position: absolute;", "  display: none;", "  z-index: 999;", "}", ".blocklyResizeSE {", "  fill: #aaa;", "  cursor: se-resize;", "}", ".blocklyResizeSW {", "  fill: #aaa;", "  cursor: sw-resize;", "}", ".blocklyResizeLine {", "  stroke-width: 1;", "  stroke: #888;", "}", 
 ".blocklyHighlightedConnectionPath {", "  stroke-width: 4px;", "  stroke: #fc3;", "  fill: none;", "}", ".blocklyPathLight {", "  fill: none;", "  stroke-width: 2;", "  stroke-linecap: round;", "}", ".blocklySpotlight>.blocklyPath {", "  fill: #fc3;", "}", ".blocklySelected:not(.blocklyUndeletable)>.blocklyPath {", "  stroke-width: 3px;", "  stroke: #fc3;", "}", ".blocklySelected:not(.blocklyUndeletable)>.blocklyPathLight {", "  display: none;", "}", ".blocklyUndeletable>.blocklyEditableText>rect {", 
-"  fill-opacity: 1.0;", "  fill: #ffdb74;", "}", ".blocklyDragging>.blocklyPath,", ".blocklyDragging>.blocklyPathLight {", "  fill-opacity: 0.8;", "  stroke-opacity: 0.8;", "}", ".blocklyDragging>.blocklyPathDark {", "  display: none;", "}", ".blocklyDisabled>.blocklyPath {", "  fill-opacity: 0.50;", "  stroke-opacity: 0.50;", "}", ".blocklyDisabled>.blocklyPathLight,", ".blocklyDisabled>.blocklyPathDark {", "  display: none;", "}", ".blocklyText {", "  cursor: default;", "  font-family: sans-serif;", 
-"  font-size: 11pt;", "  fill: #fff;", "}", ".innerModalDiv {", "  pointer-events: none !important;", "}", ".innerModalDiv .goog-flat-menu-button,", ".innerModalDiv textarea,", ".innerModalDiv input,", ".innerModalDiv button {", "  pointer-events: auto;", "}", ".flyoutColorGray {", "  background-color: #DDD;", "}", ".contractEditor #paramAddButton {", "  margin-top: 3px;", "  margin-left: 10px;", "  margin-bottom: 4px;", "}", ".contractEditorHeaderText {", "  cursor: default;", "  font-size: 12pt;", 
-"  fill: #fff;", "}", ".contract-type-hint {", "  color: #898989;", "  font-size: 11px;", "}", ".exampleAreaDiv {", "  pointer-events: none;", "}", ".callResultText {", "  color: #000;", "  position: absolute;", "}", ".exampleAreaButton {", "  pointer-events: initial;", "  position: absolute;", "}", ".core-clearfix {", "  overflow: auto;", "}", ".testButton {", "  padding: 3px 0 !important;", "  min-width: 95px !important;", "}", ".resetButton {", "  border: 1px solid #0094ca !important;", "  background-color: #0094ca !important;", 
-"}", ".example-result-text {", "  position: absolute;", "  font-size: 16px;", "}", ".color-square-icon {", "  float: left;", "  width: 21px;", "  height: 18px;", "  margin-right: 9px !important;", "  margin-left: 6px !important;", "}", ".goog-menuitem .color-square-icon {", "  margin-left: -3px !important;", "  margin-top: 2px !important;", "}", ".blocklyNonEditableText>text {", "  pointer-events: none;", "}", ".blocklyNonEditableText>rect,", ".blocklyEditableText>rect {", "  fill: #fff;", "  fill-opacity: 0.6;", 
-"}", ".blocklyNonEditableText>text,", ".blocklyEditableText>text {", "  fill: #000;", "}", ".blocklyEditableText:hover>rect {", "  stroke-width: 2;", "  stroke: #fff;", "}", "/*", " * Don't allow users to select text.  It gets annoying when trying to", " * drag a block and selected text moves instead.", " */", ".blocklySvg text {", "  -moz-user-select: none;", "  -webkit-user-select: none;", "  user-select: none;", "  cursor: inherit;", "}", ".blocklyHidden {", "  display: none;", "}", ".blocklyFieldDropdown:not(.blocklyHidden) {", 
-"  display: block;", "}", ".blocklyTooltipBackground {", "  fill: #ffffc7;", "  stroke-width: 1px;", "  stroke: #d8d8d8;", "}", ".blocklyTooltipShadow,", ".blocklyContextMenuShadow,", ".blocklyDropdownMenuShadow {", "  fill: #bbb;", "  filter: url(#blocklyShadowFilter);", "}", ".blocklyTooltipText {", "  font-family: sans-serif;", "  font-size: 9pt;", "  fill: #000;", "}", "#modalEditorClose:hover>rect {", "  fill: #0094ca;", "}", ".svgTextButton:hover>rect {", "  fill: #0094ca;", "}", ".red-delete-button {", 
-"  background-color: #cc0000 !important;", "  border: 1px solid #cc0000 !important;", "}", ".blocklyIconShield {", "  cursor: default;", "  fill: #00c;", "  stroke-width: 1px;", "  stroke: #ccc;", "}", ".blocklyIconGroup:hover>.blocklyIconShield {", "  fill: #00f;", "  stroke: #fff;", "}", ".blocklyIconGroup:hover>.blocklyIconMark {", "  fill: #fff;", "}", ".blocklyIconMark {", "  cursor: default !important;", "  font-family: sans-serif;", "  font-size: 9pt;", "  font-weight: bold;", "  fill: #ccc;", 
-"  text-anchor: middle;", "}", ".blocklyWarningBody {", "}", ".blocklyMinimalBody {", "  margin: 0;", "  padding: 0;", "}", ".blocklyCommentTextarea {", "  margin: 0;", "  padding: 2px;", "  border: 0;", "  resize: none;", "  background-color: #ffc;", "}", ".blocklyHtmlInput {", "  font-family: sans-serif;", "  font-size: 11pt;", "  border: none;", "  outline: none;", "  width: 100%;", "  -moz-appearance: textfield;", "}", ".blocklyHtmlInput::-webkit-inner-spin-button, .blocklyHtmlInput::-webkit-outer-spin-button {", 
-"  -webkit-appearance: none;", "}", ".blocklyContextMenuBackground,", ".blocklyMutatorBackground {", "  fill: #fff;", "  stroke-width: 1;", "  stroke: #ddd;", "}", ".newFunctionDiv {", "  position: absolute;", "  top: 120px;", "  left: 600px;", "}", "#modalContainer .goog-flat-menu-button-caption {", "  color: #555555;", "  margin-left: 1px;", "  margin-right: 0;", "  min-width: 55px;", "}", ".blocklyContextMenuOptions>.blocklyMenuDiv,", ".blocklyContextMenuOptions>.blocklyMenuDivDisabled,", ".blocklyDropdownMenuOptions>.blocklyMenuDiv {", 
-"  fill: #fff;", "}", ".blocklyContextMenuOptions>.blocklyMenuDiv:hover>rect,", ".blocklyDropdownMenuOptions>.blocklyMenuDiv:hover>rect {", "  fill: #57e;", "}", ".blocklyMenuSelected>rect {", "  fill: #57e;", "}", ".blocklyMenuText {", "  cursor: default !important;", "  font-family: sans-serif;", "  font-size: 15px; /* All context menu sizes are based on pixels. */", "  fill: #000;", "}", ".blocklyContextMenuOptions>.blocklyMenuDiv:hover>.blocklyMenuText,", ".blocklyDropdownMenuOptions>.blocklyMenuDiv:hover>.blocklyMenuText {", 
-"  fill: #fff;", "}", ".blocklyMenuSelected>.blocklyMenuText {", "  fill: #fff;", "}", ".blocklyMenuDivDisabled>.blocklyMenuText {", "  fill: #ccc;", "}", ".blocklyFlyoutBackground {", "  fill: #ddd;", "  fill-opacity: 0.8;", "}", ".blocklyToolboxBackground {", "  fill: #ddd;", "}", ".blocklyBackground {", "  fill: #666;", "}", ".blocklyScrollbarBackground {", "  fill: #fff;", "  stroke-width: 1;", "  stroke: #e4e4e4;", "}", ".blocklyScrollbarKnob {", "  fill: #ccc;", "}", ".blocklyScrollbarBackground:hover+.blocklyScrollbarKnob,", 
-".blocklyScrollbarKnob:hover {", "  fill: #bbb;", "}", ".blocklyInvalidInput {", "  background: #faa;", "}", ".blocklyAngleCircle {", "  stroke: #444;", "  stroke-width: 1;", "  fill: #ddd;", "  fill-opacity: 0.8;", "}", ".blocklyAngleMarks {", "  stroke: #444;", "  stroke-width: 1;", "}", ".blocklyAngleGuage {", "  fill: #d00;", "  fill-opacity: 0.8;  ", "}", ".blocklyContextMenu {", "  border-radius: 4px;", "}", ".blocklyDropdownMenu {", "  padding: 0 !important;", "  position: relative !important;", 
-"}", ".blocklyRectangularDropdownMenu .goog-menuitem {", "  height: 100%;", "  padding: 0 !important;", "  border-radius: 5px;", "  margin-bottom: 4px !important;", "}", ".fieldRectangularDropdownBackdrop {", "  fill: #fff;", "  fill-opacity: 0.6;", "}", ".blocklyRectangularDropdownArrow {", "  fill: #7965a1;", "  font-size: 20px !important;", "}", ".blocklyRectangularDropdownMenu .goog-menuitem-highlight, .goog-menuitem-hover {", "  border-color: #7965a1 !important;", "  border-style: dotted !important;", 
-"  border-width: 0px !important;", "  margin: -4px -4px 0 !important;", "  border-width: 4px !important;", "  border-style: solid !important;", "  padding-bottom: 0px !important;", "  padding-top: 0px !important;", "}", ".colored-type-dropdown .goog-menuitem-content {", "  color: #555555;", "  float: left;", "}", ".colored-type-dropdown > .goog-menuitem {", "  padding: 0px 40px 2px 13px;", "}", ".goog-menu {", "  box-shadow: 4px 4px 6px #bbb;", "  border-width: 2px;", "}", ".goog-menuitem {", "  height: 20px;", 
-"  padding-top: 0;", "  padding-bottom: 0;", "}", ".goog-menuitem-highlight,", ".goog-menuitem-hover {", "  border-width: 0;", "  background-color: #57e;", "}", ".goog-menuitem-highlight .goog-menuitem-content {", "  color: #fff;", "}", ".goog-option-selected .goog-menuitem-checkbox:before {", '  content: "\u2713";', "}", ".goog-menuitem-checkbox {", '  background: ""', "}", ".blocklyRectangularDropdownMenu img {", "  -webkit-border-radius: 5px;", "  -moz-border-radius: 5px;", "  border-radius: 5px;", 
-"}", ".blocklyRectangularDropdownMenu {", "  border-radius: 5px;", "  box-shadow: none !important;", "}", ".goog-option-selected .goog-menuitem-checkbox,", ".goog-option-selected .goog-menuitem-icon {", "}", "/* Category tree in Toolbox. */", ".blocklyToolboxDiv {", "  display: none;", "  overflow-x: visible;", "  overflow-y: auto;", "  position: absolute;", "}", ".blocklyTreeRoot {", "  padding: 4px 0;", "}", ".blocklyTreeRoot:focus {", "  outline: none;", "}", ".blocklyTreeRow {", "  line-height: 22px;", 
-"  height: 22px;", "  padding-right: 1em;", "  white-space: nowrap;", "}", '.blocklyToolboxDiv[dir="RTL"] .blocklyTreeRow {', "  padding-right: 0;", "  padding-left: 1em !important;", "}", ".blocklyTreeRow:hover {", "  background-color: #e4e4e4;", "}", ".blocklyTreeIcon {", "  height: 16px;", "  width: 16px;", "  vertical-align: middle;", "  background-image: url(%TREE_PATH%);", "}", ".blocklyTreeIconClosedLtr {", "  background-position: -32px -1px;", "}", ".blocklyTreeIconClosedRtl {", "  background-position: 0px -1px;", 
-"}", ".blocklyTreeIconOpen {", "  background-position: -16px -1px;", "}", ".blocklyTreeIconNone {", "  background-position: -48px -1px;", "}", ".blocklyTreeSelected>.blocklyTreeIconClosedLtr {", "  background-position: -32px -17px;", "}", ".blocklyTreeSelected>.blocklyTreeIconClosedRtl {", "  background-position: 0px -17px;", "}", ".blocklyTreeSelected>.blocklyTreeIconOpen {", "  background-position: -16px -17px;", "}", ".blocklyTreeSelected>.blocklyTreeIconNone {", "  background-position: -48px -17px;", 
-"}", ".blocklyTreeLabel {", "  cursor: default;", "  font-family: sans-serif;", "  font-size: 16px;", "  padding: 0 3px;", "  vertical-align: middle;", "  -moz-user-select: none;", "  -webkit-user-select: none;", "  -ms-user-select: none;", "  user-select: none;", "}", ".blocklyTreeSelected {", "  background-color: #57e !important;", "}", ".blocklyTreeSelected .blocklyTreeLabel {", "  color: #fff;", "}", ".blocklyArrow {", "  font-size: 80%;", "}", ".paramToolbox {", "  padding: 0 0 5px 0;", "  pointer-events: auto;", 
-"}", ".paramToolbox input, .paramToolbox textarea {", "  box-sizing: border-box;", "  width: 100%;", "  margin: 0;", "  resize: none;", "}", ".paramToolbox input, .paramToolbox button {", "  height: 30px;", "  margin: 0;", "}", ".paramToolbox div {", "  margin: 4px 10px;", "}", "#modalContainer {", "  position: absolute;", "  width: 100%;", "  bottom: 0;", "}", "#modalContainer > svg {", "  position: absolute;", "  top: 0;", "  left: 0;", "  background: transparent;", "  pointer-events: none;", "}", 
-"#modalContainer > svg * {", "  pointer-events: visiblePainted;", "}", "/*", " * Copyright 2007 The Closure Library Authors. All Rights Reserved.", " *", " * Use of this source code is governed by the Apache License, Version 2.0.", " * See the COPYING file for details.", " */", "/* Author: pupius@google.com (Daniel Pupius) */", "/*", " Styles to make the colorpicker look like the old gmail color picker", " NOTE: without CSS scoping this will override styles defined in palette.css", "*/", ".goog-palette {", 
-"  outline: none;", "  cursor: default;", "}", ".goog-palette-table {", "  border: 1px solid #666;", "  border-collapse: collapse;", "}", ".goog-palette-cell {", "  height: 25px;", "  width: 25px;", "  margin: 0;", "  border: 0;", "  text-align: center;", "  vertical-align: middle;", "  border-right: 1px solid #666;", "  font-size: 1px;", "}", ".goog-palette-colorswatch {", "  position: relative;", "  height: 25px;", "  width: 25px;", "  border: 1px solid #666;", "}", ".goog-palette-cell-hover .goog-palette-colorswatch {", 
-"  border: 1px solid #FFF;", "}", ".goog-palette-cell-selected .goog-palette-colorswatch {", "  border: 1px solid #000;", "  color: #fff;", "}", ".goog-menu {", "  background: #fff;", "  border-color: #ccc #666 #666 #ccc;", "  border-style: solid;", "  border-width: 1px;", "  cursor: default;", "  font: normal 13px Arial, sans-serif;", "  margin: 0;", "  outline: none;", "  padding: 4px 0;", "  position: absolute;", "  z-index: 20000;", "}", ".goog-menuitem {", "  color: #000;", "  font: normal 13px Arial, sans-serif;", 
-"  list-style: none;", "  margin: 0;", "  padding: 4px 7em 4px 28px;", "  white-space: nowrap;", "}", ".goog-menuitem.goog-menuitem-rtl {", "  padding-left: 7em;", "  padding-right: 28px;", "}", ".goog-menu-nocheckbox .goog-menuitem,", ".goog-menu-noicon .goog-menuitem {", "  padding-left: 12px;", "}", ".goog-menu-noaccel .goog-menuitem:not(.goog-menuitem-rtl) {", "  padding-right: 20px;", "}", ".goog-menu-noaccel .goog-menuitem.goog-menuitem-rtl {", "  padding-left: 20px;", "}", ".goog-menuitem-content {", 
-"  color: #000;", "  font-size: 15px;", "}", ".goog-menuitem-disabled .goog-menuitem-accel,", ".goog-menuitem-disabled .goog-menuitem-content {", "  color: #ccc !important;", "}", ".goog-menuitem-disabled .goog-menuitem-icon {", "  opacity: 0.3;", "  -moz-opacity: 0.3;", "  filter: alpha(opacity=30);", "}", ".goog-menuitem-highlight,", ".goog-menuitem-hover {", "  background-color: #d6e9f8;", "  border-color: #d6e9f8;", "  border-style: dotted;", "  border-width: 1px 0;", "  padding-bottom: 3px;", 
-"  padding-top: 3px;", "}", ".goog-menuitem-checkbox,", ".goog-menuitem-icon {", "  background-repeat: no-repeat;", "  height: 16px;", "  left: 6px;", "  position: absolute;", "  right: auto;", "  vertical-align: middle;", "  width: 16px;", "}", ".goog-menuitem-rtl .goog-menuitem-checkbox,", ".goog-menuitem-rtl .goog-menuitem-icon {", "  left: auto;", "  right: 6px;", "}", ".goog-option-selected .goog-menuitem-checkbox,", ".goog-option-selected .goog-menuitem-icon {", "}", ".goog-menuitem-accel {", 
-"  color: #999;", "  direction: ltr;", "  left: auto;", "  padding: 0 6px;", "  position: absolute;", "  right: 0;", "  text-align: right;", "}", ".goog-menuitem-rtl .goog-menuitem-accel {", "  left: 0;", "  right: auto;", "  text-align: left;", "}", ".goog-menuitem-mnemonic-hint {", "  text-decoration: underline;", "}", ".goog-menuitem-mnemonic-separator {", "  color: #999;", "  font-size: 12px;", "  padding-left: 4px;", "}", ".goog-menuseparator {", "  border-top: 1px solid #ccc;", "  margin: 4px 0;", 
-"  padding: 0;", "}", ".goog-flat-menu-button {", "  background-color: #fff;", "  border: 1px solid #c9c9c9;", "  color: #333;", "  cursor: pointer;", "  font: normal 95%;", "  list-style: none;", "  margin: 0 2px;", "  outline: none;", "  padding: 1px 4px;", "  position: relative;", "  text-decoration: none;", "  vertical-align: middle;", "}", ".goog-flat-menu-button-disabled * {", "  border-color: #ccc;", "  color: #999;", "  cursor: default;", "}", ".goog-flat-menu-button-hover {", "  border-color: #9cf #69e #69e #7af !important; /* Hover border wins. */", 
-"}", ".goog-flat-menu-button-active {", "  background-color: #bbb;", "  background-position: bottom left;", "}", ".goog-flat-menu-button-focused {", "  border-color: #bbb;", "}", ".goog-flat-menu-button-caption {", "  padding-right: 10px;", "  vertical-align: top;", "}", ".goog-flat-menu-button-dropdown {", "  /* Client apps may override the URL at which they serve the sprite. */", "  background: url(https://ssl.gstatic.com/editor/editortoolbar.png) no-repeat -388px 0;", "  position: absolute;", 
-"  right: 2px;", "  top: 0;", "  vertical-align: top;", "  width: 7px;", "}", ".goog-inline-block {", "  position: relative;", "  display: -moz-inline-box; /* Ignored by FF3 and later. */", "  display: inline-block;", "}", ""];
+"  fill-opacity: 1.0;", "  fill: #ffdb74;", "}", "#blocklyDragCanvas {", "  display: none;", "  pointer-events: none;", "  position: absolute;", "  top: 0;", "  left: 0;", "  z-index: 10;", "}", "#blocklyDragCanvas.isDragging {", "  display: block;", "}", ".blocklyDragging>.blocklyPath,", ".blocklyDragging>.blocklyPathLight {", "  fill-opacity: 0.8;", "  stroke-opacity: 0.8;", "}", ".blocklyDragging>.blocklyPathDark {", "  display: none;", "}", ".blocklyDisabled>.blocklyPath {", "  fill-opacity: 0.50;", 
+"  stroke-opacity: 0.50;", "}", ".blocklyDisabled>.blocklyPathLight,", ".blocklyDisabled>.blocklyPathDark {", "  display: none;", "}", ".blocklyText {", "  cursor: default;", "  font-family: sans-serif;", "  font-size: 11pt;", "  fill: #fff;", "}", ".innerModalDiv {", "  pointer-events: none !important;", "}", ".innerModalDiv .goog-flat-menu-button,", ".innerModalDiv textarea,", ".innerModalDiv input,", ".innerModalDiv button {", "  pointer-events: auto;", "}", ".flyoutColorGray {", "  background-color: #DDD;", 
+"}", ".contractEditor #paramAddButton {", "  margin-top: 3px;", "  margin-left: 10px;", "  margin-bottom: 4px;", "}", ".contractEditorHeaderText {", "  cursor: default;", "  font-size: 12pt;", "  fill: #fff;", "}", ".contract-type-hint {", "  color: #898989;", "  font-size: 11px;", "}", ".exampleAreaDiv {", "  pointer-events: none;", "}", ".callResultText {", "  color: #000;", "  position: absolute;", "}", ".exampleAreaButton {", "  pointer-events: initial;", "  position: absolute;", "}", ".core-clearfix {", 
+"  overflow: auto;", "}", ".testButton {", "  padding: 3px 0 !important;", "  min-width: 95px !important;", "}", ".resetButton {", "  border: 1px solid #0094ca !important;", "  background-color: #0094ca !important;", "}", ".example-result-text {", "  position: absolute;", "  font-size: 16px;", "}", ".color-square-icon {", "  float: left;", "  width: 21px;", "  height: 18px;", "  margin-right: 9px !important;", "  margin-left: 6px !important;", "}", ".goog-menuitem .color-square-icon {", "  margin-left: -3px !important;", 
+"  margin-top: 2px !important;", "}", ".blocklyNonEditableText>text {", "  pointer-events: none;", "}", ".blocklyNonEditableText>rect,", ".blocklyEditableText>rect {", "  fill: #fff;", "  fill-opacity: 0.6;", "}", ".blocklyNonEditableText>text,", ".blocklyEditableText>text {", "  fill: #000;", "}", ".blocklyEditableText:hover>rect {", "  stroke-width: 2;", "  stroke: #fff;", "}", "/*", " * Don't allow users to select text.  It gets annoying when trying to", " * drag a block and selected text moves instead.", 
+" */", ".blocklySvg text {", "  -moz-user-select: none;", "  -webkit-user-select: none;", "  user-select: none;", "  cursor: inherit;", "}", ".blocklyHidden {", "  display: none;", "}", ".blocklyFieldDropdown:not(.blocklyHidden) {", "  display: block;", "}", ".blocklyTooltipBackground {", "  fill: #ffffc7;", "  stroke-width: 1px;", "  stroke: #d8d8d8;", "}", ".blocklyTooltipShadow,", ".blocklyContextMenuShadow,", ".blocklyDropdownMenuShadow {", "  fill: #bbb;", "  filter: url(#blocklyShadowFilter);", 
+"}", ".blocklyTooltipText {", "  font-family: sans-serif;", "  font-size: 9pt;", "  fill: #000;", "}", "#modalEditorClose:hover>rect {", "  fill: #0094ca;", "}", ".svgTextButton:hover>rect {", "  fill: #0094ca;", "}", ".red-delete-button {", "  background-color: #cc0000 !important;", "  border: 1px solid #cc0000 !important;", "}", ".blocklyIconShield {", "  cursor: default;", "  fill: #00c;", "  stroke-width: 1px;", "  stroke: #ccc;", "}", ".blocklyIconGroup:hover>.blocklyIconShield {", "  fill: #00f;", 
+"  stroke: #fff;", "}", ".blocklyIconGroup:hover>.blocklyIconMark {", "  fill: #fff;", "}", ".blocklyIconMark {", "  cursor: default !important;", "  font-family: sans-serif;", "  font-size: 9pt;", "  font-weight: bold;", "  fill: #ccc;", "  text-anchor: middle;", "}", ".blocklyWarningBody {", "}", ".blocklyMinimalBody {", "  margin: 0;", "  padding: 0;", "}", ".blocklyCommentTextarea {", "  margin: 0;", "  padding: 2px;", "  border: 0;", "  resize: none;", "  background-color: #ffc;", "}", ".blocklyHtmlInput {", 
+"  font-family: sans-serif;", "  font-size: 11pt;", "  border: none;", "  outline: none;", "  width: 100%;", "  -moz-appearance: textfield;", "}", ".blocklyHtmlInput::-webkit-inner-spin-button, .blocklyHtmlInput::-webkit-outer-spin-button {", "  -webkit-appearance: none;", "}", ".blocklyContextMenuBackground,", ".blocklyMutatorBackground {", "  fill: #fff;", "  stroke-width: 1;", "  stroke: #ddd;", "}", ".newFunctionDiv {", "  position: absolute;", "  top: 120px;", "  left: 600px;", "}", "#modalContainer .goog-flat-menu-button-caption {", 
+"  color: #555555;", "  margin-left: 1px;", "  margin-right: 0;", "  min-width: 55px;", "}", ".blocklyContextMenuOptions>.blocklyMenuDiv,", ".blocklyContextMenuOptions>.blocklyMenuDivDisabled,", ".blocklyDropdownMenuOptions>.blocklyMenuDiv {", "  fill: #fff;", "}", ".blocklyContextMenuOptions>.blocklyMenuDiv:hover>rect,", ".blocklyDropdownMenuOptions>.blocklyMenuDiv:hover>rect {", "  fill: #57e;", "}", ".blocklyMenuSelected>rect {", "  fill: #57e;", "}", ".blocklyMenuText {", "  cursor: default !important;", 
+"  font-family: sans-serif;", "  font-size: 15px; /* All context menu sizes are based on pixels. */", "  fill: #000;", "}", ".blocklyContextMenuOptions>.blocklyMenuDiv:hover>.blocklyMenuText,", ".blocklyDropdownMenuOptions>.blocklyMenuDiv:hover>.blocklyMenuText {", "  fill: #fff;", "}", ".blocklyMenuSelected>.blocklyMenuText {", "  fill: #fff;", "}", ".blocklyMenuDivDisabled>.blocklyMenuText {", "  fill: #ccc;", "}", ".blocklyFlyoutBackground {", "  fill: #ddd;", "  fill-opacity: 0.8;", "}", ".blocklyToolboxBackground {", 
+"  fill: #ddd;", "}", ".blocklyBackground {", "  fill: #666;", "}", ".blocklyScrollbarBackground {", "  fill: #fff;", "  stroke-width: 1;", "  stroke: #e4e4e4;", "}", ".blocklyScrollbarKnob {", "  fill: #ccc;", "}", ".blocklyScrollbarBackground:hover+.blocklyScrollbarKnob,", ".blocklyScrollbarKnob:hover {", "  fill: #bbb;", "}", ".blocklyInvalidInput {", "  background: #faa;", "}", ".blocklyAngleCircle {", "  stroke: #444;", "  stroke-width: 1;", "  fill: #ddd;", "  fill-opacity: 0.8;", "}", ".blocklyAngleMarks {", 
+"  stroke: #444;", "  stroke-width: 1;", "}", ".blocklyAngleGuage {", "  fill: #d00;", "  fill-opacity: 0.8;  ", "}", ".blocklyContextMenu {", "  border-radius: 4px;", "}", ".blocklyDropdownMenu {", "  padding: 0 !important;", "  position: relative !important;", "}", ".blocklyRectangularDropdownMenu .goog-menuitem {", "  height: 100%;", "  padding: 0 !important;", "  border-radius: 5px;", "  margin-bottom: 4px !important;", "}", ".fieldRectangularDropdownBackdrop {", "  fill: #fff;", "  fill-opacity: 0.6;", 
+"}", ".blocklyRectangularDropdownArrow {", "  fill: #7965a1;", "  font-size: 20px !important;", "}", ".blocklyRectangularDropdownMenu .goog-menuitem-highlight, .goog-menuitem-hover {", "  border-color: #7965a1 !important;", "  border-style: dotted !important;", "  border-width: 0px !important;", "  margin: -4px -4px 0 !important;", "  border-width: 4px !important;", "  border-style: solid !important;", "  padding-bottom: 0px !important;", "  padding-top: 0px !important;", "}", ".colored-type-dropdown .goog-menuitem-content {", 
+"  color: #555555;", "  float: left;", "}", ".colored-type-dropdown > .goog-menuitem {", "  padding: 0px 40px 2px 13px;", "}", ".goog-menu {", "  box-shadow: 4px 4px 6px #bbb;", "  border-width: 2px;", "}", ".goog-menuitem {", "  height: 20px;", "  padding-top: 0;", "  padding-bottom: 0;", "}", ".goog-menuitem-highlight,", ".goog-menuitem-hover {", "  border-width: 0;", "  background-color: #57e;", "}", ".goog-menuitem-highlight .goog-menuitem-content {", "  color: #fff;", "}", ".goog-option-selected .goog-menuitem-checkbox:before {", 
+'  content: "\u2713";', "}", ".goog-menuitem-checkbox {", '  background: ""', "}", ".blocklyRectangularDropdownMenu img {", "  -webkit-border-radius: 5px;", "  -moz-border-radius: 5px;", "  border-radius: 5px;", "}", ".blocklyRectangularDropdownMenu {", "  border-radius: 5px;", "  box-shadow: none !important;", "}", ".goog-option-selected .goog-menuitem-checkbox,", ".goog-option-selected .goog-menuitem-icon {", "}", "/* Category tree in Toolbox. */", ".blocklyToolboxDiv {", "  display: none;", "  overflow-x: visible;", 
+"  overflow-y: auto;", "  position: absolute;", "}", ".blocklyTreeRoot {", "  padding: 4px 0;", "}", ".blocklyTreeRoot:focus {", "  outline: none;", "}", ".blocklyTreeRow {", "  line-height: 22px;", "  height: 22px;", "  padding-right: 1em;", "  white-space: nowrap;", "}", '.blocklyToolboxDiv[dir="RTL"] .blocklyTreeRow {', "  padding-right: 0;", "  padding-left: 1em !important;", "}", ".blocklyTreeRow:hover {", "  background-color: #e4e4e4;", "}", ".blocklyTreeIcon {", "  height: 16px;", "  width: 16px;", 
+"  vertical-align: middle;", "  background-image: url(%TREE_PATH%);", "}", ".blocklyTreeIconClosedLtr {", "  background-position: -32px -1px;", "}", ".blocklyTreeIconClosedRtl {", "  background-position: 0px -1px;", "}", ".blocklyTreeIconOpen {", "  background-position: -16px -1px;", "}", ".blocklyTreeIconNone {", "  background-position: -48px -1px;", "}", ".blocklyTreeSelected>.blocklyTreeIconClosedLtr {", "  background-position: -32px -17px;", "}", ".blocklyTreeSelected>.blocklyTreeIconClosedRtl {", 
+"  background-position: 0px -17px;", "}", ".blocklyTreeSelected>.blocklyTreeIconOpen {", "  background-position: -16px -17px;", "}", ".blocklyTreeSelected>.blocklyTreeIconNone {", "  background-position: -48px -17px;", "}", ".blocklyTreeLabel {", "  cursor: default;", "  font-family: sans-serif;", "  font-size: 16px;", "  padding: 0 3px;", "  vertical-align: middle;", "  -moz-user-select: none;", "  -webkit-user-select: none;", "  -ms-user-select: none;", "  user-select: none;", "}", ".blocklyTreeSelected {", 
+"  background-color: #57e !important;", "}", ".blocklyTreeSelected .blocklyTreeLabel {", "  color: #fff;", "}", ".blocklyArrow {", "  font-size: 80%;", "}", ".paramToolbox {", "  padding: 0 0 5px 0;", "  pointer-events: auto;", "}", ".paramToolbox input, .paramToolbox textarea {", "  box-sizing: border-box;", "  width: 100%;", "  margin: 0;", "  resize: none;", "}", ".paramToolbox input, .paramToolbox button {", "  height: 30px;", "  margin: 0;", "}", ".paramToolbox div {", "  margin: 4px 10px;", 
+"}", "#modalContainer {", "  position: absolute;", "  width: 100%;", "  bottom: 0;", "}", "#modalContainer > svg {", "  position: absolute;", "  top: 0;", "  left: 0;", "  background: transparent;", "  pointer-events: none;", "}", "#modalContainer > svg * {", "  pointer-events: visiblePainted;", "}", "/*", " * Copyright 2007 The Closure Library Authors. All Rights Reserved.", " *", " * Use of this source code is governed by the Apache License, Version 2.0.", " * See the COPYING file for details.", 
+" */", "/* Author: pupius@google.com (Daniel Pupius) */", "/*", " Styles to make the colorpicker look like the old gmail color picker", " NOTE: without CSS scoping this will override styles defined in palette.css", "*/", ".goog-palette {", "  outline: none;", "  cursor: default;", "}", ".goog-palette-table {", "  border: 1px solid #666;", "  border-collapse: collapse;", "}", ".goog-palette-cell {", "  height: 25px;", "  width: 25px;", "  margin: 0;", "  border: 0;", "  text-align: center;", "  vertical-align: middle;", 
+"  border-right: 1px solid #666;", "  font-size: 1px;", "}", ".goog-palette-colorswatch {", "  position: relative;", "  height: 25px;", "  width: 25px;", "  border: 1px solid #666;", "}", ".goog-palette-cell-hover .goog-palette-colorswatch {", "  border: 1px solid #FFF;", "}", ".goog-palette-cell-selected .goog-palette-colorswatch {", "  border: 1px solid #000;", "  color: #fff;", "}", ".goog-menu {", "  background: #fff;", "  border-color: #ccc #666 #666 #ccc;", "  border-style: solid;", "  border-width: 1px;", 
+"  cursor: default;", "  font: normal 13px Arial, sans-serif;", "  margin: 0;", "  outline: none;", "  padding: 4px 0;", "  position: absolute;", "  z-index: 20000;", "}", ".goog-menuitem {", "  color: #000;", "  font: normal 13px Arial, sans-serif;", "  list-style: none;", "  margin: 0;", "  padding: 4px 7em 4px 28px;", "  white-space: nowrap;", "}", ".goog-menuitem.goog-menuitem-rtl {", "  padding-left: 7em;", "  padding-right: 28px;", "}", ".goog-menu-nocheckbox .goog-menuitem,", ".goog-menu-noicon .goog-menuitem {", 
+"  padding-left: 12px;", "}", ".goog-menu-noaccel .goog-menuitem:not(.goog-menuitem-rtl) {", "  padding-right: 20px;", "}", ".goog-menu-noaccel .goog-menuitem.goog-menuitem-rtl {", "  padding-left: 20px;", "}", ".goog-menuitem-content {", "  color: #000;", "  font-size: 15px;", "}", ".goog-menuitem-disabled .goog-menuitem-accel,", ".goog-menuitem-disabled .goog-menuitem-content {", "  color: #ccc !important;", "}", ".goog-menuitem-disabled .goog-menuitem-icon {", "  opacity: 0.3;", "  -moz-opacity: 0.3;", 
+"  filter: alpha(opacity=30);", "}", ".goog-menuitem-highlight,", ".goog-menuitem-hover {", "  background-color: #d6e9f8;", "  border-color: #d6e9f8;", "  border-style: dotted;", "  border-width: 1px 0;", "  padding-bottom: 3px;", "  padding-top: 3px;", "}", ".goog-menuitem-checkbox,", ".goog-menuitem-icon {", "  background-repeat: no-repeat;", "  height: 16px;", "  left: 6px;", "  position: absolute;", "  right: auto;", "  vertical-align: middle;", "  width: 16px;", "}", ".goog-menuitem-rtl .goog-menuitem-checkbox,", 
+".goog-menuitem-rtl .goog-menuitem-icon {", "  left: auto;", "  right: 6px;", "}", ".goog-option-selected .goog-menuitem-checkbox,", ".goog-option-selected .goog-menuitem-icon {", "}", ".goog-menuitem-accel {", "  color: #999;", "  direction: ltr;", "  left: auto;", "  padding: 0 6px;", "  position: absolute;", "  right: 0;", "  text-align: right;", "}", ".goog-menuitem-rtl .goog-menuitem-accel {", "  left: 0;", "  right: auto;", "  text-align: left;", "}", ".goog-menuitem-mnemonic-hint {", "  text-decoration: underline;", 
+"}", ".goog-menuitem-mnemonic-separator {", "  color: #999;", "  font-size: 12px;", "  padding-left: 4px;", "}", ".goog-menuseparator {", "  border-top: 1px solid #ccc;", "  margin: 4px 0;", "  padding: 0;", "}", ".goog-flat-menu-button {", "  background-color: #fff;", "  border: 1px solid #c9c9c9;", "  color: #333;", "  cursor: pointer;", "  font: normal 95%;", "  list-style: none;", "  margin: 0 2px;", "  outline: none;", "  padding: 1px 4px;", "  position: relative;", "  text-decoration: none;", 
+"  vertical-align: middle;", "}", ".goog-flat-menu-button-disabled * {", "  border-color: #ccc;", "  color: #999;", "  cursor: default;", "}", ".goog-flat-menu-button-hover {", "  border-color: #9cf #69e #69e #7af !important; /* Hover border wins. */", "}", ".goog-flat-menu-button-active {", "  background-color: #bbb;", "  background-position: bottom left;", "}", ".goog-flat-menu-button-focused {", "  border-color: #bbb;", "}", ".goog-flat-menu-button-caption {", "  padding-right: 10px;", "  vertical-align: top;", 
+"}", ".goog-flat-menu-button-dropdown {", "  /* Client apps may override the URL at which they serve the sprite. */", "  background: url(https://ssl.gstatic.com/editor/editortoolbar.png) no-repeat -388px 0;", "  position: absolute;", "  right: 2px;", "  top: 0;", "  vertical-align: top;", "  width: 7px;", "}", ".goog-inline-block {", "  position: relative;", "  display: -moz-inline-box; /* Ignored by FF3 and later. */", "  display: inline-block;", "}", ""];
 goog.provide("Blockly.WidgetDiv");
 goog.require("Blockly.Css");
 goog.require("goog.dom");
@@ -29922,8 +29836,8 @@ goog.require("goog.userAgent");
 Blockly.assetUrl = undefined;
 Blockly.SVG_NS = "http://www.w3.org/2000/svg";
 Blockly.HTML_NS = "http://www.w3.org/1999/xhtml";
-Blockly.HSV_SATURATION = .45;
-Blockly.HSV_VALUE = .65;
+Blockly.HSV_SATURATION = 0.45;
+Blockly.HSV_VALUE = 0.65;
 Blockly.makeColour = function(hue, saturation, value) {
   return goog.color.hsvToHex(hue, saturation, value * 256);
 };

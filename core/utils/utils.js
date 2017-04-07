@@ -379,6 +379,11 @@ Blockly.convertCoordinates = function(x, y, svg, toSvg) {
   svgPoint.x = x;
   svgPoint.y = y;
   var matrix = svg.getScreenCTM();
+  if (!matrix) {
+    // Firefox returns null for getScreenCTM if svg is hidden or has 0 height.
+    var clientRect = svg.getBoundingClientRect();
+    matrix = svg.createSVGMatrix(clientRect.left, clientRect.top);
+  }
   if (toSvg) {
     matrix = matrix.inverse();
   }

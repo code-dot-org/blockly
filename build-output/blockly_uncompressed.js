@@ -29553,6 +29553,10 @@ Blockly.convertCoordinates = function(x, y, svg, toSvg) {
   svgPoint.x = x;
   svgPoint.y = y;
   var matrix = svg.getScreenCTM();
+  if (!matrix) {
+    var clientRect = svg.getBoundingClientRect();
+    matrix = svg.createSVGMatrix(clientRect.left, clientRect.top);
+  }
   if (toSvg) {
     matrix = matrix.inverse();
   }

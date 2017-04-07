@@ -1,6 +1,6 @@
 {
   "name": "@code-dot-org/blockly",
-  "version": "1.6.11",
+  "version": "1.6.12",
   "description": "Code.org fork of google/blockly for use within the Code Studio learning environment.",
   "repository": {
     "type": "git",

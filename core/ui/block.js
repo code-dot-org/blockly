@@ -399,6 +399,7 @@ Blockly.Block.prototype.unselect = function() {
   if (!this.svg_) {
     throw 'Block is not rendered.';
   }
+  Blockly.BlockSpaceEditor.terminateDrag_();
   Blockly.selected = null;
   this.svg_.removeSelect();
   this.svg_.removeSpotlight();

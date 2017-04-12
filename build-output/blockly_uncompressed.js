@@ -15115,12 +15115,17 @@ Blockly.Field.prototype.setTooltip = function(newTip) {
 };
 Blockly.Field.prototype.positionWidgetDiv = function() {
 };
+Blockly.Field.prototype.handleBlockSpaceScrolled = function() {
+  if (this.sourceBlock_) {
+    this.positionWidgetDiv();
+  }
+};
 Blockly.Field.prototype.showWidgetDiv_ = function() {
   Blockly.WidgetDiv.show(this, this.generateWidgetDisposeHandler_());
   if (this.sourceBlock_ && this.sourceBlock_.blockSpace && this.sourceBlock_.blockSpace.events) {
     var events = this.sourceBlock_.blockSpace.events;
     if (!this.blockSpaceScrolledListenKey_) {
-      this.blockSpaceScrolledListenKey_ = events.listen(Blockly.BlockSpace.EVENTS.BLOCK_SPACE_SCROLLED, this.positionWidgetDiv.bind(this));
+      this.blockSpaceScrolledListenKey_ = events.listen(Blockly.BlockSpace.EVENTS.BLOCK_SPACE_SCROLLED, this.handleBlockSpaceScrolled.bind(this));
     }
   }
 };
@@ -16823,6 +16828,7 @@ Blockly.Block.prototype.unselect = function() {
   if (!this.svg_) {
     throw "Block is not rendered.";
   }
+  Blockly.BlockSpaceEditor.terminateDrag_();
   Blockly.selected = null;
   this.svg_.removeSelect();
   this.svg_.removeSpotlight();
@@ -20802,9 +20808,6 @@ Blockly.FieldDropdown.prototype.showEditor_ = function(container) {
   div.style.visibility = "visible";
 };
 Blockly.FieldDropdown.prototype.positionWidgetDiv = function() {
-  if (!this.sourceBlock_) {
-    return;
-  }
   var windowSize = goog.dom.getViewportSize();
   var scrollOffset = goog.style.getViewportPageOffset(document);
   var xy = Blockly.getAbsoluteXY_((this.borderRect_), this.getRootSVGElement_());

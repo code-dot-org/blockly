@@ -379,6 +379,12 @@ Blockly.Field.prototype.positionWidgetDiv = function() {
   // intentional noop; overridden by child classes
 };
 
+Blockly.Field.prototype.handleBlockSpaceScrolled = function () {
+  if (this.sourceBlock_) {
+    this.positionWidgetDiv();
+  }
+};
+
 Blockly.Field.prototype.showWidgetDiv_ = function() {
   Blockly.WidgetDiv.show(this, this.generateWidgetDisposeHandler_());
 
@@ -392,7 +398,7 @@ Blockly.Field.prototype.showWidgetDiv_ = function() {
     if (!this.blockSpaceScrolledListenKey_) {
       this.blockSpaceScrolledListenKey_ = events.listen(
           Blockly.BlockSpace.EVENTS.BLOCK_SPACE_SCROLLED,
-          this.positionWidgetDiv.bind(this));
+          this.handleBlockSpaceScrolled.bind(this));
     }
   }
 };

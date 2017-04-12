@@ -146,9 +146,6 @@ Blockly.FieldDropdown.prototype.showEditor_ = function(container) {
  * @override
  */
 Blockly.FieldDropdown.prototype.positionWidgetDiv = function() {
-  if (!this.sourceBlock_) {
-    return;
-  }
   var windowSize = goog.dom.getViewportSize();
   var scrollOffset = goog.style.getViewportPageOffset(document);
   var xy = Blockly.getAbsoluteXY_(/** @type {!Element} */ (this.borderRect_), this.getRootSVGElement_());

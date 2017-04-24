@@ -5,21 +5,21 @@
 Blockly.Blocks.colour = {};
 Blockly.Blocks.colour_picker = {init:function() {
   this.setHelpUrl(Blockly.Msg.COLOUR_PICKER_HELPURL);
-  this.setHSV(196, 1.0, 0.79);
+  this.setHSV(196, 1, .79);
   this.appendDummyInput().appendTitle(new Blockly.FieldColour("#ff0000"), "COLOUR");
   this.setOutput(!0, Blockly.BlockValueType.COLOUR);
   this.setTooltip(Blockly.Msg.COLOUR_PICKER_TOOLTIP);
 }};
 Blockly.Blocks.colour_random = {init:function() {
   this.setHelpUrl(Blockly.Msg.COLOUR_RANDOM_HELPURL);
-  this.setHSV(196, 1.0, 0.79);
+  this.setHSV(196, 1, .79);
   this.appendDummyInput().appendTitle(Blockly.Msg.COLOUR_RANDOM_TITLE);
   this.setOutput(!0, Blockly.BlockValueType.COLOUR);
   this.setTooltip(Blockly.Msg.COLOUR_RANDOM_TOOLTIP);
 }};
 Blockly.Blocks.colour_rgb = {init:function() {
   this.setHelpUrl(Blockly.Msg.COLOUR_RGB_HELPURL);
-  this.setHSV(196, 1.0, 0.79);
+  this.setHSV(196, 1, .79);
   this.appendValueInput("RED").setCheck(Blockly.BlockValueType.NUMBER).setAlign(Blockly.ALIGN_RIGHT).appendTitle(Blockly.Msg.COLOUR_RGB_TITLE).appendTitle(Blockly.Msg.COLOUR_RGB_RED);
   this.appendValueInput("GREEN").setCheck(Blockly.BlockValueType.NUMBER).setAlign(Blockly.ALIGN_RIGHT).appendTitle(Blockly.Msg.COLOUR_RGB_GREEN);
   this.appendValueInput("BLUE").setCheck(Blockly.BlockValueType.NUMBER).setAlign(Blockly.ALIGN_RIGHT).appendTitle(Blockly.Msg.COLOUR_RGB_BLUE);
@@ -28,7 +28,7 @@ Blockly.Blocks.colour_rgb = {init:function() {
 }};
 Blockly.Blocks.colour_blend = {init:function() {
   this.setHelpUrl(Blockly.Msg.COLOUR_BLEND_HELPURL);
-  this.setHSV(42, 0.89, 0.99);
+  this.setHSV(42, .89, .99);
   this.appendValueInput("COLOUR1").setCheck(Blockly.BlockValueType.COLOUR).setAlign(Blockly.ALIGN_RIGHT).appendTitle(Blockly.Msg.COLOUR_BLEND_TITLE).appendTitle(Blockly.Msg.COLOUR_BLEND_COLOUR1);
   this.appendValueInput("COLOUR2").setCheck(Blockly.BlockValueType.COLOUR).setAlign(Blockly.ALIGN_RIGHT).appendTitle(Blockly.Msg.COLOUR_BLEND_COLOUR2);
   this.appendValueInput("RATIO").setCheck(Blockly.BlockValueType.NUMBER).setAlign(Blockly.ALIGN_RIGHT).appendTitle(Blockly.Msg.COLOUR_BLEND_RATIO);
@@ -38,13 +38,13 @@ Blockly.Blocks.colour_blend = {init:function() {
 Blockly.Blocks.lists = {};
 Blockly.Blocks.lists_create_empty = {init:function() {
   this.setHelpUrl(Blockly.Msg.LISTS_CREATE_EMPTY_HELPURL);
-  this.setHSV(40, 1.0, 0.99);
+  this.setHSV(40, 1, .99);
   this.setOutput(!0, Blockly.BlockValueType.ARRAY);
   this.appendDummyInput().appendTitle(Blockly.Msg.LISTS_CREATE_EMPTY_TITLE);
   this.setTooltip(Blockly.Msg.LISTS_CREATE_EMPTY_TOOLTIP);
 }};
 Blockly.Blocks.lists_create_with = {init:function() {
-  this.setHSV(40, 1.0, 0.99);
+  this.setHSV(40, 1, .99);
   this.appendValueInput("ADD0").appendTitle(Blockly.Msg.LISTS_CREATE_WITH_INPUT_WITH);
   this.appendValueInput("ADD1");
   this.appendValueInput("ADD2");
@@ -98,14 +98,14 @@ Blockly.Blocks.lists_create_with = {init:function() {
   }
 }};
 Blockly.Blocks.lists_create_with_container = {init:function() {
-  this.setHSV(40, 1.0, 0.99);
+  this.setHSV(40, 1, .99);
   this.appendDummyInput().appendTitle(Blockly.Msg.LISTS_CREATE_WITH_CONTAINER_TITLE_ADD);
   this.appendStatementInput("STACK");
   this.setTooltip(Blockly.Msg.LISTS_CREATE_WITH_CONTAINER_TOOLTIP);
   this.contextMenu = !1;
 }};
 Blockly.Blocks.lists_create_with_item = {init:function() {
-  this.setHSV(40, 1.0, 0.99);
+  this.setHSV(40, 1, .99);
   this.appendDummyInput().appendTitle(Blockly.Msg.LISTS_CREATE_WITH_ITEM_TITLE);
   this.setPreviousStatement(!0);
   this.setNextStatement(!0);
@@ -114,21 +114,21 @@ Blockly.Blocks.lists_create_with_item = {init:function() {
 }};
 Blockly.Blocks.lists_repeat = {init:function() {
   this.setHelpUrl(Blockly.Msg.LISTS_REPEAT_HELPURL);
-  this.setHSV(40, 1.0, 0.99);
+  this.setHSV(40, 1, .99);
   this.setOutput(!0, Blockly.BlockValueType.ARRAY);
   this.interpolateMsg(Blockly.Msg.LISTS_REPEAT_TITLE, ["ITEM", null, Blockly.ALIGN_RIGHT], ["NUM", "Number", Blockly.ALIGN_RIGHT], Blockly.ALIGN_RIGHT);
   this.setTooltip(Blockly.Msg.LISTS_REPEAT_TOOLTIP);
 }};
 Blockly.Blocks.lists_length = {init:function() {
   this.setHelpUrl(Blockly.Msg.LISTS_LENGTH_HELPURL);
-  this.setHSV(40, 1.0, 0.99);
+  this.setHSV(40, 1, .99);
   this.appendValueInput("VALUE").setCheck([Blockly.BlockValueType.ARRAY, Blockly.BlockValueType.STRING]).appendTitle(Blockly.Msg.LISTS_LENGTH_INPUT_LENGTH);
   this.setOutput(!0, Blockly.BlockValueType.NUMBER);
   this.setTooltip(Blockly.Msg.LISTS_LENGTH_TOOLTIP);
 }};
 Blockly.Blocks.lists_isEmpty = {init:function() {
   this.setHelpUrl(Blockly.Msg.LISTS_IS_EMPTY_HELPURL);
-  this.setHSV(40, 1.0, 0.99);
+  this.setHSV(40, 1, .99);
   this.interpolateMsg(Blockly.Msg.LISTS_IS_EMPTY_TITLE, ["VALUE", ["Array", "String"], Blockly.ALIGN_RIGHT], Blockly.ALIGN_RIGHT);
   this.setInputsInline(!0);
   this.setOutput(!0, Blockly.BlockValueType.BOOLEAN);
@@ -137,7 +137,7 @@ Blockly.Blocks.lists_isEmpty = {init:function() {
 Blockly.Blocks.lists_indexOf = {init:function() {
   var a = [[Blockly.Msg.LISTS_INDEX_OF_FIRST, "FIRST"], [Blockly.Msg.LISTS_INDEX_OF_LAST, "LAST"]];
   this.setHelpUrl(Blockly.Msg.LISTS_INDEX_OF_HELPURL);
-  this.setHSV(40, 1.0, 0.99);
+  this.setHSV(40, 1, .99);
   this.setOutput(!0, Blockly.BlockValueType.NUMBER);
   this.appendValueInput("VALUE").setCheck(Blockly.BlockValueType.ARRAY).appendTitle(Blockly.Msg.LISTS_INDEX_OF_INPUT_IN_LIST);
   this.appendValueInput("FIND").appendTitle(new Blockly.FieldDropdown(a), "END");
@@ -148,7 +148,7 @@ Blockly.Blocks.lists_getIndex = {init:function() {
   var a = [[Blockly.Msg.LISTS_GET_INDEX_GET, "GET"], [Blockly.Msg.LISTS_GET_INDEX_GET_REMOVE, "GET_REMOVE"], [Blockly.Msg.LISTS_GET_INDEX_REMOVE, "REMOVE"]];
   this.WHERE_OPTIONS = [[Blockly.Msg.LISTS_GET_INDEX_FROM_START, "FROM_START"], [Blockly.Msg.LISTS_GET_INDEX_FROM_END, "FROM_END"], [Blockly.Msg.LISTS_GET_INDEX_FIRST, "FIRST"], [Blockly.Msg.LISTS_GET_INDEX_LAST, "LAST"], [Blockly.Msg.LISTS_GET_INDEX_RANDOM, "RANDOM"]];
   this.setHelpUrl(Blockly.Msg.LISTS_GET_INDEX_HELPURL);
-  this.setHSV(40, 1.0, 0.99);
+  this.setHSV(40, 1, .99);
   a = new Blockly.FieldDropdown(a, function(a) {
     this.sourceBlock_.updateStatement("REMOVE" == a);
   });
@@ -197,7 +197,7 @@ Blockly.Blocks.lists_setIndex = {init:function() {
   var a = [[Blockly.Msg.LISTS_SET_INDEX_SET, "SET"], [Blockly.Msg.LISTS_SET_INDEX_INSERT, "INSERT"]];
   this.WHERE_OPTIONS = [[Blockly.Msg.LISTS_GET_INDEX_FROM_START, "FROM_START"], [Blockly.Msg.LISTS_GET_INDEX_FROM_END, "FROM_END"], [Blockly.Msg.LISTS_GET_INDEX_FIRST, "FIRST"], [Blockly.Msg.LISTS_GET_INDEX_LAST, "LAST"], [Blockly.Msg.LISTS_GET_INDEX_RANDOM, "RANDOM"]];
   this.setHelpUrl(Blockly.Msg.LISTS_SET_INDEX_HELPURL);
-  this.setHSV(40, 1.0, 0.99);
+  this.setHSV(40, 1, .99);
   this.appendValueInput("LIST").setCheck(Blockly.BlockValueType.ARRAY).appendTitle(Blockly.Msg.LISTS_SET_INDEX_INPUT_IN_LIST);
   this.appendDummyInput().appendTitle(new Blockly.FieldDropdown(a), "MODE").appendTitle("", "SPACE");
   this.appendDummyInput("AT");
@@ -240,7 +240,7 @@ Blockly.Blocks.lists_getSublist = {init:function() {
   this.WHERE_OPTIONS_1 = [[Blockly.Msg.LISTS_GET_INDEX_FROM_START, "FROM_START"], [Blockly.Msg.LISTS_GET_INDEX_FROM_END, "FROM_END"], [Blockly.Msg.LISTS_GET_INDEX_FIRST, "FIRST"]];
   this.WHERE_OPTIONS_2 = [[Blockly.Msg.LISTS_GET_INDEX_FROM_START, "FROM_START"], [Blockly.Msg.LISTS_GET_INDEX_FROM_END, "FROM_END"], [Blockly.Msg.LISTS_GET_INDEX_LAST, "LAST"]];
   this.setHelpUrl(Blockly.Msg.LISTS_GET_SUBLIST_HELPURL);
-  this.setHSV(40, 1.0, 0.99);
+  this.setHSV(40, 1, .99);
   this.appendValueInput("LIST").setCheck(Blockly.BlockValueType.ARRAY).appendTitle(Blockly.Msg.LISTS_GET_SUBLIST_INPUT_IN_LIST);
   this.appendDummyInput("AT1");
   this.appendDummyInput("AT2");
@@ -354,7 +354,7 @@ Blockly.Blocks.controls_if = {init:function() {
         a.statementConnection_ && b.connection.connect(a.statementConnection_);
         break;
       default:
-        throw "Unknown block type.";
+        throw "Unknown block type.";;
     }
     a = a.nextConnection && a.nextConnection.targetBlock();
   }
@@ -373,20 +373,20 @@ Blockly.Blocks.controls_if = {init:function() {
         a.statementConnection_ = d && d.connection.targetConnection;
         break;
       default:
-        throw "Unknown block type.";
+        throw "Unknown block type.";;
     }
     a = a.nextConnection && a.nextConnection.targetBlock();
   }
 }};
 Blockly.Blocks.controls_if_if = {init:function() {
-  this.setHSV(196, 1.0, 0.79);
+  this.setHSV(196, 1, .79);
   this.appendDummyInput().appendTitle(Blockly.Msg.CONTROLS_IF_IF_TITLE_IF);
   this.appendStatementInput("STACK");
   this.setTooltip(Blockly.Msg.CONTROLS_IF_IF_TOOLTIP);
   this.contextMenu = !1;
 }};
 Blockly.Blocks.controls_if_elseif = {init:function() {
-  this.setHSV(196, 1.0, 0.79);
+  this.setHSV(196, 1, .79);
   this.appendDummyInput().appendTitle(Blockly.Msg.CONTROLS_IF_ELSEIF_TITLE_ELSEIF);
   this.setPreviousStatement(!0);
   this.setNextStatement(!0);
@@ -394,7 +394,7 @@ Blockly.Blocks.controls_if_elseif = {init:function() {
   this.contextMenu = !1;
 }};
 Blockly.Blocks.controls_if_else = {init:function() {
-  this.setHSV(196, 1.0, 0.79);
+  this.setHSV(196, 1, .79);
   this.appendDummyInput().appendTitle(Blockly.Msg.CONTROLS_IF_ELSE_TITLE_ELSE);
   this.setPreviousStatement(!0);
   this.setTooltip(Blockly.Msg.CONTROLS_IF_ELSE_TOOLTIP);
@@ -403,7 +403,7 @@ Blockly.Blocks.controls_if_else = {init:function() {
 Blockly.Blocks.logic_compare = {init:function() {
   var a = Blockly.RTL ? [["=", "EQ"], ["\u2260", "NEQ"], [">", "LT"], ["\u2265", "LTE"], ["<", "GT"], ["\u2264", "GTE"]] : [["=", "EQ"], ["\u2260", "NEQ"], ["<", "LT"], ["\u2264", "LTE"], [">", "GT"], ["\u2265", "GTE"]];
   this.setHelpUrl(Blockly.Msg.LOGIC_COMPARE_HELPURL);
-  this.setHSV(196, 1.0, 0.79);
+  this.setHSV(196, 1, .79);
   this.setOutput(!0, Blockly.BlockValueType.BOOLEAN);
   this.appendValueInput("A");
   this.appendValueInput("B").appendTitle(new Blockly.FieldDropdown(a), "OP");
@@ -417,7 +417,7 @@ Blockly.Blocks.logic_compare = {init:function() {
 Blockly.Blocks.logic_operation = {init:function() {
   var a = [[Blockly.Msg.LOGIC_OPERATION_AND, "AND"], [Blockly.Msg.LOGIC_OPERATION_OR, "OR"]];
   this.setHelpUrl(Blockly.Msg.LOGIC_OPERATION_HELPURL);
-  this.setHSV(196, 1.0, 0.79);
+  this.setHSV(196, 1, .79);
   this.setOutput(!0, Blockly.BlockValueType.BOOLEAN);
   this.appendValueInput("A").setCheck(Blockly.BlockValueType.BOOLEAN);
   this.appendValueInput("B").setCheck(Blockly.BlockValueType.BOOLEAN).appendTitle(new Blockly.FieldDropdown(a), "OP");
@@ -430,7 +430,7 @@ Blockly.Blocks.logic_operation = {init:function() {
 }};
 Blockly.Blocks.logic_negate = {init:function() {
   this.setHelpUrl(Blockly.Msg.LOGIC_NEGATE_HELPURL);
-  this.setHSV(196, 1.0, 0.79);
+  this.setHSV(196, 1, .79);
   this.setOutput(!0, Blockly.BlockValueType.BOOLEAN);
   this.interpolateMsg(Blockly.Msg.LOGIC_NEGATE_TITLE, ["BOOL", Blockly.BlockValueType.BOOLEAN, Blockly.ALIGN_RIGHT], Blockly.ALIGN_RIGHT);
   this.setTooltip(Blockly.Msg.LOGIC_NEGATE_TOOLTIP);
@@ -438,21 +438,21 @@ Blockly.Blocks.logic_negate = {init:function() {
 Blockly.Blocks.logic_boolean = {init:function() {
   var a = [[Blockly.Msg.LOGIC_BOOLEAN_TRUE, "TRUE"], [Blockly.Msg.LOGIC_BOOLEAN_FALSE, "FALSE"]];
   this.setHelpUrl(Blockly.Msg.LOGIC_BOOLEAN_HELPURL);
-  this.setHSV(196, 1.0, 0.79);
+  this.setHSV(196, 1, .79);
   this.setOutput(!0, Blockly.BlockValueType.BOOLEAN);
   this.appendDummyInput().appendTitle(new Blockly.FieldDropdown(a), "BOOL");
   this.setTooltip(Blockly.Msg.LOGIC_BOOLEAN_TOOLTIP);
 }};
 Blockly.Blocks.logic_null = {init:function() {
   this.setHelpUrl(Blockly.Msg.LOGIC_NULL_HELPURL);
-  this.setHSV(196, 1.0, 0.79);
+  this.setHSV(196, 1, .79);
   this.setOutput(!0);
   this.appendDummyInput().appendTitle(Blockly.Msg.LOGIC_NULL);
   this.setTooltip(Blockly.Msg.LOGIC_NULL_TOOLTIP);
 }};
 Blockly.Blocks.logic_ternary = {init:function() {
   this.setHelpUrl(Blockly.Msg.LOGIC_TERNARY_HELPURL);
-  this.setHSV(196, 1.0, 0.79);
+  this.setHSV(196, 1, .79);
   this.appendValueInput("IF").setCheck(Blockly.BlockValueType.BOOLEAN).appendTitle(Blockly.Msg.LOGIC_TERNARY_CONDITION);
   this.appendValueInput("THEN").appendTitle(Blockly.Msg.LOGIC_TERNARY_IF_TRUE);
   this.appendValueInput("ELSE").appendTitle(Blockly.Msg.LOGIC_TERNARY_IF_FALSE);
@@ -462,7 +462,7 @@ Blockly.Blocks.logic_ternary = {init:function() {
 Blockly.Blocks.loops = {};
 Blockly.Blocks.controls_repeat = {init:function() {
   this.setHelpUrl(Blockly.Msg.CONTROLS_REPEAT_HELPURL);
-  this.setHSV(322, 0.90, 0.95);
+  this.setHSV(322, .9, .95);
   this.appendDummyInput().appendTitle(Blockly.Msg.CONTROLS_REPEAT_TITLE_REPEAT).appendTitle(new Blockly.FieldTextInput("10", Blockly.FieldTextInput.nonnegativeIntegerValidator), "TIMES").appendTitle(Blockly.Msg.CONTROLS_REPEAT_TITLE_TIMES);
   this.appendStatementInput("DO").appendTitle(Blockly.Msg.CONTROLS_REPEAT_INPUT_DO);
   this.setPreviousStatement(!0);
@@ -471,7 +471,7 @@ Blockly.Blocks.controls_repeat = {init:function() {
 }};
 Blockly.Blocks.controls_repeat_ext = {init:function() {
   this.setHelpUrl(Blockly.Msg.CONTROLS_REPEAT_HELPURL);
-  this.setHSV(322, 0.90, 0.95);
+  this.setHSV(322, .9, .95);
   this.interpolateMsg(Blockly.Msg.CONTROLS_REPEAT_TITLE, ["TIMES", "Number", Blockly.ALIGN_RIGHT], Blockly.ALIGN_RIGHT);
   this.appendStatementInput("DO").appendTitle(Blockly.Msg.CONTROLS_REPEAT_INPUT_DO);
   this.setPreviousStatement(!0);
@@ -482,7 +482,7 @@ Blockly.Blocks.controls_repeat_ext = {init:function() {
 Blockly.Blocks.controls_whileUntil = {init:function() {
   var a = [[Blockly.Msg.CONTROLS_WHILEUNTIL_OPERATOR_WHILE, "WHILE"], [Blockly.Msg.CONTROLS_WHILEUNTIL_OPERATOR_UNTIL, "UNTIL"]];
   this.setHelpUrl(Blockly.Msg.CONTROLS_WHILEUNTIL_HELPURL);
-  this.setHSV(322, 0.90, 0.95);
+  this.setHSV(322, .9, .95);
   this.appendValueInput("BOOL").setCheck(Blockly.BlockValueType.BOOLEAN).appendTitle(new Blockly.FieldDropdown(a), "MODE");
   this.appendStatementInput("DO").appendTitle(Blockly.Msg.CONTROLS_WHILEUNTIL_INPUT_DO);
   this.setPreviousStatement(!0);
@@ -495,7 +495,7 @@ Blockly.Blocks.controls_whileUntil = {init:function() {
 }};
 Blockly.Blocks.controls_for = {init:function() {
   this.setHelpUrl(Blockly.Msg.CONTROLS_FOR_HELPURL);
-  this.setHSV(322, 0.90, 0.95);
+  this.setHSV(322, .9, .95);
   this.appendDummyInput().appendTitle(Blockly.Msg.CONTROLS_FOR_INPUT_WITH).appendTitle(new Blockly.FieldVariable(null), "VAR");
   this.interpolateMsg(Blockly.Msg.CONTROLS_FOR_INPUT_FROM_TO_BY, ["FROM", "Number", Blockly.ALIGN_RIGHT], ["TO", "Number", Blockly.ALIGN_RIGHT], ["BY", "Number", Blockly.ALIGN_RIGHT], Blockly.ALIGN_RIGHT);
   this.appendStatementInput("DO").appendTitle(Blockly.Msg.CONTROLS_FOR_INPUT_DO);
@@ -524,7 +524,7 @@ Blockly.Blocks.controls_for = {init:function() {
 }};
 Blockly.Blocks.controls_forEach = {init:function() {
   this.setHelpUrl(Blockly.Msg.CONTROLS_FOREACH_HELPURL);
-  this.setHSV(322, 0.90, 0.95);
+  this.setHSV(322, .9, .95);
   this.appendValueInput("LIST").setCheck(Blockly.BlockValueType.ARRAY).appendTitle(Blockly.Msg.CONTROLS_FOREACH_INPUT_ITEM).appendTitle(new Blockly.FieldVariable(null), "VAR").appendTitle(Blockly.Msg.CONTROLS_FOREACH_INPUT_INLIST);
   Blockly.Msg.CONTROLS_FOREACH_INPUT_INLIST_TAIL && (this.appendDummyInput().appendTitle(Blockly.Msg.CONTROLS_FOREACH_INPUT_INLIST_TAIL), this.setInputsInline(!0));
   this.appendStatementInput("DO").appendTitle(Blockly.Msg.CONTROLS_FOREACH_INPUT_DO);
@@ -542,7 +542,7 @@ Blockly.Blocks.controls_forEach = {init:function() {
 Blockly.Blocks.controls_flow_statements = {init:function() {
   var a = [[Blockly.Msg.CONTROLS_FLOW_STATEMENTS_OPERATOR_BREAK, "BREAK"], [Blockly.Msg.CONTROLS_FLOW_STATEMENTS_OPERATOR_CONTINUE, "CONTINUE"]];
   this.setHelpUrl(Blockly.Msg.CONTROLS_FLOW_STATEMENTS_HELPURL);
-  this.setHSV(322, 0.90, 0.95);
+  this.setHSV(322, .9, .95);
   this.appendDummyInput().appendTitle(new Blockly.FieldDropdown(a), "FLOW");
   this.setPreviousStatement(!0);
   var b = this;
@@ -566,7 +566,7 @@ Blockly.Blocks.controls_flow_statements = {init:function() {
 Blockly.Blocks.math = {};
 Blockly.Blocks.math_number = {init:function() {
   this.setHelpUrl(Blockly.Msg.MATH_NUMBER_HELPURL);
-  this.setHSV(258, 0.35, 0.62);
+  this.setHSV(258, .35, .62);
   this.appendDummyInput().appendTitle(new Blockly.FieldTextInput("0", Blockly.FieldTextInput.numberValidator), "NUM");
   this.setOutput(!0, Blockly.BlockValueType.NUMBER);
   this.setTooltip(Blockly.Msg.MATH_NUMBER_TOOLTIP);
@@ -574,7 +574,7 @@ Blockly.Blocks.math_number = {init:function() {
 Blockly.Blocks.math_arithmetic = {init:function() {
   var a = [[Blockly.Msg.MATH_ADDITION_SYMBOL, "ADD"], [Blockly.Msg.MATH_SUBTRACTION_SYMBOL, "MINUS"], [Blockly.Msg.MATH_MULTIPLICATION_SYMBOL, "MULTIPLY"], [Blockly.Msg.MATH_DIVISION_SYMBOL, "DIVIDE"], [Blockly.Msg.MATH_POWER_SYMBOL, "POWER"]];
   this.setHelpUrl(Blockly.Msg.MATH_ARITHMETIC_HELPURL);
-  this.setHSV(258, 0.35, 0.62);
+  this.setHSV(258, .35, .62);
   this.setOutput(!0, Blockly.BlockValueType.NUMBER);
   this.appendValueInput("A").setCheck(Blockly.BlockValueType.NUMBER);
   this.appendValueInput("B").setCheck(Blockly.BlockValueType.NUMBER).appendTitle(new Blockly.FieldDropdown(a), "OP");
@@ -588,7 +588,7 @@ Blockly.Blocks.math_arithmetic = {init:function() {
 Blockly.Blocks.math_single = {init:function() {
   var a = [[Blockly.Msg.MATH_SINGLE_OP_ROOT, "ROOT"], [Blockly.Msg.MATH_SINGLE_OP_ABSOLUTE, "ABS"], ["-", "NEG"], ["ln", "LN"], ["log10", "LOG10"], ["e^", "EXP"], ["10^", "POW10"]];
   this.setHelpUrl(Blockly.Msg.MATH_SINGLE_HELPURL);
-  this.setHSV(258, 0.35, 0.62);
+  this.setHSV(258, .35, .62);
   this.setOutput(!0, Blockly.BlockValueType.NUMBER);
   this.appendValueInput("NUM").setCheck(Blockly.BlockValueType.NUMBER).appendTitle(new Blockly.FieldDropdown(a), "OP");
   var b = this;
@@ -600,7 +600,7 @@ Blockly.Blocks.math_single = {init:function() {
 Blockly.Blocks.math_trig = {init:function() {
   var a = [[Blockly.Msg.MATH_TRIG_SIN, "SIN"], [Blockly.Msg.MATH_TRIG_COS, "COS"], [Blockly.Msg.MATH_TRIG_TAN, "TAN"], [Blockly.Msg.MATH_TRIG_ASIN, "ASIN"], [Blockly.Msg.MATH_TRIG_ACOS, "ACOS"], [Blockly.Msg.MATH_TRIG_ATAN, "ATAN"]];
   this.setHelpUrl(Blockly.Msg.MATH_TRIG_HELPURL);
-  this.setHSV(258, 0.35, 0.62);
+  this.setHSV(258, .35, .62);
   this.setOutput(!0, Blockly.BlockValueType.NUMBER);
   this.appendValueInput("NUM").setCheck(Blockly.BlockValueType.NUMBER).appendTitle(new Blockly.FieldDropdown(a), "OP");
   var b = this;
@@ -611,14 +611,14 @@ Blockly.Blocks.math_trig = {init:function() {
 }};
 Blockly.Blocks.math_constant = {init:function() {
   this.setHelpUrl(Blockly.Msg.MATH_CONSTANT_HELPURL);
-  this.setHSV(258, 0.35, 0.62);
+  this.setHSV(258, .35, .62);
   this.setOutput(!0, Blockly.BlockValueType.NUMBER);
   this.appendDummyInput().appendTitle(new Blockly.FieldDropdown([["\u03c0", "PI"], ["e", "E"], ["\u03c6", "GOLDEN_RATIO"], ["sqrt(2)", "SQRT2"], ["sqrt(\u00bd)", "SQRT1_2"], ["\u221e", "INFINITY"]]), "CONSTANT");
   this.setTooltip(Blockly.Msg.MATH_CONSTANT_TOOLTIP);
 }};
 Blockly.Blocks.math_number_property = {init:function() {
   var a = [[Blockly.Msg.MATH_IS_EVEN, "EVEN"], [Blockly.Msg.MATH_IS_ODD, "ODD"], [Blockly.Msg.MATH_IS_PRIME, "PRIME"], [Blockly.Msg.MATH_IS_WHOLE, "WHOLE"], [Blockly.Msg.MATH_IS_POSITIVE, "POSITIVE"], [Blockly.Msg.MATH_IS_NEGATIVE, "NEGATIVE"], [Blockly.Msg.MATH_IS_DIVISIBLE_BY, "DIVISIBLE_BY"]];
-  this.setHSV(258, 0.35, 0.62);
+  this.setHSV(258, .35, .62);
   this.appendValueInput("NUMBER_TO_CHECK").setCheck(Blockly.BlockValueType.NUMBER);
   a = new Blockly.FieldDropdown(a, function(a) {
     this.sourceBlock_.updateShape("DIVISIBLE_BY" == a);
@@ -640,7 +640,7 @@ Blockly.Blocks.math_number_property = {init:function() {
 }};
 Blockly.Blocks.math_change = {init:function() {
   this.setHelpUrl(Blockly.Msg.MATH_CHANGE_HELPURL);
-  this.setHSV(258, 0.35, 0.62);
+  this.setHSV(258, .35, .62);
   this.appendValueInput("DELTA").setCheck(Blockly.BlockValueType.NUMBER).appendTitle(Blockly.Msg.MATH_CHANGE_TITLE_CHANGE).appendTitle(new Blockly.FieldVariable(Blockly.Msg.MATH_CHANGE_TITLE_ITEM), "VAR").appendTitle(Blockly.Msg.MATH_CHANGE_INPUT_BY);
   this.setPreviousStatement(!0);
   this.setNextStatement(!0);
@@ -656,7 +656,7 @@ Blockly.Blocks.math_change = {init:function() {
 Blockly.Blocks.math_round = {init:function() {
   var a = [[Blockly.Msg.MATH_ROUND_OPERATOR_ROUND, "ROUND"], [Blockly.Msg.MATH_ROUND_OPERATOR_ROUNDUP, "ROUNDUP"], [Blockly.Msg.MATH_ROUND_OPERATOR_ROUNDDOWN, "ROUNDDOWN"]];
   this.setHelpUrl(Blockly.Msg.MATH_ROUND_HELPURL);
-  this.setHSV(258, 0.35, 0.62);
+  this.setHSV(258, .35, .62);
   this.setOutput(!0, Blockly.BlockValueType.NUMBER);
   this.appendValueInput("NUM").setCheck(Blockly.BlockValueType.NUMBER).appendTitle(new Blockly.FieldDropdown(a), "OP");
   this.setTooltip(Blockly.Msg.MATH_ROUND_TOOLTIP);
@@ -664,7 +664,7 @@ Blockly.Blocks.math_round = {init:function() {
 Blockly.Blocks.math_on_list = {init:function() {
   var a = [[Blockly.Msg.MATH_ONLIST_OPERATOR_SUM, "SUM"], [Blockly.Msg.MATH_ONLIST_OPERATOR_MIN, "MIN"], [Blockly.Msg.MATH_ONLIST_OPERATOR_MAX, "MAX"], [Blockly.Msg.MATH_ONLIST_OPERATOR_AVERAGE, "AVERAGE"], [Blockly.Msg.MATH_ONLIST_OPERATOR_MEDIAN, "MEDIAN"], [Blockly.Msg.MATH_ONLIST_OPERATOR_MODE, "MODE"], [Blockly.Msg.MATH_ONLIST_OPERATOR_STD_DEV, "STD_DEV"], [Blockly.Msg.MATH_ONLIST_OPERATOR_RANDOM, "RANDOM"]], b = this;
   this.setHelpUrl(Blockly.Msg.MATH_ONLIST_HELPURL);
-  this.setHSV(258, 0.35, 0.62);
+  this.setHSV(258, .35, .62);
   this.setOutput(!0, Blockly.BlockValueType.NUMBER);
   a = new Blockly.FieldDropdown(a, function(a) {
     "MODE" == a ? b.outputConnection.setCheck(Blockly.BlockValueType.ARRAY) : b.outputConnection.setCheck(Blockly.BlockValueType.NUMBER);
@@ -677,7 +677,7 @@ Blockly.Blocks.math_on_list = {init:function() {
 }};
 Blockly.Blocks.math_modulo = {init:function() {
   this.setHelpUrl(Blockly.Msg.MATH_MODULO_HELPURL);
-  this.setHSV(258, 0.35, 0.62);
+  this.setHSV(258, .35, .62);
   this.setOutput(!0, Blockly.BlockValueType.NUMBER);
   this.interpolateMsg(Blockly.Msg.MATH_MODULO_TITLE, ["DIVIDEND", "Number", Blockly.ALIGN_RIGHT], ["DIVISOR", "Number", Blockly.ALIGN_RIGHT], Blockly.ALIGN_RIGHT);
   this.setInputsInline(!0);
@@ -685,7 +685,7 @@ Blockly.Blocks.math_modulo = {init:function() {
 }};
 Blockly.Blocks.math_constrain = {init:function() {
   this.setHelpUrl(Blockly.Msg.MATH_CONSTRAIN_HELPURL);
-  this.setHSV(258, 0.35, 0.62);
+  this.setHSV(258, .35, .62);
   this.setOutput(!0, Blockly.BlockValueType.NUMBER);
   this.interpolateMsg(Blockly.Msg.MATH_CONSTRAIN_TITLE, ["VALUE", "Number", Blockly.ALIGN_RIGHT], ["LOW", "Number", Blockly.ALIGN_RIGHT], ["HIGH", "Number", Blockly.ALIGN_RIGHT], Blockly.ALIGN_RIGHT);
   this.setInputsInline(!0);
@@ -693,7 +693,7 @@ Blockly.Blocks.math_constrain = {init:function() {
 }};
 Blockly.Blocks.math_random_int = {init:function() {
   this.setHelpUrl(Blockly.Msg.MATH_RANDOM_INT_HELPURL);
-  this.setHSV(258, 0.35, 0.62);
+  this.setHSV(258, .35, .62);
   this.setOutput(!0, Blockly.BlockValueType.NUMBER);
   this.interpolateMsg(Blockly.Msg.MATH_RANDOM_INT_TITLE, ["FROM", "Number", Blockly.ALIGN_RIGHT], ["TO", "Number", Blockly.ALIGN_RIGHT], Blockly.ALIGN_RIGHT);
   this.setInputsInline(!0);
@@ -701,7 +701,7 @@ Blockly.Blocks.math_random_int = {init:function() {
 }};
 Blockly.Blocks.math_random_float = {init:function() {
   this.setHelpUrl(Blockly.Msg.MATH_RANDOM_FLOAT_HELPURL);
-  this.setHSV(258, 0.35, 0.62);
+  this.setHSV(258, .35, .62);
   this.setOutput(!0, Blockly.BlockValueType.NUMBER);
   this.appendDummyInput().appendTitle(Blockly.Msg.MATH_RANDOM_FLOAT_TITLE_RANDOM);
   this.setTooltip(Blockly.Msg.MATH_RANDOM_FLOAT_TOOLTIP);
@@ -712,7 +712,7 @@ Blockly.Blocks.procedures_defnoreturn = {shouldHideIfInMainBlockSpace:function()
 }, init:function() {
   var a = !Blockly.disableParamEditing && !Blockly.useModalFunctionEditor;
   this.setHelpUrl(Blockly.Msg.PROCEDURES_DEFNORETURN_HELPURL);
-  this.setHSV(94, 0.84, 0.60);
+  this.setHSV(94, .84, .6);
   var b = Blockly.Procedures.findLegalName(Blockly.Msg.PROCEDURES_DEFNORETURN_PROCEDURE, this);
   this.appendDummyInput().appendTitle(a ? "" : " ").appendTitle(new Blockly.FieldTextInput(b, Blockly.Procedures.rename), "NAME").appendTitle("", "PARAMS");
   this.appendStatementInput("STACK").appendTitle(Blockly.Msg.PROCEDURES_DEFNORETURN_DO);
@@ -817,7 +817,7 @@ Blockly.Blocks.procedures_defreturn = {shouldHideIfInMainBlockSpace:function() {
   return Blockly.useModalFunctionEditor;
 }, init:function() {
   this.setHelpUrl(Blockly.Msg.PROCEDURES_DEFRETURN_HELPURL);
-  this.setHSV(94, 0.84, 0.60);
+  this.setHSV(94, .84, .6);
   var a = Blockly.Procedures.findLegalName(Blockly.Msg.PROCEDURES_DEFRETURN_PROCEDURE, this);
   this.appendDummyInput().appendTitle(Blockly.Msg.PROCEDURES_DEFRETURN_TITLE).appendTitle(new Blockly.FieldTextInput(a, Blockly.Procedures.rename), "NAME").appendTitle("", "PARAMS");
   this.appendStatementInput("STACK").appendTitle(Blockly.Msg.PROCEDURES_DEFRETURN_DO);
@@ -831,14 +831,14 @@ getProcedureInfo:function() {
   return {name:this.getTitleValue("NAME"), parameterNames:this.parameterNames_, parameterIDs:this.paramIds_, type:this.type, callType:this.callType_};
 }, getVars:Blockly.Blocks.procedures_defnoreturn.getVars, renameVar:Blockly.Blocks.procedures_defnoreturn.renameVar, customContextMenu:Blockly.Blocks.procedures_defnoreturn.customContextMenu, userCreated:Blockly.Blocks.procedures_defnoreturn.userCreated, shouldBeGrayedOut:Blockly.Blocks.procedures_defnoreturn.shouldBeGrayedOut, callType_:"procedures_callreturn"};
 Blockly.Blocks.procedures_mutatorcontainer = {init:function() {
-  this.setHSV(94, 0.84, 0.60);
+  this.setHSV(94, .84, .6);
   this.appendDummyInput().appendTitle(Blockly.Msg.PROCEDURES_MUTATORCONTAINER_TITLE);
   this.appendStatementInput("STACK");
   this.setTooltip("");
   this.contextMenu = !1;
 }};
 Blockly.Blocks.procedures_mutatorarg = {init:function() {
-  this.setHSV(94, 0.84, 0.60);
+  this.setHSV(94, .84, .6);
   this.appendDummyInput().appendTitle(Blockly.Msg.PROCEDURES_MUTATORARG_TITLE).appendTitle(new Blockly.FieldTextInput("x", this.validator), "NAME");
   this.setPreviousStatement(!0);
   this.setNextStatement(!0);
@@ -850,7 +850,7 @@ Blockly.Blocks.procedures_mutatorarg.validator = function(a) {
 };
 Blockly.Blocks.procedures_callnoreturn = {init:function() {
   this.setHelpUrl(Blockly.Msg.PROCEDURES_CALLNORETURN_HELPURL);
-  this.setHSV(94, 0.84, 0.60);
+  this.setHSV(94, .84, .6);
   var a = this.appendDummyInput().appendTitle(Blockly.Msg.PROCEDURES_CALLNORETURN_CALL).appendTitle("", "NAME");
   if (Blockly.useModalFunctionEditor) {
     var b = new Blockly.FieldIcon(Blockly.Msg.FUNCTION_EDIT);
@@ -935,7 +935,7 @@ Blockly.Blocks.procedures_callnoreturn = {init:function() {
 }};
 Blockly.Blocks.procedures_callreturn = {init:function() {
   this.setHelpUrl(Blockly.Msg.PROCEDURES_CALLRETURN_HELPURL);
-  this.setHSV(94, 0.84, 0.60);
+  this.setHSV(94, .84, .6);
   var a = this.appendDummyInput().appendTitle(Blockly.Msg.PROCEDURES_CALLRETURN_CALL).appendTitle("", "NAME");
   if (Blockly.functionEditor) {
     var b = new Blockly.FieldIcon(Blockly.Msg.FUNCTION_EDIT);
@@ -949,7 +949,7 @@ Blockly.Blocks.procedures_callreturn = {init:function() {
 }, openEditor:Blockly.Blocks.procedures_callnoreturn.openEditor, getCallName:Blockly.Blocks.procedures_callnoreturn.getCallName, renameProcedure:Blockly.Blocks.procedures_callnoreturn.renameProcedure, setProcedureParameters:Blockly.Blocks.procedures_callnoreturn.setProcedureParameters, mutationToDom:Blockly.Blocks.procedures_callnoreturn.mutationToDom, domToMutation:Blockly.Blocks.procedures_callnoreturn.domToMutation, renameVar:Blockly.Blocks.procedures_callnoreturn.renameVar, customContextMenu:Blockly.Blocks.procedures_callnoreturn.customContextMenu};
 Blockly.Blocks.procedures_ifreturn = {init:function() {
   this.setHelpUrl("http://c2.com/cgi/wiki?GuardClause");
-  this.setHSV(94, 0.84, 0.60);
+  this.setHSV(94, .84, .6);
   this.appendValueInput("CONDITION").setCheck(Blockly.BlockValueType.BOOLEAN).appendTitle(Blockly.Msg.CONTROLS_IF_MSG_IF);
   this.appendValueInput("VALUE").appendTitle(Blockly.Msg.PROCEDURES_DEFRETURN_RETURN);
   this.setInputsInline(!0);
@@ -1211,7 +1211,7 @@ Blockly.Blocks.variables_get = {init:function() {
   var a = new Blockly.FieldLabel(Blockly.Msg.VARIABLES_GET_ITEM);
   a.EDITABLE = !0;
   this.setHelpUrl(Blockly.Msg.VARIABLES_GET_HELPURL);
-  this.setHSV(312, 0.32, 0.62);
+  this.setHSV(312, .32, .62);
   this.appendDummyInput().appendTitle(Blockly.Msg.VARIABLES_GET_TITLE).appendTitle(Blockly.disableVariableEditing ? a : new Blockly.FieldVariable(Blockly.Msg.VARIABLES_GET_ITEM), "VAR").appendTitle(Blockly.Msg.VARIABLES_GET_TAIL);
   this.setOutput(!0);
   this.setTooltip(Blockly.Msg.VARIABLES_GET_TOOLTIP);
@@ -1235,7 +1235,7 @@ Blockly.Blocks.variables_set = {init:function() {
   var a = new Blockly.FieldLabel(Blockly.Msg.VARIABLES_SET_ITEM);
   a.EDITABLE = !0;
   this.setHelpUrl(Blockly.Msg.VARIABLES_SET_HELPURL);
-  this.setHSV(312, 0.32, 0.62);
+  this.setHSV(312, .32, .62);
   this.appendValueInput("VALUE").appendTitle(Blockly.Msg.VARIABLES_SET_TITLE).appendTitle(Blockly.disableVariableEditing ? a : new Blockly.FieldVariable(Blockly.Msg.VARIABLES_SET_ITEM), "VAR").appendTitle(Blockly.Msg.VARIABLES_SET_TAIL);
   this.setPreviousStatement(!0);
   this.setNextStatement(!0);
@@ -1249,7 +1249,7 @@ Blockly.Blocks.parameters_get = {init:function() {
   var a = new Blockly.FieldLabel(Blockly.Msg.VARIABLES_GET_ITEM);
   a.EDITABLE = !0;
   this.setHelpUrl(Blockly.Msg.VARIABLES_GET_HELPURL);
-  this.setHSV(7, 0.80, 0.95);
+  this.setHSV(7, .8, .95);
   this.appendDummyInput().appendTitle(Blockly.Msg.VARIABLES_GET_TITLE).appendTitle(Blockly.disableVariableEditing ? a : new Blockly.FieldParameter(Blockly.Msg.VARIABLES_GET_ITEM), "VAR").appendTitle(Blockly.Msg.VARIABLES_GET_TAIL);
   this.setOutput(!0);
   this.setTooltip(Blockly.Msg.VARIABLES_GET_TOOLTIP);
@@ -1261,7 +1261,7 @@ Blockly.Blocks.functional_definition = {shouldHideIfInMainBlockSpace:function() 
   return !0;
 }, init:function() {
   this.setHelpUrl(Blockly.Msg.PROCEDURES_DEFNORETURN_HELPURL);
-  this.setHSV(94, 0.84, 0.60);
+  this.setHSV(94, .84, .6);
   this.setFunctional(!0, {headerHeight:0, rowBuffer:3});
   this.setFunctionalOutput(!1);
   var a = Blockly.Procedures.findLegalName(Blockly.Msg.PROCEDURES_DEFNORETURN_PROCEDURE, this);
@@ -1359,7 +1359,7 @@ Blockly.Blocks.functional_definition = {shouldHideIfInMainBlockSpace:function() 
 Blockly.Blocks.functional_call = {init:function() {
   this.setHelpUrl(Blockly.Msg.PROCEDURES_CALLNORETURN_HELPURL);
   this.setTooltip("Calls a user-defined function");
-  this.setHSV(94, 0.84, 0.60);
+  this.setHSV(94, .84, .6);
   var a = this.appendDummyInput().appendTitle(new Blockly.FieldLabel("Function Call", {fixedSize:{height:35}}), "NAME").appendTitle("", "PARAM_TEXT");
   if (Blockly.useContractEditor && this.blockSpace !== Blockly.modalBlockSpace) {
     var b = new Blockly.FieldIcon(Blockly.Msg.FUNCTION_EDIT);
@@ -1409,7 +1409,8 @@ Blockly.Blocks.functional_call = {init:function() {
     this.currentParameterIDs_ = goog.array.clone(b);
     this.currentParameterTypes_ = goog.array.clone(c);
     for (e = 0;e < this.currentParameterNames_.length;e++) {
-      f = this.appendFunctionalInput("ARG" + e).setAlign(Blockly.ALIGN_CENTRE).setInline(0 < e), g = this.currentParameterTypes_[e], f.setHSV.apply(f, Blockly.FunctionalTypeColors[g]), f.setCheck(g), this.currentParameterIDs_ && (a = this.currentParameterIDs_[e], a in this.parameterIDsToArgumentConnections_ && (g = this.parameterIDsToArgumentConnections_[a], !g || g.targetConnection || g.sourceBlock_.blockSpace != this.blockSpace ? delete this.parameterIDsToArgumentConnections_[a] : f.connection.connect(g)));
+      f = this.appendFunctionalInput("ARG" + e).setAlign(Blockly.ALIGN_CENTRE).setInline(0 < e), g = this.currentParameterTypes_[e], f.setHSV.apply(f, Blockly.FunctionalTypeColors[g]), f.setCheck(g), this.currentParameterIDs_ && (a = this.currentParameterIDs_[e], a in this.parameterIDsToArgumentConnections_ && (g = this.parameterIDsToArgumentConnections_[a], !g || g.targetConnection || g.sourceBlock_.blockSpace != this.blockSpace ? delete this.parameterIDsToArgumentConnections_[a] : f.connection.connect(g)))
+      ;
     }
     this.refreshParameterTitleString_();
     (this.rendered = d) && this.render();
@@ -1449,7 +1450,7 @@ Blockly.Blocks.functional_call = {init:function() {
 Blockly.Blocks.functional_pass = {init:function() {
   this.setHelpUrl(Blockly.Msg.PROCEDURES_CALLNORETURN_HELPURL);
   this.setTooltip("Pass a user-defined function");
-  this.setHSV(94, 0.84, 0.60);
+  this.setHSV(94, .84, .6);
   var a = this.appendDummyInput().appendTitle(new Blockly.FieldLabel("Pass Function", {fixedSize:{height:35}}), "NAME").appendTitle("", "PARAM_TEXT");
   if (Blockly.useContractEditor && this.blockSpace !== Blockly.modalBlockSpace) {
     var b = new Blockly.FieldIcon(Blockly.Msg.FUNCTION_EDIT);
@@ -1487,7 +1488,7 @@ Blockly.Blocks.functional_example = {shouldHideIfInMainBlockSpace:function() {
 }, isCopyable:function() {
   return !1;
 }, init:function() {
-  this.setHSV(0.0, 0.0, .49);
+  this.setHSV(0, 0, .49);
   this.setFunctional(!0, {headerHeight:0, rowBuffer:3});
   this.setFunctionalOutput(!1);
   this.appendFunctionalInput("ACTUAL").setAlign(Blockly.ALIGN_CENTRE);
@@ -1511,7 +1512,7 @@ Blockly.Blocks.functional_parameters_get = {init:function() {
   var a = new Blockly.FieldLabel(Blockly.Msg.VARIABLES_GET_ITEM);
   a.EDITABLE = !0;
   this.setHelpUrl(Blockly.Msg.VARIABLES_GET_HELPURL);
-  this.setHSV(312, 0.32, 0.62);
+  this.setHSV(312, .32, .62);
   this.setFunctional(!0, {headerHeight:30});
   this.appendDummyInput().appendTitle(Blockly.Msg.VARIABLES_GET_TITLE).appendTitle(a, "VAR").appendTitle(Blockly.Msg.VARIABLES_GET_TAIL).setAlign(Blockly.ALIGN_CENTRE);
   this.setFunctionalOutput(!0);

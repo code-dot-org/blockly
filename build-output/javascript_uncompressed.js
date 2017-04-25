@@ -17,7 +17,7 @@ $jscomp.defineProperty = "function" == typeof Object.defineProperties ? Object.d
   a != Array.prototype && a != Object.prototype && (a[b] = c.value);
 };
 $jscomp.getGlobal = function(a) {
-  return "undefined" != typeof window && window === a ? a : "undefined" != typeof global ? global : a;
+  return "undefined" != typeof window && window === a ? a : "undefined" != typeof global && null != global ? global : a;
 };
 $jscomp.global = $jscomp.getGlobal(this);
 $jscomp.polyfill = function(a, b, c, d) {
@@ -168,7 +168,7 @@ Blockly.JavaScript.colour_rgb = function() {
   return [Blockly.JavaScript.colour_rgb.functionName + "(" + a + ", " + b + ", " + c + ")", Blockly.JavaScript.ORDER_FUNCTION_CALL];
 };
 Blockly.JavaScript.colour_blend = function() {
-  var a = Blockly.JavaScript.valueToCode(this, "COLOUR1", Blockly.JavaScript.ORDER_COMMA) || "'#000000'", b = Blockly.JavaScript.valueToCode(this, "COLOUR2", Blockly.JavaScript.ORDER_COMMA) || "'#000000'", c = Blockly.JavaScript.valueToCode(this, "RATIO", Blockly.JavaScript.ORDER_COMMA) || .5;
+  var a = Blockly.JavaScript.valueToCode(this, "COLOUR1", Blockly.JavaScript.ORDER_COMMA) || "'#000000'", b = Blockly.JavaScript.valueToCode(this, "COLOUR2", Blockly.JavaScript.ORDER_COMMA) || "'#000000'", c = Blockly.JavaScript.valueToCode(this, "RATIO", Blockly.JavaScript.ORDER_COMMA) || 0.5;
   if (!Blockly.JavaScript.definitions_.colour_blend) {
     var d = Blockly.JavaScript.variableDB_.getDistinctName("colour_blend", Blockly.Generator.NAME_TYPE);
     Blockly.JavaScript.colour_blend.functionName = d;
@@ -561,7 +561,7 @@ Blockly.JavaScript.math_single = function() {
       b = "Math.atan(" + c + ") / Math.PI * 180";
       break;
     default:
-      throw "Unknown math operator: " + a;;
+      throw "Unknown math operator: " + a;
   }
   return [b, Blockly.JavaScript.ORDER_DIVISION];
 };
@@ -656,7 +656,7 @@ Blockly.JavaScript.math_on_list = function() {
       a = Blockly.JavaScript.math_on_list.math_random_item + "(" + a + ")";
       break;
     default:
-      throw "Unknown operator: " + a;;
+      throw "Unknown operator: " + a;
   }
   return [a, Blockly.JavaScript.ORDER_FUNCTION_CALL];
 };
@@ -720,7 +720,7 @@ Blockly.JavaScript.procedures_callnoreturn = function() {
 Blockly.JavaScript.procedures_ifreturn = function() {
   var a = "if (" + (Blockly.JavaScript.valueToCode(this, "CONDITION", Blockly.JavaScript.ORDER_NONE) || "false") + ") {\n";
   if (this.hasReturnValue_) {
-    var b = Blockly.JavaScript.valueToCode(this, "VALUE", Blockly.JavaScript.ORDER_NONE) || "null", a = a + ("  return " + b + ";\n")
+    var b = Blockly.JavaScript.valueToCode(this, "VALUE", Blockly.JavaScript.ORDER_NONE) || "null", a = a + ("  return " + b + ";\n");
   } else {
     a += "  return;\n";
   }
@@ -855,7 +855,7 @@ Blockly.JavaScript.text_getSubstring = function() {
 Blockly.JavaScript.text_changeCase = function() {
   var a = this.getTitleValue("CASE");
   if (a = Blockly.JavaScript.text_changeCase.OPERATORS[a]) {
-    var b = Blockly.JavaScript.valueToCode(this, "TEXT", Blockly.JavaScript.ORDER_MEMBER) || "''", a = b + a
+    var b = Blockly.JavaScript.valueToCode(this, "TEXT", Blockly.JavaScript.ORDER_MEMBER) || "''", a = b + a;
   } else {
     Blockly.JavaScript.definitions_.text_toTitleCase || (a = Blockly.JavaScript.variableDB_.getDistinctName("text_toTitleCase", Blockly.Generator.NAME_TYPE), Blockly.JavaScript.text_changeCase.toTitleCase = a, b = [], b.push("function " + a + "(str) {"), b.push("  return str.replace(/\\S+/g,"), b.push("      function(txt) {return txt[0].toUpperCase() + txt.substring(1).toLowerCase();});"), b.push("}"), Blockly.JavaScript.definitions_.text_toTitleCase = b.join("\n")), b = Blockly.JavaScript.valueToCode(this, 
     "TEXT", Blockly.JavaScript.ORDER_NONE) || "''", a = Blockly.JavaScript.text_changeCase.toTitleCase + "(" + b + ")";

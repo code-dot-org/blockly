@@ -21447,7 +21447,7 @@ Blockly.Flyout.prototype.hide = function(opt_saveBlock) {
     this.reflowWrapper_ = null;
   }
   this.blockSpace_.getTopBlocks(false).forEach(function(block) {
-    if (block !== opt_saveBlock) {
+    if (block.rendered && block !== opt_saveBlock) {
       block.dispose(false, false);
     }
   });

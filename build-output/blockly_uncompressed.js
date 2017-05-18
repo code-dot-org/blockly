@@ -21252,9 +21252,6 @@ Blockly.BlockLimits.prototype.updateBlockTotals = function(blockTypes) {
   var countsByType = Blockly.aggregateCounts(blockTypes);
   goog.object.forEach(this.limits_, function(limit, type) {
     var blockCount = countsByType[type] || 0;
-    if (blockCount > limit.limit) {
-      goog.asserts.fail("this toolbox block cannot create more than %s workspace blocks", limit.limit);
-    }
     this.updateCount(type, blockCount);
   }.bind(this));
 };

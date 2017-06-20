@@ -44,6 +44,16 @@ var TWO_DISCONNECTED_BLOCKS =
     '</block>' +
   '</xml>';
 
+var DISCONNECTED_INLINE_BLOCKS =
+  '<xml>' +
+  '  <block type="math_number">' +
+  '    <title name="NUM">1</title>' +
+  '  </block>' +
+  '  <block type="variables_get">' +
+  '    <title name="VAR">x</title>' +
+  '  </block>' +
+  '</xml>';
+
 
 function test_unattachedBlocks() {
   var orig = Blockly.showUnusedBlocks;
@@ -65,6 +75,27 @@ function test_unattachedBlocks() {
       var generatedCode = Blockly.Generator.blockSpaceToCode('JavaScript');
       assertEquals(expectedCode[i][j], generatedCode);
     });
+  });
+
+  Blockly.showUnusedBlocks = orig;
+}
+
+function test_unattachedInlineBlocks() {
+  var orig = Blockly.showUnusedBlocks;
+  Blockly.Test.initializeBlockSpaceEditor();
+  var blockSpace = Blockly.mainBlockSpace;
+
+  var expectedCode = [
+    "var x;\n\n\n1;\n\nx;\n",
+    "var x;\n\n\n/*\n1;\n*/\n\n/*\nx;\n*/\n"
+  ];
+
+  [false, true].forEach(function (showUnusedBlocks, i) {
+    Blockly.showUnusedBlocks = showUnusedBlocks;
+    blockSpace.clear();
+    Blockly.Xml.domToBlockSpace(blockSpace, Blockly.Xml.textToDom(DISCONNECTED_INLINE_BLOCKS));
+    var generatedCode = Blockly.Generator.blockSpaceToCode('JavaScript');
+    assertEquals(expectedCode[i], generatedCode);
   });
 
   Blockly.showUnusedBlocks = orig;

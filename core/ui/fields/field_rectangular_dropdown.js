@@ -266,12 +266,22 @@ Blockly.FieldRectangularDropdown.prototype.addPositionAndShowMenu = function (me
  * @override
  */
 Blockly.FieldRectangularDropdown.prototype.positionWidgetDiv = function () {
+  var width = this.menu_.element_.clientWidth;
+  var height = this.menu_.element_.clientHeight;
   var numberOfColumns = chooseNumberOfColumns(this.menu_.getChildCount());
   var positionBelow = numberOfColumns > 1;
 
   var menuPosition = this.calculateMenuPosition_(this.previewElement_, positionBelow);
 
   var windowSize = goog.dom.getViewportSize();
+  
+  if(menuPosition.x + width > windowSize.width) {
+  	menuPosition.x -= width - (width / numberOfColumns);
+  }
+  if(menuPosition.y + height > windowSize.height) {
+  	menuPosition.y -= height + (height / Math.ceil(this.menu_.getChildCount() / numberOfColumns)); 
+  }
+  
   var scrollOffset = goog.style.getViewportPageOffset(document);
 
   Blockly.WidgetDiv.position(menuPosition.x, menuPosition.y, windowSize, scrollOffset);

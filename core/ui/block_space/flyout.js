@@ -392,6 +392,27 @@ Blockly.Flyout.prototype.layoutBlock_ = function(block, cursor, gap, initialX) {
 };
 
 /**
+ * Convert the given XML to Blocks and populate the given arrays of blocks and
+ * gaps appropriately.
+ *
+ * @see Blockly.Flyout.prototype.show
+ *
+ * @param {!Array|string} xmlList List of blocks (as XML) to lay out
+ * @param {!Array|Block} blocks Array to which the newly-created blocks are
+ *     appended
+ * @param {!Array|number} gaps Array to which the gap values for the
+ *     newly-created blocks are appended
+ */
+Blockly.Flyout.prototype.layoutXmlToBlocks_ = function(xmlList, blocks, gaps, margin) {
+  for (var i = 0, xml; xml = xmlList[i]; i++) {
+    if (xml.tagName && xml.tagName.toUpperCase() === 'BLOCK') {
+      blocks.push(Blockly.Xml.domToBlock(this.blockSpace_, xml));
+      gaps.push(margin * 3);
+    }
+  }
+};
+
+/**
  * Show and populate the flyout.
  * @param {!Array|string} xmlList List of blocks to show.
  *     Variables and procedures have a custom set of blocks.
@@ -422,12 +443,7 @@ Blockly.Flyout.prototype.show = function(xmlList) {
     // Special category for variables.
     // Allow for a mix of static + dynamic blocks. Static blocks will appear
     // first in the category
-    for (var i = 1, xml; xml = xmlList[i]; i++) {
-      if (xml.tagName && xml.tagName.toUpperCase() === 'BLOCK') {
-        blocks.push(Blockly.Xml.domToBlock(this.blockSpace_, xml));
-        gaps.push(margin * 3);
-      }
-    }
+    this.layoutXmlToBlocks_(xmlList.slice(1), blocks, gaps, margin);
     Blockly.Variables.flyoutCategory(blocks, gaps, margin, this.blockSpace_);
   } else if (firstBlock === Blockly.Procedures.NAME_TYPE) {
     // Special category for procedures.
@@ -449,12 +465,7 @@ Blockly.Flyout.prototype.show = function(xmlList) {
       function(procedureInfo) { return procedureInfo.isFunctionalVariable; }
     );
   } else {
-    for (var i = 0, xml; xml = xmlList[i]; i++) {
-      if (xml.tagName && xml.tagName.toUpperCase() === 'BLOCK') {
-        blocks.push(Blockly.Xml.domToBlock(this.blockSpace_, xml));
-        gaps.push(margin * 3);
-      }
-    }
+    this.layoutXmlToBlocks_(xmlList, blocks, gaps, margin);
   }
 
   // Lay out the blocks vertically.

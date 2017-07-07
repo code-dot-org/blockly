@@ -450,6 +450,11 @@ Blockly.Flyout.prototype.show = function(xmlList) {
     if (Blockly.functionEditor && !Blockly.functionEditor.isOpen()) {
       this.addButtonToFlyout_(cursor, Blockly.Msg.FUNCTION_CREATE, this.createFunction_);
     }
+
+    if (Blockly.disableProcedureAutopopulate) {
+      this.layoutXmlToBlocks_(xmlList.slice(1), blocks, gaps, margin);
+    }
+
     Blockly.Procedures.flyoutCategory(blocks, gaps, margin,
       this.blockSpace_,
       function(procedureInfo) { return !procedureInfo.isFunctionalVariable; }

@@ -184,7 +184,7 @@ Blockly.Procedures.rename = function(text) {
  *  will be included in the category.
  */
 Blockly.Procedures.flyoutCategory = function(blocks, gaps, margin, blockSpace, opt_procedureInfoFilter) {
-  if (!Blockly.functionEditor) {
+  if (!Blockly.functionEditor && !Blockly.disableProcedureAutopopulate) {
     if (Blockly.Blocks.procedures_defnoreturn) {
       var block = new Blockly.Block(blockSpace, 'procedures_defnoreturn');
       block.initSvg();

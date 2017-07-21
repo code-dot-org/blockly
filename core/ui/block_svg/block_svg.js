@@ -563,6 +563,14 @@ Blockly.BlockSvg.prototype.updateLimit = function (limit) {
   var rectWidth = Math.max(textWidth + HALF_BUBBLE_SIZE, BUBBLE_SIZE);
   this.limitRect_.setAttribute('width', rectWidth);
   this.limitText_.setAttribute('x', Math.round(rectWidth * 0.5) - HALF_BUBBLE_SIZE);
+
+  // IE Does not support dominant-baseline, so we can't actually vertically
+  // center the text. Instead simply shift it down by one quarter the height of
+  // the bubble, which should be visually quite close if not necessarily exact
+  if (Blockly.isMsie() || Blockly.isTrident()) {
+    this.limitText_.setAttribute('y', BUBBLE_SIZE / 4);
+  }
+
 };
 
 /**

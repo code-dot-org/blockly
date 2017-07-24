@@ -1767,7 +1767,10 @@ Blockly.Block.prototype.isUnused = function() {
 
 Blockly.Block.prototype.setIsUnused = function(isUnused) {
   if (isUnused === undefined) {
-    isUnused = this.previousConnection !== null &&
+    var shouldBeTopBlock = this.previousConnection === null &&
+        this.outputConnection === null;
+
+    isUnused = !shouldBeTopBlock &&
         this.isUserVisible() &&
         this.type !== 'functional_definition' &&
         Blockly.mainBlockSpace &&

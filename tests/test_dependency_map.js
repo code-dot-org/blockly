@@ -52,11 +52,11 @@ goog.addDependency('../../../../core/ui/contract_editor/svg_text_button.js', ['B
 goog.addDependency('../../../../core/ui/contract_editor/type_dropdown.js', ['Blockly.TypeDropdown'], [], false);
 goog.addDependency('../../../../core/ui/contract_editor/x_button.js', ['Blockly.XButton'], [], false);
 goog.addDependency('../../../../core/ui/css.js', ['Blockly.Css'], ['goog.cssom'], false);
-goog.addDependency('../../../../core/ui/fields/angle_helper.js', ['Blockly.AngleHelper'], [], false);
+goog.addDependency('../../../../core/ui/fields/angle_helper.js', ['Blockly.AngleHelper'], ['goog.math.Vec2'], false);
 goog.addDependency('../../../../core/ui/fields/field.js', ['Blockly.Field'], ['Blockly.BlockSvg'], false);
 goog.addDependency('../../../../core/ui/fields/field_angle.js', ['Blockly.FieldAngle'], ['Blockly.FieldTextInput'], false);
 goog.addDependency('../../../../core/ui/fields/field_angle_dropdown.js', ['Blockly.FieldAngleDropdown'], ['Blockly.AngleHelper', 'Blockly.FieldDropdown'], false);
-goog.addDependency('../../../../core/ui/fields/field_angle_textinput.js', ['Blockly.FieldAngleTextInput'], ['Blockly.AngleHelper', 'Blockly.FieldAngleTextInput'], false);
+goog.addDependency('../../../../core/ui/fields/field_angle_textinput.js', ['Blockly.FieldAngleTextInput'], ['Blockly.AngleHelper', 'Blockly.FieldTextInput'], false);
 goog.addDependency('../../../../core/ui/fields/field_checkbox.js', ['Blockly.FieldCheckbox'], ['Blockly.Field'], false);
 goog.addDependency('../../../../core/ui/fields/field_colour.js', ['Blockly.FieldColour'], ['Blockly.Field', 'goog.ui.ColorPicker'], false);
 goog.addDependency('../../../../core/ui/fields/field_colour_dropdown.js', ['Blockly.FieldColourDropdown'], ['Blockly.Field', 'Blockly.FieldRectangularDropdown'], false);
@@ -67,7 +67,7 @@ goog.addDependency('../../../../core/ui/fields/field_image_dropdown.js', ['Block
 goog.addDependency('../../../../core/ui/fields/field_label.js', ['Blockly.FieldLabel'], ['Blockly.Field', 'Blockly.Tooltip'], false);
 goog.addDependency('../../../../core/ui/fields/field_parameter.js', ['Blockly.FieldParameter'], ['Blockly.FieldVariable'], false);
 goog.addDependency('../../../../core/ui/fields/field_rectangular_dropdown.js', ['Blockly.FieldRectangularDropdown'], ['Blockly.Field', 'Blockly.FieldImage', 'Blockly.ImageDimensionCache'], false);
-goog.addDependency('../../../../core/ui/fields/field_textinput.js', ['Blockly.FieldTextInput'], ['Blockly.Field', 'Blockly.Msg', 'goog.asserts', 'goog.userAgent'], false);
+goog.addDependency('../../../../core/ui/fields/field_textinput.js', ['Blockly.FieldTextInput'], ['Blockly.AngleHelper', 'Blockly.BlockFieldHelper', 'Blockly.Field', 'Blockly.Msg', 'goog.asserts', 'goog.userAgent'], false);
 goog.addDependency('../../../../core/ui/fields/field_variable.js', ['Blockly.FieldVariable'], ['Blockly.FieldDropdown', 'Blockly.Msg', 'Blockly.Variables'], false);
 goog.addDependency('../../../../core/ui/function_editor.js', ['Blockly.FunctionEditor'], ['Blockly.BlockSpace', 'Blockly.BlockSpaceEditor', 'Blockly.HorizontalFlyout', 'goog.array', 'goog.dom', 'goog.events', 'goog.structs.LinkedMap', 'goog.style'], false);
 goog.addDependency('../../../../core/ui/icon.js', ['Blockly.Icon'], [], false);
@@ -76,6 +76,7 @@ goog.addDependency('../../../../core/ui/mutator.js', ['Blockly.Mutator'], ['Bloc
 goog.addDependency('../../../../core/ui/tooltip.js', ['Blockly.Tooltip'], [], false);
 goog.addDependency('../../../../core/ui/warning.js', ['Blockly.Warning'], ['Blockly.Bubble', 'Blockly.Icon'], false);
 goog.addDependency('../../../../core/ui/widgetdiv.js', ['Blockly.WidgetDiv'], ['Blockly.Css', 'goog.dom'], false);
+goog.addDependency('../../../../core/utils/block_field_helper.js', ['Blockly.BlockFieldHelper'], [], false);
 goog.addDependency('../../../../core/utils/block_value_type.js', ['Blockly.BlockValueType'], [], false);
 goog.addDependency('../../../../core/utils/functional_block_utils.js', ['Blockly.FunctionalBlockUtils', 'Blockly.FunctionalTypeColors'], ['Blockly.BlockValueType'], false);
 goog.addDependency('../../../../core/utils/image_dimension_cache.js', ['Blockly.ImageDimensionCache'], [], false);

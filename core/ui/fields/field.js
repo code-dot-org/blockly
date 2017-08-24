@@ -55,6 +55,23 @@ Blockly.Field = function(text) {
 };
 
 /**
+ * If this field is attached to a block whose output connection is attached to a
+ * connection that has the specified field helper, get the options for that
+ * field helper.
+ * @param {string} fieldHelper - the field helper to retrieve. One of
+ *        Blockly.BlockFieldHelper
+ * @return {Object|undefined} the options object if it exists
+ */
+Blockly.Field.prototype.getFieldHelperOptions_ = function(fieldHelper) {
+  return (
+    this.sourceBlock_ &&
+    this.sourceBlock_.outputConnection &&
+    this.sourceBlock_.outputConnection.targetConnection &&
+    this.sourceBlock_.outputConnection.targetConnection.getFieldHelperOptions(fieldHelper)
+  );
+};
+
+/**
  * @returns {Blockly.BlockSpace.blockSpaceEditor}
  * @protected
  */

@@ -85,6 +85,12 @@ Blockly.Connection = function(source, type) {
    * @private
    */
   this.check_ = null;
+
+  /**
+   * Enabled field helpers for this connection and their associated options
+   * @private
+   */
+  this.fieldHelpers_ = {};
 };
 
 /**
@@ -676,6 +682,30 @@ Blockly.Connection.prototype.setCheck = function(check) {
   }
   return this;
 };
+
+/**
+ * Enable the specified field helper with the specified options for this
+ * connection
+ * @param {string} fieldHelper the field helper to retrieve. One of
+ *        Blockly.BlockFieldHelper
+ * @param {*} options for this helper
+ * @return {!Blockly.Connection} The connection being modified
+ *     (to allow chaining).
+ */
+Blockly.Connection.prototype.addFieldHelper = function (fieldHelper, options) {
+  this.fieldHelpers_[fieldHelper] = options;
+
+  return this;
+}
+
+/**
+ * Retrieve the options for the specified field helper if it has been enabled
+ * @param {string} fieldHelper the field helper to retrieve. One of
+ *        Blockly.BlockFieldHelper
+ */
+Blockly.Connection.prototype.getFieldHelperOptions = function (fieldHelper) {
+  return this.fieldHelpers_ && this.fieldHelpers_[fieldHelper];
+}
 
 /**
  * @returns {?Array.<Blockly.BlockValueType>}

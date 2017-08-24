@@ -26,6 +26,8 @@
 goog.provide('Blockly.FieldTextInput');
 
 goog.require('Blockly.Field');
+goog.require('Blockly.AngleHelper');
+goog.require('Blockly.BlockFieldHelper');
 goog.require('Blockly.Msg');
 goog.require('goog.asserts');
 goog.require('goog.userAgent');
@@ -45,6 +47,7 @@ Blockly.FieldTextInput = function(text, opt_changeHandler) {
   Blockly.FieldTextInput.superClass_.constructor.call(this, text);
 
   this.changeHandler_ = opt_changeHandler;
+  this.angleHelper = null;
 };
 goog.inherits(Blockly.FieldTextInput, Blockly.Field);
 
@@ -53,10 +56,16 @@ goog.inherits(Blockly.FieldTextInput, Blockly.Field);
  */
 Blockly.FieldTextInput.prototype.CURSOR = 'text';
 
+Blockly.FieldTextInput.ANGLE_HELPER_SIZE = 150;
+
 /**
  * Close the input widget if this input is being deleted.
  */
 Blockly.FieldTextInput.prototype.dispose = function() {
+  if (this.angleHelper) {
+    this.angleHelper.dispose();
+  }
+
   Blockly.WidgetDiv.hideIfOwner(this);
   Blockly.FieldTextInput.superClass_.dispose.call(this);
 };
@@ -80,6 +89,35 @@ Blockly.FieldTextInput.prototype.setText = function(text) {
     }
   }
   Blockly.Field.prototype.setText.call(this, text);
+};
+
+Blockly.FieldTextInput.prototype.shouldShowAngleHelper_ = function() {
+  return this.getFieldHelperOptions_(Blockly.BlockFieldHelper.ANGLE_HELPER);
+};
+
+Blockly.FieldTextInput.prototype.showAngleHelper_ = function() {
+  var div = Blockly.WidgetDiv.DIV;
+  var container = goog.dom.createDom('div', 'blocklyFieldAngleTextInput');
+  container.style.height = Blockly.FieldTextInput.ANGLE_HELPER_SIZE + 'px';
+  container.style.width = Blockly.FieldTextInput.ANGLE_HELPER_SIZE + 'px';
+  div.appendChild(container);
+
+  var options = this.getFieldHelperOptions_(Blockly.BlockFieldHelper.ANGLE_HELPER);
+  var dir = options.block.getTitleValue(options.directionTitle);
+  var colour = options.block.getHexColour();
+  this.angleHelper = new Blockly.AngleHelper(dir, {
+    onUpdate: function () {
+      var value = this.angleHelper.getAngle().toString();
+      this.setText(value);
+      Blockly.FieldTextInput.htmlInput_.value = value;
+    }.bind(this),
+    arcColour: colour,
+    height: Blockly.FieldTextInput.ANGLE_HELPER_SIZE,
+    width: Blockly.FieldTextInput.ANGLE_HELPER_SIZE,
+    angle: parseInt(this.getValue())
+  });
+
+  this.angleHelper.init(container);
 };
 
 /**
@@ -129,6 +167,10 @@ Blockly.FieldTextInput.prototype.showEditor_ = function() {
   htmlInput.onBlockSpaceChangeWrapper_ =
       Blockly.bindEvent_(blockSpaceSvg, 'blocklyBlockSpaceChange', this,
       this.resizeEditor_);
+
+  if (this.shouldShowAngleHelper_()) {
+    this.showAngleHelper_();
+  }
 };
 
 /**
@@ -161,6 +203,10 @@ Blockly.FieldTextInput.prototype.onHtmlInputChange_ = function(e) {
       // Chrome only (version 26, OS X).
       this.sourceBlock_.render();
     }
+  }
+
+  if (this.angleHelper) {
+    this.angleHelper.animateAngleChange(parseInt(this.getText()));
   }
 };
 

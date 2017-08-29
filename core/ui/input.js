@@ -160,6 +160,23 @@ Blockly.Input.prototype.setCheck = function(check) {
 };
 
 /**
+ * Enable the specified field helper with the specified options for this
+ * input's connection
+ * @param {string} fieldHelper the field helper to retrieve. One of
+ *        Blockly.BlockFieldHelper
+ * @param {*} options for this helper
+ * @return {!Blockly.Input} The input being modified (to allow chaining).
+ */
+Blockly.Input.prototype.addFieldHelper = function(fieldHelper, options) {
+  if (this.type !== Blockly.INPUT_VALUE) {
+    throw 'Only Value Inputs can be augmented with helpers';
+  }
+
+  this.connection.addFieldHelper(fieldHelper, options);
+  return this;
+};
+
+/**
  * Change the alignment of the connection's title(s).
  * @param {number} align One of Blockly.ALIGN_LEFT, ALIGN_CENTRE, ALIGN_RIGHT.
  *   In RTL mode directions are reversed, and ALIGN_RIGHT aligns to the left.

@@ -7865,6 +7865,7 @@ Blockly.Connection = function(source, type) {
   this.inDB_ = false;
   this.dbList_ = this.sourceBlock_.blockSpace.connectionDBList;
   this.check_ = null;
+  this.fieldHelpers_ = {};
 };
 Blockly.Connection.prototype.isConnected = function() {
   return this.targetConnection !== null;
@@ -8231,6 +8232,13 @@ Blockly.Connection.prototype.setCheck = function(check) {
     this.check_ = null;
   }
   return this;
+};
+Blockly.Connection.prototype.addFieldHelper = function(fieldHelper, options) {
+  this.fieldHelpers_[fieldHelper] = options;
+  return this;
+};
+Blockly.Connection.prototype.getFieldHelperOptions = function(fieldHelper) {
+  return this.fieldHelpers_ && this.fieldHelpers_[fieldHelper];
 };
 Blockly.Connection.prototype.getCheck = function() {
   return this.check_;
@@ -14958,6 +14966,9 @@ Blockly.Field = function(text) {
   this.setText(text);
   this.visible_ = true;
 };
+Blockly.Field.prototype.getFieldHelperOptions_ = function(fieldHelper) {
+  return this.sourceBlock_ && this.sourceBlock_.outputConnection && this.sourceBlock_.outputConnection.targetConnection && this.sourceBlock_.outputConnection.targetConnection.getFieldHelperOptions(fieldHelper);
+};
 Blockly.Field.prototype.getParentEditor_ = function() {
   return this.sourceBlock_.blockSpace.blockSpaceEditor;
 };
@@ -15426,6 +15437,13 @@ Blockly.Input.prototype.setCheck = function(check) {
     throw "This input does not have a connection.";
   }
   this.connection.setCheck(check);
+  return this;
+};
+Blockly.Input.prototype.addFieldHelper = function(fieldHelper, options) {
+  if (this.type !== Blockly.INPUT_VALUE) {
+    throw "Only Value Inputs can be augmented with helpers";
+  }
+  this.connection.addFieldHelper(fieldHelper, options);
   return this;
 };
 Blockly.Input.prototype.setAlign = function(align) {
@@ -18270,18 +18288,174 @@ Blockly.Names.prototype.safeName_ = function(name) {
 Blockly.Names.equals = function(name1, name2) {
   return name1.toLowerCase() == name2.toLowerCase();
 };
+goog.provide("Blockly.AngleHelper");
+goog.require("goog.math.Vec2");
+Blockly.AngleHelper = function(direction, opt_options) {
+  opt_options = opt_options || {};
+  this.turnRight_ = direction === "turnRight";
+  this.arcColour_ = opt_options.arcColour || "#949ca2";
+  this.angle_ = opt_options.angle || 0;
+  this.circleR_ = opt_options.circleR || 10;
+  this.height_ = opt_options.height || 150;
+  this.width_ = opt_options.width || 150;
+  this.dragging_ = opt_options.dragging || false;
+  this.strokeWidth_ = opt_options.strokeWidth || 3;
+  this.snapPoints_ = opt_options.snapPoints && opt_options.snapPoints.map(function(point) {
+    return Math.round(parseInt(point));
+  });
+  this.center_ = new goog.math.Vec2(this.width_ / 2, this.height_ / 2);
+  var circumference = Math.min(this.height_, this.width_);
+  this.lineLength_ = new goog.math.Vec2(circumference / 2 - this.circleR_ - this.strokeWidth_, 0);
+  this.circleCenter_ = this.center_.clone().add(this.lineLength_);
+  this.circleCenter_ = goog.math.Vec2.rotateAroundPoint(this.circleCenter_, this.center_, goog.math.toRadians(this.turnRight_ ? this.angle_ : -this.angle_));
+  this.arc_ = null;
+  this.circle_ = null;
+  this.svg_ = null;
+  this.variableLine_ = null;
+  this.animationInterval_ = null;
+  this.onUpdate_ = opt_options.onUpdate;
+};
+Blockly.AngleHelper.prototype.animateAngleChange = function(targetAngle, animationDuration) {
+  animationDuration = animationDuration || 200;
+  var minSteps = animationDuration / 10;
+  var totalDiff = targetAngle - this.getAngle();
+  var steps = Math.min(Math.abs(totalDiff), minSteps);
+  var timePerStep = animationDuration / steps;
+  var diffPerStep = totalDiff / steps;
+  clearInterval(this.animationInterval_);
+  this.animationInterval_ = setInterval(function() {
+    if (Math.abs(this.getAngle() - targetAngle) < 1) {
+      this.setAngle(targetAngle);
+      clearInterval(this.animationInterval_);
+    } else {
+      var newAngle = this.getAngle() + diffPerStep;
+      this.setAngle(newAngle, true);
+    }
+  }.bind(this), timePerStep);
+};
+Blockly.AngleHelper.prototype.setAngle = function(angle, skipSnap) {
+  this.angle_ = skipSnap ? angle : this.snap_(angle);
+  this.update_();
+};
+Blockly.AngleHelper.prototype.getAngle = function() {
+  return this.angle_;
+};
+Blockly.AngleHelper.prototype.init = function(svgContainer) {
+  this.svg_ = Blockly.createSvgElement("svg", {"xmlns":"http://www.w3.org/2000/svg", "xmlns:html":"http://www.w3.org/1999/xhtml", "xmlns:xlink":"http://www.w3.org/1999/xlink", "version":"1.1", "height":this.height_ + "px", "width":this.width_ + "px", "style":"background: rgb(255, 255, 255);"}, svgContainer);
+  this.mouseMoveWrapper_ = Blockly.bindEvent_(this.svg_, "mousemove", this, this.updateDrag_);
+  this.mouseUpWrapper_ = Blockly.bindEvent_(this.svg_, "mouseup", this, this.stopDrag_);
+  this.mouseDownWrapper_ = Blockly.bindEvent_(this.svg_, "mousedown", this, this.startDrag_);
+  Blockly.createSvgElement("line", {"stroke":"#4d575f", "stroke-width":this.strokeWidth_, "stroke-linecap":"round", "x1":this.center_.x - this.lineLength_.x, "x2":this.center_.x, "y1":this.center_.y, "y2":this.center_.y}, this.svg_);
+  Blockly.createSvgElement("line", {"stroke":"#949ca2", "stroke-dasharray":"6,6", "stroke-width":this.strokeWidth_, "stroke-linecap":"round", "x1":this.center_.x, "x2":this.center_.x + this.lineLength_.x, "y1":this.center_.y, "y2":this.center_.y}, this.svg_);
+  this.arc_ = Blockly.createSvgElement("path", {"stroke":this.arcColour_, "fill":"none", "stroke-width":this.strokeWidth_}, this.svg_);
+  for (var angle = 15;angle < 360;angle += 15) {
+    var markerSize = angle % 90 == 0 ? 15 : angle % 45 == 0 ? 10 : 5;
+    var isOnPrimaryHalf = this.turnRight_ ? angle < 180 : angle > 180;
+    Blockly.createSvgElement("line", {"stroke-linecap":"round", "stroke-opacity":isOnPrimaryHalf ? 1 : 0.3, "x1":this.center_.x + this.lineLength_.x, "y1":this.center_.y, "x2":this.center_.x + this.lineLength_.x - markerSize, "y2":this.center_.y, "class":"blocklyAngleMarks", "transform":"rotate(" + angle + ", " + this.center_.x + ", " + this.center_.y + ")"}, this.svg_);
+  }
+  this.variableLine_ = Blockly.createSvgElement("line", {"stroke":"#4d575f", "stroke-width":this.strokeWidth_, "stroke-linecap":"round", "x1":this.center_.x, "x2":this.circleCenter_.x, "y1":this.center_.y, "y2":this.circleCenter_.y}, this.svg_);
+  this.circle_ = Blockly.createSvgElement("circle", {"cx":this.circleCenter_.x, "cy":this.circleCenter_.y, "fill":"#a69bc1", "r":this.circleR_, "stroke":"#4d575f", "stroke-width":this.strokeWidth_, "style":"cursor: move;"}, this.svg_);
+  this.update_();
+};
+Blockly.AngleHelper.prototype.update_ = function() {
+  this.circleCenter_ = goog.math.Vec2.rotateAroundPoint(this.center_.clone().add(this.lineLength_), this.center_, goog.math.toRadians(this.turnRight_ ? this.angle_ : -this.angle_));
+  this.variableLine_.setAttribute("x2", this.circleCenter_.x);
+  this.variableLine_.setAttribute("y2", this.circleCenter_.y);
+  this.circle_.setAttribute("cx", this.circleCenter_.x);
+  this.circle_.setAttribute("cy", this.circleCenter_.y);
+  var arcStart = 0;
+  var arcEnd = this.turnRight_ ? this.angle_ : -this.angle_;
+  this.arc_.setAttribute("d", Blockly.AngleHelper.describeArc(this.center_, 20, arcStart, arcEnd));
+};
+Blockly.AngleHelper.prototype.startDrag_ = function() {
+  this.dragging_ = true;
+};
+Blockly.AngleHelper.prototype.updateDrag_ = function(e) {
+  if (!this.dragging_) {
+    return;
+  }
+  var x, y;
+  if (e.offsetX && e.offsetY) {
+    x = e.offsetX;
+    y = e.offsetY;
+  } else {
+    var rect = this.svg_.getBoundingClientRect();
+    x = e.clientX - rect.left;
+    y = e.clientY - rect.top;
+  }
+  var angle = goog.math.angle(this.center_.x, this.center_.y, x, y);
+  if (!this.turnRight_) {
+    angle = goog.math.standardAngle(-angle);
+  }
+  this.setAngle(angle);
+  if (this.onUpdate_) {
+    this.onUpdate_();
+  }
+  e.stopPropagation();
+  e.preventDefault();
+};
+Blockly.AngleHelper.prototype.stopDrag_ = function() {
+  this.dragging_ = false;
+};
+Blockly.AngleHelper.prototype.snap_ = function(val) {
+  if (!this.snapPoints_) {
+    return Math.round(val);
+  }
+  return this.snapPoints_.reduce(function(prev, curr) {
+    var currDiff = Math.abs(goog.math.angleDifference(curr, val));
+    var prevDiff = Math.abs(goog.math.angleDifference(prev, val));
+    return currDiff < prevDiff ? curr : prev;
+  });
+};
+Blockly.AngleHelper.prototype.dispose = function() {
+  if (this.mouseDownWrapper_) {
+    Blockly.unbindEvent_(this.mouseDownWrapper_);
+    this.mouseDownWrapper_ = null;
+  }
+  if (this.mouseUpWrapper_) {
+    Blockly.unbindEvent_(this.mouseUpWrapper_);
+    this.mouseUpWrapper_ = null;
+  }
+  if (this.mouseMoveWrapper_) {
+    Blockly.unbindEvent_(this.mouseMoveWrapper_);
+    this.mouseMoveWrapper_ = null;
+  }
+  goog.dom.removeNode(this.svg_);
+  this.arc_ = null;
+  this.circle_ = null;
+  this.svg_ = null;
+  this.variableLine_ = null;
+};
+Blockly.AngleHelper.describeArc = function(center, radius, startAngle, endAngle) {
+  var vector = center.clone().add(new goog.math.Vec2(radius, 0));
+  var start = goog.math.Vec2.rotateAroundPoint(vector, center, goog.math.toRadians(startAngle));
+  var end = goog.math.Vec2.rotateAroundPoint(vector, center, goog.math.toRadians(endAngle));
+  var largeArcFlag = Math.abs(startAngle - endAngle) > 180 ? "1" : "0";
+  var sweepFlag = endAngle - startAngle < 0 ? "0" : "1";
+  var d = ["M", start.x.toFixed(2), start.y.toFixed(2), "A", radius, radius, 0, largeArcFlag, sweepFlag, end.x.toFixed(2), end.y.toFixed(2)].join(" ");
+  return d;
+};
+goog.provide("Blockly.BlockFieldHelper");
+Blockly.BlockFieldHelper = {ANGLE_HELPER:"Angle Helper"};
 goog.provide("Blockly.FieldTextInput");
 goog.require("Blockly.Field");
+goog.require("Blockly.AngleHelper");
+goog.require("Blockly.BlockFieldHelper");
 goog.require("Blockly.Msg");
 goog.require("goog.asserts");
 goog.require("goog.userAgent");
 Blockly.FieldTextInput = function(text, opt_changeHandler) {
   Blockly.FieldTextInput.superClass_.constructor.call(this, text);
   this.changeHandler_ = opt_changeHandler;
+  this.angleHelper = null;
 };
 goog.inherits(Blockly.FieldTextInput, Blockly.Field);
 Blockly.FieldTextInput.prototype.CURSOR = "text";
+Blockly.FieldTextInput.ANGLE_HELPER_SIZE = 150;
 Blockly.FieldTextInput.prototype.dispose = function() {
+  if (this.angleHelper) {
+    this.angleHelper.dispose();
+  }
   Blockly.WidgetDiv.hideIfOwner(this);
   Blockly.FieldTextInput.superClass_.dispose.call(this);
 };
@@ -18296,6 +18470,25 @@ Blockly.FieldTextInput.prototype.setText = function(text) {
     }
   }
   Blockly.Field.prototype.setText.call(this, text);
+};
+Blockly.FieldTextInput.prototype.shouldShowAngleHelper_ = function() {
+  return this.getFieldHelperOptions_(Blockly.BlockFieldHelper.ANGLE_HELPER);
+};
+Blockly.FieldTextInput.prototype.showAngleHelper_ = function() {
+  var div = Blockly.WidgetDiv.DIV;
+  var container = goog.dom.createDom("div", "blocklyFieldAngleTextInput");
+  container.style.height = Blockly.FieldTextInput.ANGLE_HELPER_SIZE + "px";
+  container.style.width = Blockly.FieldTextInput.ANGLE_HELPER_SIZE + "px";
+  div.appendChild(container);
+  var options = this.getFieldHelperOptions_(Blockly.BlockFieldHelper.ANGLE_HELPER);
+  var dir = options.block.getTitleValue(options.directionTitle);
+  var colour = options.block.getHexColour();
+  this.angleHelper = new Blockly.AngleHelper(dir, {onUpdate:function() {
+    var value = this.angleHelper.getAngle().toString();
+    this.setText(value);
+    Blockly.FieldTextInput.htmlInput_.value = value;
+  }.bind(this), arcColour:colour, height:Blockly.FieldTextInput.ANGLE_HELPER_SIZE, width:Blockly.FieldTextInput.ANGLE_HELPER_SIZE, angle:parseInt(this.getValue())});
+  this.angleHelper.init(container);
 };
 Blockly.FieldTextInput.prototype.showEditor_ = function() {
   this.showWidgetDiv_();
@@ -18329,6 +18522,9 @@ Blockly.FieldTextInput.prototype.showEditor_ = function() {
   htmlInput.onKeyPressWrapper_ = Blockly.bindEvent_(htmlInput, "keypress", this, this.onHtmlInputChange_);
   var blockSpaceSvg = this.sourceBlock_.blockSpace.getCanvas();
   htmlInput.onBlockSpaceChangeWrapper_ = Blockly.bindEvent_(blockSpaceSvg, "blocklyBlockSpaceChange", this, this.resizeEditor_);
+  if (this.shouldShowAngleHelper_()) {
+    this.showAngleHelper_();
+  }
 };
 Blockly.FieldTextInput.prototype.onHtmlInputChange_ = function(e) {
   var htmlInput = Blockly.FieldTextInput.htmlInput_;
@@ -18351,6 +18547,9 @@ Blockly.FieldTextInput.prototype.onHtmlInputChange_ = function(e) {
         }
       }
     }
+  }
+  if (this.angleHelper) {
+    this.angleHelper.animateAngleChange(parseInt(this.getText()));
   }
 };
 Blockly.FieldTextInput.prototype.validate_ = function() {
@@ -20944,153 +21143,6 @@ Blockly.FieldDropdown.prototype.dispose = function() {
   Blockly.WidgetDiv.hideIfOwner(this);
   Blockly.FieldDropdown.superClass_.dispose.call(this);
 };
-goog.provide("Blockly.AngleHelper");
-goog.require("goog.math.Vec2");
-Blockly.AngleHelper = function(direction, opt_options) {
-  opt_options = opt_options || {};
-  this.turnRight_ = direction === "turnRight";
-  this.arcColour_ = opt_options.arcColour || "#949ca2";
-  this.angle_ = opt_options.angle || 0;
-  this.circleR_ = opt_options.circleR || 10;
-  this.height_ = opt_options.height || 150;
-  this.width_ = opt_options.width || 150;
-  this.dragging_ = opt_options.dragging || false;
-  this.strokeWidth_ = opt_options.strokeWidth || 3;
-  this.snapPoints_ = opt_options.snapPoints && opt_options.snapPoints.map(function(point) {
-    return Math.round(parseInt(point));
-  });
-  this.center_ = new goog.math.Vec2(this.width_ / 2, this.height_ / 2);
-  var circumference = Math.min(this.height_, this.width_);
-  this.lineLength_ = new goog.math.Vec2(circumference / 2 - this.circleR_ - this.strokeWidth_, 0);
-  this.circleCenter_ = this.center_.clone().add(this.lineLength_);
-  this.circleCenter_ = goog.math.Vec2.rotateAroundPoint(this.circleCenter_, this.center_, goog.math.toRadians(this.turnRight_ ? this.angle_ : -this.angle_));
-  this.arc_ = null;
-  this.circle_ = null;
-  this.svg_ = null;
-  this.variableLine_ = null;
-  this.animationInterval_ = null;
-  this.onUpdate_ = opt_options.onUpdate;
-};
-Blockly.AngleHelper.prototype.animateAngleChange = function(targetAngle, animationDuration) {
-  animationDuration = animationDuration || 200;
-  var minSteps = animationDuration / 10;
-  var totalDiff = targetAngle - this.getAngle();
-  var steps = Math.min(Math.abs(totalDiff), minSteps);
-  var timePerStep = animationDuration / steps;
-  var diffPerStep = totalDiff / steps;
-  clearInterval(this.animationInterval_);
-  this.animationInterval_ = setInterval(function() {
-    if (Math.abs(this.getAngle() - targetAngle) < 1) {
-      this.setAngle(targetAngle);
-      clearInterval(this.animationInterval_);
-    } else {
-      var newAngle = this.getAngle() + diffPerStep;
-      this.setAngle(newAngle, true);
-    }
-  }.bind(this), timePerStep);
-};
-Blockly.AngleHelper.prototype.setAngle = function(angle, skipSnap) {
-  this.angle_ = skipSnap ? angle : this.snap_(angle);
-  this.update_();
-};
-Blockly.AngleHelper.prototype.getAngle = function() {
-  return this.angle_;
-};
-Blockly.AngleHelper.prototype.init = function(svgContainer) {
-  this.svg_ = Blockly.createSvgElement("svg", {"xmlns":"http://www.w3.org/2000/svg", "xmlns:html":"http://www.w3.org/1999/xhtml", "xmlns:xlink":"http://www.w3.org/1999/xlink", "version":"1.1", "height":this.height_ + "px", "width":this.width_ + "px", "style":"background: rgb(255, 255, 255);"}, svgContainer);
-  this.mouseMoveWrapper_ = Blockly.bindEvent_(this.svg_, "mousemove", this, this.updateDrag_);
-  this.mouseUpWrapper_ = Blockly.bindEvent_(this.svg_, "mouseup", this, this.stopDrag_);
-  this.mouseDownWrapper_ = Blockly.bindEvent_(this.svg_, "mousedown", this, this.startDrag_);
-  Blockly.createSvgElement("line", {"stroke":"#4d575f", "stroke-width":this.strokeWidth_, "stroke-linecap":"round", "x1":this.center_.x - this.lineLength_.x, "x2":this.center_.x, "y1":this.center_.y, "y2":this.center_.y}, this.svg_);
-  Blockly.createSvgElement("line", {"stroke":"#949ca2", "stroke-dasharray":"6,6", "stroke-width":this.strokeWidth_, "stroke-linecap":"round", "x1":this.center_.x, "x2":this.center_.x + this.lineLength_.x, "y1":this.center_.y, "y2":this.center_.y}, this.svg_);
-  this.arc_ = Blockly.createSvgElement("path", {"stroke":this.arcColour_, "fill":"none", "stroke-width":this.strokeWidth_}, this.svg_);
-  for (var angle = 15;angle < 360;angle += 15) {
-    var markerSize = angle % 90 == 0 ? 15 : angle % 45 == 0 ? 10 : 5;
-    var isOnPrimaryHalf = this.turnRight_ ? angle < 180 : angle > 180;
-    Blockly.createSvgElement("line", {"stroke-linecap":"round", "stroke-opacity":isOnPrimaryHalf ? 1 : 0.3, "x1":this.center_.x + this.lineLength_.x, "y1":this.center_.y, "x2":this.center_.x + this.lineLength_.x - markerSize, "y2":this.center_.y, "class":"blocklyAngleMarks", "transform":"rotate(" + angle + ", " + this.center_.x + ", " + this.center_.y + ")"}, this.svg_);
-  }
-  this.variableLine_ = Blockly.createSvgElement("line", {"stroke":"#4d575f", "stroke-width":this.strokeWidth_, "stroke-linecap":"round", "x1":this.center_.x, "x2":this.circleCenter_.x, "y1":this.center_.y, "y2":this.circleCenter_.y}, this.svg_);
-  this.circle_ = Blockly.createSvgElement("circle", {"cx":this.circleCenter_.x, "cy":this.circleCenter_.y, "fill":"#a69bc1", "r":this.circleR_, "stroke":"#4d575f", "stroke-width":this.strokeWidth_, "style":"cursor: move;"}, this.svg_);
-  this.update_();
-};
-Blockly.AngleHelper.prototype.update_ = function() {
-  this.circleCenter_ = goog.math.Vec2.rotateAroundPoint(this.center_.clone().add(this.lineLength_), this.center_, goog.math.toRadians(this.turnRight_ ? this.angle_ : -this.angle_));
-  this.variableLine_.setAttribute("x2", this.circleCenter_.x);
-  this.variableLine_.setAttribute("y2", this.circleCenter_.y);
-  this.circle_.setAttribute("cx", this.circleCenter_.x);
-  this.circle_.setAttribute("cy", this.circleCenter_.y);
-  var arcStart = 0;
-  var arcEnd = this.turnRight_ ? this.angle_ : -this.angle_;
-  this.arc_.setAttribute("d", Blockly.AngleHelper.describeArc(this.center_, 20, arcStart, arcEnd));
-};
-Blockly.AngleHelper.prototype.startDrag_ = function() {
-  this.dragging_ = true;
-};
-Blockly.AngleHelper.prototype.updateDrag_ = function(e) {
-  if (!this.dragging_) {
-    return;
-  }
-  var x, y;
-  if (e.offsetX && e.offsetY) {
-    x = e.offsetX;
-    y = e.offsetY;
-  } else {
-    var rect = this.svg_.getBoundingClientRect();
-    x = e.clientX - rect.left;
-    y = e.clientY - rect.top;
-  }
-  var angle = goog.math.angle(this.center_.x, this.center_.y, x, y);
-  if (!this.turnRight_) {
-    angle = goog.math.standardAngle(-angle);
-  }
-  this.setAngle(angle);
-  if (this.onUpdate_) {
-    this.onUpdate_();
-  }
-  e.stopPropagation();
-  e.preventDefault();
-};
-Blockly.AngleHelper.prototype.stopDrag_ = function() {
-  this.dragging_ = false;
-};
-Blockly.AngleHelper.prototype.snap_ = function(val) {
-  if (!this.snapPoints_) {
-    return Math.round(val);
-  }
-  return this.snapPoints_.reduce(function(prev, curr) {
-    var currDiff = Math.abs(goog.math.angleDifference(curr, val));
-    var prevDiff = Math.abs(goog.math.angleDifference(prev, val));
-    return currDiff < prevDiff ? curr : prev;
-  });
-};
-Blockly.AngleHelper.prototype.dispose = function() {
-  if (this.mouseDownWrapper_) {
-    Blockly.unbindEvent_(this.mouseDownWrapper_);
-    this.mouseDownWrapper_ = null;
-  }
-  if (this.mouseUpWrapper_) {
-    Blockly.unbindEvent_(this.mouseUpWrapper_);
-    this.mouseUpWrapper_ = null;
-  }
-  if (this.mouseMoveWrapper_) {
-    Blockly.unbindEvent_(this.mouseMoveWrapper_);
-    this.mouseMoveWrapper_ = null;
-  }
-  goog.dom.removeNode(this.svg_);
-  this.arc_ = null;
-  this.circle_ = null;
-  this.svg_ = null;
-  this.variableLine_ = null;
-};
-Blockly.AngleHelper.describeArc = function(center, radius, startAngle, endAngle) {
-  var vector = center.clone().add(new goog.math.Vec2(radius, 0));
-  var start = goog.math.Vec2.rotateAroundPoint(vector, center, goog.math.toRadians(startAngle));
-  var end = goog.math.Vec2.rotateAroundPoint(vector, center, goog.math.toRadians(endAngle));
-  var largeArcFlag = Math.abs(startAngle - endAngle) > 180 ? "1" : "0";
-  var sweepFlag = endAngle - startAngle < 0 ? "0" : "1";
-  var d = ["M", start.x.toFixed(2), start.y.toFixed(2), "A", radius, radius, 0, largeArcFlag, sweepFlag, end.x.toFixed(2), end.y.toFixed(2)].join(" ");
-  return d;
-};
 goog.provide("Blockly.FieldAngleDropdown");
 goog.require("Blockly.FieldDropdown");
 goog.require("Blockly.AngleHelper");
@@ -21138,39 +21190,18 @@ Blockly.FieldAngleDropdown.prototype.dispose = function() {
   Blockly.FieldAngleDropdown.superClass_.dispose.call(this);
 };
 goog.provide("Blockly.FieldAngleTextInput");
-goog.require("Blockly.FieldTextInput");
 goog.require("Blockly.AngleHelper");
-Blockly.FieldAngleTextInput = function(directionTitleName, text) {
-  this.angleHelper = null;
-  this.directionTitleName = directionTitleName;
+goog.require("Blockly.BlockFieldHelper");
+goog.require("Blockly.FieldTextInput");
+Blockly.FieldAngleTextInput = function(directionTitle, text) {
+  this.directionTitle = directionTitle;
   Blockly.FieldAngleTextInput.superClass_.constructor.call(this, text, Blockly.FieldTextInput.numberValidator);
 };
 goog.inherits(Blockly.FieldAngleTextInput, Blockly.FieldTextInput);
-Blockly.FieldAngleTextInput.SIZE = 150;
-Blockly.FieldAngleTextInput.prototype.dispose = function() {
-  if (this.angleHelper) {
-    this.angleHelper.dispose();
+Blockly.FieldAngleTextInput.prototype.getFieldHelperOptions_ = function(field_helper) {
+  if (field_helper === Blockly.BlockFieldHelper.ANGLE_HELPER) {
+    return {directionTitle:this.directionTitle, block:this.sourceBlock_};
   }
-  Blockly.FieldAngleTextInput.superClass_.dispose.call(this);
-};
-Blockly.FieldAngleTextInput.prototype.showEditor_ = function() {
-  Blockly.FieldAngleTextInput.superClass_.showEditor_.call(this);
-  var div = Blockly.WidgetDiv.DIV;
-  var container = goog.dom.createDom("div", "blocklyFieldAngleTextInput");
-  container.style.height = Blockly.FieldAngleTextInput.SIZE + "px";
-  container.style.width = Blockly.FieldAngleTextInput.SIZE + "px";
-  div.appendChild(container);
-  var dir = this.sourceBlock_.getTitleValue(this.directionTitleName);
-  this.angleHelper = new Blockly.AngleHelper(dir, {onUpdate:function() {
-    var value = this.angleHelper.getAngle().toString();
-    this.setText(value);
-    Blockly.FieldTextInput.htmlInput_.value = value;
-  }.bind(this), arcColour:this.sourceBlock_.getHexColour(), height:Blockly.FieldAngleTextInput.SIZE, width:Blockly.FieldAngleTextInput.SIZE, angle:parseInt(this.getValue())});
-  this.angleHelper.init(container);
-};
-Blockly.FieldAngleTextInput.prototype.onHtmlInputChange_ = function(e) {
-  Blockly.FieldAngleTextInput.superClass_.onHtmlInputChange_.call(this, e);
-  this.angleHelper.animateAngleChange(parseInt(this.getText()));
 };
 goog.provide("Blockly.FieldIcon");
 goog.require("Blockly.FieldLabel");

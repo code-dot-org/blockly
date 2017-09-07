@@ -11,7 +11,7 @@ goog.require('Blockly.BlockFieldHelper');
 goog.require('Blockly.FieldTextInput');
 
 /**
- * Class for an editable text field which will always show the Angle HElper
+ * Class for an editable text field which will always show the Angle Helper
  * @param {string} directionTitle the title of the field from which to obtain
  *        direction information
  * @param {string} text The initial content of the field.

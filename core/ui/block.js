@@ -88,7 +88,6 @@ Blockly.Block = function(blockSpace, prototypeName, htmlId) {
 
   /**
    * Whether this block is allowed to disconnect from its parent block.
-   * This property does not get serialized/deserialized.
    * @private {boolean}
    */
   this.canDisconnectFromParent_ = true;
@@ -970,6 +969,19 @@ Blockly.Block.prototype.showContextMenu_ = function(e) {
       }
     };
     options.push(editableOption);
+
+    // can disconnect from parent
+    var canDisconnectFromParentOption = {
+      text: this.canDisconnectFromParent_ ?
+          "Lock to Parent Block" : "Unlock from Parent Block",
+      enabled: true,
+      callback: function () {
+        block.setCanDisconnectFromParent(!block.canDisconnectFromParent_);
+        Blockly.ContextMenu.hide();
+      }
+    };
+    options.push(canDisconnectFromParentOption);
+
 
     // limit
     var getCurrentLimit = function() {

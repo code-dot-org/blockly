@@ -971,6 +971,19 @@ Blockly.Block.prototype.showContextMenu_ = function(e) {
     };
     options.push(editableOption);
 
+    // can disconnect from parent
+    var canDisconnectFromParentOption = {
+      text: this.canDisconnectFromParent_ ?
+          "Lock to Parent Block" : "Unlock from Parent Block",
+      enabled: true,
+      callback: function () {
+        block.setCanDisconnectFromParent(!block.canDisconnectFromParent_);
+        Blockly.ContextMenu.hide();
+      }
+    };
+    options.push(canDisconnectFromParentOption);
+
+
     // limit
     var getCurrentLimit = function() {
       return block.blockSpace.blockSpaceEditor.blockLimits.getLimit(block.type);

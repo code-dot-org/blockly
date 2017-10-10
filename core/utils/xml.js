@@ -154,6 +154,9 @@ Blockly.Xml.blockToDom = function(block, ignoreChildBlocks) {
   if (block.isNextConnectionDisabled()) {
     element.setAttribute('next_connection_disabled', true);
   }
+  if (!block.canDisconnectFromParent()) {
+    element.setAttribute('can_disconnect_from_parent', false);
+  }
   if (block.isFunctionDefinition() && block.userCreated) {
     element.setAttribute('usercreated', true);
   }
@@ -363,6 +366,10 @@ Blockly.Xml.domToBlock = function(blockSpace, xmlBlock) {
   var next_connection_disabled = xmlBlock.getAttribute('next_connection_disabled');
   if (next_connection_disabled) {
     block.setNextConnectionDisabled(next_connection_disabled === 'true');
+  }
+  var can_disconnect_from_parent = xmlBlock.getAttribute('can_disconnect_from_parent');
+  if (can_disconnect_from_parent) {
+    block.setCanDisconnectFromParent(can_disconnect_from_parent === 'true');
   }
   var userVisible = xmlBlock.getAttribute('uservisible');
   if (userVisible) {

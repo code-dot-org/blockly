@@ -88,7 +88,6 @@ Blockly.Block = function(blockSpace, prototypeName, htmlId) {
 
   /**
    * Whether this block is allowed to disconnect from its parent block.
-   * This property does not get serialized/deserialized.
    * @private {boolean}
    */
   this.canDisconnectFromParent_ = true;

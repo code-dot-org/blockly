@@ -519,6 +519,13 @@ Blockly.BlockSpaceEditor.prototype.init_ = function() {
   }
 };
 
+Blockly.BlockSpaceEditor.prototype.getAllFlyoutBlocks = function() {
+  if (!this.flyout_) {
+    return [];
+  }
+  return this.flyout_.getAllBlocks();
+};
+
 Blockly.BlockSpaceEditor.prototype.detectBrokenControlPoints = function() {
   if (goog.userAgent.WEBKIT) {
     /* HACK:

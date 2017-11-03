@@ -17088,6 +17088,11 @@ Blockly.Block.prototype.onMouseUp_ = function(e) {
         goog.Timer.callOnce(trashcan.close, 100, trashcan);
       }
       Blockly.selected.dispose(false, true);
+      if (Blockly.topLevelProcedureAutopopulate && this.isFunctionDefinition()) {
+        window.setTimeout(function() {
+          thisBlockSpace.blockSpaceEditor.updateFlyout();
+        }, 0);
+      }
       Blockly.fireUiEvent(window, "resize");
     }
   }
@@ -21718,6 +21723,13 @@ Blockly.Flyout.prototype.createBlockFunc_ = function(originBlock) {
     } else {
       flyout.filterForCapacity_();
     }
+    if (Blockly.topLevelProcedureAutopopulate && block.isFunctionDefinition()) {
+      block.blockEvents.listenOnce(Blockly.Block.EVENTS.AFTER_DROPPED, function() {
+        window.setTimeout(function() {
+          targetBlockSpace.blockSpaceEditor.updateFlyout();
+        }, 0);
+      });
+    }
     block.onMouseDown_(e);
   };
 };
@@ -25179,12 +25191,18 @@ Blockly.BlockSpaceEditor.prototype.init_ = function() {
       this.toolbox.init(this.blockSpace, this);
     } else {
       this.flyout_.init(this.blockSpace, true);
-      this.flyout_.show(Blockly.languageTree.childNodes);
+      this.updateFlyout();
     }
   }
   if (!this.noScrolling_ && (Blockly.hasVerticalScrollbars || Blockly.hasHorizontalScrollbars)) {
     this.blockSpace.scrollbarPair = new Blockly.ScrollbarPair(this.blockSpace, Blockly.hasHorizontalScrollbars, Blockly.hasVerticalScrollbars);
     this.blockSpace.scrollbarPair.resize();
+  }
+};
+Blockly.BlockSpaceEditor.prototype.updateFlyout = function() {
+  if (this.flyout_ && Blockly.languageTree) {
+    this.flyout_.show(Blockly.languageTree.childNodes);
+    this.svgResize();
   }
 };
 Blockly.BlockSpaceEditor.prototype.getAllFlyoutBlocks = function() {

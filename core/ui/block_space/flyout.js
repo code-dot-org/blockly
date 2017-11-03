@@ -751,6 +751,16 @@ Blockly.Flyout.prototype.createBlockFunc_ = function(originBlock) {
     } else {
       flyout.filterForCapacity_();
     }
+    if (Blockly.topLevelProcedureAutopopulate && block.isFunctionDefinition()) {
+      block.blockEvents.listenOnce(
+        Blockly.Block.EVENTS.AFTER_DROPPED,
+        function() {
+          window.setTimeout(function() {
+            targetBlockSpace.blockSpaceEditor.updateFlyout();
+          }, 0);
+        }
+      );
+    }
     // Start a dragging operation on the new block.
     block.onMouseDown_(e);
   };

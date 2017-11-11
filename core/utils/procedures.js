@@ -162,13 +162,15 @@ Blockly.Procedures.rename = function(text) {
   // Ensure two identically-named procedures don't exist.
   text = Blockly.Procedures.findLegalName(text, this.sourceBlock_);
   // Rename any callers.
-  var blocks = this.sourceBlock_.blockSpace.getAllBlocks();
+  var blocks = this.sourceBlock_.blockSpace.getAllBlocks().concat(
+    this.sourceBlock_.blockSpace.blockSpaceEditor.getAllFlyoutBlocks());
   for (var x = 0; x < blocks.length; x++) {
     var func = blocks[x].renameProcedure;
     if (func) {
       func.call(blocks[x], this.text_, text);
     }
   }
+  this.sourceBlock_.blockSpace.blockSpaceEditor.svgResize();
   return text;
 };
 
@@ -184,7 +186,9 @@ Blockly.Procedures.rename = function(text) {
  *  will be included in the category.
  */
 Blockly.Procedures.flyoutCategory = function(blocks, gaps, margin, blockSpace, opt_procedureInfoFilter) {
-  if (!Blockly.functionEditor && !Blockly.disableProcedureAutopopulate) {
+  if (!Blockly.functionEditor &&
+      !Blockly.disableProcedureAutopopulate &&
+      !Blockly.topLevelProcedureAutopopulate) {
     if (Blockly.Blocks.procedures_defnoreturn) {
       var block = new Blockly.Block(blockSpace, 'procedures_defnoreturn');
       block.initSvg();

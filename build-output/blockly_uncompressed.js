@@ -6610,6 +6610,9 @@ Blockly.Xml.domToBlockSpace = function(blockSpace, xml) {
   blocks.filter(function(block) {
     return !block.blockly_block.isVisible();
   }).forEach(positionBlock);
+  if (Blockly.topLevelProcedureAutopopulate) {
+    blockSpace.blockSpaceEditor.updateFlyout();
+  }
   blockSpace.events.dispatchEvent(Blockly.BlockSpace.EVENTS.EVENT_BLOCKS_IMPORTED);
 };
 Blockly.Xml.domToBlock = function(blockSpace, xmlBlock) {
@@ -17085,6 +17088,11 @@ Blockly.Block.prototype.onMouseUp_ = function(e) {
         goog.Timer.callOnce(trashcan.close, 100, trashcan);
       }
       Blockly.selected.dispose(false, true);
+      if (Blockly.topLevelProcedureAutopopulate && this.isFunctionDefinition()) {
+        window.setTimeout(function() {
+          thisBlockSpace.blockSpaceEditor.updateFlyout();
+        }, 0);
+      }
       Blockly.fireUiEvent(window, "resize");
     }
   }
@@ -21530,16 +21538,21 @@ Blockly.Flyout.prototype.show = function(xmlList) {
     this.layoutXmlToBlocks_(xmlList.slice(1), blocks, gaps, margin);
     Blockly.Variables.flyoutCategory(blocks, gaps, margin, this.blockSpace_);
   } else {
-    if (firstBlock === Blockly.Procedures.NAME_TYPE) {
+    if (firstBlock === Blockly.Procedures.NAME_TYPE || Blockly.topLevelProcedureAutopopulate) {
       if (Blockly.functionEditor && !Blockly.functionEditor.isOpen()) {
         this.addButtonToFlyout_(cursor, Blockly.Msg.FUNCTION_CREATE, this.createFunction_);
       }
       if (Blockly.disableProcedureAutopopulate) {
         this.layoutXmlToBlocks_(xmlList.slice(1), blocks, gaps, margin);
       }
-      Blockly.Procedures.flyoutCategory(blocks, gaps, margin, this.blockSpace_, function(procedureInfo) {
-        return !procedureInfo.isFunctionalVariable;
-      });
+      if (Blockly.topLevelProcedureAutopopulate) {
+        this.layoutXmlToBlocks_(xmlList, blocks, gaps, margin);
+      }
+      if (Blockly.mainBlockSpace) {
+        Blockly.Procedures.flyoutCategory(blocks, gaps, margin, this.blockSpace_, function(procedureInfo) {
+          return !procedureInfo.isFunctionalVariable;
+        });
+      }
     } else {
       if (firstBlock === Blockly.Procedures.NAME_TYPE_FUNCTIONAL_VARIABLE) {
         if (Blockly.functionEditor && !Blockly.functionEditor.isOpen()) {
@@ -21710,6 +21723,13 @@ Blockly.Flyout.prototype.createBlockFunc_ = function(originBlock) {
     } else {
       flyout.filterForCapacity_();
     }
+    if (Blockly.topLevelProcedureAutopopulate && block.isFunctionDefinition()) {
+      block.blockEvents.listenOnce(Blockly.Block.EVENTS.AFTER_DROPPED, function() {
+        window.setTimeout(function() {
+          targetBlockSpace.blockSpaceEditor.updateFlyout();
+        }, 0);
+      });
+    }
     block.onMouseDown_(e);
   };
 };
@@ -21757,6 +21777,9 @@ Blockly.Flyout.prototype.getRect = function() {
     x -= BIG_NUM;
   }
   return new goog.math.Rect(x, -BIG_NUM, BIG_NUM + this.width_, this.height_ + 2 * BIG_NUM);
+};
+Blockly.Flyout.prototype.getAllBlocks = function() {
+  return this.blockSpace_.getAllBlocks();
 };
 goog.provide("goog.events.FocusHandler");
 goog.provide("goog.events.FocusHandler.EventType");
@@ -25168,13 +25191,25 @@ Blockly.BlockSpaceEditor.prototype.init_ = function() {
       this.toolbox.init(this.blockSpace, this);
     } else {
       this.flyout_.init(this.blockSpace, true);
-      this.flyout_.show(Blockly.languageTree.childNodes);
+      this.updateFlyout();
     }
   }
   if (!this.noScrolling_ && (Blockly.hasVerticalScrollbars || Blockly.hasHorizontalScrollbars)) {
     this.blockSpace.scrollbarPair = new Blockly.ScrollbarPair(this.blockSpace, Blockly.hasHorizontalScrollbars, Blockly.hasVerticalScrollbars);
     this.blockSpace.scrollbarPair.resize();
   }
+};
+Blockly.BlockSpaceEditor.prototype.updateFlyout = function() {
+  if (this.flyout_ && Blockly.languageTree) {
+    this.flyout_.show(Blockly.languageTree.childNodes);
+    this.svgResize();
+  }
+};
+Blockly.BlockSpaceEditor.prototype.getAllFlyoutBlocks = function() {
+  if (!this.flyout_) {
+    return [];
+  }
+  return this.flyout_.getAllBlocks();
 };
 Blockly.BlockSpaceEditor.prototype.detectBrokenControlPoints = function() {
   if (goog.userAgent.WEBKIT) {
@@ -28913,17 +28948,18 @@ Blockly.Procedures.isLegalName = function(name, blockSpace, opt_exclude) {
 Blockly.Procedures.rename = function(text) {
   text = text.replace(/^[\s\xa0]+|[\s\xa0]+$/g, "");
   text = Blockly.Procedures.findLegalName(text, this.sourceBlock_);
-  var blocks = this.sourceBlock_.blockSpace.getAllBlocks();
+  var blocks = this.sourceBlock_.blockSpace.getAllBlocks().concat(this.sourceBlock_.blockSpace.blockSpaceEditor.getAllFlyoutBlocks());
   for (var x = 0;x < blocks.length;x++) {
     var func = blocks[x].renameProcedure;
     if (func) {
       func.call(blocks[x], this.text_, text);
     }
   }
+  this.sourceBlock_.blockSpace.blockSpaceEditor.svgResize();
   return text;
 };
 Blockly.Procedures.flyoutCategory = function(blocks, gaps, margin, blockSpace, opt_procedureInfoFilter) {
-  if (!Blockly.functionEditor && !Blockly.disableProcedureAutopopulate) {
+  if (!Blockly.functionEditor && !Blockly.disableProcedureAutopopulate && !Blockly.topLevelProcedureAutopopulate) {
     if (Blockly.Blocks.procedures_defnoreturn) {
       var block = new Blockly.Block(blockSpace, "procedures_defnoreturn");
       block.initSvg();
@@ -29369,7 +29405,7 @@ Blockly.parseOptions_ = function(options) {
   return {RTL:!!options["rtl"], collapse:hasCollapse, readOnly:readOnly, showUnusedBlocks:showUnusedBlocks, maxBlocks:options["maxBlocks"] || Infinity, assetUrl:options["assetUrl"] || function(path) {
     return "./" + path;
   }, hasCategories:hasCategories, hasHorizontalScrollbars:options["hasHorizontalScrollbars"], hasVerticalScrollbars:options["hasVerticalScrollbars"], customSimpleDialog:options["customSimpleDialog"], hasTrashcan:hasTrashcan, varsInGlobals:options["varsInGlobals"] || false, languageTree:tree, disableIfElseEditing:options["disableIfElseEditing"] || false, disableParamEditing:options["disableParamEditing"] || false, disableVariableEditing:options["disableVariableEditing"] || false, disableProcedureAutopopulate:options["disableProcedureAutopopulate"] || 
-  false, useModalFunctionEditor:options["useModalFunctionEditor"] || false, useContractEditor:options["useContractEditor"] || false, disableExamples:options["disableExamples"] || false, defaultNumExampleBlocks:options["defaultNumExampleBlocks"] || 0, grayOutUndeletableBlocks:grayOutUndeletableBlocks, editBlocks:options["editBlocks"] || false, showExampleTestButtons:options["showExampleTestButtons"] || false};
+  false, topLevelProcedureAutopopulate:options["topLevelProcedureAutopopulate"] || false, useModalFunctionEditor:options["useModalFunctionEditor"] || false, useContractEditor:options["useContractEditor"] || false, disableExamples:options["disableExamples"] || false, defaultNumExampleBlocks:options["defaultNumExampleBlocks"] || 0, grayOutUndeletableBlocks:grayOutUndeletableBlocks, editBlocks:options["editBlocks"] || false, showExampleTestButtons:options["showExampleTestButtons"] || false};
 };
 Blockly.registerUISounds_ = function(audioPlayer) {
   audioPlayer.register({id:"click", mp3:Blockly.assetUrl("media/click.mp3"), wav:Blockly.assetUrl("media/click.wav"), ogg:Blockly.assetUrl("media/click.ogg")});

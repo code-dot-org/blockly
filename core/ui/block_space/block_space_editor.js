@@ -508,7 +508,7 @@ Blockly.BlockSpaceEditor.prototype.init_ = function() {
     } else {
       // Build a fixed flyout with the root blocks.
       this.flyout_.init(this.blockSpace, true);
-      this.flyout_.show(Blockly.languageTree.childNodes);
+      this.updateFlyout();
     }
   }
   if (!this.noScrolling_ &&
@@ -517,6 +517,20 @@ Blockly.BlockSpaceEditor.prototype.init_ = function() {
       this.blockSpace, Blockly.hasHorizontalScrollbars, Blockly.hasVerticalScrollbars);
     this.blockSpace.scrollbarPair.resize();
   }
+};
+
+Blockly.BlockSpaceEditor.prototype.updateFlyout = function() {
+  if (this.flyout_ && Blockly.languageTree) {
+    this.flyout_.show(Blockly.languageTree.childNodes);
+    this.svgResize();
+  }
+};
+
+Blockly.BlockSpaceEditor.prototype.getAllFlyoutBlocks = function() {
+  if (!this.flyout_) {
+    return [];
+  }
+  return this.flyout_.getAllBlocks();
 };
 
 Blockly.BlockSpaceEditor.prototype.detectBrokenControlPoints = function() {

@@ -323,6 +323,10 @@ Blockly.Xml.domToBlockSpace = function(blockSpace, xml) {
     return !block.blockly_block.isVisible();
   }).forEach(positionBlock);
 
+  if (Blockly.topLevelProcedureAutopopulate) {
+    blockSpace.blockSpaceEditor.updateFlyout();
+  }
+
   blockSpace.events.dispatchEvent(Blockly.BlockSpace.EVENTS.EVENT_BLOCKS_IMPORTED);
 };
 

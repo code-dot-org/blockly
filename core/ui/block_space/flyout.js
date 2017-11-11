@@ -445,7 +445,8 @@ Blockly.Flyout.prototype.show = function(xmlList) {
     // first in the category
     this.layoutXmlToBlocks_(xmlList.slice(1), blocks, gaps, margin);
     Blockly.Variables.flyoutCategory(blocks, gaps, margin, this.blockSpace_);
-  } else if (firstBlock === Blockly.Procedures.NAME_TYPE) {
+  } else if (firstBlock === Blockly.Procedures.NAME_TYPE ||
+    Blockly.topLevelProcedureAutopopulate) {
     // Special category for procedures.
     if (Blockly.functionEditor && !Blockly.functionEditor.isOpen()) {
       this.addButtonToFlyout_(cursor, Blockly.Msg.FUNCTION_CREATE, this.createFunction_);
@@ -455,10 +456,16 @@ Blockly.Flyout.prototype.show = function(xmlList) {
       this.layoutXmlToBlocks_(xmlList.slice(1), blocks, gaps, margin);
     }
 
-    Blockly.Procedures.flyoutCategory(blocks, gaps, margin,
-      this.blockSpace_,
-      function(procedureInfo) { return !procedureInfo.isFunctionalVariable; }
-    );
+    if (Blockly.topLevelProcedureAutopopulate) {
+      this.layoutXmlToBlocks_(xmlList, blocks, gaps, margin);
+    }
+
+    if (Blockly.mainBlockSpace) {
+      Blockly.Procedures.flyoutCategory(blocks, gaps, margin,
+        this.blockSpace_,
+        function(procedureInfo) { return !procedureInfo.isFunctionalVariable; }
+      );
+    }
   } else if (firstBlock === Blockly.Procedures.NAME_TYPE_FUNCTIONAL_VARIABLE) {
     // Special category for functional variables.
     if (Blockly.functionEditor && !Blockly.functionEditor.isOpen()) {
@@ -744,6 +751,16 @@ Blockly.Flyout.prototype.createBlockFunc_ = function(originBlock) {
     } else {
       flyout.filterForCapacity_();
     }
+    if (Blockly.topLevelProcedureAutopopulate && block.isFunctionDefinition()) {
+      block.blockEvents.listenOnce(
+        Blockly.Block.EVENTS.AFTER_DROPPED,
+        function() {
+          window.setTimeout(function() {
+            targetBlockSpace.blockSpaceEditor.updateFlyout();
+          }, 0);
+        }
+      );
+    }
     // Start a dragging operation on the new block.
     block.onMouseDown_(e);
   };
@@ -822,4 +839,8 @@ Blockly.Flyout.prototype.getRect = function() {
   }
   return new goog.math.Rect(x, -BIG_NUM,
     BIG_NUM + this.width_, this.height_ + 2 * BIG_NUM);
+};
+
+Blockly.Flyout.prototype.getAllBlocks = function() {
+  return this.blockSpace_.getAllBlocks();
 };

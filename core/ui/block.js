@@ -798,6 +798,11 @@ Blockly.Block.prototype.onMouseUp_ = function(e) {
       goog.Timer.callOnce(trashcan.close, 100, trashcan);
     }
     Blockly.selected.dispose(false, true);
+    if (Blockly.topLevelProcedureAutopopulate && this.isFunctionDefinition()) {
+      window.setTimeout(function() {
+        thisBlockSpace.blockSpaceEditor.updateFlyout();
+      }, 0);
+    }
     // Dropping a block on the trash can will usually cause the blockSpace to
     // resize to contain the newly positioned block.  Force a second resize now
     // that the block has been deleted.

@@ -160,6 +160,7 @@ Blockly.parseOptions_ = function(options) {
     disableParamEditing: options['disableParamEditing'] || false,
     disableVariableEditing: options['disableVariableEditing'] || false,
     disableProcedureAutopopulate: options['disableProcedureAutopopulate'] || false,
+    topLevelProcedureAutopopulate: options['topLevelProcedureAutopopulate'] || false,
     useModalFunctionEditor: options['useModalFunctionEditor'] || false,
     useContractEditor: options['useContractEditor'] || false,
     disableExamples: options['disableExamples'] || false,

@@ -52,6 +52,8 @@ goog.require('goog.style');
  *      BlockSpaceEditor.readOnly OR Blockly.readOnly are true
  * @param {boolean} opt_options.disableTooltip whether or not to disable tooltips for this
  *      blockSpace. It is recommended that only one blockSpace per page allow tooltips.
+ * @param {boolean} opt_options.disableEventBindings whether or not to skip setting up dom
+ *      event handlers for this blockspace
  */
 Blockly.BlockSpaceEditor = function(container, opt_options) {
   opt_options = opt_options || {};
@@ -89,7 +91,7 @@ Blockly.BlockSpaceEditor = function(container, opt_options) {
   this.blockLimits = new Blockly.BlockLimits();
 
   this.createDom_(container);
-  this.init_();
+  this.init_(!opt_options.disableEventBindings);
 };
 
 /**
@@ -477,7 +479,8 @@ Blockly.BlockSpaceEditor.prototype.bumpBlocksIntoBlockSpace = function() {
   }, this);
 };
 
-Blockly.BlockSpaceEditor.prototype.init_ = function() {
+
+Blockly.BlockSpaceEditor.prototype.init_ = function(bindEvents) {
   this.detectBrokenControlPoints();
 
   // Bind pan-drag handlers
@@ -488,7 +491,7 @@ Blockly.BlockSpaceEditor.prototype.init_ = function() {
   Blockly.bindEvent_(Blockly.WidgetDiv.DIV, 'contextmenu', null,
     Blockly.blockContextMenu);
 
-  if (!Blockly.documentEventsBound_) {
+  if (bindEvents && !Blockly.documentEventsBound_) {
     // Only bind the window/document events once.
     // Destroying and reinjecting Blockly should not bind again.
     Blockly.bindEvent_(window, 'resize', this, this.svgResize);

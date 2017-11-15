@@ -70,6 +70,9 @@ Blockly.BlockSpaceEditor = function(container, opt_options) {
   if (opt_options.disableTooltip) {
     this.disableTooltip = opt_options.disableTooltip;
   }
+  if (opt_options.disableEventBindings) {
+    this.disableEventBindings = opt_options.disableEventBindings;
+  }
 
   this.readOnly_ = !!opt_options.readOnly;
   this.noScrolling_ = !!opt_options.noScrolling;
@@ -91,7 +94,7 @@ Blockly.BlockSpaceEditor = function(container, opt_options) {
   this.blockLimits = new Blockly.BlockLimits();
 
   this.createDom_(container);
-  this.init_(!opt_options.disableEventBindings);
+  this.init_();
 };
 
 /**
@@ -480,7 +483,7 @@ Blockly.BlockSpaceEditor.prototype.bumpBlocksIntoBlockSpace = function() {
 };
 
 
-Blockly.BlockSpaceEditor.prototype.init_ = function(bindEvents) {
+Blockly.BlockSpaceEditor.prototype.init_ = function() {
   this.detectBrokenControlPoints();
 
   // Bind pan-drag handlers
@@ -491,7 +494,7 @@ Blockly.BlockSpaceEditor.prototype.init_ = function(bindEvents) {
   Blockly.bindEvent_(Blockly.WidgetDiv.DIV, 'contextmenu', null,
     Blockly.blockContextMenu);
 
-  if (bindEvents && !Blockly.documentEventsBound_) {
+  if (!this.disableEventBindings && !Blockly.documentEventsBound_) {
     // Only bind the window/document events once.
     // Destroying and reinjecting Blockly should not bind again.
     Blockly.bindEvent_(window, 'resize', this, this.svgResize);

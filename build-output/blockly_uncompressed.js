@@ -24991,12 +24991,15 @@ Blockly.BlockSpaceEditor = function(container, opt_options) {
   if (opt_options.disableTooltip) {
     this.disableTooltip = opt_options.disableTooltip;
   }
+  if (opt_options.disableEventBindings) {
+    this.disableEventBindings = opt_options.disableEventBindings;
+  }
   this.readOnly_ = !!opt_options.readOnly;
   this.noScrolling_ = !!opt_options.noScrolling;
   this.blockSpace = new Blockly.BlockSpace(this, goog.bind(this.getBlockSpaceMetrics_, this), goog.bind(this.setBlockSpaceMetrics_, this), container);
   this.blockLimits = new Blockly.BlockLimits;
   this.createDom_(container);
-  this.init_(!opt_options.disableEventBindings);
+  this.init_();
 };
 Blockly.BlockSpaceEditor.BUMP_ENTIRE_BLOCK = false;
 Blockly.BlockSpaceEditor.ENTIRE_BUMP_PADDING_TOP = 2;
@@ -25171,12 +25174,12 @@ Blockly.BlockSpaceEditor.prototype.bumpBlocksIntoBlockSpace = function() {
     }
   }, this);
 };
-Blockly.BlockSpaceEditor.prototype.init_ = function(bindEvents) {
+Blockly.BlockSpaceEditor.prototype.init_ = function() {
   this.detectBrokenControlPoints();
   this.blockSpace.bindBeginPanDragHandler(this.svg_, goog.bind(this.hideChaff, this));
   this.blockSpace.bindScrollOnWheelHandler(this.svg_);
   Blockly.bindEvent_(Blockly.WidgetDiv.DIV, "contextmenu", null, Blockly.blockContextMenu);
-  if (bindEvents && !Blockly.documentEventsBound_) {
+  if (!this.disableEventBindings && !Blockly.documentEventsBound_) {
     Blockly.bindEvent_(window, "resize", this, this.svgResize);
     Blockly.bindEvent_(document, "keydown", this, this.onKeyDown_);
     if (goog.userAgent.IPAD) {

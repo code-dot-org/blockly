@@ -122,7 +122,9 @@ Blockly.Generator.xmlToCode = function(name, xml) {
  */
 Blockly.Generator.xmlToBlocks = function(name, xml) {
   var div = document.createElement('div');
-  var blockSpace = Blockly.BlockSpace.createReadOnlyBlockSpace(div, xml);
+  var blockSpace = Blockly.BlockSpace.createReadOnlyBlockSpace(div, xml, {
+    disableEventBindings: true,
+  });
   return blockSpace.getTopBlocks(true);
 };
 

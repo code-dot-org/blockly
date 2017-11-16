@@ -6820,7 +6820,7 @@ Blockly.BlockSpace.createReadOnlyBlockSpace = function(container, xml, opt_optio
     return metrics;
   }, setMetrics:function(xyRatio) {
     Blockly.BlockSpaceEditor.prototype.setBlockSpaceMetrics_.call(this, xyRatio);
-  }, hideTrashRect:true, readOnly:true, disableTooltip:true, noScrolling:opt_options.noScrolling});
+  }, hideTrashRect:true, readOnly:true, disableTooltip:true, noScrolling:opt_options.noScrolling, disableEventBindings:opt_options.disableEventBindings});
   var blockSpace = blockSpaceEditor.blockSpace;
   Blockly.Xml.domToBlockSpace(blockSpace, xml);
   return blockSpace;
@@ -18154,7 +18154,7 @@ Blockly.Generator.xmlToCode = function(name, xml) {
 };
 Blockly.Generator.xmlToBlocks = function(name, xml) {
   var div = document.createElement("div");
-  var blockSpace = Blockly.BlockSpace.createReadOnlyBlockSpace(div, xml);
+  var blockSpace = Blockly.BlockSpace.createReadOnlyBlockSpace(div, xml, {disableEventBindings:true});
   return blockSpace.getTopBlocks(true);
 };
 Blockly.Generator.blockSpaceToCode = function(name, opt_typeFilter, opt_showHidden) {
@@ -24991,6 +24991,9 @@ Blockly.BlockSpaceEditor = function(container, opt_options) {
   if (opt_options.disableTooltip) {
     this.disableTooltip = opt_options.disableTooltip;
   }
+  if (opt_options.disableEventBindings) {
+    this.disableEventBindings = opt_options.disableEventBindings;
+  }
   this.readOnly_ = !!opt_options.readOnly;
   this.noScrolling_ = !!opt_options.noScrolling;
   this.blockSpace = new Blockly.BlockSpace(this, goog.bind(this.getBlockSpaceMetrics_, this), goog.bind(this.setBlockSpaceMetrics_, this), container);
@@ -25176,7 +25179,7 @@ Blockly.BlockSpaceEditor.prototype.init_ = function() {
   this.blockSpace.bindBeginPanDragHandler(this.svg_, goog.bind(this.hideChaff, this));
   this.blockSpace.bindScrollOnWheelHandler(this.svg_);
   Blockly.bindEvent_(Blockly.WidgetDiv.DIV, "contextmenu", null, Blockly.blockContextMenu);
-  if (!Blockly.documentEventsBound_) {
+  if (!this.disableEventBindings && !Blockly.documentEventsBound_) {
     Blockly.bindEvent_(window, "resize", this, this.svgResize);
     Blockly.bindEvent_(document, "keydown", this, this.onKeyDown_);
     if (goog.userAgent.IPAD) {

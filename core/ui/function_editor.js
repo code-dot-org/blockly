@@ -896,7 +896,7 @@ Blockly.FunctionEditor.prototype.createParameterEditor_ = function() {
     '<div>' + Blockly.Msg.FUNCTION_PARAMETERS_LABEL + '</div>'
     + '<div>'
     + '<input id="paramAddText" type="text" style="width: 200px;"/> '
-    + '<button id="paramAddButton" class="btn">' + Blockly.Msg.ADD_PARAMETER + '</button>'
+    + '<button id="paramAddButton" class="btn no-mc">' + Blockly.Msg.ADD_PARAMETER + '</button>'
     + '</div>';
 };
 

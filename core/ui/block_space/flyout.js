@@ -708,10 +708,6 @@ Blockly.Flyout.prototype.createBlockFunc_ = function(originBlock) {
       // Right-click.  Don't create a block, let the context menu show.
       return;
     }
-    if (!flyout.blockSpaceEditor_.blockLimits.blockTypeWithinLimits(originBlock.type)) {
-      // at capacity.
-      return;
-    }
     if (originBlock.disabled) {
       // Beyond capacity.
       return;

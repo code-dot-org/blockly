@@ -120,7 +120,7 @@ Blockly.BlockLimits.prototype.blockTypeWithinLimits = function (type, count) {
  * Returns true if any block limit is currently exceeded
  */
 Blockly.BlockLimits.prototype.blockLimitExceeded = function () {
-  return goog.object.some(this.limits_, function (limit) {
-    return limit.count > limit.limit;
+  return goog.object.findKey(this.limits_, function (value) {
+    return value.count > value.limit;
   });
 };

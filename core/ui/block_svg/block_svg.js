@@ -550,15 +550,14 @@ Blockly.BlockSvg.prototype.updateLimit = function (limit) {
     }, this.limitGroup_);
   }
 
-  if (limit === 0) {
-    Blockly.addClass_(this.svgGroup_, 'blocklyUnused');
-    Blockly.removeClass_(this.svgGroup_, 'blocklyDraggable');
+  if (limit < 0) {
+    this.limitText_.textContent = '!';
+    Blockly.addClass_(this.limitGroup_, 'overLimit');
   } else {
-    Blockly.removeClass_(this.svgGroup_, 'blocklyUnused');
-    Blockly.addClass_(this.svgGroup_, 'blocklyDraggable');
+    this.limitText_.textContent = limit;
+    Blockly.removeClass_(this.limitGroup_, 'overLimit');
   }
 
-  this.limitText_.textContent = limit;
   var textWidth = this.limitText_.getBBox ? Math.ceil(this.limitText_.getBBox().width) : HALF_BUBBLE_SIZE;
   var rectWidth = Math.max(textWidth + HALF_BUBBLE_SIZE, BUBBLE_SIZE);
   this.limitRect_.setAttribute('width', rectWidth);

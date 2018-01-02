@@ -551,7 +551,7 @@ Blockly.BlockSvg.prototype.updateLimit = function (limit) {
   }
 
   if (limit < 0) {
-    this.limitText_.textContent = '!'; //Math.abs(limit) + ' too many';
+    this.limitText_.textContent = '!';
     Blockly.addClass_(this.limitGroup_, 'overLimit');
   } else {
     this.limitText_.textContent = limit;

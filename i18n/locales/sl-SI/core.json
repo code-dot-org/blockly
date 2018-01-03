@@ -47,7 +47,7 @@
   "CONTROLS_IF_ELSEIF_TOOLTIP": "Dodaj pogoj v blok \"če\".",
   "CONTROLS_IF_ELSE_TOOLTIP": "Določi ukaze, ki se izvedejo, če ni noben pogoj izpolnjen.",
   "CONTROLS_IF_HELPURL": "http://code.google.com/p/blockly/wiki/If_Then",
-  "CONTROLS_IF_IF_TOOLTIP": "Dodaj, odstrani ali prerazporedi odseke za spremembo tega IF bloka.",
+  "CONTROLS_IF_IF_TOOLTIP": "Dodaj, odstrani ali drugače razporedi odseke v tem bloku \"če\".",
   "CONTROLS_IF_MSG_ELSE": "sicer",
   "CONTROLS_IF_MSG_ELSEIF": "sicer če",
   "CONTROLS_IF_MSG_IF": "če",

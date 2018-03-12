@@ -76,6 +76,7 @@ Blockly.BlockSpaceEditor = function(container, opt_options) {
 
   this.readOnly_ = !!opt_options.readOnly;
   this.noScrolling_ = !!opt_options.noScrolling;
+  this.inline_ = !!opt_options.inline;
 
   /**
    * @type {Blockly.BlockSpace}
@@ -261,7 +262,7 @@ Blockly.BlockSpaceEditor.prototype.createDom_ = function(container) {
     'xmlns:html': 'http://www.w3.org/1999/xhtml',
     'xmlns:xlink': 'http://www.w3.org/1999/xlink',
     'version': '1.1',
-    'class': 'blocklySvg'
+    'class': this.inline_ ? 'blocklySvg inline' : 'blocklySvg'
   }, null);
   this.svg_ = svg;
 
@@ -980,6 +981,13 @@ Blockly.BlockSpaceEditor.prototype.addUnusedBlocksHelpListener = function(func) 
  */
 Blockly.BlockSpaceEditor.prototype.isReadOnly = function() {
   return (Blockly.readOnly || this.readOnly_);
+};
+
+/**
+ * @returns {boolean}
+ */
+Blockly.BlockSpaceEditor.prototype.shouldHavePadding = function() {
+  return !this.inline_;
 };
 
 /**

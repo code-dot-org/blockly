@@ -255,6 +255,13 @@ Blockly.Xml.domToBlockSpace = function(blockSpace, xml) {
   var metrics = blockSpace.getMetrics();
   var width = metrics ? metrics.viewWidth : 0;
 
+  var paddingLeft = blockSpace.blockSpaceEditor.shouldHavePadding()
+    ? Blockly.BlockSpace.AUTO_LAYOUT_PADDING_LEFT
+    : 0;
+  var paddingTop = blockSpace.blockSpaceEditor.shouldHavePadding()
+    ? Blockly.BlockSpace.AUTO_LAYOUT_PADDING_TOP
+    : 0;
+
   // Block positioning rules are simple:
   //  if the block has been given an absolute X coordinate, use it
   //  (taking into account that RTL languages position from the left)
@@ -263,10 +270,8 @@ Blockly.Xml.domToBlockSpace = function(blockSpace, xml) {
   //  bottom. Any block positioned absolutely with Y does not influence
   //  the flow of the other blocks.
   var cursor = {
-    x: Blockly.RTL ?
-        width - Blockly.BlockSpace.AUTO_LAYOUT_PADDING_LEFT :
-        Blockly.BlockSpace.AUTO_LAYOUT_PADDING_LEFT,
-    y: Blockly.BlockSpace.AUTO_LAYOUT_PADDING_TOP
+    x: Blockly.RTL ? width - paddingLeft : paddingLeft,
+    y: paddingTop,
   };
 
   var positionBlock = function (block) {

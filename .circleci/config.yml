@@ -9,12 +9,10 @@ jobs:
     - checkout
     - restore_cache:
         keys:
-        - v2-dep-{{ .Branch }}-
-        - v2-dep-staging-
-        - v2-dep-
+        - v3-dep-{{ checksum "package.json" }}
     - run: npm install
     - save_cache:
-        key: v1-dep-{{ .Branch }}-{{ epoch }}
+        key: v3-dep-{{ checksum "package.json" }}
         paths:
         - ./node_modules
     - run: npm test

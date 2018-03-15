@@ -1,7 +1,7 @@
 version: 2
 jobs:
   build:
-    working_directory: ~/code-dot-org/blockly
+    working_directory: ~/blockly
     parallelism: 1
     docker:
     - image: circleci/node:6.13

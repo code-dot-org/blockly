@@ -75,6 +75,7 @@ Blockly.BlockSpaceEditor = function(container, opt_options) {
   }
 
   this.readOnly_ = !!opt_options.readOnly;
+  this.noToolbox_ = !!opt_options.noToolbox;
   this.noScrolling_ = !!opt_options.noScrolling;
 
   /**
@@ -276,7 +277,7 @@ Blockly.BlockSpaceEditor.prototype.createDom_ = function(container) {
   // it here so that blocks can be dragged over the top of it.  The HTML div
   // appears over the blocks, meaning that blocks dragged to it would appear
   // underneath it, if it had a background color, which wouldn't look as good.
-  if (!this.hideTrashRect_ && !this.isReadOnly() && Blockly.hasCategories) {
+  if (!this.hideTrashRect_ && this.needsToolbox() && Blockly.hasCategories) {
     this.svgBackground_ = Blockly.createSvgElement('rect',
       {'id': 'toolboxRect', 'class': 'blocklyToolboxBackground'},
       this.svg_);
@@ -284,7 +285,7 @@ Blockly.BlockSpaceEditor.prototype.createDom_ = function(container) {
 
   svg.appendChild(this.blockSpace.createDom());
 
-  if (!this.isReadOnly()) {
+  if (this.needsToolbox()) {
     // Determine if there needs to be a category tree, or a simple list of
     // blocks.  This cannot be changed later, since the UI is very different.
     this.addToolboxOrFlyout_();
@@ -298,7 +299,7 @@ Blockly.BlockSpaceEditor.prototype.createDom_ = function(container) {
    * When disabled, we wont allow you to drag blocks into blockSpace
    */
   this.setEnableToolbox = function (enabled) {
-    if (!this.isReadOnly()) {
+    if (this.needsToolbox()) {
       if (this.flyout_) {
         this.flyout_.setEnabled(enabled);
       } else if (this.toolbox) {
@@ -508,7 +509,7 @@ Blockly.BlockSpaceEditor.prototype.init_ = function() {
     Blockly.documentEventsBound_ = true;
   }
 
-  if (Blockly.languageTree && !this.isReadOnly()) {
+  if (Blockly.languageTree && this.needsToolbox()) {
     if (Blockly.hasCategories) {
       this.toolbox.init(this.blockSpace, this);
     } else {
@@ -984,6 +985,13 @@ Blockly.BlockSpaceEditor.prototype.addUnusedBlocksHelpListener = function(func) 
  */
 Blockly.BlockSpaceEditor.prototype.isReadOnly = function() {
   return (Blockly.readOnly || this.readOnly_);
+};
+
+/**
+ * @returns {boolean}
+ */
+Blockly.BlockSpaceEditor.prototype.needsToolbox = function() {
+  return !(this.isReadOnly() || this.noToolbox_)
 };
 
 /**

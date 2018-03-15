@@ -884,7 +884,7 @@ Blockly.BlockSpace.prototype.drawTrashZone = function(x, startDragX) {
     if (this.blockSpaceEditor.hideTrashRect_) {
       blockGroupForeground = this.blockSpaceEditor.toolbox.tree_.element_;
     }
-  } else {
+  } else if (this.blockSpaceEditor.flyout_) {
     var flyout = blockSpaceEditor.flyout_;
     background = flyout.svgBackground_;
     blockGroup = flyout.blockSpace_.svgGroup_;
@@ -894,6 +894,8 @@ Blockly.BlockSpace.prototype.drawTrashZone = function(x, startDragX) {
     if (this.blockSpaceEditor.hideTrashRect_) {
       blockGroupForeground = this.blockSpaceEditor.flyout_.svgGroup_;
     }
+  } else {
+    return;
   }
 
   var toolbarWidth = background.getBoundingClientRect().width;

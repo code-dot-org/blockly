@@ -1289,6 +1289,37 @@ Blockly.Block.prototype.onMouseMove_ = function(e) {
     e.stopPropagation();
     return;
   }
+
+  if (this.blockSpace !== Blockly.mainBlockSpace) {
+    targetElement = document.elementFromPoint(e.clientX, e.clientY);
+    targetSvgParent = Blockly.topMostSVGParent(targetElement);
+    if (targetSvgParent === Blockly.mainBlockSpace.svgGroup_.parentElement) {
+
+      var xml = Blockly.Xml.blockToDom(this);
+
+      Blockly.Block.startDragging();
+      var block = Blockly.Xml.domToBlock(Blockly.mainBlockSpace, xml);
+      var svgRootNew = block.getSvgRoot();
+      if (!svgRootNew) {
+        throw 'block is not rendered.';
+      }
+
+      var xyAbsolute = Blockly.getAbsoluteXY_(svgRootNew,
+          block.blockSpace.blockSpaceEditor.svg_);
+
+      block.moveTo(e.clientX - xyAbsolute.x, e.clientY - xyAbsolute.y);
+
+      Blockly.Block.terminateDrag_();
+
+      this.moveTo(this.blockSpace.pickedUpBlockOrigin_.left, this.blockSpace.pickedUpBlockOrigin_.top);
+
+      // Start a dragging operation on the new block.
+      block.onMouseDown_(e);
+
+      return;
+    }
+  }
+
   this.moveBlockBeingDragged_(e.clientX, e.clientY);
   this.blockSpace.panIfOverEdge(this, e.clientX, e.clientY);
   // This event has been handled.  No need to bubble up to the document.

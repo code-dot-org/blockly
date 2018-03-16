@@ -548,13 +548,9 @@ Blockly.BlockSpaceEditor.prototype.detectBrokenControlPoints = function() {
      If the getBBox function returns a height of 55px instead of 50px, then
      this browser has broken control points.
 
-     NOTE:
-     chromium fixed this bug for path elements in commit 8f4c8e;
-     (https://chromium.googlesource.com/chromium/src.git/+/8f4c8e6d2f1260d68f387b37f078457e4153bbb4)
-     unfortunately, the bug still presents itself when getBBox is called
-     on containers that CONTAIN such a path element, which is our actual
-     use case. Thus, we draw the shape within a container and check the
-     size of the container.
+     This was fixed in Chrome 63. BROKEN_CONTROL_POINTS and all this detector
+     code can be removed when we drop support for Chrome versions older than
+     that.
      */
     var container = Blockly.createSvgElement('g', {}, this.svg_);
     Blockly.createSvgElement('path',

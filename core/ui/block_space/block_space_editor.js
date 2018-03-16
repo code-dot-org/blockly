@@ -558,7 +558,7 @@ Blockly.BlockSpaceEditor.prototype.detectBrokenControlPoints = function() {
      */
     var container = Blockly.createSvgElement('g', {}, this.svg_);
     Blockly.createSvgElement('path',
-      {'d': 'm 0,0 c 0,-5 0,-5 0,0 H 50 V 50 z'}, container);
+      {'d': 'M 0,50 C 75,-25 75,50 125,0 Z'}, container);
     if (Blockly.isMsie() || Blockly.isTrident()) {
       container.style.display = "inline";
       /* reqd for IE */

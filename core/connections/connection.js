@@ -416,26 +416,23 @@ Blockly.Connection.prototype.moveBy = function(dx, dy) {
 Blockly.Connection.prototype.highlight = function() {
   var steps;
   if (this.type === Blockly.INPUT_VALUE || this.type === Blockly.OUTPUT_VALUE) {
-    var tabWidth = Blockly.RTL ? -Blockly.BlockSvg.TAB_WIDTH :
-                                 Blockly.BlockSvg.TAB_WIDTH;
-    steps = 'm 0,0 v 5 c 0,10 ' + -tabWidth + ',-8 ' + -tabWidth + ',7.5 s ' +
-            tabWidth + ',-2.5 ' + tabWidth + ',7.5 v 5';
+    steps = 'm 0,0 '+ Blockly.BlockSvg.TAB_PATH_DOWN + ' v 5';
   } else {
     var moveWidth = 5 + Blockly.BlockSvg.NOTCH_PATH_WIDTH;
     var notchPaths = this.getNotchPaths();
-    if (Blockly.RTL) {
-      steps = 'm ' + moveWidth + ',0 h -5 ' + notchPaths.right + ' h -5';
-    } else {
-      steps = 'm -' + moveWidth + ',0 h 5 ' + notchPaths.left + ' h 5';
-    }
+    steps = 'm -' + moveWidth + ',0 h 5 ' + notchPaths.left + ' h 5';
   }
   var xy = this.sourceBlock_.getRelativeToSurfaceXY();
   var x = this.x_ - xy.x;
   var y = this.y_ - xy.y;
+  var transform  = 'translate(' + x + ', ' + y + ')';
+  if (Blockly.RTL) {
+    transform += ' scale(-1, 1)';
+  }
   Blockly.Connection.highlightedPath_ = Blockly.createSvgElement('path',
       {'class': 'blocklyHighlightedConnectionPath',
        'd': steps,
-       transform: 'translate(' + x + ', ' + y + ')'},
+       transform: transform},
       this.sourceBlock_.getSvgRoot());
 };
 

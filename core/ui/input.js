@@ -151,6 +151,20 @@ Blockly.Input.prototype.setVisible = function(visible) {
  *     list of value types.  Null if all types are compatible.
  * @return {!Blockly.Input} The input being modified (to allow chaining).
  */
+Blockly.Input.prototype.setStrictCheck = function(check) {
+  if (!this.connection) {
+    throw 'This input does not have a connection.';
+  }
+  this.connection.setStrictCheck(check);
+  return this;
+};
+
+/**
+ * Change a connection's compatibility.
+ * @param {string|Array.<string>|null} check Compatible value type or
+ *     list of value types.  Null if all types are compatible.
+ * @return {!Blockly.Input} The input being modified (to allow chaining).
+ */
 Blockly.Input.prototype.setCheck = function(check) {
   if (!this.connection) {
     throw 'This input does not have a connection.';

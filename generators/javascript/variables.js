@@ -44,3 +44,5 @@ Blockly.JavaScript.variables_set = function() {
 
 Blockly.JavaScript.parameters_get = Blockly.JavaScript.variables_get;
 Blockly.JavaScript.parameters_set = Blockly.JavaScript.variables_set;
+Blockly.JavaScript.sprite_variables_get = Blockly.JavaScript.variables_get;
+Blockly.JavaScript.sprite_variables_set = Blockly.JavaScript.variables_set;

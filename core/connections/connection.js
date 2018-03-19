@@ -649,13 +649,25 @@ Blockly.Connection.prototype.acceptsType = function(type) {
 };
 
 /**
- * Change a connection's compatibility.
+ * Change a connection's compatibility, with strict enforcement.
  * @param {*} check Compatible value type or list of value types.
- *     Null if all types are compatible.
  * @return {!Blockly.Connection} The connection being modified
  *     (to allow chaining).
  */
-Blockly.Connection.prototype.setCheck = function(check) {
+Blockly.Connection.prototype.setStrictCheck = function(check) {
+  return this.setCheck(check, true);
+}
+
+/**
+ * Change a connection's compatibility.
+ * @param {*} check Compatible value type or list of value types.
+ *     Null if all types are compatible.
+ * @param {boolean} opt_strict Set this check as strict, i.e. only accept
+ *     connections of the exact same type.
+ * @return {!Blockly.Connection} The connection being modified
+ *     (to allow chaining).
+ */
+Blockly.Connection.prototype.setCheck = function(check, opt_strict) {
   if (check && check !== Blockly.BlockValueType.NONE) {
     // Ensure that check is in an array.
     if (!(check instanceof Array)) {
@@ -663,6 +675,7 @@ Blockly.Connection.prototype.setCheck = function(check) {
     }
 
     this.check_ = check;
+    this.strictType_ = !!opt_strict;
 
     // The new value type may not be compatible with the existing connection.
     if (this.targetConnection && !this.checkAllowedConnectionType_(this.targetConnection)) {

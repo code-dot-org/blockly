@@ -617,9 +617,15 @@ Blockly.Connection.prototype.closest = function(maxLimit, dx, dy) {
  * @private
  */
 Blockly.Connection.prototype.checkAllowedConnectionType_ = function(otherConnection) {
-  if (this.acceptsAnyType() || otherConnection.acceptsAnyType()) {
+  if (!this.strictCheck() && !otherConnection.strictCheck() &&
+    (this.acceptsAnyType() || otherConnection.acceptsAnyType())) {
     // One or both sides are promiscuous enough that anything will fit.
     return true;
+  }
+  if ((this.strictCheck() && otherConnection.acceptsAnyType()) ||
+    (this.acceptsAnyType() && otherConnection.strictCheck())) {
+    // One side is stict but the other doesn't specify a type
+    return false;
   }
   // Find any intersection in the check lists.
   for (var x = 0; x < this.check_.length; x++) {
@@ -630,6 +636,14 @@ Blockly.Connection.prototype.checkAllowedConnectionType_ = function(otherConnect
   // No intersection.
   return false;
 };
+
+/**
+ * Returns whether this connection strictly checks connection types
+ * @returns {boolean}
+ */
+Blockly.Connection.prototype.strictCheck = function() {
+  return this.strictType_;
+}
 
 /**
  * Returns whether this connection is compatible with any/every type
@@ -676,6 +690,9 @@ Blockly.Connection.prototype.setCheck = function(check, opt_strict) {
 
     this.check_ = check;
     this.strictType_ = !!opt_strict;
+    if (this.strictType_ && !this.check_) {
+      throw 'Strict connections must specify a type';
+    }
 
     // The new value type may not be compatible with the existing connection.
     if (this.targetConnection && !this.checkAllowedConnectionType_(this.targetConnection)) {

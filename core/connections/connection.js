@@ -431,7 +431,10 @@ Blockly.Connection.prototype.moveBy = function(dx, dy) {
 Blockly.Connection.prototype.highlight = function() {
   var steps;
   if (this.type === Blockly.INPUT_VALUE || this.type === Blockly.OUTPUT_VALUE) {
-    steps = 'm 0,0 '+ Blockly.BlockSvg.TAB_PATH_DOWN + ' v 5';
+    var path = Blockly.BlockSvg
+      .TAB_PATHS_BY_SHAPE[this.getTabShape()]
+      .TAB_PATH_DOWN;
+    steps = 'm 0,0 '+ path + ' v 5';
   } else {
     var moveWidth = 5 + Blockly.BlockSvg.NOTCH_PATH_WIDTH;
     var notchPaths = this.getNotchPaths();

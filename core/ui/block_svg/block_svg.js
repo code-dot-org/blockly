@@ -239,7 +239,7 @@ BS.TAB_PATH_DOWN_HIGHLIGHT_RTL = 'v 6.5 m -' +
     (BS.TAB_WIDTH * 0.98) + ',2.5 q -' +
     (BS.TAB_WIDTH * .05) + ',10 ' +
     (BS.TAB_WIDTH * .27) + ',10 m ' +
-    (BS.TAB_WIDTH * .71) + ',-2.5 v 1.5';
+    (BS.TAB_WIDTH * .71) + ',-2.5 v 3.5';
 
 /**
  * SVG paths for drawing a horizontal puzzle tab from bottom to top.
@@ -1182,18 +1182,19 @@ Blockly.BlockSvg.prototype.renderDrawRightInputValue_ = function (renderInfo,
     }
   }
   renderInfo.curX += this.renderTitles_(input.titleRow, titleX, titleY);
-  renderInfo.core.push(BS.TAB_PATH_DOWN);
-  renderInfo.core.push('v', row.height - BS.TAB_HEIGHT);
+
+  var paths = BS.TAB_PATHS_BY_SHAPE[input.connection.getTabShape()];
+  renderInfo.core.push(paths.TAB_PATH_DOWN);
   if (Blockly.RTL) {
-    // Highlight around back of tab.
-    renderInfo.highlight.push(BS.TAB_PATH_DOWN_HIGHLIGHT_RTL);
-    renderInfo.highlight.push('v', row.height - BS.TAB_HEIGHT);
+    renderInfo.highlight.push(paths.TAB_PATH_DOWN_HIGHLIGHT_RTL);
+    renderInfo.highlight.push('v', row.height - BS.TAB_HEIGHT - 2);
   } else {
-    // Short highlight glint at bottom of tab.
     renderInfo.highlight.push('M', (inputRows.rightEdge - 4.2) + ',' +
       (renderInfo.curY + BS.TAB_HEIGHT - 0.4));
-    renderInfo.highlight.push('l', (BS.TAB_WIDTH * 0.42) + ',-1.8');
+    renderInfo.highlight.push(paths.TAB_PATH_DOWN_HIGHLIGHT);
   }
+
+  renderInfo.core.push('v', row.height - BS.TAB_HEIGHT);
   // Create external input connection.
   connectionX = connectionsXY.x + oppositeIfRTL(inputRows.rightEdge + 1);
   connectionY = connectionsXY.y + renderInfo.curY;
@@ -1336,7 +1337,9 @@ Blockly.BlockSvg.prototype.renderDrawRightInline_ = function (renderInfo, inputR
       renderInfo.inline.push('M', (renderInfo.curX - BS.SEP_SPACE_X) +
                        ',' + (renderInfo.curY + BS.INLINE_PADDING_Y));
       renderInfo.inline.push('h', BS.TAB_WIDTH - input.renderWidth);
-      renderInfo.inline.push(BS.TAB_PATH_DOWN);
+
+      var paths = BS.TAB_PATHS_BY_SHAPE[input.connection.getTabShape()];
+      renderInfo.inline.push(paths.TAB_PATH_DOWN);
       renderInfo.inline.push('v', input.renderHeight -
                             BS.TAB_HEIGHT);
       renderInfo.inline.push('h', input.renderWidth - BS.TAB_WIDTH);
@@ -1347,8 +1350,8 @@ Blockly.BlockSvg.prototype.renderDrawRightInline_ = function (renderInfo, inputR
           (renderInfo.curX - BS.SEP_SPACE_X +
            BS.TAB_WIDTH - input.renderWidth - 1) + ',' +
           (renderInfo.curY + BS.INLINE_PADDING_Y + 1));
-        renderInfo.highlightInline.push(BS.TAB_PATH_DOWN_HIGHLIGHT_RTL);
-        renderInfo.highlightInline.push('v', input.renderHeight - BS.TAB_HEIGHT + 2);
+        renderInfo.highlightInline.push(paths.TAB_PATH_DOWN_HIGHLIGHT_RTL);
+        renderInfo.highlightInline.push('v', input.renderHeight - BS.TAB_HEIGHT);
         renderInfo.highlightInline.push('h', input.renderWidth - BS.TAB_WIDTH);
       } else {
         // Highlight right edge, bottom, and glint at bottom of tab.
@@ -1357,11 +1360,12 @@ Blockly.BlockSvg.prototype.renderDrawRightInline_ = function (renderInfo, inputR
             (renderInfo.curY + BS.INLINE_PADDING_Y + 1));
         renderInfo.highlightInline.push('v', input.renderHeight);
         renderInfo.highlightInline.push('h', BS.TAB_WIDTH - input.renderWidth);
+
         renderInfo.highlightInline.push('M',
           (renderInfo.curX - input.renderWidth - BS.SEP_SPACE_X +
            3.8) + ',' + (renderInfo.curY + BS.INLINE_PADDING_Y +
            BS.TAB_HEIGHT - 0.4));
-        renderInfo.highlightInline.push('l', (BS.TAB_WIDTH * 0.42) + ',-1.8');
+        renderInfo.highlightInline.push(paths.TAB_PATH_DOWN_HIGHLIGHT);
       }
       // Create inline input connection.
       var connectionX = connectionsXY.x + oppositeIfRTL(renderInfo.curX + BS.TAB_WIDTH -
@@ -1465,20 +1469,13 @@ Blockly.BlockSvg.prototype.renderDrawBottom_ = function(renderInfo, connectionsX
  */
 Blockly.BlockSvg.prototype.renderDrawLeft_ = function(renderInfo) {
   if (this.block_.outputConnection) {
-    renderInfo.core.push('V', BS.TAB_HEIGHT);
-    renderInfo.core.push('c 0,-10 -' + BS.TAB_WIDTH + ',8 -' +
-        BS.TAB_WIDTH + ',-7.5 s ' + BS.TAB_WIDTH +
-        ',2.5 ' + BS.TAB_WIDTH + ',-7.5');
+    var paths =
+      BS.TAB_PATHS_BY_SHAPE[this.block_.outputConnection.getTabShape()];
+    renderInfo.core.push(paths.TAB_PATH_UP);
     if (Blockly.RTL) {
-      renderInfo.highlight.push('M', (BS.TAB_WIDTH * -0.3) + ',8.9');
-      renderInfo.highlight.push('l', (BS.TAB_WIDTH * -0.45) + ',-2.1');
+      renderInfo.highlight.push(paths.TAB_PATH_UP_HIGHLIGHT_RTL);
     } else {
-      renderInfo.highlight.push('V', BS.TAB_HEIGHT - 1);
-      renderInfo.highlight.push('m', (BS.TAB_WIDTH * -0.92) +
-                          ',-1 q ' + (BS.TAB_WIDTH * -0.19) +
-                          ',-5.5 0,-11');
-      renderInfo.highlight.push('m', (BS.TAB_WIDTH * 0.92) +
-                          ',1 V 1 H 2');
+      renderInfo.highlight.push(paths.TAB_PATH_UP_HIGHLIGHT);
     }
   } else if (!Blockly.RTL) {
     renderInfo.highlight.push('V', this.squareTopLeftCorner_ ? 1 : BS.CORNER_RADIUS);

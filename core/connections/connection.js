@@ -94,6 +94,21 @@ Blockly.Connection = function(source, type) {
 };
 
 /**
+ * Possible input/output tab shapes
+ */
+Blockly.Connection.Shapes = {
+  STANDARD: 'standard',
+  ANGLE: 'angle',
+};
+
+/**
+ * Tab shapes by BlockValueType
+ */
+Blockly.Connection.ShapesByType = {
+  Sprite: Blockly.Connection.Shapes.ANGLE,
+};
+
+/**
  * Is this connection currently connected to another connection.
  */
 Blockly.Connection.prototype.isConnected = function () {
@@ -457,6 +472,23 @@ Blockly.Connection.prototype.getNotchPaths = function () {
     return SQUARE_NOTCH_PATHS;
   }
   return ROUNDED_NOTCH_PATHS;
+};
+
+/**
+ * Return the tab shape for this input or output connection
+ */
+Blockly.Connection.prototype.getTabShape = function () {
+  if (this.type !== Blockly.INPUT_VALUE && this.type !== Blockly.OUTPUT_VALUE) {
+    return null;
+  }
+  if (!this.strictType_) {
+    return Blockly.Connection.Shapes.STANDARD;
+  }
+  var type = this.check_[0];
+  if (!type) {
+    throw 'strict connections require a type';
+  }
+  return Blockly.Connection.ShapesByType[type];
 };
 
 

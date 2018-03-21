@@ -80,7 +80,7 @@ var NESTED_HIDDEN_VAR_REASSIGNMENT =
   '</xml>';
 
 function test_showHiddenDefaultsToTrue() {
-  Blockly.Test.initializeBlockSpaceEditor();
+  var container = Blockly.Test.initializeBlockSpaceEditor();
   var blockSpace = Blockly.mainBlockSpace;
 
   Blockly.Xml.domToBlockSpace(blockSpace, Blockly.Xml.textToDom(
@@ -89,10 +89,12 @@ function test_showHiddenDefaultsToTrue() {
   var generatedCode =
       Blockly.Generator.blockSpaceToCode('JavaScript');
   assertEquals(2, eval(generatedCode));
+
+  goog.dom.removeNode(container);
 }
 
 function test_showHiddenTrue() {
-  Blockly.Test.initializeBlockSpaceEditor();
+  var container = Blockly.Test.initializeBlockSpaceEditor();
   var blockSpace = Blockly.mainBlockSpace;
 
   Blockly.Xml.domToBlockSpace(blockSpace, Blockly.Xml.textToDom(
@@ -101,10 +103,12 @@ function test_showHiddenTrue() {
   var generatedCode =
       Blockly.Generator.blockSpaceToCode('JavaScript', null, true);
   assertEquals(2, eval(generatedCode));
+
+  goog.dom.removeNode(container);
 }
 
 function test_showHiddenTrue_nested() {
-  Blockly.Test.initializeBlockSpaceEditor();
+  var container = Blockly.Test.initializeBlockSpaceEditor();
   var blockSpace = Blockly.mainBlockSpace;
 
   Blockly.Xml.domToBlockSpace(blockSpace, Blockly.Xml.textToDom(
@@ -113,10 +117,12 @@ function test_showHiddenTrue_nested() {
   var generatedCode =
       Blockly.Generator.blockSpaceToCode('JavaScript', null, true);
   assertEquals(3, eval(generatedCode));
+
+  goog.dom.removeNode(container);
 }
 
 function test_showHiddenFalse() {
-  Blockly.Test.initializeBlockSpaceEditor();
+  var container = Blockly.Test.initializeBlockSpaceEditor();
   var blockSpace = Blockly.mainBlockSpace;
 
   Blockly.Xml.domToBlockSpace(blockSpace, Blockly.Xml.textToDom(
@@ -125,10 +131,12 @@ function test_showHiddenFalse() {
   var generatedCode =
       Blockly.Generator.blockSpaceToCode('JavaScript', null, false)
   assertEquals(1, eval(generatedCode));
+
+  goog.dom.removeNode(container);
 }
 
 function test_showHiddenFalse_nested() {
-  Blockly.Test.initializeBlockSpaceEditor();
+  var container = Blockly.Test.initializeBlockSpaceEditor();
   var blockSpace = Blockly.mainBlockSpace;
 
   Blockly.Xml.domToBlockSpace(blockSpace, Blockly.Xml.textToDom(
@@ -137,5 +145,7 @@ function test_showHiddenFalse_nested() {
   var generatedCode =
       Blockly.Generator.blockSpaceToCode('JavaScript', null, false)
   assertEquals(3, eval(generatedCode));
+
+  goog.dom.removeNode(container);
 }
 

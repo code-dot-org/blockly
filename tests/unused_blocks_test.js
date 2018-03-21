@@ -57,7 +57,7 @@ var DISCONNECTED_INLINE_BLOCKS =
 
 function test_unattachedBlocks() {
   var orig = Blockly.showUnusedBlocks;
-  Blockly.Test.initializeBlockSpaceEditor();
+  var container = Blockly.Test.initializeBlockSpaceEditor();
   var blockSpace = Blockly.mainBlockSpace;
 
   var expectedCode = [
@@ -78,11 +78,13 @@ function test_unattachedBlocks() {
   });
 
   Blockly.showUnusedBlocks = orig;
+
+  goog.dom.removeNode(container);
 }
 
 function test_unattachedInlineBlocks() {
   var orig = Blockly.showUnusedBlocks;
-  Blockly.Test.initializeBlockSpaceEditor();
+  var container = Blockly.Test.initializeBlockSpaceEditor();
   var blockSpace = Blockly.mainBlockSpace;
 
   var expectedCode = [
@@ -99,4 +101,6 @@ function test_unattachedInlineBlocks() {
   });
 
   Blockly.showUnusedBlocks = orig;
+
+  goog.dom.removeNode(container);
 }

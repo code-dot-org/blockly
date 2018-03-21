@@ -120,6 +120,8 @@ function test_checkAllowedConnectionType() {
   assertConnectionAllowed(noneTypeOutput, nonStrictInput);
   assertConnectionAllowed(noneTypeOutput, otherTypeInput);
   assertConnectionAllowed(noneTypeOutput, noneTypeInput);
+
+  goog.dom.removeNode(containerDiv);
 }
 
 function test_clickIntoEditableUnmovableBlock() {
@@ -200,10 +202,11 @@ function test_setBlockNextConnectionDisabled() {
   assert(block.nextConnectionDisabled_ === true);
   assertNull(block.nextConnection);
 
+  goog.dom.removeNode(containerDiv);
 }
 
 function test_visibleThroughParent() {
-  Blockly.Test.initializeBlockSpaceEditor();
+  var containerDiv = Blockly.Test.initializeBlockSpaceEditor();
   var blockSpace = Blockly.mainBlockSpace;
 
   Blockly.Xml.domToBlockSpace(blockSpace, Blockly.Xml.textToDom(
@@ -229,10 +232,12 @@ function test_visibleThroughParent() {
 
   assert(parentBlock.isVisible() === false);
   assert(childBlock.isVisible() === false);
+
+  goog.dom.removeNode(containerDiv);
 }
 
 function test_isVisible() {
-  Blockly.Test.initializeBlockSpaceEditor();
+  var containerDiv = Blockly.Test.initializeBlockSpaceEditor();
   var blockSpace = Blockly.mainBlockSpace;
 
   Blockly.Xml.domToBlockSpace(blockSpace, Blockly.Xml.textToDom(
@@ -269,6 +274,8 @@ function test_isVisible() {
   // finally, restore the editBlocks state to avoid polluting future
   // tests
   Blockly.editBlocks = original_editBlocks_state;
+
+  goog.dom.removeNode(containerDiv);
 }
 
 function test_blockSetIsUnused() {

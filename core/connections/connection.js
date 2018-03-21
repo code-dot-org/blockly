@@ -477,14 +477,15 @@ Blockly.Connection.prototype.getTabShape = function () {
   if (this.type !== Blockly.INPUT_VALUE && this.type !== Blockly.OUTPUT_VALUE) {
     return null;
   }
-  if (!this.strictType_) {
+  if (!this.strictType_ || !Blockly.valueTypeTabShapeMap) {
     return Blockly.Connection.Shapes.STANDARD;
   }
   var type = this.check_[0];
   if (!type) {
     throw 'strict connections require a type';
   }
-  return Blockly.valueTypeTabShapeMap[type];
+  return Blockly.valueTypeTabShapeMap[type] ||
+    Blockly.Connection.Shapes.STANDARD;
 };
 
 

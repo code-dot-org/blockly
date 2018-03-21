@@ -102,13 +102,6 @@ Blockly.Connection.Shapes = {
 };
 
 /**
- * Tab shapes by BlockValueType
- */
-Blockly.Connection.ShapesByType = {
-  Sprite: Blockly.Connection.Shapes.ANGLE,
-};
-
-/**
  * Is this connection currently connected to another connection.
  */
 Blockly.Connection.prototype.isConnected = function () {
@@ -491,7 +484,7 @@ Blockly.Connection.prototype.getTabShape = function () {
   if (!type) {
     throw 'strict connections require a type';
   }
-  return Blockly.Connection.ShapesByType[type];
+  return Blockly.valueTypeTabShapeMap[type];
 };
 
 

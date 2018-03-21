@@ -31,7 +31,8 @@ function start() {
     toolbox: getToolboxElement(),
     hasVerticalScrollbars: true,
     assetUrl: function(path) { return '../' + path; },
-    customSimpleDialog: Blockly.Playground.customSimpleDialog
+    customSimpleDialog: Blockly.Playground.customSimpleDialog,
+    valueTypeTabShapeMap: { Sprite: 'angle' },
   });
 
   if (goog.tweak.getBoolean('enableExampleRunning')) {

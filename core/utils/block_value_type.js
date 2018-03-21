@@ -18,5 +18,6 @@ Blockly.BlockValueType = {
   BOOLEAN: 'Boolean',
   FUNCTION: 'Function',
   COLOUR: 'Colour',
-  ARRAY: 'Array'
+  ARRAY: 'Array',
+  SPRITE: 'Sprite',
 };

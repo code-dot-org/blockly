@@ -1974,13 +1974,25 @@ Blockly.Block.prototype.setNextStatement = function(hasNext, opt_check) {
 };
 
 /**
- * Set whether this block returns a value.
+ * Set whether this block returns a value, with strict type checking if so.
  * @param {boolean} hasOutput True if there is an output.
  * @param {string|Array.<string>|null} opt_check Returned type or list of
  *     returned types.  Null or undefined if any type could be returned
  *     (e.g. variable get).
  */
-Blockly.Block.prototype.setOutput = function(hasOutput, opt_check) {
+Blockly.Block.prototype.setStrictOutput = function(hasOutput, opt_check) {
+  this.setOutput(hasOutput, opt_check, true);
+}
+/**
+ * Set whether this block returns a value.
+ * @param {boolean} hasOutput True if there is an output.
+ * @param {string|Array.<string>|null} opt_check Returned type or list of
+ *     returned types.  Null or undefined if any type could be returned
+ *     (e.g. variable get).
+ * @param {boolean} opt_strict Specify if the output type is strict, i.e. it
+ *     can only connect to inputs that expect the exact same type
+ */
+Blockly.Block.prototype.setOutput = function(hasOutput, opt_check, opt_strict) {
   if (this.outputConnection) {
     if (this.outputConnection.targetConnection) {
       throw 'Must disconnect output value before removing connection.';
@@ -1997,7 +2009,7 @@ Blockly.Block.prototype.setOutput = function(hasOutput, opt_check) {
     }
     this.outputConnection =
         new Blockly.Connection(this, Blockly.OUTPUT_VALUE);
-    this.outputConnection.setCheck(opt_check);
+    this.outputConnection.setCheck(opt_check, opt_strict);
   }
   this.refreshRender();
 };

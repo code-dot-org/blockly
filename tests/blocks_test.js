@@ -43,6 +43,85 @@ function test_setBlockNotDisconnectable() {
   goog.dom.removeNode(containerDiv);
 }
 
+function assertConnectionAllowed(connection1, connection2) {
+  assertTrue(connection1.checkAllowedConnectionType_(connection2));
+  assertTrue(connection2.checkAllowedConnectionType_(connection1));
+}
+
+function assertConnectionNotAllowed(connection1, connection2) {
+  assertFalse(connection1.checkAllowedConnectionType_(connection2));
+  assertFalse(connection2.checkAllowedConnectionType_(connection1));
+}
+
+function test_checkAllowedConnectionType() {
+  var containerDiv = Blockly.Test.initializeBlockSpaceEditor();
+
+  var blockSpace = Blockly.mainBlockSpace;
+
+  var strictOutputBlock = new Blockly.Block(blockSpace);
+  strictOutputBlock.initSvg();
+  strictOutputBlock.setStrictOutput(true, Blockly.BlockValueType.SPRITE);
+  var strictOutput = strictOutputBlock.outputConnection;
+
+  var nonStrictOutputBlock = new Blockly.Block(blockSpace);
+  nonStrictOutputBlock.initSvg();
+  nonStrictOutputBlock.setOutput(true, Blockly.BlockValueType.SPRITE);
+  var nonStrictOutput = nonStrictOutputBlock.outputConnection;
+
+  var otherTypeOutputBlock = new Blockly.Block(blockSpace);
+  otherTypeOutputBlock.initSvg();
+  otherTypeOutputBlock.setOutput(true, Blockly.BlockValueType.NUMBER);
+  var otherTypeOutput = otherTypeOutputBlock.outputConnection;
+
+  var noneTypeOutputBlock = new Blockly.Block(blockSpace);
+  noneTypeOutputBlock.initSvg();
+  noneTypeOutputBlock.setOutput(true);
+  var noneTypeOutput = noneTypeOutputBlock.outputConnection;
+
+  var strictInputBlock = new Blockly.Block(blockSpace);
+  strictInputBlock.initSvg();
+  strictInputBlock.appendValueInput('VALUE')
+      .setStrictCheck(Blockly.BlockValueType.SPRITE);
+  var strictInput = strictInputBlock.inputList[0].connection;
+
+  var nonStrictInputBlock = new Blockly.Block(blockSpace);
+  nonStrictInputBlock.initSvg();
+  nonStrictInputBlock.appendValueInput('VALUE')
+      .setCheck(Blockly.BlockValueType.SPRITE);
+  var nonStrictInput = nonStrictInputBlock.inputList[0].connection;
+
+  var otherTypeInputBlock = new Blockly.Block(blockSpace);
+  otherTypeInputBlock.initSvg();
+  otherTypeInputBlock.appendValueInput('VALUE')
+      .setCheck(Blockly.BlockValueType.NUMBER);
+  var otherTypeInput = otherTypeInputBlock.inputList[0].connection;
+
+  var noneTypeInputBlock = new Blockly.Block(blockSpace);
+  noneTypeInputBlock.initSvg();
+  noneTypeInputBlock.appendValueInput('VALUE');
+  var noneTypeInput = noneTypeInputBlock.inputList[0].connection;
+
+  assertConnectionAllowed(strictOutput, strictInput);
+  assertConnectionAllowed(strictOutput, nonStrictInput);
+  assertConnectionNotAllowed(strictOutput, otherTypeInput);
+  assertConnectionNotAllowed(strictOutput, noneTypeInput);
+
+  assertConnectionAllowed(nonStrictOutput, strictInput);
+  assertConnectionAllowed(nonStrictOutput, nonStrictInput);
+  assertConnectionNotAllowed(nonStrictOutput, otherTypeInput);
+  assertConnectionAllowed(nonStrictOutput, noneTypeInput);
+
+  assertConnectionNotAllowed(otherTypeOutput, strictInput);
+  assertConnectionNotAllowed(otherTypeOutput, nonStrictInput);
+  assertConnectionAllowed(otherTypeOutput, otherTypeInput);
+  assertConnectionAllowed(otherTypeOutput, noneTypeInput);
+
+  assertConnectionNotAllowed(noneTypeOutput, strictInput);
+  assertConnectionAllowed(noneTypeOutput, nonStrictInput);
+  assertConnectionAllowed(noneTypeOutput, otherTypeInput);
+  assertConnectionAllowed(noneTypeOutput, noneTypeInput);
+}
+
 function test_clickIntoEditableUnmovableBlock() {
   var containerDiv = Blockly.Test.initializeBlockSpaceEditor();
 

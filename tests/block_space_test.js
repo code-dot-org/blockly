@@ -167,7 +167,8 @@ function test_blockSpaceAutoPositioning() {
     assertEquals(expected_positions[i][1], position.y);
   }
 
-  goog.dom.removeNode(container);
+  // phantomJS hangs if you try to remove container from the DOM, just hide it
+  goog.style.setElementShown(container, false);
 }
 
 function test_blockSpace_isReadOnly() {

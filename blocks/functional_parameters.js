@@ -36,9 +36,7 @@ Blockly.Blocks.functional_parameters_get = {
     fieldLabel.EDITABLE = true;
     this.setHelpUrl(Blockly.Msg.VARIABLES_GET_HELPURL);
     this.setHSV(312, 0.32, 0.62);
-    this.setFunctional(true, {
-      headerHeight: 30
-    });
+    this.setFunctional(true);
     var options = {
       fixedSize: { height: 35 }
     };

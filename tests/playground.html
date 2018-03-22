@@ -10,13 +10,12 @@
 goog.require('Blockly.Playground');
 goog.require('goog.tweak');
 goog.require('goog.tweak.TweakUi');
-// Depending on the URL argument, render as LTR or RTL.
-var rtl = (document.location.search == '?rtl');
 var block = null;
 </script>
 <script type="text/javascript" src="../msg/js/en_us.js"></script>
 <script type="text/javascript">
 function start() {
+  goog.tweak.registerBoolean('RTL', 'run in right-to-left mode', false);
   goog.tweak.registerBoolean('editBlocks', 'opens with level builder mode enabled', false);
   goog.tweak.registerBoolean('nonCategoryMode', 'opens blockly with blocks in categories', false);
   goog.tweak.registerBoolean('openContractEditor', 'pre-opens contract editor', false);
@@ -26,7 +25,7 @@ function start() {
   goog.tweak.registerNumber('addContractDomains', 'adds a given number of domain parameters to the auto-opened contract editor', 0);
 
   Blockly.inject(document.getElementById('blocklyDiv'), {
-    rtl: rtl,
+    rtl: goog.tweak.getBoolean('RTL'),
     path: '../',
     toolbox: getToolboxElement(),
     hasVerticalScrollbars: true,
@@ -452,14 +451,6 @@ h1 {
 
       <p><a href="javascript:void([document.getElementById('blocklyDiv').style.display = 'block', Blockly.mainBlockSpace.render()])">Show</a>
        - <a href="javascript:void(document.getElementById('blocklyDiv').style.display = 'none')">Hide</a></p>
-
-      <script type="text/javascript">
-        if (rtl) {
-          document.write('[ &larr; RTL. Switch to <A HREF="?ltr">LTR</A>. ]');
-        } else {
-          document.write('[ &rarr; LTR. Switch to <A HREF="?rtl">RTL</A>. ]');
-        }
-      </script>
 
       <p>
         <input type="button" value="Create Contract Editor" onclick="newContractEditor()">

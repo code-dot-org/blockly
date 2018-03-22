@@ -526,7 +526,6 @@ Blockly.Flyout.prototype.show = function(xmlList) {
   this.width_ = 0;
   this.reflow();
 
-  this.filterForCapacity_();
   this.updateBlockLimitTotals_();
 
   // Fire a resize event to update the flyout's scrollbar.
@@ -744,8 +743,6 @@ Blockly.Flyout.prototype.createBlockFunc_ = function(originBlock) {
           originBlock.dispose(false, false);
         }
       );
-    } else {
-      flyout.filterForCapacity_();
     }
     if (Blockly.topLevelProcedureAutopopulate && block.isFunctionDefinition()) {
       block.blockEvents.listenOnce(
@@ -767,23 +764,7 @@ Blockly.Flyout.prototype.createBlockFunc_ = function(originBlock) {
  * @private
  */
 Blockly.Flyout.prototype.onBlockSpaceChange_ = function() {
-  this.filterForCapacity_();
   this.updateBlockLimitTotals_();
-};
-
-/**
- * Filter the blocks on the flyout to disable the ones that are above the
- * capacity limit.
- * @private
- */
-Blockly.Flyout.prototype.filterForCapacity_ = function() {
-  var remainingCapacity = this.targetBlockSpace_.remainingCapacity();
-  var blocks = this.blockSpace_.getTopBlocks(false);
-  for (var i = 0, block; block = blocks[i]; i++) {
-    var allBlocks = block.getDescendants();
-    var disabled = allBlocks.length > remainingCapacity;
-    block.setDisabled(disabled);
-  }
 };
 
 Blockly.Flyout.prototype.updateBlockLimitTotals_ = function() {

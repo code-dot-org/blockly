@@ -787,7 +787,7 @@ Blockly.Flyout.prototype.filterForCapacity_ = function() {
 };
 
 Blockly.Flyout.prototype.updateBlockLimitTotals_ = function() {
-  var blocks = this.blockSpaceEditor_.blockSpace.getAllVisibleBlocks();
+  var blocks = this.blockSpaceEditor_.blockSpace.getAllUsedBlocks();
   var blockTypes = blocks.map(function (block) {
     return block.type;
   });

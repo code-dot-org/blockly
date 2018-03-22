@@ -228,7 +228,9 @@ BS.TAB_PATH_DOWN = 'v 5 c 0,10 -' + BS.TAB_WIDTH +
  * SVG path for drawing a short highlight glint at the bottom of a tab
  * @const
  */
-BS.TAB_PATH_DOWN_HIGHLIGHT = 'l ' + (BS.TAB_WIDTH * 0.42) + ',-1.8';
+BS.TAB_PATH_DOWN_HIGHLIGHT =
+  'm -4.2,' + (BS.TAB_HEIGHT - 0.4) + ' ' +
+  'l ' + (BS.TAB_WIDTH * 0.42) + ',-1.8';
 
 /**
  * SVG path for drawing a horizontal puzzle tab from top to bottom with
@@ -296,6 +298,15 @@ BS.ANGLE_TAB_PATH_UP_HIGHLIGHT =
 
 /**
  * Map of connection tab shapes to the corresponding set of svg paths
+ * TAB_PATH_DOWN and TAB_PATH_DOWN_HIGHLIGHT_RTL should have a height of
+ *   BS.TAB_HEIGHT (20px), and will be started from top of the row
+ * TAB_PATH_DOWN_HIGHLIGHT starts at the top of the row, but can end anywhere
+ *
+ * TAB_PATH_UP starts from BS.TAB_HEIGHT pixels below the top of the row, and
+ *   will be followed by a 'Z' path element to draw a straight line to the top
+ *   left of the block
+ * TAB_PATH_UP_HIGHLIGHT and TAB_PATH_UP_HIGHLIGHT_RTL start from the bottom
+ *   of the row, and can end anywhere
  * @const
  */
 BS.TAB_PATHS_BY_SHAPE = {
@@ -1189,8 +1200,8 @@ Blockly.BlockSvg.prototype.renderDrawRightInputValue_ = function (renderInfo,
     renderInfo.highlight.push(paths.TAB_PATH_DOWN_HIGHLIGHT_RTL);
     renderInfo.highlight.push('v', row.height - BS.TAB_HEIGHT - 2);
   } else {
-    renderInfo.highlight.push('M', (inputRows.rightEdge - 4.2) + ',' +
-      (renderInfo.curY + BS.TAB_HEIGHT - 0.4));
+    renderInfo.highlight.push('M', inputRows.rightEdge + ',' +
+      (renderInfo.curY));
     renderInfo.highlight.push(paths.TAB_PATH_DOWN_HIGHLIGHT);
   }
 
@@ -1362,9 +1373,8 @@ Blockly.BlockSvg.prototype.renderDrawRightInline_ = function (renderInfo, inputR
         renderInfo.highlightInline.push('h', BS.TAB_WIDTH - input.renderWidth);
 
         renderInfo.highlightInline.push('M',
-          (renderInfo.curX - input.renderWidth - BS.SEP_SPACE_X +
-           3.8) + ',' + (renderInfo.curY + BS.INLINE_PADDING_Y +
-           BS.TAB_HEIGHT - 0.4));
+          (renderInfo.curX - input.renderWidth - BS.SEP_SPACE_X + BS.TAB_WIDTH) +
+           ',' + (renderInfo.curY + BS.INLINE_PADDING_Y));
         renderInfo.highlightInline.push(paths.TAB_PATH_DOWN_HIGHLIGHT);
       }
       // Create inline input connection.

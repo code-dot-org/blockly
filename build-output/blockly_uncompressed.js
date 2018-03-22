@@ -8197,8 +8197,11 @@ Blockly.Connection.prototype.closest = function(maxLimit, dx, dy) {
   return {connection:closestConnection, radius:maxLimit};
 };
 Blockly.Connection.prototype.checkAllowedConnectionType_ = function(otherConnection) {
-  if (this.acceptsAnyType() || otherConnection.acceptsAnyType()) {
+  if (!this.strictCheck() && !otherConnection.strictCheck() && (this.acceptsAnyType() || otherConnection.acceptsAnyType())) {
     return true;
+  }
+  if (this.strictCheck() && otherConnection.acceptsAnyType() || this.acceptsAnyType() && otherConnection.strictCheck()) {
+    return false;
   }
   for (var x = 0;x < this.check_.length;x++) {
     if (otherConnection.acceptsType(this.check_[x])) {
@@ -8207,18 +8210,28 @@ Blockly.Connection.prototype.checkAllowedConnectionType_ = function(otherConnect
   }
   return false;
 };
+Blockly.Connection.prototype.strictCheck = function() {
+  return this.strictType_;
+};
 Blockly.Connection.prototype.acceptsAnyType = function() {
   return !this.check_ || this.acceptsType(Blockly.BlockValueType.NONE);
 };
 Blockly.Connection.prototype.acceptsType = function(type) {
   return !this.check_ || goog.array.contains(this.check_, type);
 };
-Blockly.Connection.prototype.setCheck = function(check) {
+Blockly.Connection.prototype.setStrictCheck = function(check) {
+  return this.setCheck(check, true);
+};
+Blockly.Connection.prototype.setCheck = function(check, opt_strict) {
   if (check && check !== Blockly.BlockValueType.NONE) {
     if (!(check instanceof Array)) {
       check = [check];
     }
     this.check_ = check;
+    this.strictType_ = !!opt_strict;
+    if (this.strictType_ && !this.check_) {
+      throw "Strict connections must specify a type";
+    }
     if (this.targetConnection && !this.checkAllowedConnectionType_(this.targetConnection)) {
       if (this.isSuperior()) {
         this.targetBlock().setParent(null);
@@ -15431,6 +15444,13 @@ Blockly.Input.prototype.setVisible = function(visible) {
   }
   return renderList;
 };
+Blockly.Input.prototype.setStrictCheck = function(check) {
+  if (!this.connection) {
+    throw "This input does not have a connection.";
+  }
+  this.connection.setStrictCheck(check);
+  return this;
+};
 Blockly.Input.prototype.setCheck = function(check) {
   if (!this.connection) {
     throw "This input does not have a connection.";
@@ -17733,7 +17753,10 @@ Blockly.Block.prototype.setNextStatement = function(hasNext, opt_check) {
   }
   this.refreshRender();
 };
-Blockly.Block.prototype.setOutput = function(hasOutput, opt_check) {
+Blockly.Block.prototype.setStrictOutput = function(hasOutput, opt_check) {
+  this.setOutput(hasOutput, opt_check, true);
+};
+Blockly.Block.prototype.setOutput = function(hasOutput, opt_check, opt_strict) {
   if (this.outputConnection) {
     if (this.outputConnection.targetConnection) {
       throw "Must disconnect output value before removing connection.";
@@ -17749,7 +17772,7 @@ Blockly.Block.prototype.setOutput = function(hasOutput, opt_check) {
       opt_check = null;
     }
     this.outputConnection = new Blockly.Connection(this, Blockly.OUTPUT_VALUE);
-    this.outputConnection.setCheck(opt_check);
+    this.outputConnection.setCheck(opt_check, opt_strict);
   }
   this.refreshRender();
 };
@@ -21745,7 +21768,7 @@ Blockly.Flyout.prototype.filterForCapacity_ = function() {
   }
 };
 Blockly.Flyout.prototype.updateBlockLimitTotals_ = function() {
-  var blocks = this.blockSpaceEditor_.blockSpace.getAllVisibleBlocks();
+  var blocks = this.blockSpaceEditor_.blockSpace.getAllUsedBlocks();
   var blockTypes = blocks.map(function(block) {
     return block.type;
   });
@@ -26224,7 +26247,7 @@ Blockly.FunctionEditor.prototype.createContractDom_ = function() {
   this.container_.insertBefore(this.frameClipDiv_, this.container_.firstChild);
 };
 goog.provide("Blockly.BlockValueType");
-Blockly.BlockValueType = {NONE:"None", STRING:"String", NUMBER:"Number", IMAGE:"Image", BOOLEAN:"Boolean", FUNCTION:"Function", COLOUR:"Colour", ARRAY:"Array"};
+Blockly.BlockValueType = {NONE:"None", STRING:"String", NUMBER:"Number", IMAGE:"Image", BOOLEAN:"Boolean", FUNCTION:"Function", COLOUR:"Colour", ARRAY:"Array", SPRITE:"Sprite"};
 goog.provide("Blockly.FunctionalBlockUtils");
 goog.provide("Blockly.FunctionalTypeColors");
 goog.require("Blockly.BlockValueType");

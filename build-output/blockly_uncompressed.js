@@ -3012,7 +3012,17 @@ BS.NOTCH_PATH_WIDTH = 15;
 BS.JAGGED_TEETH = "l 8,0 0,4 8,4 -16,8 8,4";
 BS.JAGGED_TEETH_HEIGHT = 20;
 BS.TAB_PATH_DOWN = "v 5 c 0,10 -" + BS.TAB_WIDTH + ",-8 -" + BS.TAB_WIDTH + ",7.5 s " + BS.TAB_WIDTH + ",-2.5 " + BS.TAB_WIDTH + ",7.5";
-BS.TAB_PATH_DOWN_HIGHLIGHT_RTL = "v 6.5 m -" + BS.TAB_WIDTH * 0.98 + ",2.5 q -" + BS.TAB_WIDTH * .05 + ",10 " + BS.TAB_WIDTH * .27 + ",10 m " + BS.TAB_WIDTH * .71 + ",-2.5 v 1.5";
+BS.TAB_PATH_DOWN_HIGHLIGHT = "m -4.2," + (BS.TAB_HEIGHT - 0.4) + " " + "l " + BS.TAB_WIDTH * 0.42 + ",-1.8";
+BS.TAB_PATH_DOWN_HIGHLIGHT_RTL = "v 6.5 m -" + BS.TAB_WIDTH * 0.98 + ",2.5 q -" + BS.TAB_WIDTH * .05 + ",10 " + BS.TAB_WIDTH * .27 + ",10 m " + BS.TAB_WIDTH * .71 + ",-2.5 v 3.5";
+BS.TAB_PATH_UP = "V " + BS.TAB_HEIGHT + "c 0,-10 " + "-" + BS.TAB_WIDTH + ",8 " + "-" + BS.TAB_WIDTH + ",-7.5 " + "s " + BS.TAB_WIDTH + ",2.5 " + BS.TAB_WIDTH + ",-7.5";
+BS.TAB_PATH_UP_HIGHLIGHT = "V " + (BS.TAB_HEIGHT - 1) + " " + "m " + BS.TAB_WIDTH * -0.92 + ",-1 " + "q " + BS.TAB_WIDTH * -0.19 + ",-5.5 0,-11 " + "m " + BS.TAB_WIDTH * 0.92 + ",1 " + "V 1 " + "H 2";
+BS.TAB_PATH_UP_HIGHLIGHT_RTL = "M " + BS.TAB_WIDTH * -0.3 + ",8.9 " + "l " + BS.TAB_WIDTH * -0.45 + ",-2.1";
+BS.ANGLE_TAB_PATH_DOWN = "v " + BS.TAB_HEIGHT / 3 + " " + "l " + BS.TAB_WIDTH * -1 + " " + BS.TAB_HEIGHT / 3 + " " + "l " + BS.TAB_WIDTH + " " + BS.TAB_HEIGHT / 3;
+BS.ANGLE_TAB_PATH_DOWN_HIGHLIGHT_RTL = "v 5.5 " + "m -" + (BS.TAB_WIDTH - 1) + "," + (BS.TAB_HEIGHT / 3 + 1) + " " + "l " + (BS.TAB_WIDTH - 1) + "," + BS.TAB_HEIGHT / 3;
+BS.ANGLE_TAB_PATH_UP = "V" + BS.TAB_HEIGHT + " " + "L" + BS.TAB_WIDTH * -1 + ", " + BS.TAB_HEIGHT * 0.66 + " " + "L" + 0 + ", " + BS.TAB_HEIGHT * 0.33;
+BS.ANGLE_TAB_PATH_UP_HIGHLIGHT = "V " + (BS.TAB_HEIGHT + 2) + " " + "M " + (BS.TAB_WIDTH * -1 + 1) + ", " + BS.TAB_HEIGHT * 0.66 + " " + "L " + "1, " + (BS.TAB_HEIGHT * 0.33 + 1) + " " + "V " + 1;
+BS.TAB_PATHS_BY_SHAPE = {standard:{TAB_PATH_DOWN:BS.TAB_PATH_DOWN, TAB_PATH_DOWN_HIGHLIGHT:BS.TAB_PATH_DOWN_HIGHLIGHT, TAB_PATH_DOWN_HIGHLIGHT_RTL:BS.TAB_PATH_DOWN_HIGHLIGHT_RTL, TAB_PATH_UP:BS.TAB_PATH_UP, TAB_PATH_UP_HIGHLIGHT:BS.TAB_PATH_UP_HIGHLIGHT, TAB_PATH_UP_HIGHLIGHT_RTL:BS.TAB_PATH_UP_HIGHLIGHT_RTL}, angle:{TAB_PATH_DOWN:BS.ANGLE_TAB_PATH_DOWN, TAB_PATH_DOWN_HIGHLIGHT:"", TAB_PATH_DOWN_HIGHLIGHT_RTL:BS.ANGLE_TAB_PATH_DOWN_HIGHLIGHT_RTL, TAB_PATH_UP:BS.ANGLE_TAB_PATH_UP, TAB_PATH_UP_HIGHLIGHT:BS.ANGLE_TAB_PATH_UP_HIGHLIGHT, 
+TAB_PATH_UP_HIGHLIGHT_RTL:""}};
 BS.TOP_LEFT_CORNER_START = "m 0," + BS.CORNER_RADIUS;
 BS.TOP_LEFT_CORNER_START_HIGHLIGHT_RTL = "m " + BS.DISTANCE_45_INSIDE + "," + BS.DISTANCE_45_INSIDE;
 BS.TOP_LEFT_CORNER_START_HIGHLIGHT_LTR = "m 1," + (BS.CORNER_RADIUS - 1);
@@ -3503,15 +3513,16 @@ Blockly.BlockSvg.prototype.renderDrawRightInputValue_ = function(renderInfo, inp
     }
   }
   renderInfo.curX += this.renderTitles_(input.titleRow, titleX, titleY);
-  renderInfo.core.push(BS.TAB_PATH_DOWN);
-  renderInfo.core.push("v", row.height - BS.TAB_HEIGHT);
+  var paths = BS.TAB_PATHS_BY_SHAPE[input.connection.getTabShape()];
+  renderInfo.core.push(paths.TAB_PATH_DOWN);
   if (Blockly.RTL) {
-    renderInfo.highlight.push(BS.TAB_PATH_DOWN_HIGHLIGHT_RTL);
-    renderInfo.highlight.push("v", row.height - BS.TAB_HEIGHT);
+    renderInfo.highlight.push(paths.TAB_PATH_DOWN_HIGHLIGHT_RTL);
+    renderInfo.highlight.push("v", row.height - BS.TAB_HEIGHT - 2);
   } else {
-    renderInfo.highlight.push("M", inputRows.rightEdge - 4.2 + "," + (renderInfo.curY + BS.TAB_HEIGHT - 0.4));
-    renderInfo.highlight.push("l", BS.TAB_WIDTH * 0.42 + ",-1.8");
+    renderInfo.highlight.push("M", inputRows.rightEdge + "," + renderInfo.curY);
+    renderInfo.highlight.push(paths.TAB_PATH_DOWN_HIGHLIGHT);
   }
+  renderInfo.core.push("v", row.height - BS.TAB_HEIGHT);
   connectionX = connectionsXY.x + oppositeIfRTL(inputRows.rightEdge + 1);
   connectionY = connectionsXY.y + renderInfo.curY;
   input.connection.moveTo(connectionX, connectionY);
@@ -3622,21 +3633,22 @@ Blockly.BlockSvg.prototype.renderDrawRightInline_ = function(renderInfo, inputRo
       renderInfo.curX += input.renderWidth + BS.SEP_SPACE_X;
       renderInfo.inline.push("M", renderInfo.curX - BS.SEP_SPACE_X + "," + (renderInfo.curY + BS.INLINE_PADDING_Y));
       renderInfo.inline.push("h", BS.TAB_WIDTH - input.renderWidth);
-      renderInfo.inline.push(BS.TAB_PATH_DOWN);
+      var paths = BS.TAB_PATHS_BY_SHAPE[input.connection.getTabShape()];
+      renderInfo.inline.push(paths.TAB_PATH_DOWN);
       renderInfo.inline.push("v", input.renderHeight - BS.TAB_HEIGHT);
       renderInfo.inline.push("h", input.renderWidth - BS.TAB_WIDTH);
       renderInfo.inline.push("z");
       if (Blockly.RTL) {
         renderInfo.highlightInline.push("M", renderInfo.curX - BS.SEP_SPACE_X + BS.TAB_WIDTH - input.renderWidth - 1 + "," + (renderInfo.curY + BS.INLINE_PADDING_Y + 1));
-        renderInfo.highlightInline.push(BS.TAB_PATH_DOWN_HIGHLIGHT_RTL);
-        renderInfo.highlightInline.push("v", input.renderHeight - BS.TAB_HEIGHT + 2);
+        renderInfo.highlightInline.push(paths.TAB_PATH_DOWN_HIGHLIGHT_RTL);
+        renderInfo.highlightInline.push("v", input.renderHeight - BS.TAB_HEIGHT);
         renderInfo.highlightInline.push("h", input.renderWidth - BS.TAB_WIDTH);
       } else {
         renderInfo.highlightInline.push("M", renderInfo.curX - BS.SEP_SPACE_X + 1 + "," + (renderInfo.curY + BS.INLINE_PADDING_Y + 1));
         renderInfo.highlightInline.push("v", input.renderHeight);
         renderInfo.highlightInline.push("h", BS.TAB_WIDTH - input.renderWidth);
-        renderInfo.highlightInline.push("M", renderInfo.curX - input.renderWidth - BS.SEP_SPACE_X + 3.8 + "," + (renderInfo.curY + BS.INLINE_PADDING_Y + BS.TAB_HEIGHT - 0.4));
-        renderInfo.highlightInline.push("l", BS.TAB_WIDTH * 0.42 + ",-1.8");
+        renderInfo.highlightInline.push("M", renderInfo.curX - input.renderWidth - BS.SEP_SPACE_X + BS.TAB_WIDTH + "," + (renderInfo.curY + BS.INLINE_PADDING_Y));
+        renderInfo.highlightInline.push(paths.TAB_PATH_DOWN_HIGHLIGHT);
       }
       var connectionX = connectionsXY.x + oppositeIfRTL(renderInfo.curX + BS.TAB_WIDTH - BS.SEP_SPACE_X - input.renderWidth + 1);
       var connectionY = connectionsXY.y + renderInfo.curY + BS.INLINE_PADDING_Y;
@@ -3699,15 +3711,12 @@ Blockly.BlockSvg.prototype.renderDrawBottom_ = function(renderInfo, connectionsX
 };
 Blockly.BlockSvg.prototype.renderDrawLeft_ = function(renderInfo) {
   if (this.block_.outputConnection) {
-    renderInfo.core.push("V", BS.TAB_HEIGHT);
-    renderInfo.core.push("c 0,-10 -" + BS.TAB_WIDTH + ",8 -" + BS.TAB_WIDTH + ",-7.5 s " + BS.TAB_WIDTH + ",2.5 " + BS.TAB_WIDTH + ",-7.5");
+    var paths = BS.TAB_PATHS_BY_SHAPE[this.block_.outputConnection.getTabShape()];
+    renderInfo.core.push(paths.TAB_PATH_UP);
     if (Blockly.RTL) {
-      renderInfo.highlight.push("M", BS.TAB_WIDTH * -0.3 + ",8.9");
-      renderInfo.highlight.push("l", BS.TAB_WIDTH * -0.45 + ",-2.1");
+      renderInfo.highlight.push(paths.TAB_PATH_UP_HIGHLIGHT_RTL);
     } else {
-      renderInfo.highlight.push("V", BS.TAB_HEIGHT - 1);
-      renderInfo.highlight.push("m", BS.TAB_WIDTH * -0.92 + ",-1 q " + BS.TAB_WIDTH * -0.19 + ",-5.5 0,-11");
-      renderInfo.highlight.push("m", BS.TAB_WIDTH * 0.92 + ",1 V 1 H 2");
+      renderInfo.highlight.push(paths.TAB_PATH_UP_HIGHLIGHT);
     }
   } else {
     if (!Blockly.RTL) {
@@ -7867,6 +7876,7 @@ Blockly.Connection = function(source, type) {
   this.check_ = null;
   this.fieldHelpers_ = {};
 };
+Blockly.Connection.Shapes = {STANDARD:"standard", ANGLE:"angle"};
 Blockly.Connection.prototype.isConnected = function() {
   return this.targetConnection !== null;
 };
@@ -8078,7 +8088,8 @@ Blockly.Connection.prototype.moveBy = function(dx, dy) {
 Blockly.Connection.prototype.highlight = function() {
   var steps;
   if (this.type === Blockly.INPUT_VALUE || this.type === Blockly.OUTPUT_VALUE) {
-    steps = "m 0,0 " + Blockly.BlockSvg.TAB_PATH_DOWN + " v 5";
+    var path = Blockly.BlockSvg.TAB_PATHS_BY_SHAPE[this.getTabShape()].TAB_PATH_DOWN;
+    steps = "m 0,0 " + path + " v 5";
   } else {
     var moveWidth = 5 + Blockly.BlockSvg.NOTCH_PATH_WIDTH;
     var notchPaths = this.getNotchPaths();
@@ -8106,6 +8117,19 @@ Blockly.Connection.prototype.getNotchPaths = function() {
     return SQUARE_NOTCH_PATHS;
   }
   return ROUNDED_NOTCH_PATHS;
+};
+Blockly.Connection.prototype.getTabShape = function() {
+  if (this.type !== Blockly.INPUT_VALUE && this.type !== Blockly.OUTPUT_VALUE) {
+    return null;
+  }
+  if (!this.strictType_ || !Blockly.valueTypeTabShapeMap) {
+    return Blockly.Connection.Shapes.STANDARD;
+  }
+  var type = this.check_[0];
+  if (!type) {
+    throw "strict connections require a type";
+  }
+  return Blockly.valueTypeTabShapeMap[type] || Blockly.Connection.Shapes.STANDARD;
 };
 Blockly.Connection.prototype.tighten_ = function() {
   var dx = Math.round(this.targetConnection.x_ - this.x_);
@@ -29430,7 +29454,8 @@ Blockly.parseOptions_ = function(options) {
   return {RTL:!!options["rtl"], collapse:hasCollapse, readOnly:readOnly, showUnusedBlocks:showUnusedBlocks, maxBlocks:options["maxBlocks"] || Infinity, assetUrl:options["assetUrl"] || function(path) {
     return "./" + path;
   }, hasCategories:hasCategories, hasHorizontalScrollbars:options["hasHorizontalScrollbars"], hasVerticalScrollbars:options["hasVerticalScrollbars"], customSimpleDialog:options["customSimpleDialog"], hasTrashcan:hasTrashcan, varsInGlobals:options["varsInGlobals"] || false, languageTree:tree, disableIfElseEditing:options["disableIfElseEditing"] || false, disableParamEditing:options["disableParamEditing"] || false, disableVariableEditing:options["disableVariableEditing"] || false, disableProcedureAutopopulate:options["disableProcedureAutopopulate"] || 
-  false, topLevelProcedureAutopopulate:options["topLevelProcedureAutopopulate"] || false, useModalFunctionEditor:options["useModalFunctionEditor"] || false, useContractEditor:options["useContractEditor"] || false, disableExamples:options["disableExamples"] || false, defaultNumExampleBlocks:options["defaultNumExampleBlocks"] || 0, grayOutUndeletableBlocks:grayOutUndeletableBlocks, editBlocks:options["editBlocks"] || false, showExampleTestButtons:options["showExampleTestButtons"] || false};
+  false, topLevelProcedureAutopopulate:options["topLevelProcedureAutopopulate"] || false, useModalFunctionEditor:options["useModalFunctionEditor"] || false, useContractEditor:options["useContractEditor"] || false, disableExamples:options["disableExamples"] || false, defaultNumExampleBlocks:options["defaultNumExampleBlocks"] || 0, grayOutUndeletableBlocks:grayOutUndeletableBlocks, editBlocks:options["editBlocks"] || false, showExampleTestButtons:options["showExampleTestButtons"] || false, valueTypeTabShapeMap:options["valueTypeTabShapeMap"] || 
+  {}};
 };
 Blockly.registerUISounds_ = function(audioPlayer) {
   audioPlayer.register({id:"click", mp3:Blockly.assetUrl("media/click.mp3"), wav:Blockly.assetUrl("media/click.wav"), ogg:Blockly.assetUrl("media/click.ogg")});

@@ -1512,7 +1512,7 @@ Blockly.Blocks.functional_parameters_get = {init:function() {
   a.EDITABLE = !0;
   this.setHelpUrl(Blockly.Msg.VARIABLES_GET_HELPURL);
   this.setHSV(312, 0.32, 0.62);
-  this.setFunctional(!0, {headerHeight:30});
+  this.setFunctional(!0);
   this.appendDummyInput().appendTitle(Blockly.Msg.VARIABLES_GET_TITLE).appendTitle(a, "VAR").appendTitle(Blockly.Msg.VARIABLES_GET_TAIL).setAlign(Blockly.ALIGN_CENTRE);
   this.setFunctionalOutput(!0);
   this.setTooltip(Blockly.Msg.VARIABLES_GET_TOOLTIP);

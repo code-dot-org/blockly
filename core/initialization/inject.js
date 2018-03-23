@@ -167,7 +167,8 @@ Blockly.parseOptions_ = function(options) {
     defaultNumExampleBlocks: options['defaultNumExampleBlocks'] || 0,
     grayOutUndeletableBlocks: grayOutUndeletableBlocks,
     editBlocks: options['editBlocks'] || false,
-    showExampleTestButtons: options['showExampleTestButtons'] || false
+    showExampleTestButtons: options['showExampleTestButtons'] || false,
+    valueTypeTabShapeMap: options['valueTypeTabShapeMap'] || {},
   };
 };
 

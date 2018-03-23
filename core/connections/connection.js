@@ -94,6 +94,14 @@ Blockly.Connection = function(source, type) {
 };
 
 /**
+ * Possible input/output tab shapes
+ */
+Blockly.Connection.Shapes = {
+  STANDARD: 'standard',
+  ANGLE: 'angle',
+};
+
+/**
  * Is this connection currently connected to another connection.
  */
 Blockly.Connection.prototype.isConnected = function () {
@@ -416,7 +424,10 @@ Blockly.Connection.prototype.moveBy = function(dx, dy) {
 Blockly.Connection.prototype.highlight = function() {
   var steps;
   if (this.type === Blockly.INPUT_VALUE || this.type === Blockly.OUTPUT_VALUE) {
-    steps = 'm 0,0 '+ Blockly.BlockSvg.TAB_PATH_DOWN + ' v 5';
+    var path = Blockly.BlockSvg
+      .TAB_PATHS_BY_SHAPE[this.getTabShape()]
+      .TAB_PATH_DOWN;
+    steps = 'm 0,0 '+ path + ' v 5';
   } else {
     var moveWidth = 5 + Blockly.BlockSvg.NOTCH_PATH_WIDTH;
     var notchPaths = this.getNotchPaths();
@@ -457,6 +468,24 @@ Blockly.Connection.prototype.getNotchPaths = function () {
     return SQUARE_NOTCH_PATHS;
   }
   return ROUNDED_NOTCH_PATHS;
+};
+
+/**
+ * Return the tab shape for this input or output connection
+ */
+Blockly.Connection.prototype.getTabShape = function () {
+  if (this.type !== Blockly.INPUT_VALUE && this.type !== Blockly.OUTPUT_VALUE) {
+    return null;
+  }
+  if (!this.strictType_ || !Blockly.valueTypeTabShapeMap) {
+    return Blockly.Connection.Shapes.STANDARD;
+  }
+  var type = this.check_[0];
+  if (!type) {
+    throw 'strict connections require a type';
+  }
+  return Blockly.valueTypeTabShapeMap[type] ||
+    Blockly.Connection.Shapes.STANDARD;
 };
 
 

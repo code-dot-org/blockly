@@ -30,7 +30,8 @@ function start() {
     toolbox: getToolboxElement(),
     hasVerticalScrollbars: true,
     assetUrl: function(path) { return '../' + path; },
-    customSimpleDialog: Blockly.Playground.customSimpleDialog
+    customSimpleDialog: Blockly.Playground.customSimpleDialog,
+    valueTypeTabShapeMap: { Sprite: 'angle' },
   });
 
   if (goog.tweak.getBoolean('enableExampleRunning')) {
@@ -432,10 +433,21 @@ h1 {
     </category>
     <category name="Variables" custom="VARIABLE"></category>
     <category name="Functions" custom="PROCEDURE"></category>
+    <category name="Sprites">
+      <block type="sprite_variables_get"></block>
+      <block type="sprite_variables_set"></block>
+      <block type="sprite_variables_set" inline="true"></block>
+    </category>
     <category name="CSinA Vars" custom="FUNCTIONAL_VARIABLE" />
   </xml>
 
   <xml id="non-category-toolbox" style="display: none">
+    <block type="variables_get"></block>
+    <block type="variables_set"></block>
+    <block type="variables_set" inline="true"></block>
+    <block type="sprite_variables_get"></block>
+    <block type="sprite_variables_set"></block>
+    <block type="sprite_variables_set" inline="true"></block>
     <block type="controls_if"></block>
     <block type="logic_compare"></block>
     <block type="logic_operation"></block>

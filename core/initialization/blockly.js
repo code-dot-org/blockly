@@ -30,6 +30,7 @@ goog.provide('Blockly');
 goog.require('Blockly.Block');
 goog.require('Blockly.Connection');
 goog.require('Blockly.FieldAngle');
+goog.require('Blockly.FieldButton');
 goog.require('Blockly.FieldCheckbox');
 goog.require('Blockly.FieldColour');
 goog.require('Blockly.FieldColourDropdown');

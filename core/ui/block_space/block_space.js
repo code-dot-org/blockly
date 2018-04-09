@@ -185,6 +185,8 @@ Blockly.BlockSpace.SCROLLABLE_MARGIN_BELOW_BOTTOM = 100;
  * @param {Object} opt_options optional options
  * @param {boolean} opt_options.noScrolling whether or not to disable
  *        scrolling
+ * @param {boolean} opt_options.inline whether or not this blockspace should be
+ *        treated as an inline element, as opposed to a block element
  * @param {boolean} opt_options.disableEventBindings whether or not to skip
  *        setting up dom event handlers for this blockspace
  * @returns {Blockly.BlockSpace}
@@ -209,6 +211,7 @@ Blockly.BlockSpace.createReadOnlyBlockSpace = function (container, xml, opt_opti
     readOnly: true,
     disableTooltip: true,
     noScrolling: opt_options.noScrolling,
+    inline: opt_options.inline,
     disableEventBindings: opt_options.disableEventBindings,
   });
 

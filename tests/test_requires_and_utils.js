@@ -59,5 +59,5 @@ Blockly.Test.testWithReadOnlyBlockSpaceEditor = function (callback) {
     readOnly: true
   });
   callback(blockSpaceEditor);
-  return container;
+  goog.dom.removeNode(container);
 };

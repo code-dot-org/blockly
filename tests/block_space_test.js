@@ -160,12 +160,15 @@ function test_blockSpaceAutoPositioning() {
   var blockXML = '<xml>' + blocks.join('') + '</xml>';
   Blockly.Xml.domToBlockSpace(Blockly.mainBlockSpace, Blockly.Xml.textToDom(blockXML));
   var topBlocks = Blockly.mainBlockSpace.getTopBlocks();
-  
+
   for (var i = 0; i < topBlocks.length; i++) {
     var position = topBlocks[i].getRelativeToSurfaceXY();
     assertEquals(expected_positions[i][0], position.x);
     assertEquals(expected_positions[i][1], position.y);
   }
+
+  // phantomJS hangs if you try to remove container from the DOM, just hide it
+  goog.style.setElementShown(container, false);
 }
 
 function test_blockSpace_isReadOnly() {
@@ -210,13 +213,16 @@ function test_readOnlyBlockSpaceCanRender() {
 }
 
 function test_blockSpacesUseSameWidgetDiv() {
-  Blockly.Test.initializeBlockSpaceEditor();
+  var container = Blockly.Test.initializeBlockSpaceEditor();
   var first = Blockly.WidgetDiv;
   assertNotNull(first);
-  Blockly.Test.initializeBlockSpaceEditor();
+  var container2 = Blockly.Test.initializeBlockSpaceEditor();
   var second = Blockly.WidgetDiv;
   assertNotNull(second);
   assertEquals(first, second);
+
+  goog.dom.removeNode(container);
+  goog.dom.removeNode(container2);
 }
 
 function test_blockSpaceWithLimitedQuantitiesOfBlocks() {

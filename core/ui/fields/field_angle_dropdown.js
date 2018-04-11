@@ -7,11 +7,22 @@ goog.provide('Blockly.FieldAngleDropdown');
 goog.require('Blockly.FieldDropdown');
 goog.require('Blockly.AngleHelper');
 
-Blockly.FieldAngleDropdown = function(directionTitleName, menuGenerator, opt_changeHandler) {
+/**
+ * Class for an editable dropdown field with an angle helper.
+ * @param {Object} opt_options An options object
+ * @param {(!Array.<string>|!Function)} opt_options.menuGenerator An array of options
+ *     for a dropdown list, or a function which generates these options.
+ * @param {Function} opt_options.opt_changeHandler A function that is executed when a new
+ *     option is selected.
+ * @param {string} opt_options.directionTitleName The name of the title value from which to get the direction setting.
+ * @extends {Blockly.FieldAngleDropdown}
+ * @constructor
+ */
+Blockly.FieldAngleDropdown = function(opt_options) {
   this.angleHelper = null;
-  this.directionTitleName = directionTitleName;
+  this.directionTitleName = opt_options.directionTitleName;
   Blockly.FieldAngleDropdown.superClass_.constructor.call(this,
-      menuGenerator, opt_changeHandler);
+      opt_options.menuGenerator, opt_options.opt_changeHandler);
 };
 goog.inherits(Blockly.FieldAngleDropdown, Blockly.FieldDropdown);
 

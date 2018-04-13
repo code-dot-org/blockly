@@ -1,6 +1,6 @@
 {
   "name": "@code-dot-org/blockly",
-  "version": "1.8.2",
+  "version": "1.8.2-add-anglehelper-options",
   "description": "Code.org fork of google/blockly for use within the Code Studio learning environment.",
   "repository": {
     "type": "git",

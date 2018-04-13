@@ -18540,6 +18540,14 @@ Blockly.FieldTextInput.prototype.showAngleHelper_ = function() {
   div.appendChild(container);
   var options = this.getFieldHelperOptions_(Blockly.BlockFieldHelper.ANGLE_HELPER);
   var dir = options.block.getTitleValue(options.directionTitle);
+  var dir = "turnRight";
+  if (options.directionTitle) {
+    dir = options.block.getTitleValue(options.directionTitle);
+  } else {
+    if (options.direction) {
+      dir = options.direction;
+    }
+  }
   var colour = options.block.getHexColour();
   this.angleHelper = new Blockly.AngleHelper(dir, {onUpdate:function() {
     var value = this.angleHelper.getAngle().toString();
@@ -21211,10 +21219,11 @@ Blockly.FieldDropdown.prototype.dispose = function() {
 goog.provide("Blockly.FieldAngleDropdown");
 goog.require("Blockly.FieldDropdown");
 goog.require("Blockly.AngleHelper");
-Blockly.FieldAngleDropdown = function(directionTitleName, menuGenerator, opt_changeHandler) {
+Blockly.FieldAngleDropdown = function(opt_options) {
   this.angleHelper = null;
-  this.directionTitleName = directionTitleName;
-  Blockly.FieldAngleDropdown.superClass_.constructor.call(this, menuGenerator, opt_changeHandler);
+  this.direction = opt_options.direction;
+  this.directionTitleName = opt_options.directionTitleName;
+  Blockly.FieldAngleDropdown.superClass_.constructor.call(this, opt_options.menuGenerator, opt_options.opt_changeHandler);
 };
 goog.inherits(Blockly.FieldAngleDropdown, Blockly.FieldDropdown);
 Blockly.FieldAngleDropdown.prototype.showEditor_ = function() {
@@ -21229,7 +21238,14 @@ Blockly.FieldAngleDropdown.prototype.showEditor_ = function() {
   container.style.height = angleHelperHeight + "px";
   var svgContainer = goog.dom.createDom("div");
   container.appendChild(svgContainer);
-  var dir = this.sourceBlock_.getTitleValue(this.directionTitleName);
+  var dir = "turnRight";
+  if (this.directionTitleName) {
+    dir = this.sourceBlock_.getTitleValue(this.directionTitleName);
+  } else {
+    if (this.direction) {
+      dir = this.direction;
+    }
+  }
   this.angleHelper = new Blockly.AngleHelper(dir, {onUpdate:function() {
     this.setValue(this.angleHelper.getAngle().toString());
     this.menu_.getItems().forEach(function(menuItem) {
@@ -21258,14 +21274,15 @@ goog.provide("Blockly.FieldAngleTextInput");
 goog.require("Blockly.AngleHelper");
 goog.require("Blockly.BlockFieldHelper");
 goog.require("Blockly.FieldTextInput");
-Blockly.FieldAngleTextInput = function(directionTitle, text) {
-  this.directionTitle = directionTitle;
+Blockly.FieldAngleTextInput = function(text, opt_options) {
+  this.direction = opt_options.direction;
+  this.directionTitle = opt_options.directionTitle;
   Blockly.FieldAngleTextInput.superClass_.constructor.call(this, text, Blockly.FieldTextInput.numberValidator);
 };
 goog.inherits(Blockly.FieldAngleTextInput, Blockly.FieldTextInput);
 Blockly.FieldAngleTextInput.prototype.getFieldHelperOptions_ = function(field_helper) {
   if (field_helper === Blockly.BlockFieldHelper.ANGLE_HELPER) {
-    return {directionTitle:this.directionTitle, block:this.sourceBlock_};
+    return {direction:this.direction, directionTitle:this.directionTitle, block:this.sourceBlock_};
   }
 };
 goog.provide("Blockly.FieldIcon");

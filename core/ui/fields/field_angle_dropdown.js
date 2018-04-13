@@ -14,12 +14,15 @@ goog.require('Blockly.AngleHelper');
  *     for a dropdown list, or a function which generates these options.
  * @param {Function} opt_options.opt_changeHandler A function that is executed when a new
  *     option is selected.
- * @param {string} opt_options.directionTitleName The name of the title value from which to get the direction setting.
+ * @param {string} opt_options.directionTitleName The name of the title value
+ *     from which to get the direction setting.
+ * @param {string} opt_options.direction The hardcoded direction setting to pass along
  * @extends {Blockly.FieldAngleDropdown}
  * @constructor
  */
 Blockly.FieldAngleDropdown = function(opt_options) {
   this.angleHelper = null;
+  this.direction = opt_options.direction;
   this.directionTitleName = opt_options.directionTitleName;
   Blockly.FieldAngleDropdown.superClass_.constructor.call(this,
       opt_options.menuGenerator, opt_options.opt_changeHandler);
@@ -44,7 +47,14 @@ Blockly.FieldAngleDropdown.prototype.showEditor_ = function() {
   var svgContainer = goog.dom.createDom('div');
   container.appendChild(svgContainer);
 
-  var dir = this.sourceBlock_.getTitleValue(this.directionTitleName);
+  // Turn right (clockwise) by default.
+  var dir = 'turnRight'
+  if (this.directionTitleName) {
+    dir = this.sourceBlock_.getTitleValue(this.directionTitleName);
+  } else if (this.direction) {
+    dir = this.direction;
+  }
+
   this.angleHelper = new Blockly.AngleHelper(dir, {
     onUpdate: function () {
       this.setValue(this.angleHelper.getAngle().toString());

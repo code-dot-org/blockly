@@ -144,6 +144,7 @@ Blockly.Trashcan.prototype.createDom = function() {
   <g filter="url(#blocklyTrashcanShadowFilter)">
     <image width="100" height="100" href="media/canclosed.png"></image>
     <image width="100" height="100" visibility="hidden" href="media/canopen.png"></image>
+    <line x0="0" y1="0" x2="100" y2="100" stroke="red" visibility="hidden"></line>
   </g>
   */
   this.svgGroup_ = Blockly.createSvgElement('g',
@@ -160,9 +161,11 @@ Blockly.Trashcan.prototype.createDom = function() {
   this.svgOpenCan_.setAttribute('visibility', 'hidden');
   this.svgOpenCan_.setAttributeNS('http://www.w3.org/1999/xlink', 'xlink:href',
       Blockly.assetUrl(Blockly.Trashcan.OPEN_URL_));
+  this.notAllowed_ = Blockly.createSvgElement('line',
+      {x1: 0, y1: 0, x2: 100, y2: 100, stroke: 'red'}, this.svgGroup_);
+  this.notAllowed_.setAttribute('visibility', 'hidden');
   return this.svgGroup_;
 };
-
 
 /**
  * Dispose of this trash can.
@@ -178,14 +181,12 @@ Blockly.Trashcan.prototype.dispose = function() {
   this.blockSpace_ = null;
 };
 
-
 /**
  * Returns the trashcan's current height in pixels
  */
 Blockly.Trashcan.prototype.getHeight = function() {
   return Blockly.Trashcan.HEIGHT_;
 };
-
 
 /**
  * Flip the lid open or shut.
@@ -198,6 +199,22 @@ Blockly.Trashcan.prototype.setOpen_ = function(state) {
   }
   this.isOpen = state;
   this.animateLid_();
+};
+
+/**
+ * Put a red slash over the trashcan to make it clear a block can't be deleted.
+ * @param {boolean} state True if disabled.
+ */
+Blockly.Trashcan.prototype.setDisabled = function(state) {
+  if (this.isDisabled === state) {
+    return;
+  }
+  this.isDisabled = state;
+  if (this.isDisabled) {
+    this.notAllowed_.setAttribute('visibility', 'visible');
+  } else {
+    this.notAllowed_.setAttribute('visibility', 'hidden');
+  }
 };
 
 /**

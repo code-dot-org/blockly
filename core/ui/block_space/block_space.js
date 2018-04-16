@@ -802,9 +802,10 @@ Blockly.BlockSpace.prototype.recordDeleteAreas = function() {
 * @param {number} mouseX mouse clientX
 * @param {number} mouseY mouse clientY
 * @param {number} startDragX The x coordinate of the drag start.
+* @param {boolean} undeletable
 * @return {boolean} True if event is in a delete area.
 */
-Blockly.BlockSpace.prototype.isDeleteArea = function(mouseX, mouseY, startDragX) {
+Blockly.BlockSpace.prototype.isDeleteArea = function(mouseX, mouseY, startDragX, undeletable) {
   // If there is no toolbox and no flyout then there is no trash area.
   if (!Blockly.languageTree) {
     return false;
@@ -829,7 +830,7 @@ Blockly.BlockSpace.prototype.isDeleteArea = function(mouseX, mouseY, startDragX)
     }
   }
 
-  this.drawTrashZone(xy.x, dragStartXY.x);
+  this.drawTrashZone(xy.x, dragStartXY.x, undeletable);
 
   // Check against all delete areas
   for (var i = 0, area; i < this.deleteAreas_.length; i++) {
@@ -855,11 +856,12 @@ Blockly.BlockSpace.prototype.hideDelete = function() {
 /**
 * Draws the trash zone over the toolbox/flyout, as the user drags an
 * item towards it.
-* @param {!Event} e Mouse move event.
+* @param x
 * @param {integer} startDragX The x coordinate of the drag start.
+* @param undeletable
 * @return {boolean} True if event is in a delete area.
 */
-Blockly.BlockSpace.prototype.drawTrashZone = function(x, startDragX) {
+Blockly.BlockSpace.prototype.drawTrashZone = function(x, startDragX, undeletable) {
   var background;
   var blockGroup;
   var trashcan;
@@ -931,10 +933,18 @@ Blockly.BlockSpace.prototype.drawTrashZone = function(x, startDragX) {
   var INNER_TRASH_NORMAL_INTENSITY = 0.8;
   var INNER_TRASH_TRASHCAN_INTENSITY = 1 - INNER_TRASH_NORMAL_INTENSITY;
 
+  if (undeletable) {
+    trashcan.setDisabled(true);
+  } else {
+    trashcan.setDisabled(false);
+  }
+
   if (pastThreshold) {
     if (xDifference <= 0) {
       normalIntensity = 0;
-      trashcan.setOpen_(true);
+      if (!undeletable) {
+        trashcan.setOpen_(true);
+      }
     } else {
       trashcan.setOpen_(false);
       if (xDifference >= trashZoneWidth) {

@@ -162,7 +162,7 @@ Blockly.Trashcan.prototype.createDom = function() {
   this.svgOpenCan_.setAttributeNS('http://www.w3.org/1999/xlink', 'xlink:href',
       Blockly.assetUrl(Blockly.Trashcan.OPEN_URL_));
   this.notAllowed_ = Blockly.createSvgElement('line',
-      {x1: 0, y1: 0, x2: 100, y2: 100, stroke: 'red'}, this.svgGroup_);
+      {x1: 5, y1: 5, x2: 64, y2: 64, stroke: 'red', 'stroke-width': 3}, this.svgGroup_);
   this.notAllowed_.setAttribute('visibility', 'hidden');
   return this.svgGroup_;
 };
@@ -178,6 +178,7 @@ Blockly.Trashcan.prototype.dispose = function() {
   }
   this.svgClosedCan_ = null;
   this.svgOpenCan_ = null;
+  this.notAllowed_ = null;
   this.blockSpace_ = null;
 };
 

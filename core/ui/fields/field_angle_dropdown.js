@@ -30,6 +30,12 @@ Blockly.FieldAngleDropdown = function(opt_options) {
 goog.inherits(Blockly.FieldAngleDropdown, Blockly.FieldDropdown);
 
 Blockly.FieldAngleDropdown.prototype.getAngleDirection_ = function() {
+  // direction can be set by specifying either direction or directionTitleName,
+  // but not both
+  if (this.direction && this.directionTitleName) {
+    throw 'FieldAngleDropdown should not have both a direction and a directionTitleName; please pass at most one of these options';
+  }
+
   if (this.directionTitleName) {
     return this.sourceBlock_.getTitleValue(this.directionTitleName);
   } else if (this.direction) {

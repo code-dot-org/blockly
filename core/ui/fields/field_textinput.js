@@ -98,6 +98,12 @@ Blockly.FieldTextInput.prototype.shouldShowAngleHelper_ = function() {
 Blockly.FieldTextInput.prototype.getAngleHelperDirection_ = function() {
   var options = this.getFieldHelperOptions_(Blockly.BlockFieldHelper.ANGLE_HELPER);
 
+  // direction can be set by specifying either direction or directionTitleName,
+  // but not both
+  if (options.direction && options.directionTitleName) {
+    throw 'FieldTextInput should not have both a direction and a directionTitleName; please pass at most one of these options';
+  }
+
   if (options.directionTitle) {
     return options.block.getTitleValue(options.directionTitle);
   } else if (options.direction) {

@@ -29,6 +29,17 @@ Blockly.FieldAngleDropdown = function(opt_options) {
 };
 goog.inherits(Blockly.FieldAngleDropdown, Blockly.FieldDropdown);
 
+Blockly.FieldAngleDropdown.prototype.getAngleDirection_ = function() {
+  if (this.directionTitleName) {
+    return this.sourceBlock_.getTitleValue(this.directionTitleName);
+  } else if (this.direction) {
+    return this.direction;
+  }
+
+  // Turn right (clockwise) by default.
+  return 'turnRight'
+};
+
 Blockly.FieldAngleDropdown.prototype.showEditor_ = function() {
   var div = Blockly.WidgetDiv.DIV;
 
@@ -47,15 +58,7 @@ Blockly.FieldAngleDropdown.prototype.showEditor_ = function() {
   var svgContainer = goog.dom.createDom('div');
   container.appendChild(svgContainer);
 
-  // Turn right (clockwise) by default.
-  var dir = 'turnRight'
-  if (this.directionTitleName) {
-    dir = this.sourceBlock_.getTitleValue(this.directionTitleName);
-  } else if (this.direction) {
-    dir = this.direction;
-  }
-
-  this.angleHelper = new Blockly.AngleHelper(dir, {
+  this.angleHelper = new Blockly.AngleHelper(this.getAngleDirection_(), {
     onUpdate: function () {
       this.setValue(this.angleHelper.getAngle().toString());
       this.menu_.getItems().forEach(function (menuItem) {

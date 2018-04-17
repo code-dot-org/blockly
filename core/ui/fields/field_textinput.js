@@ -95,6 +95,19 @@ Blockly.FieldTextInput.prototype.shouldShowAngleHelper_ = function() {
   return this.getFieldHelperOptions_(Blockly.BlockFieldHelper.ANGLE_HELPER);
 };
 
+Blockly.FieldTextInput.prototype.getAngleHelperDirection_ = function() {
+  var options = this.getFieldHelperOptions_(Blockly.BlockFieldHelper.ANGLE_HELPER);
+
+  if (options.directionTitle) {
+    return options.block.getTitleValue(options.directionTitle);
+  } else if (options.direction) {
+    return options.direction;
+  }
+
+  // Turn right (clockwise) by default.
+  return 'turnRight';
+};
+
 Blockly.FieldTextInput.prototype.showAngleHelper_ = function() {
   var div = Blockly.WidgetDiv.DIV;
   var container = goog.dom.createDom('div', 'blocklyFieldAngleTextInput');
@@ -103,15 +116,7 @@ Blockly.FieldTextInput.prototype.showAngleHelper_ = function() {
   div.appendChild(container);
 
   var options = this.getFieldHelperOptions_(Blockly.BlockFieldHelper.ANGLE_HELPER);
-  var dir = options.block.getTitleValue(options.directionTitle);
-  // Turn right (clockwise) by default.
-  var dir = 'turnRight'
-  if (options.directionTitle) {
-    dir = options.block.getTitleValue(options.directionTitle);
-  } else if (options.direction) {
-    dir = options.direction;
-  }
-
+  var dir = this.getAngleHelperDirection_();
   var colour = options.block.getHexColour();
   this.angleHelper = new Blockly.AngleHelper(dir, {
     onUpdate: function () {

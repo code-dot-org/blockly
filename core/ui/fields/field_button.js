@@ -4,6 +4,9 @@ goog.provide('Blockly.FieldButton');
 
 goog.require('Blockly.Field');
 
+var CORNER_RADIUS = 3;
+var INNER_HEIGHT = 17;
+var Y_OFFSET = -13;
 
 /**
  * Class for a button field.
@@ -20,13 +23,16 @@ Blockly.FieldButton = function(title, buttonHandler, color, opt_changeHandler) {
 
   this.changeHandler_ = opt_changeHandler;
   this.buttonHandler = buttonHandler;
+
+  this.borderRect_.setAttribute('height', INNER_HEIGHT + 2);
+  this.borderRect_.setAttribute('y', Y_OFFSET - 1);
   this.buttonElement_ = Blockly.createSvgElement('rect',
       {
-        rx: 3,
-        ry: 3,
+        rx: CORNER_RADIUS,
+        ry: CORNER_RADIUS,
         x: (-Blockly.BlockSvg.SEP_SPACE_X / 2) + 1,
-        y: -11,
-        height: 14,
+        y: Y_OFFSET,
+        height: INNER_HEIGHT,
       },
       this.fieldGroup_
   );

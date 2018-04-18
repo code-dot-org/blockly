@@ -12,7 +12,9 @@ var Y_OFFSET = -13;
  * Class for a button field.
  * @param {string} value The initial value of the field.
  * @param {Function} buttonHandler A function that is executed when the button
- *   is clicked, must return the new value;
+ *   is clicked. It should eventually call FieldButton.setValue() to update the
+ *   field value.
+ * @param {string} Button fill color
  * @param {Function} opt_changeHandler A function that is executed when the
  *   value is changed
  * @extends {Blockly.Field}
@@ -36,12 +38,18 @@ Blockly.FieldButton = function(title, buttonHandler, color, opt_changeHandler) {
       },
       this.fieldGroup_
   );
-  this.fieldGroup_.insertBefore(this.buttonElement_, this.textElement_);
-  this.textElement_.style.fontSize = '10pt';
   this.buttonElement_.style.fillOpacity = 1;
   this.buttonElement_.style.fill = color;
-  // Set the initial state.
-  this.setText(title);
+  this.fieldGroup_.insertBefore(this.buttonElement_, this.textElement_);
+
+  this.textElement_.style.fontSize = '11pt';
+  this.textElement_.style.fill = 'white';
+  if (goog.isString(title)) {
+    this.setText(title);
+  } else {
+    this.textElement_.textContent = '';
+    this.textElement_.appendChild(title);
+  }
 };
 goog.inherits(Blockly.FieldButton, Blockly.Field);
 

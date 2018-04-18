@@ -22,7 +22,7 @@ Blockly.FieldButton = function(title, buttonHandler, color, opt_changeHandler) {
   Blockly.FieldButton.superClass_.constructor.call(this, '');
 
   this.changeHandler_ = opt_changeHandler;
-  this.buttonHandler = buttonHandler;
+  this.buttonHandler_ = buttonHandler;
 
   this.borderRect_.setAttribute('height', INNER_HEIGHT + 2);
   this.borderRect_.setAttribute('y', Y_OFFSET - 1);
@@ -83,10 +83,10 @@ Blockly.FieldButton.prototype.setValue = function(value) {
  * @private
  */
 Blockly.FieldButton.prototype.showEditor_ = function() {
-  if (!this.buttonHandler) {
+  if (!this.buttonHandler_) {
     return;
   }
-  this.buttonHandler(this.setValue.bind(this));
+  this.buttonHandler_(this.setValue.bind(this));
 };
 
 /**

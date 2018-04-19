@@ -18532,6 +18532,20 @@ Blockly.FieldTextInput.prototype.setText = function(text) {
 Blockly.FieldTextInput.prototype.shouldShowAngleHelper_ = function() {
   return this.getFieldHelperOptions_(Blockly.BlockFieldHelper.ANGLE_HELPER);
 };
+Blockly.FieldTextInput.prototype.getAngleHelperDirection_ = function() {
+  var options = this.getFieldHelperOptions_(Blockly.BlockFieldHelper.ANGLE_HELPER);
+  if (options.direction && options.directionTitleName) {
+    throw "FieldTextInput should not have both a direction and a directionTitleName; please pass at most one of these options";
+  }
+  if (options.directionTitle) {
+    return options.block.getTitleValue(options.directionTitle);
+  } else {
+    if (options.direction) {
+      return options.direction;
+    }
+  }
+  return "turnRight";
+};
 Blockly.FieldTextInput.prototype.showAngleHelper_ = function() {
   var div = Blockly.WidgetDiv.DIV;
   var container = goog.dom.createDom("div", "blocklyFieldAngleTextInput");
@@ -18539,15 +18553,7 @@ Blockly.FieldTextInput.prototype.showAngleHelper_ = function() {
   container.style.width = Blockly.FieldTextInput.ANGLE_HELPER_SIZE + "px";
   div.appendChild(container);
   var options = this.getFieldHelperOptions_(Blockly.BlockFieldHelper.ANGLE_HELPER);
-  var dir = options.block.getTitleValue(options.directionTitle);
-  var dir = "turnRight";
-  if (options.directionTitle) {
-    dir = options.block.getTitleValue(options.directionTitle);
-  } else {
-    if (options.direction) {
-      dir = options.direction;
-    }
-  }
+  var dir = this.getAngleHelperDirection_();
   var colour = options.block.getHexColour();
   this.angleHelper = new Blockly.AngleHelper(dir, {onUpdate:function() {
     var value = this.angleHelper.getAngle().toString();
@@ -21281,6 +21287,19 @@ Blockly.FieldAngleDropdown = function(opt_options) {
   Blockly.FieldAngleDropdown.superClass_.constructor.call(this, opt_options.menuGenerator, opt_options.opt_changeHandler);
 };
 goog.inherits(Blockly.FieldAngleDropdown, Blockly.FieldDropdown);
+Blockly.FieldAngleDropdown.prototype.getAngleDirection_ = function() {
+  if (this.direction && this.directionTitleName) {
+    throw "FieldAngleDropdown should not have both a direction and a directionTitleName; please pass at most one of these options";
+  }
+  if (this.directionTitleName) {
+    return this.sourceBlock_.getTitleValue(this.directionTitleName);
+  } else {
+    if (this.direction) {
+      return this.direction;
+    }
+  }
+  return "turnRight";
+};
 Blockly.FieldAngleDropdown.prototype.showEditor_ = function() {
   var div = Blockly.WidgetDiv.DIV;
   var container = goog.dom.createDom("div", "blocklyFieldAngleDropdown");
@@ -21293,15 +21312,7 @@ Blockly.FieldAngleDropdown.prototype.showEditor_ = function() {
   container.style.height = angleHelperHeight + "px";
   var svgContainer = goog.dom.createDom("div");
   container.appendChild(svgContainer);
-  var dir = "turnRight";
-  if (this.directionTitleName) {
-    dir = this.sourceBlock_.getTitleValue(this.directionTitleName);
-  } else {
-    if (this.direction) {
-      dir = this.direction;
-    }
-  }
-  this.angleHelper = new Blockly.AngleHelper(dir, {onUpdate:function() {
+  this.angleHelper = new Blockly.AngleHelper(this.getAngleDirection_(), {onUpdate:function() {
     this.setValue(this.angleHelper.getAngle().toString());
     this.menu_.getItems().forEach(function(menuItem) {
       menuItem.setChecked(menuItem.getValue() === this.value_);

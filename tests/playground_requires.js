@@ -69,51 +69,61 @@ Blockly.Playground.customSimpleDialog = function (dialogOptions) {
   dialog.setVisible(true);
 };
 
-Blockly.Blocks.sprite_variables_get = {
-  // Variable getter.
-  init: function() {
-    var fieldLabel = new Blockly.FieldLabel(Blockly.Msg.VARIABLES_GET_ITEM);
-    // Must be marked EDITABLE so that cloned blocks share the same var name
-    fieldLabel.EDITABLE = true;
-    this.setHelpUrl(Blockly.Msg.VARIABLES_GET_HELPURL);
-    this.setHSV(131, 0.64, 0.62);
-    this.appendDummyInput()
+function createVariableGet(type, color) {
+  return {
+    // Variable getter.
+    init: function() {
+      var fieldLabel = new Blockly.FieldLabel(Blockly.Msg.VARIABLES_GET_ITEM);
+      // Must be marked EDITABLE so that cloned blocks share the same var name
+      fieldLabel.EDITABLE = true;
+      this.setHelpUrl(Blockly.Msg.VARIABLES_GET_HELPURL);
+      this.setHSV.apply(this, color);
+      this.appendDummyInput()
         .appendTitle(Blockly.Msg.VARIABLES_GET_TITLE)
         .appendTitle(Blockly.disableVariableEditing ? fieldLabel
-            : new Blockly.FieldParameter(Blockly.Msg.VARIABLES_GET_ITEM), 'VAR')
+          : new Blockly.FieldParameter(Blockly.Msg.VARIABLES_GET_ITEM), 'VAR')
         .appendTitle(Blockly.Msg.VARIABLES_GET_TAIL);
-    this.setStrictOutput(true, Blockly.BlockValueType.SPRITE);
-    this.setTooltip(Blockly.Msg.VARIABLES_GET_TOOLTIP);
-  },
-};
+      this.setStrictOutput(true, type);
+      this.setTooltip(Blockly.Msg.VARIABLES_GET_TOOLTIP);
+    }
+  }
+}
 
-Blockly.Blocks.sprite_variables_set = {
-  // Variable setter.
-  init: function() {
-    var fieldLabel = new Blockly.FieldLabel(Blockly.Msg.VARIABLES_SET_ITEM);
-    // Must be marked EDITABLE so that cloned blocks share the same var name
-    fieldLabel.EDITABLE = true;
-    this.setHelpUrl(Blockly.Msg.VARIABLES_SET_HELPURL);
-    this.setHSV(131, 0.64, 0.62);
-    this.appendValueInput('VALUE')
-        .setStrictCheck(Blockly.BlockValueType.SPRITE)
+function createVariableSet(type, color) {
+  return {
+    // Variable setter.
+    init: function() {
+      var fieldLabel = new Blockly.FieldLabel(Blockly.Msg.VARIABLES_SET_ITEM);
+      // Must be marked EDITABLE so that cloned blocks share the same var name
+      fieldLabel.EDITABLE = true;
+      this.setHelpUrl(Blockly.Msg.VARIABLES_SET_HELPURL);
+      this.setHSV.apply(this, color);
+      this.appendValueInput('VALUE')
+        .setStrictCheck(type)
         .appendTitle(Blockly.Msg.VARIABLES_SET_TITLE)
         .appendTitle(Blockly.disableVariableEditing ? fieldLabel
           : new Blockly.FieldVariable(Blockly.Msg.VARIABLES_SET_ITEM), 'VAR')
         .appendTitle(Blockly.Msg.VARIABLES_SET_TAIL);
-    this.setPreviousStatement(true);
-    this.setNextStatement(true);
-    this.setTooltip(Blockly.Msg.VARIABLES_SET_TOOLTIP);
-  },
-  getVars: function() {
-    return [this.getTitleValue('VAR')];
-  },
-  renameVar: function(oldName, newName) {
-    if (Blockly.Names.equals(oldName, this.getTitleValue('VAR'))) {
-      this.setTitleValue(newName, 'VAR');
-    }
-  },
-  contextMenuMsg_: Blockly.Msg.VARIABLES_SET_CREATE_GET,
-  contextMenuType_: 'variables_get',
-  customContextMenu: Blockly.Blocks.variables_get.customContextMenu
-};
+      this.setPreviousStatement(true);
+      this.setNextStatement(true);
+      this.setTooltip(Blockly.Msg.VARIABLES_SET_TOOLTIP);
+    },
+    getVars: function() {
+      return [this.getTitleValue('VAR')];
+    },
+    renameVar: function(oldName, newName) {
+      if (Blockly.Names.equals(oldName, this.getTitleValue('VAR'))) {
+        this.setTitleValue(newName, 'VAR');
+      }
+    },
+    contextMenuMsg_: Blockly.Msg.VARIABLES_SET_CREATE_GET,
+      contextMenuType_: 'variables_get',
+    customContextMenu: Blockly.Blocks.variables_get.customContextMenu
+  }
+}
+
+Blockly.Blocks.sprite_variables_get = createVariableGet(Blockly.BlockValueType.SPRITE, [131, 0.64, 0.62]);
+Blockly.Blocks.sprite_variables_set = createVariableSet(Blockly.BlockValueType.SPRITE, [131, 0.64, 0.62]);
+
+Blockly.Blocks.behavior_variables_get = createVariableGet(Blockly.BlockValueType.BEHAVIOR, [52, .98, .82]);
+Blockly.Blocks.behavior_variables_set = createVariableSet(Blockly.BlockValueType.BEHAVIOR, [52, .98, .82]);

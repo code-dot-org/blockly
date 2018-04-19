@@ -330,10 +330,10 @@ BS.SQUARE_TAB_PATH_UP =
 
 BS.SQUARE_TAB_PATH_UP_HIGHLIGHT =
   'v -7 ' +
-  'm ' + (BS.TAB_WIDTH * -1) + ' -1 ' +
+  'm ' + (BS.TAB_WIDTH * -1) + ' -1.5 ' +
   'v -9 ' +
   'h ' + BS.TAB_WIDTH + ' ' +
-  'v -7';
+  'v -6.5';
 
 BS.SQUARE_TAB_PATH_UP_HIGHLIGHT_RTL =
   'M -1.5 7.5 ' +

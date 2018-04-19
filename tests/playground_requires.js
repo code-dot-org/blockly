@@ -117,3 +117,24 @@ Blockly.Blocks.sprite_variables_set = {
   contextMenuType_: 'variables_get',
   customContextMenu: Blockly.Blocks.variables_get.customContextMenu
 };
+
+Blockly.Blocks.button_block = {
+  // Example block with button field
+  init: function() {
+    this.setHSV(131, 0.64, 0.62);
+    var span = document.createElementNS("http://www.w3.org/2000/svg", 'tspan');
+    span.style.fill = 'blue';
+    span.textContent = 'button';
+    this.appendDummyInput()
+        .appendTitle("here's a button")
+        .appendTitle(
+          new Blockly.FieldButton(span, function () {
+              return new Promise(resolve => resolve(prompt()));
+            },
+            this.getHexColour(),
+          ),
+          'VALUE',
+        );
+    this.setOutput(true, Blockly.BlockValueType.STRING);
+  },
+};

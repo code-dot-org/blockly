@@ -11,20 +11,20 @@ var Y_OFFSET = -13;
 /**
  * Class for a button field.
  * @param {string} value The initial value of the field.
- * @param {Function} buttonHandler A function that is executed when the button
+ * @param {Function} opt_buttonHandler A function that is executed when the button
  *   is clicked. It should eventually call FieldButton.setValue() to update the
  *   field value.
- * @param {string} Button fill color
+ * @param {string} opt_color fill color
  * @param {Function} opt_changeHandler A function that is executed when the
  *   value is changed
  * @extends {Blockly.Field}
  * @constructor
  */
-Blockly.FieldButton = function(title, buttonHandler, color, opt_changeHandler) {
+Blockly.FieldButton = function(title, opt_buttonHandler, opt_color, opt_changeHandler) {
   Blockly.FieldButton.superClass_.constructor.call(this, '');
 
   this.changeHandler_ = opt_changeHandler;
-  this.buttonHandler_ = buttonHandler;
+  this.buttonHandler_ = opt_buttonHandler;
 
   this.borderRect_.setAttribute('height', INNER_HEIGHT + 2);
   this.borderRect_.setAttribute('y', Y_OFFSET - 1);
@@ -39,7 +39,7 @@ Blockly.FieldButton = function(title, buttonHandler, color, opt_changeHandler) {
       this.fieldGroup_
   );
   this.buttonElement_.style.fillOpacity = 1;
-  this.buttonElement_.style.fill = color;
+  this.buttonElement_.style.fill = opt_color;
   this.fieldGroup_.insertBefore(this.buttonElement_, this.textElement_);
 
   this.textElement_.style.fontSize = '11pt';
@@ -79,7 +79,6 @@ Blockly.FieldButton.prototype.setValue = function(value) {
       }
     }
     this.value_ = value;
-    //this.checkElement_.style.display = newState ? 'block' : 'none';
     if (this.sourceBlock_ && this.sourceBlock_.rendered) {
       this.sourceBlock_.blockSpace.fireChangeEvent();
     }

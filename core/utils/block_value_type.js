@@ -21,4 +21,5 @@ Blockly.BlockValueType = {
   ARRAY: 'Array',
   SPRITE: 'Sprite',
   BEHAVIOR: 'Behavior',
+  LOCATION: 'Location',
 };

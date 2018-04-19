@@ -7,13 +7,44 @@ goog.provide('Blockly.FieldAngleDropdown');
 goog.require('Blockly.FieldDropdown');
 goog.require('Blockly.AngleHelper');
 
-Blockly.FieldAngleDropdown = function(directionTitleName, menuGenerator, opt_changeHandler) {
+/**
+ * Class for an editable dropdown field with an angle helper.
+ * @param {Object} opt_options An options object
+ * @param {(!Array.<string>|!Function)} opt_options.menuGenerator An array of options
+ *     for a dropdown list, or a function which generates these options.
+ * @param {Function} opt_options.opt_changeHandler A function that is executed when a new
+ *     option is selected.
+ * @param {string} opt_options.directionTitleName The name of the title value
+ *     from which to get the direction setting.
+ * @param {string} opt_options.direction The hardcoded direction setting to pass along
+ * @extends {Blockly.FieldAngleDropdown}
+ * @constructor
+ */
+Blockly.FieldAngleDropdown = function(opt_options) {
   this.angleHelper = null;
-  this.directionTitleName = directionTitleName;
+  this.direction = opt_options.direction;
+  this.directionTitleName = opt_options.directionTitleName;
   Blockly.FieldAngleDropdown.superClass_.constructor.call(this,
-      menuGenerator, opt_changeHandler);
+      opt_options.menuGenerator, opt_options.opt_changeHandler);
 };
 goog.inherits(Blockly.FieldAngleDropdown, Blockly.FieldDropdown);
+
+Blockly.FieldAngleDropdown.prototype.getAngleDirection_ = function() {
+  // direction can be set by specifying either direction or directionTitleName,
+  // but not both
+  if (this.direction && this.directionTitleName) {
+    throw 'FieldAngleDropdown should not have both a direction and a directionTitleName; please pass at most one of these options';
+  }
+
+  if (this.directionTitleName) {
+    return this.sourceBlock_.getTitleValue(this.directionTitleName);
+  } else if (this.direction) {
+    return this.direction;
+  }
+
+  // Turn right (clockwise) by default.
+  return 'turnRight'
+};
 
 Blockly.FieldAngleDropdown.prototype.showEditor_ = function() {
   var div = Blockly.WidgetDiv.DIV;
@@ -33,8 +64,7 @@ Blockly.FieldAngleDropdown.prototype.showEditor_ = function() {
   var svgContainer = goog.dom.createDom('div');
   container.appendChild(svgContainer);
 
-  var dir = this.sourceBlock_.getTitleValue(this.directionTitleName);
-  this.angleHelper = new Blockly.AngleHelper(dir, {
+  this.angleHelper = new Blockly.AngleHelper(this.getAngleDirection_(), {
     onUpdate: function () {
       this.setValue(this.angleHelper.getAngle().toString());
       this.menu_.getItems().forEach(function (menuItem) {

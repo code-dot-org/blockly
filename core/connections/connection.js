@@ -420,15 +420,31 @@ Blockly.Connection.prototype.moveBy = function(dx, dy) {
 };
 
 /**
- * Add highlighting around this connection.
+ * Get the hint type color for a given set of strict checks.
  */
-Blockly.Connection.prototype.highlight = function() {
+Blockly.Connection.prototype.colorForType = function(checks) {
+  if (!checks) {
+    return;
+  }
+  if (checks.length > 1) {
+    //throw new Error('Cannot show type hints for multiple strict types.');
+  }
+  switch (checks[0]) {
+    default:
+      return '#9e6b94';
+  }
+};
+
+/**
+ * Calculate the path to highlight this connection.
+ */
+Blockly.Connection.prototype.getPathInfo = function() {
   var steps;
   if (this.type === Blockly.INPUT_VALUE || this.type === Blockly.OUTPUT_VALUE) {
     var path = Blockly.BlockSvg
       .TAB_PATHS_BY_SHAPE[this.getTabShape()]
       .TAB_PATH_DOWN;
-    steps = 'm 0,0 '+ path + ' v 5';
+    steps = 'm 0,0 ' + path + ' v 5';
   } else {
     var moveWidth = 5 + Blockly.BlockSvg.NOTCH_PATH_WIDTH;
     var notchPaths = this.getNotchPaths();
@@ -437,14 +453,26 @@ Blockly.Connection.prototype.highlight = function() {
   var xy = this.sourceBlock_.getRelativeToSurfaceXY();
   var x = this.x_ - xy.x;
   var y = this.y_ - xy.y;
-  var transform  = 'translate(' + x + ', ' + y + ')';
+  var transform = 'translate(' + x + ', ' + y + ')';
   if (Blockly.RTL) {
     transform += ' scale(-1, 1)';
   }
+  return {
+    steps: steps,
+    transform: transform,
+    color: this.colorForType(this.check_)
+  };
+};
+
+/**
+ * Add highlighting around this connection.
+ */
+Blockly.Connection.prototype.highlight = function() {
+  var pathInfo = this.getPathInfo();
   Blockly.Connection.highlightedPath_ = Blockly.createSvgElement('path',
       {'class': 'blocklyHighlightedConnectionPath',
-       'd': steps,
-       transform: transform},
+       'd': pathInfo.steps,
+       transform: pathInfo.transform},
       this.sourceBlock_.getSvgRoot());
 };
 

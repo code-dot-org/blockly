@@ -80,6 +80,13 @@ Blockly.BlockSvg.prototype.initChildren = function () {
   }
   this.svgPathLight_ = Blockly.createSvgElement('path',
       {'class': 'blocklyPathLight'}, this.svgGroup_);
+  this.svgTypeHints_ = Blockly.createSvgElement('g', {}, this.svgGroup_);
+  for (var i = 0; i < this.block_.inputList.length; i++) {
+    Blockly.createSvgElement('path', {
+      'class': 'blocklyTypeHint',
+      'filter': 'url(#blocklyTypeHintFilter)'
+    }, this.svgTypeHints_);
+  }
   this.svgPath_.tooltip = this.block_;
   if (!this.block_.blockSpace.blockSpaceEditor.disableTooltip) {
     Blockly.Tooltip.bindMouseEvents(this.svgPath_);
@@ -497,6 +504,8 @@ Blockly.BlockSvg.prototype.dispose = function() {
   // Sever JavaScript to DOM connections.
   this.svgGroup_ = null;
   this.svgPath_ = null;
+  this.svgPathFill_ = null;
+  this.svgTypeHints_ = null;
   this.svgPathLight_ = null;
   this.svgPathDark_ = null;
   // dispose of children
@@ -1074,11 +1083,17 @@ Blockly.BlockSvg.prototype.renderDraw_ = function(iconWidth, inputRows) {
     this.squareBottomLeftCorner_ = true;
   }
 
+  var typeHints = [];
   for (var i = 0; i < this.block_.inputList.length; i++) {
-    if (this.block_.inputList[i].type === Blockly.FUNCTIONAL_INPUT) {
+    var input = this.block_.inputList[i];
+    if (input.type === Blockly.FUNCTIONAL_INPUT) {
       // todo (brent) - do we actually want these to be square
       this.squareTopLeftCorner_ = true;
       this.squareBottomLeftCorner_ = true;
+    }
+
+    if (input.connection) {
+      typeHints.push(input.connection.getPathInfo());
     }
   }
 
@@ -1109,6 +1124,12 @@ Blockly.BlockSvg.prototype.renderDraw_ = function(iconWidth, inputRows) {
   this.svgPath_.setAttribute('d', pathString);
   if (this.svgPathFill_) {
     this.svgPathFill_.setAttribute('d', pathString);
+  }
+  for (var i = 0; i < typeHints.length; i++) {
+    var pathInfo = typeHints[i];
+    this.svgTypeHints_.children[i].setAttribute('d', pathInfo.steps);
+    this.svgTypeHints_.children[i].setAttribute('transform', pathInfo.transform);
+    this.svgTypeHints_.children[i].setAttribute('stroke', pathInfo.color);
   }
   this.svgPathDark_.setAttribute('d', pathString);
   pathString = renderInfo.highlight.join(' ') + '\n' + renderInfo.highlightInline.join(' ');

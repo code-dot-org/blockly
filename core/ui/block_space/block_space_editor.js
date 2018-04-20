@@ -231,6 +231,15 @@ Blockly.BlockSpaceEditor.prototype.populateSVGEffects_ = function(container) {
       {'width': 10, 'height': 10, 'fill': '#aaa'}, pattern);
   Blockly.createSvgElement('path',
       {'d': 'M 0 0 L 10 10 M 10 0 L 0 10', 'stroke': '#cc0'}, pattern);
+  /*
+   <filter id="blocklyTypeHintFilter">
+   <TODO>
+   </filter>
+   */
+  filter = Blockly.createSvgElement('filter',
+    {'id': 'blocklyTypeHintFilter', x: '-100%', width: '200%'}, defs);
+  Blockly.createSvgElement('feMorphology', {operator: 'dilate', radius: 1}, filter);
+  Blockly.createSvgElement('feGaussianBlur', {'stdDeviation': 2}, filter);
 };
 
 /**

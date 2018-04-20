@@ -99,6 +99,7 @@ Blockly.Connection = function(source, type) {
 Blockly.Connection.Shapes = {
   STANDARD: 'standard',
   ANGLE: 'angle',
+  SQUARE: 'square',
 };
 
 /**

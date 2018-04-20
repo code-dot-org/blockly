@@ -297,6 +297,49 @@ BS.ANGLE_TAB_PATH_UP_HIGHLIGHT =
   'V ' + 1;
 
 /**
+ * SVG paths for drawing a horizontal square tab from top to bottom
+ * @const
+ */
+BS.SQUARE_TAB_PATH_DOWN =
+  'v 7 ' +
+  'h ' + (BS.TAB_WIDTH * -1) + ' ' +
+  'v 11 ' +
+  'h ' + BS.TAB_WIDTH + ' ' +
+  'v 2';
+
+BS.SQUARE_TAB_PATH_DOWN_HIGHLIGHT =
+  'm 0 18.5 ' +
+  'h ' + (BS.TAB_WIDTH * -0.85);
+
+BS.SQUARE_TAB_PATH_DOWN_HIGHLIGHT_RTL =
+  'v 6 ' +
+  'm ' + (BS.TAB_WIDTH * -1) + ' 1 ' +
+  'v 11 ' +
+  'h ' + BS.TAB_WIDTH + ' ' +
+  'v 2';
+
+/**
+ * SVG paths for drawing a horizontal square tab from bottom to top
+ * @const
+ */
+BS.SQUARE_TAB_PATH_UP =
+  'v -8 ' +
+  'h ' + (BS.TAB_WIDTH * -1) + ' ' +
+  'v -10 ' +
+  'h ' + BS.TAB_WIDTH;
+
+BS.SQUARE_TAB_PATH_UP_HIGHLIGHT =
+  'v -7 ' +
+  'm ' + (BS.TAB_WIDTH * -1) + ' -1.5 ' +
+  'v -9 ' +
+  'h ' + BS.TAB_WIDTH + ' ' +
+  'v -6.5';
+
+BS.SQUARE_TAB_PATH_UP_HIGHLIGHT_RTL =
+  'M -1.5 7.5 ' +
+  'h ' + (BS.TAB_WIDTH * -0.8);
+
+/**
  * Map of connection tab shapes to the corresponding set of svg paths
  * TAB_PATH_DOWN and TAB_PATH_DOWN_HIGHLIGHT_RTL should have a height of
  *   BS.TAB_HEIGHT (20px), and will be started from top of the row
@@ -325,6 +368,14 @@ BS.TAB_PATHS_BY_SHAPE = {
     TAB_PATH_UP: BS.ANGLE_TAB_PATH_UP,
     TAB_PATH_UP_HIGHLIGHT: BS.ANGLE_TAB_PATH_UP_HIGHLIGHT,
     TAB_PATH_UP_HIGHLIGHT_RTL: '',
+  },
+  square: {
+    TAB_PATH_DOWN: BS.SQUARE_TAB_PATH_DOWN,
+    TAB_PATH_DOWN_HIGHLIGHT: BS.SQUARE_TAB_PATH_DOWN_HIGHLIGHT,
+    TAB_PATH_DOWN_HIGHLIGHT_RTL: BS.SQUARE_TAB_PATH_DOWN_HIGHLIGHT_RTL,
+    TAB_PATH_UP: BS.SQUARE_TAB_PATH_UP,
+    TAB_PATH_UP_HIGHLIGHT: BS.SQUARE_TAB_PATH_UP_HIGHLIGHT,
+    TAB_PATH_UP_HIGHLIGHT_RTL: BS.SQUARE_TAB_PATH_UP_HIGHLIGHT_RTL,
   },
 };
 

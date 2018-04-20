@@ -430,8 +430,14 @@ Blockly.Connection.prototype.colorForType = function(checks) {
     //throw new Error('Cannot show type hints for multiple strict types.');
   }
   switch (checks[0]) {
-    default:
+    case 'String':
       return '#9e6b94';
+    case 'Number':
+      return '#77679e';
+    case 'Colour':
+      return '#0094ca';
+    default:
+      return;
   }
 };
 

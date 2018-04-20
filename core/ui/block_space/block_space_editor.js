@@ -238,8 +238,7 @@ Blockly.BlockSpaceEditor.prototype.populateSVGEffects_ = function(container) {
    */
   filter = Blockly.createSvgElement('filter',
     {'id': 'blocklyTypeHintFilter', x: '-100%', width: '200%'}, defs);
-  Blockly.createSvgElement('feMorphology', {operator: 'dilate', radius: 1}, filter);
-  Blockly.createSvgElement('feGaussianBlur', {'stdDeviation': 2}, filter);
+  Blockly.createSvgElement('feConvolveMatrix', {order: '5,5', kernelMatrix: '0 0 0 0 0 0 0 0 0.5 1 0.5 1 1 1 1 0 0 0 0 0 0 0 0 0.5 1'}, filter);
 };
 
 /**

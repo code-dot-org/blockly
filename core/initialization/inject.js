@@ -169,6 +169,7 @@ Blockly.parseOptions_ = function(options) {
     editBlocks: options['editBlocks'] || false,
     showExampleTestButtons: options['showExampleTestButtons'] || false,
     valueTypeTabShapeMap: options['valueTypeTabShapeMap'] || {},
+    typeHints: options['typeHints'] || false
   };
 };
 

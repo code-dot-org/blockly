@@ -69,11 +69,15 @@ Blockly.BlockSvg.prototype.initChildren = function () {
     'transform': 'translate(1, 1)',
     'fill-rule': 'evenodd'
   }, this.svgGroup_);
-  this.svgTypeHints_ = Blockly.createSvgElement('g', {'class': 'blocklyTypeHint'}, this.svgGroup_);
-  for (var i = 0; i < this.block_.inputList.length; i++) {
-    Blockly.createSvgElement('path', {
-      'filter': 'url(#blocklyTypeHintFilter)'
-    }, this.svgTypeHints_);
+  if (Blockly.typeHints) {
+    this.svgTypeHints_ = Blockly.createSvgElement('g', {
+      'class': 'blocklyTypeHint'
+    }, this.svgGroup_);
+    for (var i = 0; i < this.block_.inputList.length; i++) {
+      Blockly.createSvgElement('path', {
+        'filter': 'url(#blocklyTypeHintFilter)'
+      }, this.svgTypeHints_);
+    }
   }
   this.svgPath_ = Blockly.createSvgElement('path', {
     'class': 'blocklyPath',
@@ -1124,11 +1128,14 @@ Blockly.BlockSvg.prototype.renderDraw_ = function(iconWidth, inputRows) {
   if (this.svgPathFill_) {
     this.svgPathFill_.setAttribute('d', pathString);
   }
-  for (var i = 0; i < typeHints.length; i++) {
-    var pathInfo = typeHints[i];
-    this.svgTypeHints_.children[i].setAttribute('d', pathInfo.steps);
-    this.svgTypeHints_.children[i].setAttribute('transform', pathInfo.transform);
-    this.svgTypeHints_.children[i].setAttribute('stroke', pathInfo.color);
+  if (this.svgTypeHints_) {
+    for (var j = 0; j < typeHints.length; j++) {
+      var pathInfo = typeHints[j];
+      this.svgTypeHints_.children[j].setAttribute('d', pathInfo.steps);
+      this.svgTypeHints_.children[j].setAttribute('transform',
+        pathInfo.transform);
+      this.svgTypeHints_.children[j].setAttribute('stroke', pathInfo.color);
+    }
   }
   this.svgPathDark_.setAttribute('d', pathString);
   pathString = renderInfo.highlight.join(' ') + '\n' + renderInfo.highlightInline.join(' ');

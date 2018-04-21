@@ -455,8 +455,8 @@ Blockly.Xml.domToBlock = function(blockSpace, xmlBlock) {
       case 'functional_input':
         input = block.getInput(name);
         if (!input) {
-          console.warn('Skipping unknown: Input "' + name + '" not found.');
-          break;
+          input = block.appendStatementInput(name);
+          console.warn('Unknown statement: "' + name + '" not found.');
         }
         if (firstRealGrandchild &&
             firstRealGrandchild.nodeName.toLowerCase() == 'block') {

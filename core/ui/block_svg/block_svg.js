@@ -78,15 +78,13 @@ Blockly.BlockSvg.prototype.initChildren = function () {
     this.svgPathFill_ = Blockly.createSvgElement('path', {'class': 'blocklyPath'},
       this.svgGroup_);
   }
-  this.svgPathLight_ = Blockly.createSvgElement('path',
-      {'class': 'blocklyPathLight'}, this.svgGroup_);
-  this.svgTypeHints_ = Blockly.createSvgElement('g', {}, this.svgGroup_);
+  this.svgTypeHints_ = Blockly.createSvgElement('g', {'class': 'blocklyTypeHint',}, this.svgGroup_);
   for (var i = 0; i < this.block_.inputList.length; i++) {
     Blockly.createSvgElement('path', {
-      'class': 'blocklyTypeHint',
-      'filter': 'url(#blocklyTypeHintFilter)'
     }, this.svgTypeHints_);
   }
+  this.svgPathLight_ = Blockly.createSvgElement('path',
+    {'class': 'blocklyPathLight'}, this.svgGroup_);
   this.svgPath_.tooltip = this.block_;
   if (!this.block_.blockSpace.blockSpaceEditor.disableTooltip) {
     Blockly.Tooltip.bindMouseEvents(this.svgPath_);

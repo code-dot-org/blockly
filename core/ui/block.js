@@ -1904,7 +1904,7 @@ Blockly.Block.prototype.setTitleValue = function(newValue, name) {
 Blockly.Block.prototype.setFieldConfig = function(fieldName, configString) {
   var field = this.getTitle_(fieldName);
   if (!field) {
-    console.warn('Skipping unknown: Title "' + name + '" not found.');
+    console.warn('Skipping unknown: Field "' + fieldName + '" not found.');
     return;
   }
 

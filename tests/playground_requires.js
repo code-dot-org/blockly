@@ -123,10 +123,10 @@ function createVariableSet(type, color) {
 }
 
 Blockly.Blocks.sprite_variables_get = createVariableGet(Blockly.BlockValueType.SPRITE, [131, 0.64, 0.62]);
-Blockly.Blocks.sprite_variables_set = createVariableSet(Blockly.BlockValueType.SPRITE, [131, 0.64, 0.62]);
+Blockly.Blocks.sprite_variables_set = createVariableSet(Blockly.BlockValueType.SPRITE, [312, 0.32, 0.62]);
 
 Blockly.Blocks.behavior_variables_get = createVariableGet(Blockly.BlockValueType.BEHAVIOR, [52, .98, .82]);
-Blockly.Blocks.behavior_variables_set = createVariableSet(Blockly.BlockValueType.BEHAVIOR, [52, .98, .82]);
+Blockly.Blocks.behavior_variables_set = createVariableSet(Blockly.BlockValueType.BEHAVIOR, [312, 0.32, 0.62]);
 
 Blockly.Blocks.button_block = {
   // Example block with button field

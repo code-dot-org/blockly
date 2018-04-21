@@ -69,6 +69,12 @@ Blockly.BlockSvg.prototype.initChildren = function () {
     'transform': 'translate(1, 1)',
     'fill-rule': 'evenodd'
   }, this.svgGroup_);
+  this.svgTypeHints_ = Blockly.createSvgElement('g', {'class': 'blocklyTypeHint'}, this.svgGroup_);
+  for (var i = 0; i < this.block_.inputList.length; i++) {
+    Blockly.createSvgElement('path', {
+      'filter': 'url(#blocklyTypeHintFilter)'
+    }, this.svgTypeHints_);
+  }
   this.svgPath_ = Blockly.createSvgElement('path', {
     'class': 'blocklyPath',
     'fill-rule': 'evenodd'
@@ -77,11 +83,6 @@ Blockly.BlockSvg.prototype.initChildren = function () {
   if (pattern) {
     this.svgPathFill_ = Blockly.createSvgElement('path', {'class': 'blocklyPath'},
       this.svgGroup_);
-  }
-  this.svgTypeHints_ = Blockly.createSvgElement('g', {'class': 'blocklyTypeHint',}, this.svgGroup_);
-  for (var i = 0; i < this.block_.inputList.length; i++) {
-    Blockly.createSvgElement('path', {
-    }, this.svgTypeHints_);
   }
   this.svgPathLight_ = Blockly.createSvgElement('path',
     {'class': 'blocklyPathLight'}, this.svgGroup_);

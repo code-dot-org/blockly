@@ -20,6 +20,7 @@ goog.require('Blockly.Blocks.loops');
 goog.require('Blockly.Blocks.math');
 goog.require('Blockly.Blocks.procedures');
 goog.require('Blockly.Blocks.text');
+goog.require('Blockly.Blocks.unknown');
 goog.require('Blockly.Blocks.variables');
 goog.require('Blockly.JavaScript');
 goog.require('Blockly.JavaScript.colour');

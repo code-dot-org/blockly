@@ -124,7 +124,8 @@ Blockly.Block = function(blockSpace, prototypeName, htmlId) {
     this.type = prototypeName;
     var prototype = Blockly.Blocks[prototypeName];
     if (!prototype) {
-      throw 'Error: "' + prototypeName + '" is an unknown language block.';
+      prototype = Blockly.Blocks.unknown;
+      console.warn('Warning: "' + prototypeName + '" is an unknown language block.');
     }
     goog.mixin(this, prototype);
   }
@@ -1891,7 +1892,7 @@ Blockly.Block.prototype.setTitleValue = function(newValue, name) {
   if (title) {
     title.setValue(newValue);
   } else {
-    throw 'Title "' + name + '" not found.';
+    console.warn('Skipping unknown: Title "' + name + '" not found.');
   }
 };
 
@@ -1903,7 +1904,8 @@ Blockly.Block.prototype.setTitleValue = function(newValue, name) {
 Blockly.Block.prototype.setFieldConfig = function(fieldName, configString) {
   var field = this.getTitle_(fieldName);
   if (!field) {
-    throw 'Title "' + name + '" not found.';
+    console.warn('Skipping unknown: Title "' + name + '" not found.');
+    return;
   }
 
   if (field.setConfig) {

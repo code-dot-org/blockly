@@ -161,8 +161,11 @@ Blockly.Trashcan.prototype.createDom = function() {
   this.svgOpenCan_.setAttribute('visibility', 'hidden');
   this.svgOpenCan_.setAttributeNS('http://www.w3.org/1999/xlink', 'xlink:href',
       Blockly.assetUrl(Blockly.Trashcan.OPEN_URL_));
-  this.notAllowed_ = Blockly.createSvgElement('line',
-      {x1: 5, y1: 5, x2: 64, y2: 64, stroke: 'red', 'stroke-width': 3}, this.svgGroup_);
+  this.notAllowed_ = Blockly.createSvgElement('g', {}, this.svgGroup_);
+  Blockly.createSvgElement('line',
+      {x1: 15, y1: 15, x2: 55, y2: 55, stroke: 'red', 'stroke-width': 5}, this.notAllowed_);
+  Blockly.createSvgElement('circle',
+    {cx: 36, cy: 34, r: 28, stroke: 'red', 'stroke-width': 5, fill: 'none'}, this.notAllowed_);
   this.notAllowed_.setAttribute('visibility', 'hidden');
   return this.svgGroup_;
 };

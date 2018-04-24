@@ -345,16 +345,20 @@ BS.SQUARE_TAB_PATH_UP_HIGHLIGHT_RTL =
  */
 BS.ROUNDED_TAB_PATH_DOWN =
   'v 5.5 ' +
-  'h ' + (BS.TAB_WIDTH * -1) + ' ' +
-  'v 14 ' +
-  'h ' + BS.TAB_WIDTH + ' ' +
+  'c ' + (BS.TAB_WIDTH * -0.5) + ' 0, ' + (BS.TAB_WIDTH * -1) + ' 2, ' + (BS.TAB_WIDTH * -1) + ' 7 ' +
+  'c 0 5, ' + (BS.TAB_WIDTH * 0.5) + ' 7, ' + BS.TAB_WIDTH + ' 7 ' +
   'v 0.5';
 
 BS.ROUNDED_TAB_PATH_DOWN_HIGHLIGHT =
-  '';
+  'm 0 20 ' +
+  'c -2 0, -4 -0.5, -4 -0.5';
 
 BS.ROUNDED_TAB_PATH_DOWN_HIGHLIGHT_RTL =
-  '';
+  'v 4.5 ' +
+  'm -6 2.5 ' +
+  'c -2 0, -2 5, -2 5.5 ' +
+  'c 0 5, ' + (BS.TAB_WIDTH * 0.5) + ' 7, ' + BS.TAB_WIDTH + ' 7 ' +
+  'v 1';
 
 /**
  * SVG paths for drawing a horizontal square tab from bottom to top
@@ -373,7 +377,8 @@ BS.ROUNDED_TAB_PATH_UP_HIGHLIGHT =
   'v -6';
 
 BS.ROUNDED_TAB_PATH_UP_HIGHLIGHT_RTL =
-  '';
+  'M -0.5 7.5 ' +
+  'c -2 0, -4 0.5, -4 0.5';
 
 /**
  * Map of connection tab shapes to the corresponding set of svg paths

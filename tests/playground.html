@@ -31,7 +31,7 @@ function start() {
     hasVerticalScrollbars: true,
     assetUrl: function(path) { return '../' + path; },
     customSimpleDialog: Blockly.Playground.customSimpleDialog,
-    valueTypeTabShapeMap: { Sprite: 'angle', Behavior: 'square' },
+    valueTypeTabShapeMap: { Sprite: 'angle', Behavior: 'square', Location: 'rounded' },
   });
 
   if (goog.tweak.getBoolean('enableExampleRunning')) {
@@ -440,6 +440,9 @@ h1 {
       <block type="behavior_variables_get"></block>
       <block type="behavior_variables_set"></block>
       <block type="behavior_variables_set" inline="true"></block>
+      <block type="location_variables_get"></block>
+      <block type="location_variables_set"></block>
+      <block type="location_variables_set" inline="true"></block>
     </category>
     <category name="CSinA Vars" custom="FUNCTIONAL_VARIABLE" />
   </xml>

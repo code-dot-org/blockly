@@ -100,6 +100,7 @@ Blockly.Connection.Shapes = {
   STANDARD: 'standard',
   ANGLE: 'angle',
   SQUARE: 'square',
+  ROUNDED: 'rounded'
 };
 
 /**

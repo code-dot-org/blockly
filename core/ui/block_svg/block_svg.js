@@ -350,6 +350,47 @@ BS.SQUARE_TAB_PATH_UP_HIGHLIGHT_RTL =
   'h ' + (BS.TAB_WIDTH * -0.8);
 
 /**
+ * SVG paths for drawing a horizontal square tab from top to bottom
+ * @const
+ */
+BS.ROUNDED_TAB_PATH_DOWN =
+  'v 5.5 ' +
+  'c ' + (BS.TAB_WIDTH * -0.5) + ' 0, ' + (BS.TAB_WIDTH * -1) + ' 2, ' + (BS.TAB_WIDTH * -1) + ' 7 ' +
+  'c 0 5, ' + (BS.TAB_WIDTH * 0.5) + ' 7, ' + BS.TAB_WIDTH + ' 7 ' +
+  'v 0.5';
+
+BS.ROUNDED_TAB_PATH_DOWN_HIGHLIGHT =
+  'm 0 20 ' +
+  'c -2 0, -4 -0.5, -4 -0.5';
+
+BS.ROUNDED_TAB_PATH_DOWN_HIGHLIGHT_RTL =
+  'v 4.5 ' +
+  'm -6 2.5 ' +
+  'c -2 0, -2 5, -2 5.5 ' +
+  'c 0 5, ' + (BS.TAB_WIDTH * 0.5) + ' 7, ' + BS.TAB_WIDTH + ' 7 ' +
+  'v 1';
+
+/**
+ * SVG paths for drawing a horizontal square tab from bottom to top
+ * @const
+ */
+BS.ROUNDED_TAB_PATH_UP =
+  'v -6 ' +
+  'c ' + (BS.TAB_WIDTH * -0.5) + ' 0, ' + (BS.TAB_WIDTH * -1) + ' 0, ' + (BS.TAB_WIDTH * -1) + ' -6 ' +
+  'c 0 -6, ' + (BS.TAB_WIDTH * 0.5) + ' -6, ' + BS.TAB_WIDTH + ' -6 ';
+
+BS.ROUNDED_TAB_PATH_UP_HIGHLIGHT =
+  'v -5.5 ' +
+  'm -6 -2 ' +
+  'c -1 -1, -2 -2, -2 -4.5 ' +
+  'c 0 -6, ' + (BS.TAB_WIDTH * 0.5) + ' -6, ' + BS.TAB_WIDTH + ' -6 ' +
+  'v -6';
+
+BS.ROUNDED_TAB_PATH_UP_HIGHLIGHT_RTL =
+  'M -0.5 7.5 ' +
+  'c -2 0, -4 0.5, -4 0.5';
+
+/**
  * Map of connection tab shapes to the corresponding set of svg paths
  * TAB_PATH_DOWN and TAB_PATH_DOWN_HIGHLIGHT_RTL should have a height of
  *   BS.TAB_HEIGHT (20px), and will be started from top of the row
@@ -387,6 +428,14 @@ BS.TAB_PATHS_BY_SHAPE = {
     TAB_PATH_UP_HIGHLIGHT: BS.SQUARE_TAB_PATH_UP_HIGHLIGHT,
     TAB_PATH_UP_HIGHLIGHT_RTL: BS.SQUARE_TAB_PATH_UP_HIGHLIGHT_RTL,
   },
+  rounded: {
+    TAB_PATH_DOWN: BS.ROUNDED_TAB_PATH_DOWN,
+    TAB_PATH_DOWN_HIGHLIGHT: BS.ROUNDED_TAB_PATH_DOWN_HIGHLIGHT,
+    TAB_PATH_DOWN_HIGHLIGHT_RTL: BS.ROUNDED_TAB_PATH_DOWN_HIGHLIGHT_RTL,
+    TAB_PATH_UP: BS.ROUNDED_TAB_PATH_UP,
+    TAB_PATH_UP_HIGHLIGHT: BS.ROUNDED_TAB_PATH_UP_HIGHLIGHT,
+    TAB_PATH_UP_HIGHLIGHT_RTL: BS.ROUNDED_TAB_PATH_UP_HIGHLIGHT_RTL,
+  }
 };
 
 /**

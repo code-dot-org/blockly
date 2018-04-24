@@ -1260,9 +1260,8 @@ Blockly.Block.prototype.moveBlockBeingDragged_ = function (mouseX, mouseY) {
 
     // Provide visual indication of whether the block will be
     // deleted if dropped here.
-    if (this.areBlockAndDescendantsDeletable()) {
-      this.blockSpace.isDeleteArea(mouseX, mouseY, this.startDragMouseX);
-    }
+    var undeletable = !this.areBlockAndDescendantsDeletable();
+    this.blockSpace.isDeleteArea(mouseX, mouseY, this.startDragMouseX, undeletable);
   }
 };
 

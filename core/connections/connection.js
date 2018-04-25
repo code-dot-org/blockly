@@ -424,11 +424,8 @@ Blockly.Connection.prototype.moveBy = function(dx, dy) {
  * Get the hint type color for a given set of strict checks.
  */
 Blockly.Connection.prototype.colorForType = function(checks) {
-  if (!checks) {
+  if (!checks || checks.length > 1) {
     return;
-  }
-  if (checks.length > 1) {
-    //throw new Error('Cannot show type hints for multiple strict types.');
   }
   switch (checks[0]) {
     case 'String':

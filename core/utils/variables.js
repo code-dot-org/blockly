@@ -43,9 +43,10 @@ Blockly.Variables.NAME_TYPE_LOCAL = 'LOCALVARIABLE';
  * Find all user-created variables.
  * Currently searches the main blockspace only
  * @param {Array.<Blockly.Block>=} opt_blocks Optional root blocks.
+ * @param {string=} opt_category only return variables in this category
  * @return {!Array.<string>} Array of variable names.
  */
-Blockly.Variables.allVariables = function(opt_blocks) {
+Blockly.Variables.allVariables = function(opt_blocks, opt_category) {
   var blocks;
   if (opt_blocks) {
     opt_blocks = Array.isArray(opt_blocks) ? opt_blocks : [opt_blocks];
@@ -62,7 +63,7 @@ Blockly.Variables.allVariables = function(opt_blocks) {
   for (var x = 0; x < blocks.length; x++) {
     var func = blocks[x].getVars;
     if (func) {
-      var blockVariables = func.call(blocks[x]);
+      var blockVariables = func.call(blocks[x], opt_category);
       for (var y = 0; y < blockVariables.length; y++) {
         var varName = blockVariables[y];
         // Variable name may be null if the block is only half-built.
@@ -155,7 +156,7 @@ Blockly.Variables.flyoutCategory = function(blocks, gaps, margin, blockSpace) {
         new Blockly.Block(blockSpace, 'variables_set') : null;
     setBlock && setBlock.initSvg();
     if (variableList[i] === null) {
-      defaultVariable = (getBlock || setBlock).getVars()[0];
+      defaultVariable = (getBlock || setBlock).getVars(null)[0];
     } else {
       getBlock && getBlock.setTitleValue(variableList[i], 'VAR');
       setBlock && setBlock.setTitleValue(variableList[i], 'VAR');

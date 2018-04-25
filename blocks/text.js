@@ -185,7 +185,10 @@ Blockly.Blocks.text_append = {
           thisBlock.getTitleValue('VAR'));
     });
   },
-  getVars: function() {
+  getVars: function(category) {
+    if (category) {
+      return [];
+    }
     return [this.getTitleValue('VAR')];
   },
   renameVar: function(oldName, newName) {

@@ -116,7 +116,10 @@ Blockly.Blocks.controls_for = {
           thisBlock.getTitleValue('VAR'));
     });
   },
-  getVars: function() {
+  getVars: function(category) {
+    if (category) {
+      return [];
+    }
     return [this.getTitleValue('VAR')];
   },
   renameVar: function(oldName, newName) {
@@ -170,7 +173,10 @@ Blockly.Blocks.controls_forEach = {
           thisBlock.getTitleValue('VAR'));
     });
   },
-  getVars: function() {
+  getVars: function(category) {
+    if (category) {
+      return [];
+    }
     return [this.getTitleValue('VAR')];
   },
   renameVar: function(oldName, newName) {

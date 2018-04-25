@@ -109,7 +109,10 @@ function createVariableSet(type, color) {
       this.setNextStatement(true);
       this.setTooltip(Blockly.Msg.VARIABLES_SET_TOOLTIP);
     },
-    getVars: function() {
+    getVars: function(category) {
+      if (category !== type) {
+        return [];
+      }
       return [this.getTitleValue('VAR')];
     },
     renameVar: function(oldName, newName) {

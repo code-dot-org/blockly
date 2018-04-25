@@ -211,7 +211,10 @@ Blockly.Blocks.functional_definition = {
       isFunctionalVariable: this.isFunctionalVariable_
     }
   },
-  getVars: function() {
+  getVars: function(category) {
+    if (category) {
+      return [];
+    }
     return this.parameterNames_;
   },
   renameVar: function(oldName, newName) {

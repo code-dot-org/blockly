@@ -438,6 +438,8 @@ Blockly.Connection.prototype.colorForType = function(checks) {
       return '#399e4b';
     case 'Behavior':
       return '#d1c404';
+    case 'Location':
+      return '#f318a2';
     default:
       return;
   }

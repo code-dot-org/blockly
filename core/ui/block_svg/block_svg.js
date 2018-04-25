@@ -1135,17 +1135,11 @@ Blockly.BlockSvg.prototype.renderDraw_ = function(iconWidth, inputRows) {
     this.squareBottomLeftCorner_ = true;
   }
 
-  var typeHints = [];
   for (var i = 0; i < this.block_.inputList.length; i++) {
-    var input = this.block_.inputList[i];
-    if (input.type === Blockly.FUNCTIONAL_INPUT) {
+    if (this.block_.inputList[i].type === Blockly.FUNCTIONAL_INPUT) {
       // todo (brent) - do we actually want these to be square
       this.squareTopLeftCorner_ = true;
       this.squareBottomLeftCorner_ = true;
-    }
-
-    if (input.connection) {
-      typeHints.push(input.connection.getPathInfo());
     }
   }
 
@@ -1178,12 +1172,22 @@ Blockly.BlockSvg.prototype.renderDraw_ = function(iconWidth, inputRows) {
     this.svgPathFill_.setAttribute('d', pathString);
   }
   if (this.svgTypeHints_) {
-    for (var j = 0; j < typeHints.length; j++) {
+    var typeHints = [];
+    this.block_.inputList.forEach(function (input) {
+      if (input.connection) {
+        typeHints.push(input.connection.getPathInfo());
+      }
+    });
+    for (var j = 0; j < this.svgTypeHints_.children.length; j++) {
       var pathInfo = typeHints[j];
-      this.svgTypeHints_.children[j].setAttribute('d', pathInfo.steps);
-      this.svgTypeHints_.children[j].setAttribute('transform',
-        pathInfo.transform);
-      this.svgTypeHints_.children[j].setAttribute('stroke', pathInfo.color);
+      if (pathInfo) {
+        this.svgTypeHints_.children[j].setAttribute('d', pathInfo.steps);
+        this.svgTypeHints_.children[j].setAttribute('transform',
+          pathInfo.transform);
+        this.svgTypeHints_.children[j].setAttribute('stroke', pathInfo.color);
+      } else {
+        this.svgTypeHints_.children[j].setAttribute('d', '');
+      }
     }
   }
   this.svgPathDark_.setAttribute('d', pathString);
@@ -1198,7 +1202,8 @@ Blockly.BlockSvg.prototype.renderDraw_ = function(iconWidth, inputRows) {
 };
 
 /**
- * Render the top edge of the block.
+ * Render the top edge of the block. Side effect: moves connections to their
+ *     new locations.
  * @param {!Object} renderInfo Current state of our paths
  * @param {number} rightEdge Minimum width of block.
  * @param {!Object} connectionsXY Location of block.
@@ -1243,7 +1248,8 @@ Blockly.BlockSvg.prototype.renderDrawTop_ = function(renderInfo, rightEdge,
 };
 
 /**
- * Render the right edge of the block.
+ * Render the right edge of the block. Side effect: moves connections to their
+ *     new locations.
  * @param {!Object} renderInfo Current state of our paths
  * @param {!Object} connectionsXY Location of block.
  * @param {!Array.<!Array.<!Object>>} inputRows 2D array of objects, each

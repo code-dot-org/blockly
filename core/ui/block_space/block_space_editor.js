@@ -231,6 +231,18 @@ Blockly.BlockSpaceEditor.prototype.populateSVGEffects_ = function(container) {
       {'width': 10, 'height': 10, 'fill': '#aaa'}, pattern);
   Blockly.createSvgElement('path',
       {'d': 'M 0 0 L 10 10 M 10 0 L 0 10', 'stroke': '#cc0'}, pattern);
+  /*
+   <filter id="blocklyTypeHintFilter">
+     <feConvolveMatrix order="5,5" kernelMatrix="0 0 ... 0.5 1">
+   </filter>
+   */
+  filter = Blockly.createSvgElement('filter', {
+    id: 'blocklyTypeHintFilter'
+  }, defs);
+  Blockly.createSvgElement('feConvolveMatrix', {
+    order: '5,5',
+    kernelMatrix: '0 0 0 0 0 0 0 0 0.5 1 0.5 1 1 1 1 0 0 0 0 0 0 0 0 0.5 1'
+  }, filter);
 };
 
 /**

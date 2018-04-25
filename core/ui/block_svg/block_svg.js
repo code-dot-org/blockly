@@ -69,6 +69,16 @@ Blockly.BlockSvg.prototype.initChildren = function () {
     'transform': 'translate(1, 1)',
     'fill-rule': 'evenodd'
   }, this.svgGroup_);
+  if (Blockly.typeHints) {
+    this.svgTypeHints_ = Blockly.createSvgElement('g', {
+      'class': 'blocklyTypeHint'
+    }, this.svgGroup_);
+    for (var i = 0; i < this.block_.inputList.length; i++) {
+      Blockly.createSvgElement('path', {
+        'filter': 'url(#blocklyTypeHintFilter)'
+      }, this.svgTypeHints_);
+    }
+  }
   this.svgPath_ = Blockly.createSvgElement('path', {
     'class': 'blocklyPath',
     'fill-rule': 'evenodd'
@@ -79,7 +89,7 @@ Blockly.BlockSvg.prototype.initChildren = function () {
       this.svgGroup_);
   }
   this.svgPathLight_ = Blockly.createSvgElement('path',
-      {'class': 'blocklyPathLight'}, this.svgGroup_);
+    {'class': 'blocklyPathLight'}, this.svgGroup_);
   this.svgPath_.tooltip = this.block_;
   if (!this.block_.blockSpace.blockSpaceEditor.disableTooltip) {
     Blockly.Tooltip.bindMouseEvents(this.svgPath_);
@@ -546,6 +556,8 @@ Blockly.BlockSvg.prototype.dispose = function() {
   // Sever JavaScript to DOM connections.
   this.svgGroup_ = null;
   this.svgPath_ = null;
+  this.svgPathFill_ = null;
+  this.svgTypeHints_ = null;
   this.svgPathLight_ = null;
   this.svgPathDark_ = null;
   // dispose of children
@@ -1159,6 +1171,25 @@ Blockly.BlockSvg.prototype.renderDraw_ = function(iconWidth, inputRows) {
   if (this.svgPathFill_) {
     this.svgPathFill_.setAttribute('d', pathString);
   }
+  if (this.svgTypeHints_) {
+    var typeHints = [];
+    this.block_.inputList.forEach(function (input) {
+      if (input.connection) {
+        typeHints.push(input.connection.getPathInfo());
+      }
+    });
+    for (var j = 0; j < this.svgTypeHints_.children.length; j++) {
+      var pathInfo = typeHints[j];
+      if (pathInfo) {
+        this.svgTypeHints_.children[j].setAttribute('d', pathInfo.steps);
+        this.svgTypeHints_.children[j].setAttribute('transform',
+          pathInfo.transform);
+        this.svgTypeHints_.children[j].setAttribute('stroke', pathInfo.color);
+      } else {
+        this.svgTypeHints_.children[j].setAttribute('d', '');
+      }
+    }
+  }
   this.svgPathDark_.setAttribute('d', pathString);
   pathString = renderInfo.highlight.join(' ') + '\n' + renderInfo.highlightInline.join(' ');
   this.svgPathLight_.setAttribute('d', pathString);
@@ -1171,7 +1202,8 @@ Blockly.BlockSvg.prototype.renderDraw_ = function(iconWidth, inputRows) {
 };
 
 /**
- * Render the top edge of the block.
+ * Render the top edge of the block. Side effect: moves connections to their
+ *     new locations.
  * @param {!Object} renderInfo Current state of our paths
  * @param {number} rightEdge Minimum width of block.
  * @param {!Object} connectionsXY Location of block.
@@ -1216,7 +1248,8 @@ Blockly.BlockSvg.prototype.renderDrawTop_ = function(renderInfo, rightEdge,
 };
 
 /**
- * Render the right edge of the block.
+ * Render the right edge of the block. Side effect: moves connections to their
+ *     new locations.
  * @param {!Object} renderInfo Current state of our paths
  * @param {!Object} connectionsXY Location of block.
  * @param {!Array.<!Array.<!Object>>} inputRows 2D array of objects, each

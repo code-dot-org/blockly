@@ -479,14 +479,22 @@ Blockly.Xml.domToBlock = function(blockSpace, xmlBlock) {
         if (firstRealGrandchild &&
             firstRealGrandchild.nodeName.toLowerCase() == 'block') {
           if (!block.nextConnection) {
-            throw 'Next statement does not exist.';
+            if (block.unknownBlock) {
+              block.setNextStatement(true);
+            } else {
+              throw 'Next statement does not exist.';
+            }
           } else if (block.nextConnection.targetConnection) {
             // This could happen if there is more than one XML 'next' tag.
             throw 'Next statement is already connected.';
           }
           blockChild = Blockly.Xml.domToBlock(blockSpace, firstRealGrandchild);
           if (!blockChild.previousConnection) {
-            throw 'Next block does not have previous statement.';
+            if (blockChild.unknownBlock) {
+              blockChild.setPreviousStatement(true);
+            } else {
+              throw 'Next block does not have previous statement.';
+            }
           }
           block.nextConnection.connect(blockChild.previousConnection);
         }

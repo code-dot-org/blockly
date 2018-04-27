@@ -470,6 +470,18 @@ Blockly.Xml.domToBlock = function(blockSpace, xmlBlock) {
         if (firstRealGrandchild &&
             firstRealGrandchild.nodeName.toLowerCase() == 'block') {
           blockChild = Blockly.Xml.domToBlock(blockSpace, firstRealGrandchild);
+          if (blockChild.unknownBlock) {
+            switch (input.connection.type) {
+              case Blockly.NEXT_STATEMENT:
+                blockChild.setPreviousStatement(true);
+                break;
+              case Blockly.INPUT_VALUE:
+                blockChild.setOutput(true);
+                break;
+              default:
+                throw 'Unable to infer connection type for unknown block.';
+            }
+          }
           if (blockChild.outputConnection) {
             input.connection.connect(blockChild.outputConnection);
           } else if (blockChild.previousConnection) {

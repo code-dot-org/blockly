@@ -357,20 +357,23 @@ Blockly.Xml.domToBlock = function(blockSpace, xmlBlock) {
     block.setCollapsed(collapsed === 'true');
   }
   var disabled = xmlBlock.getAttribute('disabled');
-  if (disabled) {
+  if (disabled && !block.unknownBlock) {
     block.setDisabled(disabled === 'true');
   }
   var deletable = xmlBlock.getAttribute('deletable');
-  if (deletable) {
+  if (deletable && !block.unknownBlock) {
     block.setDeletable(deletable === 'true');
   }
   var movable = xmlBlock.getAttribute('movable');
-  if (movable) {
+  if (movable && !block.unknownBlock) {
     block.setMovable(movable === 'true');
   }
   var editable = xmlBlock.getAttribute('editable');
   if (editable) {
     block.setEditable(editable === 'true');
+  }
+  if (block.unknownBlock) {
+    block.setEditable(false);
   }
   var next_connection_disabled = xmlBlock.getAttribute('next_connection_disabled');
   if (next_connection_disabled) {

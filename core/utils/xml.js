@@ -473,6 +473,9 @@ Blockly.Xml.domToBlock = function(blockSpace, xmlBlock) {
         if (firstRealGrandchild &&
             firstRealGrandchild.nodeName.toLowerCase() == 'block') {
           blockChild = Blockly.Xml.domToBlock(blockSpace, firstRealGrandchild);
+          if (block.unknownBlock) {
+            blockChild.setMovable(true);
+          }
           if (blockChild.unknownBlock) {
             switch (input.connection.type) {
               case Blockly.NEXT_STATEMENT:
@@ -508,12 +511,14 @@ Blockly.Xml.domToBlock = function(blockSpace, xmlBlock) {
             throw 'Next statement is already connected.';
           }
           blockChild = Blockly.Xml.domToBlock(blockSpace, firstRealGrandchild);
+          if (block.unknownBlock) {
+            blockChild.setMovable(true);
+          }
+          if (blockChild.unknownBlock) {
+            blockChild.setPreviousStatement(true);
+          }
           if (!blockChild.previousConnection) {
-            if (blockChild.unknownBlock) {
-              blockChild.setPreviousStatement(true);
-            } else {
-              throw 'Next block does not have previous statement.';
-            }
+            throw 'Next block does not have previous statement.';
           }
           block.nextConnection.connect(blockChild.previousConnection);
         }

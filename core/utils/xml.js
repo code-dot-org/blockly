@@ -405,7 +405,6 @@ Blockly.Xml.domToBlock = function(blockSpace, xmlBlock) {
       // Extra whitespace between tags does not concern us.
       continue;
     }
-    var input;
 
     // Find the first 'real' grandchild node (that isn't whitespace).
     var firstRealGrandchild = null;
@@ -417,6 +416,7 @@ Blockly.Xml.domToBlock = function(blockSpace, xmlBlock) {
     }
 
     var name = xmlChild.getAttribute('name');
+    var input = block.getInput(name);
     switch (xmlChild.nodeName.toLowerCase()) {
       case 'mutation':
         // Custom data for an advanced block.
@@ -451,13 +451,18 @@ Blockly.Xml.domToBlock = function(blockSpace, xmlBlock) {
         block.setTitleValue(xmlChild.textContent, name);
         break;
       case 'value':
+        if (!input) {
+          input = block.appendValueInput(name);
+          console.warn('Unknown block input: "' + name + '" not found.');
+        }
+        // Fall through.
       case 'statement':
-      case 'functional_input':
-        input = block.getInput(name);
         if (!input) {
           input = block.appendStatementInput(name);
           console.warn('Unknown statement: "' + name + '" not found.');
         }
+        // Fall through.
+      case 'functional_input':
         if (firstRealGrandchild &&
             firstRealGrandchild.nodeName.toLowerCase() == 'block') {
           blockChild = Blockly.Xml.domToBlock(blockSpace, firstRealGrandchild);

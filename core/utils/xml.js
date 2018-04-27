@@ -474,6 +474,8 @@ Blockly.Xml.domToBlock = function(blockSpace, xmlBlock) {
             firstRealGrandchild.nodeName.toLowerCase() == 'block') {
           blockChild = Blockly.Xml.domToBlock(blockSpace, firstRealGrandchild);
           if (block.unknownBlock) {
+            // Any blocks connected to an `unknown` block should be movable, so
+            // they can be disconnected.
             blockChild.setMovable(true);
           }
           if (blockChild.unknownBlock) {
@@ -512,6 +514,8 @@ Blockly.Xml.domToBlock = function(blockSpace, xmlBlock) {
           }
           blockChild = Blockly.Xml.domToBlock(blockSpace, firstRealGrandchild);
           if (block.unknownBlock) {
+            // Any blocks connected to an `unknown` block should be movable, so
+            // they can be disconnected.
             blockChild.setMovable(true);
           }
           if (blockChild.unknownBlock) {

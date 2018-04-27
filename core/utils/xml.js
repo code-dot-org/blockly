@@ -463,6 +463,10 @@ Blockly.Xml.domToBlock = function(blockSpace, xmlBlock) {
         }
         // Fall through.
       case 'functional_input':
+        if (!input) {
+          input = block.appendFunctionalInput(name);
+          console.warn('Unknown functional input: "' + name + '" not found.');
+        }
         if (firstRealGrandchild &&
             firstRealGrandchild.nodeName.toLowerCase() == 'block') {
           blockChild = Blockly.Xml.domToBlock(blockSpace, firstRealGrandchild);

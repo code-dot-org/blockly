@@ -124,6 +124,7 @@ Blockly.Block = function(blockSpace, prototypeName, htmlId) {
     this.type = prototypeName;
     var prototype = Blockly.Blocks[prototypeName];
     if (!prototype) {
+      Blockly.fireUiEvent(window, 'unknownBlock', {name: prototypeName});
       prototype = Blockly.Blocks.unknown;
       this.appendDummyInput().appendTitle('unknown: ' + prototypeName);
       console.warn('Warning: "' + prototypeName + '" is an unknown language block.');

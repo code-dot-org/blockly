@@ -357,20 +357,23 @@ Blockly.Xml.domToBlock = function(blockSpace, xmlBlock) {
     block.setCollapsed(collapsed === 'true');
   }
   var disabled = xmlBlock.getAttribute('disabled');
-  if (disabled) {
+  if (disabled && !block.unknownBlock) {
     block.setDisabled(disabled === 'true');
   }
   var deletable = xmlBlock.getAttribute('deletable');
-  if (deletable) {
+  if (deletable && !block.unknownBlock) {
     block.setDeletable(deletable === 'true');
   }
   var movable = xmlBlock.getAttribute('movable');
-  if (movable) {
+  if (movable && !block.unknownBlock) {
     block.setMovable(movable === 'true');
   }
   var editable = xmlBlock.getAttribute('editable');
   if (editable) {
     block.setEditable(editable === 'true');
+  }
+  if (block.unknownBlock) {
+    block.setEditable(false);
   }
   var next_connection_disabled = xmlBlock.getAttribute('next_connection_disabled');
   if (next_connection_disabled) {
@@ -405,7 +408,6 @@ Blockly.Xml.domToBlock = function(blockSpace, xmlBlock) {
       // Extra whitespace between tags does not concern us.
       continue;
     }
-    var input;
 
     // Find the first 'real' grandchild node (that isn't whitespace).
     var firstRealGrandchild = null;
@@ -417,6 +419,7 @@ Blockly.Xml.domToBlock = function(blockSpace, xmlBlock) {
     }
 
     var name = xmlChild.getAttribute('name');
+    var input = block.getInput(name);
     switch (xmlChild.nodeName.toLowerCase()) {
       case 'mutation':
         // Custom data for an advanced block.
@@ -451,15 +454,42 @@ Blockly.Xml.domToBlock = function(blockSpace, xmlBlock) {
         block.setTitleValue(xmlChild.textContent, name);
         break;
       case 'value':
-      case 'statement':
-      case 'functional_input':
-        input = block.getInput(name);
         if (!input) {
-          throw 'Input does not exist: ' + name;
+          input = block.appendValueInput(name);
+          console.warn('Unknown block input: "' + name + '" not found.');
+        }
+        // Fall through.
+      case 'statement':
+        if (!input) {
+          input = block.appendStatementInput(name);
+          console.warn('Unknown statement: "' + name + '" not found.');
+        }
+        // Fall through.
+      case 'functional_input':
+        if (!input) {
+          input = block.appendFunctionalInput(name);
+          console.warn('Unknown functional input: "' + name + '" not found.');
         }
         if (firstRealGrandchild &&
             firstRealGrandchild.nodeName.toLowerCase() == 'block') {
           blockChild = Blockly.Xml.domToBlock(blockSpace, firstRealGrandchild);
+          if (block.unknownBlock) {
+            // Any blocks connected to an `unknown` block should be movable, so
+            // they can be disconnected.
+            blockChild.setMovable(true);
+          }
+          if (blockChild.unknownBlock) {
+            switch (input.connection.type) {
+              case Blockly.NEXT_STATEMENT:
+                blockChild.setPreviousStatement(true);
+                break;
+              case Blockly.INPUT_VALUE:
+                blockChild.setOutput(true);
+                break;
+              default:
+                throw 'Unable to infer connection type for unknown block.';
+            }
+          }
           if (blockChild.outputConnection) {
             input.connection.connect(blockChild.outputConnection);
           } else if (blockChild.previousConnection) {
@@ -473,12 +503,24 @@ Blockly.Xml.domToBlock = function(blockSpace, xmlBlock) {
         if (firstRealGrandchild &&
             firstRealGrandchild.nodeName.toLowerCase() == 'block') {
           if (!block.nextConnection) {
-            throw 'Next statement does not exist.';
+            if (block.unknownBlock) {
+              block.setNextStatement(true);
+            } else {
+              throw 'Next statement does not exist.';
+            }
           } else if (block.nextConnection.targetConnection) {
             // This could happen if there is more than one XML 'next' tag.
             throw 'Next statement is already connected.';
           }
           blockChild = Blockly.Xml.domToBlock(blockSpace, firstRealGrandchild);
+          if (block.unknownBlock) {
+            // Any blocks connected to an `unknown` block should be movable, so
+            // they can be disconnected.
+            blockChild.setMovable(true);
+          }
+          if (blockChild.unknownBlock) {
+            blockChild.setPreviousStatement(true);
+          }
           if (!blockChild.previousConnection) {
             throw 'Next block does not have previous statement.';
           }

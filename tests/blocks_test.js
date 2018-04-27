@@ -317,3 +317,44 @@ function test_blockSetIsUnused() {
   goog.dom.removeNode(containerDiv);
   Blockly.showUnusedBlocks = orig;
 }
+
+function test_unknownLanguageBlocks() {
+  var containerDiv = Blockly.Test.initializeBlockSpaceEditor();
+  var blockSpace = Blockly.mainBlockSpace;
+  var lastEvent = null;
+
+  window.addEventListener('unknownBlock', function (e) {
+    lastEvent = e;
+  });
+
+  Blockly.Xml.domToBlockSpace(blockSpace, Blockly.Xml.textToDom(
+    '<xml>' +
+      '<block type="not_a_real_block" movable="false">' +
+        '<statement name="DO">' +
+          '<block type="math_change" movable="false"/>' +
+        '</statement>' +
+        '<next>' +
+          '<block type="math_change" movable="false">' +
+            '<next>' +
+            '<block type="math_change" movable="false"/>' +
+            '</next>' +
+          '</block>' +
+        '</next>' +
+      '</block>' +
+    '</xml>'
+  ));
+
+  assertEquals('not_a_real_block', lastEvent.name);
+
+  var unknownBlock = blockSpace.getTopBlocks()[0];
+  var statementBlock = unknownBlock.getChildren()[0];
+  var firstNextBlock = unknownBlock.getChildren()[1];
+  var secondNextBlock = firstNextBlock.getChildren()[0];
+
+  assert(unknownBlock.isMovable() === true);
+  assert(statementBlock.isMovable() === true);
+  assert(firstNextBlock.isMovable() === true);
+  assert(secondNextBlock.isMovable() === false);
+
+  goog.dom.removeNode(containerDiv);
+}

@@ -124,7 +124,10 @@ Blockly.Block = function(blockSpace, prototypeName, htmlId) {
     this.type = prototypeName;
     var prototype = Blockly.Blocks[prototypeName];
     if (!prototype) {
-      throw 'Error: "' + prototypeName + '" is an unknown language block.';
+      Blockly.fireUiEvent(window, 'unknownBlock', {name: prototypeName});
+      prototype = Blockly.Blocks.unknown;
+      this.appendDummyInput().appendTitle('unknown: ' + prototypeName);
+      console.warn('Warning: "' + prototypeName + '" is an unknown language block.');
     }
     goog.mixin(this, prototype);
   }
@@ -1890,7 +1893,8 @@ Blockly.Block.prototype.setTitleValue = function(newValue, name) {
   if (title) {
     title.setValue(newValue);
   } else {
-    throw 'Title "' + name + '" not found.';
+    this.appendDummyInput().appendTitle(new Blockly.FieldTextInput(newValue), name);
+    console.warn('Unknown title: "' + name + '" not found.');
   }
 };
 
@@ -1902,7 +1906,8 @@ Blockly.Block.prototype.setTitleValue = function(newValue, name) {
 Blockly.Block.prototype.setFieldConfig = function(fieldName, configString) {
   var field = this.getTitle_(fieldName);
   if (!field) {
-    throw 'Title "' + name + '" not found.';
+    console.warn('Unknown field: "' + fieldName + '" not found.');
+    return;
   }
 
   if (field.setConfig) {

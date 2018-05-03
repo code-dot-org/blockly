@@ -136,27 +136,36 @@ Blockly.Variables.deleteVariable = function(nameToRemove, blockSpace) {
  * @param {!Array.<number>} gaps List of widths between blocks.
  * @param {number} margin Standard margin width for calculating gaps.
  * @param {!Blockly.BlockSpace} blockSpace The flyout's blockSpace.
+ * @param {string} category The category of variables to show.
+ * @param {boolean} addDefaultVar Whether to insert a default variable
  */
-Blockly.Variables.flyoutCategory = function(blocks, gaps, margin, blockSpace) {
-  var variableList = Blockly.Variables.allVariables();
+Blockly.Variables.flyoutCategory = function(
+  blocks,
+  gaps,
+  margin,
+  blockSpace,
+  category,
+  addDefaultVar
+) {
+  var variableList = Blockly.Variables.allVariables(null, category);
   variableList.sort(goog.string.caseInsensitiveCompare);
-  // In addition to the user's variables, we also want to display the default
-  // variable name at the top.  We also don't want this duplicated if the
-  // user has created a variable of the same name.
-  variableList.unshift(null);
+  if (addDefaultVar) {
+    // In addition to the user's variables, we also want to display the default
+    // variable name at the top.  We also don't want this duplicated if the
+    // user has created a variable of the same name.
+    variableList.unshift(null);
+  }
   var defaultVariable = undefined;
   for (var i = 0; i < variableList.length; i++) {
     if (variableList[i] === defaultVariable) {
       continue;
     }
-    var getBlock = Blockly.Blocks.variables_get ?
-        new Blockly.Block(blockSpace, 'variables_get') : null;
+    var getBlock = Blockly.Variables.getGetter(blockSpace, category);
     getBlock && getBlock.initSvg();
-    var setBlock = Blockly.Blocks.variables_set ?
-        new Blockly.Block(blockSpace, 'variables_set') : null;
+    var setBlock = Blockly.Variables.getSetter(blockSpace, category);
     setBlock && setBlock.initSvg();
-    if (variableList[i] === null) {
-      defaultVariable = (getBlock || setBlock).getVars(null)[0];
+    if (variableList[i] === null && (getBlock || setBlock)) {
+      defaultVariable = (getBlock || setBlock).getVars(category)[0];
     } else {
       getBlock && getBlock.setTitleValue(variableList[i], 'VAR');
       setBlock && setBlock.setTitleValue(variableList[i], 'VAR');
@@ -171,6 +180,22 @@ Blockly.Variables.flyoutCategory = function(blocks, gaps, margin, blockSpace) {
   }
 };
 
+Blockly.Variables.getters = {};
+Blockly.Variables.getGetter = function(blockSpace, category) {
+  var getterName = category ? Blockly.Variables.getters[category] :
+    'variables_get';
+  return (getterName && Blockly.Blocks[getterName]) ?
+      new Blockly.Block(blockSpace, getterName) : null;
+};
+
+Blockly.Variables.setters = {};
+Blockly.Variables.getSetter = function(blockSpace, category) {
+  var setterName = category ? Blockly.Variables.setters[category] :
+    'variables_set';
+  return (setterName && Blockly.Blocks[setterName]) ?
+      new Blockly.Block(blockSpace, setterName) : null;
+};
+
 /**
 * Return a new variable name that is not yet being used. This will try to
 * generate single letter variable names in the range 'i' to 'z' to start with.
@@ -183,6 +208,11 @@ Blockly.Variables.generateUniqueName = function(baseName) {
   }
 
   var variableList = Blockly.Variables.allVariables();
+  Object.keys(Blockly.Variables.getters).forEach(function (category) {
+    variableList = variableList.concat(
+      Blockly.Variables.allVariables(null, category)
+    );
+  })
   var newName = '';
   if (variableList.length) {
     variableList.sort(goog.string.caseInsensitiveCompare);

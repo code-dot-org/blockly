@@ -51,7 +51,8 @@ Blockly.Variables.DEFAULT_CATEGORY = 'Default';
  */
 Blockly.Variables.allVariables = function(opt_blocks, opt_category) {
   if (opt_category && opt_category !== Blockly.Variables.DEFAULT_CATEGORY &&
-      !Object.keys(Blockly.valueTypeTabShapeMap).includes(opt_category)) {
+      (Blockly.valueTypeTabShapeMap &&
+      Object.keys(Blockly.valueTypeTabShapeMap).indexOf(opt_category) === -1)) {
     throw new Error('Variable category must be "Default" or a strict type');
   }
   var blocks;

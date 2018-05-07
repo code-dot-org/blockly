@@ -195,6 +195,9 @@ Blockly.Variables.getGetter = function(blockSpace, category) {
   return (getterName && Blockly.Blocks[getterName]) ?
       new Blockly.Block(blockSpace, getterName) : null;
 };
+Blockly.Variables.registerGetter = function(category, blockName) {
+  Blockly.Variables.getters[category] = blockName;
+};
 
 Blockly.Variables.setters = {
   'Default': 'variables_set',
@@ -203,6 +206,9 @@ Blockly.Variables.getSetter = function(blockSpace, category) {
   var setterName = Blockly.Variables.setters[category];
   return (setterName && Blockly.Blocks[setterName]) ?
       new Blockly.Block(blockSpace, setterName) : null;
+};
+Blockly.Variables.registerSetter = function(category, blockName) {
+  Blockly.Variables.setters[category] = blockName;
 };
 
 /**

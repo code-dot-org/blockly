@@ -212,7 +212,7 @@ Blockly.Blocks.functional_definition = {
     }
   },
   getVars: function(category) {
-    if (category) {
+    if (category && category !== Blockly.Variables.DEFAULT_CATEGORY) {
       return [];
     }
     return this.parameterNames_;

@@ -39,14 +39,21 @@ goog.require('Blockly.BlockSpace');
 Blockly.Variables.NAME_TYPE = 'VARIABLE';
 Blockly.Variables.NAME_TYPE_LOCAL = 'LOCALVARIABLE';
 
+Blockly.Variables.DEFAULT_CATEGORY = 'Default';
+
 /**
  * Find all user-created variables.
  * Currently searches the main blockspace only
  * @param {Array.<Blockly.Block>=} opt_blocks Optional root blocks.
- * @param {string=} opt_category only return variables in this category
+ * @param {string=} opt_category only return variables in this category, or all
+ *   variables if not specified
  * @return {!Array.<string>} Array of variable names.
  */
 Blockly.Variables.allVariables = function(opt_blocks, opt_category) {
+  if (opt_category && opt_category !== Blockly.Variables.DEFAULT_CATEGORY &&
+      !Object.keys(Blockly.valueTypeTabShapeMap).includes(opt_category)) {
+    throw new Error('Variable category must be "Default" or a strict type');
+  }
   var blocks;
   if (opt_blocks) {
     opt_blocks = Array.isArray(opt_blocks) ? opt_blocks : [opt_blocks];
@@ -180,18 +187,20 @@ Blockly.Variables.flyoutCategory = function(
   }
 };
 
-Blockly.Variables.getters = {};
+Blockly.Variables.getters = {
+  'Default': 'variables_get',
+};
 Blockly.Variables.getGetter = function(blockSpace, category) {
-  var getterName = category ? Blockly.Variables.getters[category] :
-    'variables_get';
+  var getterName = Blockly.Variables.getters[category];
   return (getterName && Blockly.Blocks[getterName]) ?
       new Blockly.Block(blockSpace, getterName) : null;
 };
 
-Blockly.Variables.setters = {};
+Blockly.Variables.setters = {
+  'Default': 'variables_set',
+};
 Blockly.Variables.getSetter = function(blockSpace, category) {
-  var setterName = category ? Blockly.Variables.setters[category] :
-    'variables_set';
+  var setterName = Blockly.Variables.setters[category];
   return (setterName && Blockly.Blocks[setterName]) ?
       new Blockly.Block(blockSpace, setterName) : null;
 };
@@ -208,11 +217,6 @@ Blockly.Variables.generateUniqueName = function(baseName) {
   }
 
   var variableList = Blockly.Variables.allVariables();
-  Object.keys(Blockly.Variables.getters).forEach(function (category) {
-    variableList = variableList.concat(
-      Blockly.Variables.allVariables(null, category)
-    );
-  })
   var newName = '';
   if (variableList.length) {
     variableList.sort(goog.string.caseInsensitiveCompare);

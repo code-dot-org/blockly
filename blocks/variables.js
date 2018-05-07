@@ -45,7 +45,7 @@ Blockly.Blocks.variables_get = {
     this.setTooltip(Blockly.Msg.VARIABLES_GET_TOOLTIP);
   },
   getVars: function(category) {
-    if (category) {
+    if (category && category !== Blockly.Variables.DEFAULT_CATEGORY) {
       return [];
     }
     return [this.getTitleValue('VAR')];
@@ -92,7 +92,7 @@ Blockly.Blocks.variables_set = {
     this.setTooltip(Blockly.Msg.VARIABLES_SET_TOOLTIP);
   },
   getVars: function(category) {
-    if (category) {
+    if (category && category !== Blockly.Variables.DEFAULT_CATEGORY) {
       return [];
     }
     return [this.getTitleValue('VAR')];

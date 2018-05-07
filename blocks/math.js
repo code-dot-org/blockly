@@ -234,7 +234,7 @@ Blockly.Blocks.math_change = {
     });
   },
   getVars: function(category) {
-    if (category) {
+    if (category && category !== Blockly.Variables.DEFAULT_CATEGORY) {
       return [];
     }
     return [this.getTitleValue('VAR')];

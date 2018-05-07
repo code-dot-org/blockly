@@ -45,7 +45,7 @@ Blockly.FieldVariable = function(
     opt_changeHandler,
     opt_createHandler,
     opt_category) {
-  this.category = opt_category;
+  this.category = opt_category || Blockly.Variables.DEFAULT_CATEGORY;
   var changeHandler;
   if (opt_changeHandler === Blockly.FieldParameter.dropdownChange) {
     changeHandler = opt_changeHandler;

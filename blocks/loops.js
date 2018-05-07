@@ -117,7 +117,7 @@ Blockly.Blocks.controls_for = {
     });
   },
   getVars: function(category) {
-    if (category) {
+    if (category && category !== Blockly.Variables.DEFAULT_CATEGORY) {
       return [];
     }
     return [this.getTitleValue('VAR')];
@@ -174,7 +174,7 @@ Blockly.Blocks.controls_forEach = {
     });
   },
   getVars: function(category) {
-    if (category) {
+    if (category && category !== Blockly.Variables.DEFAULT_CATEGORY) {
       return [];
     }
     return [this.getTitleValue('VAR')];

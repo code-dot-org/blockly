@@ -20,7 +20,7 @@ goog.require('goog.structs.LinkedMap');
  * Class for a modal function editor.
  * @constructor
  */
-Blockly.FunctionEditor = function() {
+Blockly.FunctionEditor = function(opt_msgOverrides) {
   /**
    * Whether this editor has been initialized
    * @type {boolean}
@@ -72,6 +72,8 @@ Blockly.FunctionEditor = function() {
 
   /** @type {BlockSpace} */
   this.modalBlockSpace = null;
+
+  this.msgOverrides_ = opt_msgOverrides || {};
 };
 
 Blockly.FunctionEditor.BLOCK_LAYOUT_LEFT_MARGIN = Blockly.BlockSpaceEditor.BUMP_PADDING_LEFT;
@@ -95,6 +97,13 @@ Blockly.FunctionEditor.RTL_CLOSE_BUTTON_OFFSET = 5;
 
 /** @type {number} */
 Blockly.FunctionEditor.BUTTON_TOP_OFFSET = -22;
+
+/**
+ * Get a string from Blockly.Msg, unless overridden by msgOverrides
+ */
+Blockly.FunctionEditor.prototype.getMsg = function(label) {
+  return this.msgOverrides_[label] || Blockly.Msg[label];
+};
 
 /**
  * The type of block to instantiate in the function editing area
@@ -782,7 +791,7 @@ Blockly.FunctionEditor.prototype.addCloseButton_ = function () {
     'y': padding,
     'class': 'blocklyText'
   }, this.closeButton_);
-  text.textContent = Blockly.Msg.CLOSE;
+  text.textContent = this.getMsg('CLOSE');
   this.modalBlockSpaceEditor.appendSVGChild(this.closeButton_);
   var bounds = text.getBoundingClientRect();
   r.setAttribute('width', bounds.width + 2 * padding);
@@ -797,18 +806,18 @@ Blockly.FunctionEditor.prototype.addCloseButton_ = function () {
  */
 Blockly.FunctionEditor.prototype.addDeleteButton_ = function () {
   this.deleteButton_ = new Blockly.SvgTextButton(
-      this.modalBlockSpaceEditor.getSVGElement(), Blockly.Msg.DELETE,
+      this.modalBlockSpaceEditor.getSVGElement(), this.getMsg('DELETE'),
       this.onDeletePressed.bind(this));
 };
 
 Blockly.FunctionEditor.prototype.onDeletePressed = function () {
   var functionName = this.functionDefinitionBlock.getProcedureInfo().name;
-  var deleteMessage = Blockly.Msg.CONFIRM_DELETE_FUNCTION_MESSAGE.replace('%1',
+  var deleteMessage = this.getMsg('CONFIRM_DELETE_FUNCTION_MESSAGE').replace('%1',
       functionName);
   Blockly.showSimpleDialog({
     bodyText: deleteMessage,
-    cancelText: Blockly.Msg.DELETE,
-    confirmText: Blockly.Msg.KEEP,
+    cancelText: this.getMsg('DELETE'),
+    confirmText: this.getMsg('KEEP'),
     onConfirm: null,
     onCancel: this.onDeleteConfirmed.bind(this, functionName),
     cancelButtonClass: 'red-delete-button'
@@ -860,7 +869,7 @@ Blockly.FunctionEditor.prototype.addEditorFrame_ = function () {
     'class': 'blocklyText',
     style: 'font-size: 12pt'
   }, this.modalBackground_);
-  this.frameText_.textContent = Blockly.Msg.FUNCTION_HEADER;
+  this.frameText_.textContent = this.getMsg('FUNCTION_HEADER');
 };
 
 Blockly.FunctionEditor.prototype.position_ = function() {
@@ -893,10 +902,10 @@ Blockly.FunctionEditor.prototype.createParameterEditor_ = function() {
   }
 
   this.container_.querySelector('#paramEditingArea').innerHTML =
-    '<div>' + Blockly.Msg.FUNCTION_PARAMETERS_LABEL + '</div>'
+    '<div>' + this.getMsg('FUNCTION_PARAMETERS_LABEL') + '</div>'
     + '<div>'
     + '<input id="paramAddText" type="text" style="width: 200px;"/> '
-    + '<button id="paramAddButton" class="btn no-mc">' + Blockly.Msg.ADD_PARAMETER + '</button>'
+    + '<button id="paramAddButton" class="btn no-mc">' + this.getMsg('ADD_PARAMETER') + '</button>'
     + '</div>';
 };
 
@@ -915,9 +924,9 @@ Blockly.FunctionEditor.prototype.createContractDom_ = function() {
     this.contractDiv_.setAttribute('dir', 'RTL');
   }
   this.contractDiv_.innerHTML =
-      '<div>' + Blockly.Msg.FUNCTION_NAME_LABEL + '</div>'
+      '<div>' + this.getMsg('FUNCTION_NAME_LABEL') + '</div>'
       + '<div><input id="functionNameText" type="text"></div>'
-      + '<div>' + Blockly.Msg.FUNCTION_DESCRIPTION_LABEL + '</div>'
+      + '<div>' + this.getMsg('FUNCTION_DESCRIPTION_LABEL') + '</div>'
       + '<div><textarea id="functionDescriptionText" rows="2"></textarea></div>'
       + '<div style="margin: 0;" id="paramEditingArea"></div>';
   this.contractDiv_.style.display = 'block';

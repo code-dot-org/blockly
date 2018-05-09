@@ -1536,4 +1536,7 @@ Blockly.Blocks.functional_parameters_get = {init:function() {
     "description" === d ? this.description_ = c.textContent : "outputtype" === d && (this.outputType_ = c.textContent, this.changeFunctionalOutput(this.outputType_));
   }
 }};
+Blockly.Blocks.unknown = {unknownBlock:!0, init:function() {
+  this.setHSV(0, 0, 0.8);
+}};
 

@@ -2950,6 +2950,12 @@ Blockly.BlockSvg = function(block) {
 };
 Blockly.BlockSvg.prototype.initChildren = function() {
   this.svgPathDark_ = Blockly.createSvgElement("path", {"class":"blocklyPathDark", "transform":"translate(1, 1)", "fill-rule":"evenodd"}, this.svgGroup_);
+  if (Blockly.typeHints) {
+    this.svgTypeHints_ = Blockly.createSvgElement("g", {"class":"blocklyTypeHint"}, this.svgGroup_);
+    for (var i = 0;i < this.block_.inputList.length;i++) {
+      Blockly.createSvgElement("path", {"filter":"url(#blocklyTypeHintFilter)"}, this.svgTypeHints_);
+    }
+  }
   this.svgPath_ = Blockly.createSvgElement("path", {"class":"blocklyPath", "fill-rule":"evenodd"}, this.svgGroup_);
   var pattern = this.block_.getFillPattern();
   if (pattern) {
@@ -3021,8 +3027,21 @@ BS.ANGLE_TAB_PATH_DOWN = "v " + BS.TAB_HEIGHT / 3 + " " + "l " + BS.TAB_WIDTH * 
 BS.ANGLE_TAB_PATH_DOWN_HIGHLIGHT_RTL = "v 5.5 " + "m -" + (BS.TAB_WIDTH - 1) + "," + (BS.TAB_HEIGHT / 3 + 1) + " " + "l " + (BS.TAB_WIDTH - 1) + "," + BS.TAB_HEIGHT / 3;
 BS.ANGLE_TAB_PATH_UP = "V" + BS.TAB_HEIGHT + " " + "L" + BS.TAB_WIDTH * -1 + ", " + BS.TAB_HEIGHT * 0.66 + " " + "L" + 0 + ", " + BS.TAB_HEIGHT * 0.33;
 BS.ANGLE_TAB_PATH_UP_HIGHLIGHT = "V " + (BS.TAB_HEIGHT + 2) + " " + "M " + (BS.TAB_WIDTH * -1 + 1) + ", " + BS.TAB_HEIGHT * 0.66 + " " + "L " + "1, " + (BS.TAB_HEIGHT * 0.33 + 1) + " " + "V " + 1;
+BS.SQUARE_TAB_PATH_DOWN = "v 7 " + "h " + BS.TAB_WIDTH * -1 + " " + "v 11 " + "h " + BS.TAB_WIDTH + " " + "v 2";
+BS.SQUARE_TAB_PATH_DOWN_HIGHLIGHT = "m 0 18.5 " + "h " + BS.TAB_WIDTH * -0.85;
+BS.SQUARE_TAB_PATH_DOWN_HIGHLIGHT_RTL = "v 6 " + "m " + BS.TAB_WIDTH * -1 + " 1 " + "v 11 " + "h " + BS.TAB_WIDTH + " " + "v 2";
+BS.SQUARE_TAB_PATH_UP = "v -8 " + "h " + BS.TAB_WIDTH * -1 + " " + "v -10 " + "h " + BS.TAB_WIDTH;
+BS.SQUARE_TAB_PATH_UP_HIGHLIGHT = "v -7 " + "m " + BS.TAB_WIDTH * -1 + " -1.5 " + "v -9 " + "h " + BS.TAB_WIDTH + " " + "v -6.5";
+BS.SQUARE_TAB_PATH_UP_HIGHLIGHT_RTL = "M -1.5 7.5 " + "h " + BS.TAB_WIDTH * -0.8;
+BS.ROUNDED_TAB_PATH_DOWN = "v 5.5 " + "c " + BS.TAB_WIDTH * -0.5 + " 0, " + BS.TAB_WIDTH * -1 + " 2, " + BS.TAB_WIDTH * -1 + " 7 " + "c 0 5, " + BS.TAB_WIDTH * 0.5 + " 7, " + BS.TAB_WIDTH + " 7 " + "v 0.5";
+BS.ROUNDED_TAB_PATH_DOWN_HIGHLIGHT = "m 0 20 " + "c -2 0, -4 -0.5, -4 -0.5";
+BS.ROUNDED_TAB_PATH_DOWN_HIGHLIGHT_RTL = "v 4.5 " + "m -6 2.5 " + "c -2 0, -2 5, -2 5.5 " + "c 0 5, " + BS.TAB_WIDTH * 0.5 + " 7, " + BS.TAB_WIDTH + " 7 " + "v 1";
+BS.ROUNDED_TAB_PATH_UP = "v -6 " + "c " + BS.TAB_WIDTH * -0.5 + " 0, " + BS.TAB_WIDTH * -1 + " 0, " + BS.TAB_WIDTH * -1 + " -6 " + "c 0 -6, " + BS.TAB_WIDTH * 0.5 + " -6, " + BS.TAB_WIDTH + " -6 ";
+BS.ROUNDED_TAB_PATH_UP_HIGHLIGHT = "v -5.5 " + "m -6 -2 " + "c -1 -1, -2 -2, -2 -4.5 " + "c 0 -6, " + BS.TAB_WIDTH * 0.5 + " -6, " + BS.TAB_WIDTH + " -6 " + "v -6";
+BS.ROUNDED_TAB_PATH_UP_HIGHLIGHT_RTL = "M -0.5 7.5 " + "c -2 0, -4 0.5, -4 0.5";
 BS.TAB_PATHS_BY_SHAPE = {standard:{TAB_PATH_DOWN:BS.TAB_PATH_DOWN, TAB_PATH_DOWN_HIGHLIGHT:BS.TAB_PATH_DOWN_HIGHLIGHT, TAB_PATH_DOWN_HIGHLIGHT_RTL:BS.TAB_PATH_DOWN_HIGHLIGHT_RTL, TAB_PATH_UP:BS.TAB_PATH_UP, TAB_PATH_UP_HIGHLIGHT:BS.TAB_PATH_UP_HIGHLIGHT, TAB_PATH_UP_HIGHLIGHT_RTL:BS.TAB_PATH_UP_HIGHLIGHT_RTL}, angle:{TAB_PATH_DOWN:BS.ANGLE_TAB_PATH_DOWN, TAB_PATH_DOWN_HIGHLIGHT:"", TAB_PATH_DOWN_HIGHLIGHT_RTL:BS.ANGLE_TAB_PATH_DOWN_HIGHLIGHT_RTL, TAB_PATH_UP:BS.ANGLE_TAB_PATH_UP, TAB_PATH_UP_HIGHLIGHT:BS.ANGLE_TAB_PATH_UP_HIGHLIGHT, 
-TAB_PATH_UP_HIGHLIGHT_RTL:""}};
+TAB_PATH_UP_HIGHLIGHT_RTL:""}, square:{TAB_PATH_DOWN:BS.SQUARE_TAB_PATH_DOWN, TAB_PATH_DOWN_HIGHLIGHT:BS.SQUARE_TAB_PATH_DOWN_HIGHLIGHT, TAB_PATH_DOWN_HIGHLIGHT_RTL:BS.SQUARE_TAB_PATH_DOWN_HIGHLIGHT_RTL, TAB_PATH_UP:BS.SQUARE_TAB_PATH_UP, TAB_PATH_UP_HIGHLIGHT:BS.SQUARE_TAB_PATH_UP_HIGHLIGHT, TAB_PATH_UP_HIGHLIGHT_RTL:BS.SQUARE_TAB_PATH_UP_HIGHLIGHT_RTL}, rounded:{TAB_PATH_DOWN:BS.ROUNDED_TAB_PATH_DOWN, TAB_PATH_DOWN_HIGHLIGHT:BS.ROUNDED_TAB_PATH_DOWN_HIGHLIGHT, TAB_PATH_DOWN_HIGHLIGHT_RTL:BS.ROUNDED_TAB_PATH_DOWN_HIGHLIGHT_RTL, 
+TAB_PATH_UP:BS.ROUNDED_TAB_PATH_UP, TAB_PATH_UP_HIGHLIGHT:BS.ROUNDED_TAB_PATH_UP_HIGHLIGHT, TAB_PATH_UP_HIGHLIGHT_RTL:BS.ROUNDED_TAB_PATH_UP_HIGHLIGHT_RTL}};
 BS.TOP_LEFT_CORNER_START = "m 0," + BS.CORNER_RADIUS;
 BS.TOP_LEFT_CORNER_START_HIGHLIGHT_RTL = "m " + BS.DISTANCE_45_INSIDE + "," + BS.DISTANCE_45_INSIDE;
 BS.TOP_LEFT_CORNER_START_HIGHLIGHT_LTR = "m 1," + (BS.CORNER_RADIUS - 1);
@@ -3048,6 +3067,8 @@ Blockly.BlockSvg.prototype.dispose = function() {
   goog.dom.removeNode(this.svgGroup_);
   this.svgGroup_ = null;
   this.svgPath_ = null;
+  this.svgPathFill_ = null;
+  this.svgTypeHints_ = null;
   this.svgPathLight_ = null;
   this.svgPathDark_ = null;
   if (this.isUnused()) {
@@ -3407,6 +3428,24 @@ Blockly.BlockSvg.prototype.renderDraw_ = function(iconWidth, inputRows) {
   this.svgPath_.setAttribute("d", pathString);
   if (this.svgPathFill_) {
     this.svgPathFill_.setAttribute("d", pathString);
+  }
+  if (this.svgTypeHints_) {
+    var typeHints = [];
+    this.block_.inputList.forEach(function(input) {
+      if (input.connection) {
+        typeHints.push(input.connection.getPathInfo());
+      }
+    });
+    for (var j = 0;j < this.svgTypeHints_.children.length;j++) {
+      var pathInfo = typeHints[j];
+      if (pathInfo) {
+        this.svgTypeHints_.children[j].setAttribute("d", pathInfo.steps);
+        this.svgTypeHints_.children[j].setAttribute("transform", pathInfo.transform);
+        this.svgTypeHints_.children[j].setAttribute("stroke", pathInfo.color);
+      } else {
+        this.svgTypeHints_.children[j].setAttribute("d", "");
+      }
+    }
   }
   this.svgPathDark_.setAttribute("d", pathString);
   pathString = renderInfo.highlight.join(" ") + "\n" + renderInfo.highlightInline.join(" ");
@@ -4935,6 +4974,10 @@ Blockly.Trashcan.prototype.createDom = function() {
   this.svgOpenCan_ = Blockly.createSvgElement("image", {"width":Blockly.Trashcan.WIDTH_, "height":Blockly.Trashcan.HEIGHT_}, this.svgGroup_);
   this.svgOpenCan_.setAttribute("visibility", "hidden");
   this.svgOpenCan_.setAttributeNS("http://www.w3.org/1999/xlink", "xlink:href", Blockly.assetUrl(Blockly.Trashcan.OPEN_URL_));
+  this.notAllowed_ = Blockly.createSvgElement("g", {}, this.svgGroup_);
+  Blockly.createSvgElement("line", {x1:15, y1:15, x2:55, y2:55, stroke:"#c00", "stroke-width":5}, this.notAllowed_);
+  Blockly.createSvgElement("circle", {cx:36, cy:34, r:28, stroke:"#c00", "stroke-width":5, fill:"none"}, this.notAllowed_);
+  this.notAllowed_.setAttribute("visibility", "hidden");
   return this.svgGroup_;
 };
 Blockly.Trashcan.prototype.dispose = function() {
@@ -4944,6 +4987,7 @@ Blockly.Trashcan.prototype.dispose = function() {
   }
   this.svgClosedCan_ = null;
   this.svgOpenCan_ = null;
+  this.notAllowed_ = null;
   this.blockSpace_ = null;
 };
 Blockly.Trashcan.prototype.getHeight = function() {
@@ -4955,6 +4999,17 @@ Blockly.Trashcan.prototype.setOpen_ = function(state) {
   }
   this.isOpen = state;
   this.animateLid_();
+};
+Blockly.Trashcan.prototype.setDisabled = function(state) {
+  if (this.isDisabled === state) {
+    return;
+  }
+  this.isDisabled = state;
+  if (this.isDisabled) {
+    this.notAllowed_.setAttribute("visibility", "visible");
+  } else {
+    this.notAllowed_.setAttribute("visibility", "hidden");
+  }
 };
 Blockly.Trashcan.prototype.animateLid_ = function() {
   if (this.isOpen) {
@@ -6639,20 +6694,23 @@ Blockly.Xml.domToBlock = function(blockSpace, xmlBlock) {
     block.setCollapsed(collapsed === "true");
   }
   var disabled = xmlBlock.getAttribute("disabled");
-  if (disabled) {
+  if (disabled && !block.unknownBlock) {
     block.setDisabled(disabled === "true");
   }
   var deletable = xmlBlock.getAttribute("deletable");
-  if (deletable) {
+  if (deletable && !block.unknownBlock) {
     block.setDeletable(deletable === "true");
   }
   var movable = xmlBlock.getAttribute("movable");
-  if (movable) {
+  if (movable && !block.unknownBlock) {
     block.setMovable(movable === "true");
   }
   var editable = xmlBlock.getAttribute("editable");
   if (editable) {
     block.setEditable(editable === "true");
+  }
+  if (block.unknownBlock) {
+    block.setEditable(false);
   }
   var next_connection_disabled = xmlBlock.getAttribute("next_connection_disabled");
   if (next_connection_disabled) {
@@ -6685,7 +6743,6 @@ Blockly.Xml.domToBlock = function(blockSpace, xmlBlock) {
     if (xmlChild.nodeType == 3 && xmlChild.data.match(/^\s*$/)) {
       continue;
     }
-    var input;
     var firstRealGrandchild = null;
     for (var y = 0, grandchildNode;y < xmlChild.childNodes.length;y++) {
       grandchildNode = xmlChild.childNodes[y];
@@ -6694,6 +6751,7 @@ Blockly.Xml.domToBlock = function(blockSpace, xmlBlock) {
       }
     }
     var name = xmlChild.getAttribute("name");
+    var input = block.getInput(name);
     switch(xmlChild.nodeName.toLowerCase()) {
       case "mutation":
         if (block.domToMutation) {
@@ -6720,14 +6778,37 @@ Blockly.Xml.domToBlock = function(blockSpace, xmlBlock) {
         block.setTitleValue(xmlChild.textContent, name);
         break;
       case "value":
-      case "statement":
-      case "functional_input":
-        input = block.getInput(name);
         if (!input) {
-          throw "Input does not exist: " + name;
+          input = block.appendValueInput(name);
+          console.warn('Unknown block input: "' + name + '" not found.');
+        }
+      case "statement":
+        if (!input) {
+          input = block.appendStatementInput(name);
+          console.warn('Unknown statement: "' + name + '" not found.');
+        }
+      case "functional_input":
+        if (!input) {
+          input = block.appendFunctionalInput(name);
+          console.warn('Unknown functional input: "' + name + '" not found.');
         }
         if (firstRealGrandchild && firstRealGrandchild.nodeName.toLowerCase() == "block") {
           blockChild = Blockly.Xml.domToBlock(blockSpace, firstRealGrandchild);
+          if (block.unknownBlock) {
+            blockChild.setMovable(true);
+          }
+          if (blockChild.unknownBlock) {
+            switch(input.connection.type) {
+              case Blockly.NEXT_STATEMENT:
+                blockChild.setPreviousStatement(true);
+                break;
+              case Blockly.INPUT_VALUE:
+                blockChild.setOutput(true);
+                break;
+              default:
+                throw "Unable to infer connection type for unknown block.";
+            }
+          }
           if (blockChild.outputConnection) {
             input.connection.connect(blockChild.outputConnection);
           } else {
@@ -6742,13 +6823,23 @@ Blockly.Xml.domToBlock = function(blockSpace, xmlBlock) {
       case "next":
         if (firstRealGrandchild && firstRealGrandchild.nodeName.toLowerCase() == "block") {
           if (!block.nextConnection) {
-            throw "Next statement does not exist.";
+            if (block.unknownBlock) {
+              block.setNextStatement(true);
+            } else {
+              throw "Next statement does not exist.";
+            }
           } else {
             if (block.nextConnection.targetConnection) {
               throw "Next statement is already connected.";
             }
           }
           blockChild = Blockly.Xml.domToBlock(blockSpace, firstRealGrandchild);
+          if (block.unknownBlock) {
+            blockChild.setMovable(true);
+          }
+          if (blockChild.unknownBlock) {
+            blockChild.setPreviousStatement(true);
+          }
           if (!blockChild.previousConnection) {
             throw "Next block does not have previous statement.";
           }
@@ -7167,7 +7258,7 @@ Blockly.BlockSpace.prototype.recordDeleteAreas = function() {
     goog.array.extend(this.deleteAreas_, this.blockSpaceEditor.getDeleteAreas());
   }
 };
-Blockly.BlockSpace.prototype.isDeleteArea = function(mouseX, mouseY, startDragX) {
+Blockly.BlockSpace.prototype.isDeleteArea = function(mouseX, mouseY, startDragX, undeletable) {
   if (!Blockly.languageTree) {
     return false;
   }
@@ -7182,7 +7273,7 @@ Blockly.BlockSpace.prototype.isDeleteArea = function(mouseX, mouseY, startDragX)
       this.trashcan.setOpen_(false);
     }
   }
-  this.drawTrashZone(xy.x, dragStartXY.x);
+  this.drawTrashZone(xy.x, dragStartXY.x, undeletable);
   for (var i = 0, area;i < this.deleteAreas_.length;i++) {
     area = this.deleteAreas_[i];
     if (area.contains(xy)) {
@@ -7196,7 +7287,7 @@ Blockly.BlockSpace.prototype.hideDelete = function() {
   var veryDistantX = Blockly.RTL ? -10000 : 10000;
   this.drawTrashZone(veryDistantX, 0);
 };
-Blockly.BlockSpace.prototype.drawTrashZone = function(x, startDragX) {
+Blockly.BlockSpace.prototype.drawTrashZone = function(x, startDragX, undeletable) {
   var background;
   var blockGroup;
   var trashcan;
@@ -7242,10 +7333,17 @@ Blockly.BlockSpace.prototype.drawTrashZone = function(x, startDragX) {
   var INNER_TRASH_DISTANCE = 100;
   var INNER_TRASH_NORMAL_INTENSITY = 0.8;
   var INNER_TRASH_TRASHCAN_INTENSITY = 1 - INNER_TRASH_NORMAL_INTENSITY;
+  if (undeletable) {
+    trashcan.setDisabled(true);
+  } else {
+    trashcan.setDisabled(false);
+  }
   if (pastThreshold) {
     if (xDifference <= 0) {
       normalIntensity = 0;
-      trashcan.setOpen_(true);
+      if (!undeletable) {
+        trashcan.setOpen_(true);
+      }
     } else {
       trashcan.setOpen_(false);
       if (xDifference >= trashZoneWidth) {
@@ -7878,7 +7976,7 @@ Blockly.Connection = function(source, type) {
   this.check_ = null;
   this.fieldHelpers_ = {};
 };
-Blockly.Connection.Shapes = {STANDARD:"standard", ANGLE:"angle"};
+Blockly.Connection.Shapes = {STANDARD:"standard", ANGLE:"angle", SQUARE:"square", ROUNDED:"rounded"};
 Blockly.Connection.prototype.isConnected = function() {
   return this.targetConnection !== null;
 };
@@ -8087,7 +8185,28 @@ Blockly.Connection.prototype.moveTo = function(x, y) {
 Blockly.Connection.prototype.moveBy = function(dx, dy) {
   this.moveTo(this.x_ + dx, this.y_ + dy);
 };
-Blockly.Connection.prototype.highlight = function() {
+Blockly.Connection.prototype.colorForType = function(checks) {
+  if (!checks || checks.length > 1) {
+    return;
+  }
+  switch(checks[0]) {
+    case "String":
+      return "#5ba68d";
+    case "Number":
+      return "#77679e";
+    case "Colour":
+      return "#0094ca";
+    case "Sprite":
+      return "#399e4b";
+    case "Behavior":
+      return "#d1c404";
+    case "Location":
+      return "#f318a2";
+    default:
+      return;
+  }
+};
+Blockly.Connection.prototype.getPathInfo = function() {
   var steps;
   if (this.type === Blockly.INPUT_VALUE || this.type === Blockly.OUTPUT_VALUE) {
     var path = Blockly.BlockSvg.TAB_PATHS_BY_SHAPE[this.getTabShape()].TAB_PATH_DOWN;
@@ -8104,7 +8223,11 @@ Blockly.Connection.prototype.highlight = function() {
   if (Blockly.RTL) {
     transform += " scale(-1, 1)";
   }
-  Blockly.Connection.highlightedPath_ = Blockly.createSvgElement("path", {"class":"blocklyHighlightedConnectionPath", "d":steps, transform:transform}, this.sourceBlock_.getSvgRoot());
+  return {steps:steps, transform:transform, color:this.colorForType(this.check_)};
+};
+Blockly.Connection.prototype.highlight = function() {
+  var pathInfo = this.getPathInfo();
+  Blockly.Connection.highlightedPath_ = Blockly.createSvgElement("path", {"class":"blocklyHighlightedConnectionPath", "d":pathInfo.steps, transform:pathInfo.transform}, this.sourceBlock_.getSvgRoot());
 };
 Blockly.Connection.prototype.unhighlight = function() {
   goog.dom.removeNode(Blockly.Connection.highlightedPath_);
@@ -16752,7 +16875,10 @@ Blockly.Block = function(blockSpace, prototypeName, htmlId) {
     this.type = prototypeName;
     var prototype = Blockly.Blocks[prototypeName];
     if (!prototype) {
-      throw 'Error: "' + prototypeName + '" is an unknown language block.';
+      Blockly.fireUiEvent(window, "unknownBlock", {name:prototypeName});
+      prototype = Blockly.Blocks.unknown;
+      this.appendDummyInput().appendTitle("unknown: " + prototypeName);
+      console.warn('Warning: "' + prototypeName + '" is an unknown language block.');
     }
     goog.mixin(this, prototype);
   }
@@ -17388,9 +17514,8 @@ Blockly.Block.prototype.moveBlockBeingDragged_ = function(mouseX, mouseY) {
       closestConnection.sourceBlock_.pendingConnection(oldConnection, closestConnection);
       Blockly.localConnection_ = localConnection;
     }
-    if (this.areBlockAndDescendantsDeletable()) {
-      this.blockSpace.isDeleteArea(mouseX, mouseY, this.startDragMouseX);
-    }
+    var undeletable = !this.areBlockAndDescendantsDeletable();
+    this.blockSpace.isDeleteArea(mouseX, mouseY, this.startDragMouseX, undeletable);
   }
 };
 Blockly.Block.prototype.pendingConnection = function(oldConnection, newConnection) {
@@ -17727,13 +17852,15 @@ Blockly.Block.prototype.setTitleValue = function(newValue, name) {
   if (title) {
     title.setValue(newValue);
   } else {
-    throw 'Title "' + name + '" not found.';
+    this.appendDummyInput().appendTitle(new Blockly.FieldTextInput(newValue), name);
+    console.warn('Unknown title: "' + name + '" not found.');
   }
 };
 Blockly.Block.prototype.setFieldConfig = function(fieldName, configString) {
   var field = this.getTitle_(fieldName);
   if (!field) {
-    throw 'Title "' + name + '" not found.';
+    console.warn('Unknown field: "' + fieldName + '" not found.');
+    return;
   }
   if (field.setConfig) {
     field.setConfig(configString);
@@ -25170,6 +25297,8 @@ Blockly.BlockSpaceEditor.prototype.populateSVGEffects_ = function(container) {
   pattern = Blockly.createSvgElement("pattern", {"id":"blocklyDisabledPattern", "patternUnits":"userSpaceOnUse", "width":10, "height":10}, defs);
   Blockly.createSvgElement("rect", {"width":10, "height":10, "fill":"#aaa"}, pattern);
   Blockly.createSvgElement("path", {"d":"M 0 0 L 10 10 M 10 0 L 0 10", "stroke":"#cc0"}, pattern);
+  filter = Blockly.createSvgElement("filter", {id:"blocklyTypeHintFilter"}, defs);
+  Blockly.createSvgElement("feConvolveMatrix", {order:"5,5", kernelMatrix:"0 0 0 0 0 0 0 0 0.5 1 0.5 1 1 1 1 0 0 0 0 0 0 0 0 0.5 1"}, filter);
 };
 Blockly.BlockSpaceEditor.prototype.createDom_ = function(container) {
   container.setAttribute("dir", "LTR");
@@ -26363,7 +26492,7 @@ Blockly.FunctionEditor.prototype.createContractDom_ = function() {
   this.container_.insertBefore(this.frameClipDiv_, this.container_.firstChild);
 };
 goog.provide("Blockly.BlockValueType");
-Blockly.BlockValueType = {NONE:"None", STRING:"String", NUMBER:"Number", IMAGE:"Image", BOOLEAN:"Boolean", FUNCTION:"Function", COLOUR:"Colour", ARRAY:"Array", SPRITE:"Sprite", LOCATION:"Location"};
+Blockly.BlockValueType = {NONE:"None", STRING:"String", NUMBER:"Number", IMAGE:"Image", BOOLEAN:"Boolean", FUNCTION:"Function", COLOUR:"Colour", ARRAY:"Array", SPRITE:"Sprite", BEHAVIOR:"Behavior", LOCATION:"Location"};
 goog.provide("Blockly.FunctionalBlockUtils");
 goog.provide("Blockly.FunctionalTypeColors");
 goog.require("Blockly.BlockValueType");
@@ -29392,38 +29521,38 @@ Blockly.Css.CONTENT = [".blocklyFieldAngleTextInput {", "  border: 1px solid #cc
 " opacity: 0.25;", "}", ".blocklyUnused .blocklyUnusedFrame {", " transition: opacity 2s;", " opacity: 0.8;", "}", ".blocklyUnused .blocklyUnusedFrame .blocklyText {", " fill: #000;", "}", ".blocklyUnused .blocklyUnusedFrame.hidden {", " opacity: 0;", " visibility: hidden", "}", ".blocklyUnused .blocklyHelp {", " cursor: pointer;", "}", ".blocklyUnused .blocklyHelp .blocklyText {", " fill: #fff;", " font-size: 10pt;", " text-anchor: middle;", " dominant-baseline: central;", "}", ".blocklyDraggable {", 
 "  cursor: url(%CURSOR_OPEN_PATH%) 8 5, auto;", "}", ".dragging, .dragging .blocklySvg, .dragging .blocklyDraggable {", "  cursor: url(%CURSOR_CLOSED_PATH%) 7 3, auto !important;", "}", "#%CONTAINER_ID% {", "  border: 1px solid #ddd;", "}", "#%CONTAINER_ID% .userHidden {", "  display: none;", "}", "#%CONTAINER_ID% .hiddenFlyout {", "  display: none !important;", "}", "#%CONTAINER_ID%.edit .userHidden {", "  display: inline;", "  fill-opacity: 0.5;", "}", "#%CONTAINER_ID%.edit .userHidden .blocklyPath {", 
 "  fill-opacity: 0.5;", "}", "#%CONTAINER_ID%.edit .userHidden .blocklyPathDark, #%CONTAINER_ID%.edit .userHidden .blocklyPathLight {", "  display: none;", "}", ".blocklySvg {", "  cursor: pointer;", "  background-color: #fff;", "  overflow: hidden;", "}", ".blocklySvg.inline {", "  vertical-align: top;", "}", "g.blocklyDraggable {", "  -ms-touch-action: none;", "  touch-action: none;", "}", ".blocklyWidgetDiv {", "  position: absolute;", "  display: none;", "  z-index: 999;", "}", ".blocklyResizeSE {", 
-"  fill: #aaa;", "  cursor: se-resize;", "}", ".blocklyResizeSW {", "  fill: #aaa;", "  cursor: sw-resize;", "}", ".blocklyResizeLine {", "  stroke-width: 1;", "  stroke: #888;", "}", ".blocklyHighlightedConnectionPath {", "  stroke-width: 4px;", "  stroke: #fc3;", "  fill: none;", "}", ".blocklyPathLight {", "  fill: none;", "  stroke-width: 2;", "  stroke-linecap: round;", "}", ".blocklySpotlight>.blocklyPath {", "  fill: #fc3;", "}", ".blocklySelected:not(.blocklyUndeletable)>.blocklyPath {", 
-"  stroke-width: 3px;", "  stroke: #fc3;", "}", ".blocklySelected:not(.blocklyUndeletable)>.blocklyPathLight {", "  display: none;", "}", ".blocklyUndeletable>.blocklyEditableText>rect {", "  fill-opacity: 1.0;", "  fill: #ffdb74;", "}", "#blocklyDragCanvas {", "  display: none;", "  pointer-events: none;", "  position: absolute;", "  top: 0;", "  left: 0;", "  z-index: 10;", "}", "#blocklyDragCanvas.isDragging {", "  display: block;", "}", ".blocklyDragging>.blocklyPath,", ".blocklyDragging>.blocklyPathLight {", 
-"  fill-opacity: 0.8;", "  stroke-opacity: 0.8;", "}", ".blocklyDragging>.blocklyPathDark {", "  display: none;", "}", ".blocklyDisabled>.blocklyPath {", "  fill-opacity: 0.50;", "  stroke-opacity: 0.50;", "}", ".blocklyDisabled>.blocklyPathLight,", ".blocklyDisabled>.blocklyPathDark {", "  display: none;", "}", ".blocklyText {", "  cursor: default;", "  font-family: sans-serif;", "  font-size: 11pt;", "  fill: #fff;", "}", ".innerModalDiv {", "  pointer-events: none !important;", "}", ".innerModalDiv .goog-flat-menu-button,", 
-".innerModalDiv textarea,", ".innerModalDiv input,", ".innerModalDiv button {", "  pointer-events: auto;", "}", ".flyoutColorGray {", "  background-color: #DDD;", "}", ".contractEditor #paramAddButton {", "  margin-top: 3px;", "  margin-left: 10px;", "  margin-bottom: 4px;", "}", ".contractEditorHeaderText {", "  cursor: default;", "  font-size: 12pt;", "  fill: #fff;", "}", ".contract-type-hint {", "  color: #898989;", "  font-size: 11px;", "}", ".exampleAreaDiv {", "  pointer-events: none;", "}", 
-".callResultText {", "  color: #000;", "  position: absolute;", "}", ".exampleAreaButton {", "  pointer-events: initial;", "  position: absolute;", "}", ".core-clearfix {", "  overflow: auto;", "}", ".testButton {", "  padding: 3px 0 !important;", "  min-width: 95px !important;", "}", ".resetButton {", "  border: 1px solid #0094ca !important;", "  background-color: #0094ca !important;", "}", ".example-result-text {", "  position: absolute;", "  font-size: 16px;", "}", ".color-square-icon {", "  float: left;", 
-"  width: 21px;", "  height: 18px;", "  margin-right: 9px !important;", "  margin-left: 6px !important;", "}", ".goog-menuitem .color-square-icon {", "  margin-left: -3px !important;", "  margin-top: 2px !important;", "}", ".blocklyNonEditableText>text {", "  pointer-events: none;", "}", ".blocklyNonEditableText>rect,", ".blocklyEditableText>rect {", "  fill: #fff;", "  fill-opacity: 0.6;", "}", ".blocklyNonEditableText>text,", ".blocklyEditableText>text {", "  fill: #000;", "}", ".blocklyEditableText:hover>rect {", 
-"  stroke-width: 2;", "  stroke: #fff;", "}", "/*", " * Don't allow users to select text.  It gets annoying when trying to", " * drag a block and selected text moves instead.", " */", ".blocklySvg text {", "  -moz-user-select: none;", "  -webkit-user-select: none;", "  user-select: none;", "  cursor: inherit;", "}", ".blocklyHidden {", "  display: none;", "}", ".blocklyFieldDropdown:not(.blocklyHidden) {", "  display: block;", "}", ".blocklyTooltipBackground {", "  fill: #ffffc7;", "  stroke-width: 1px;", 
-"  stroke: #d8d8d8;", "}", ".blocklyTooltipShadow,", ".blocklyContextMenuShadow,", ".blocklyDropdownMenuShadow {", "  fill: #bbb;", "  filter: url(#blocklyShadowFilter);", "}", ".blocklyTooltipText {", "  font-family: sans-serif;", "  font-size: 9pt;", "  fill: #000;", "}", "#modalEditorClose:hover>rect {", "  fill: #0094ca;", "}", ".svgTextButton:hover>rect {", "  fill: #0094ca;", "}", ".red-delete-button {", "  background-color: #cc0000 !important;", "  border: 1px solid #cc0000 !important;", "}", 
-".blocklyIconShield {", "  cursor: default;", "  fill: #00c;", "  stroke-width: 1px;", "  stroke: #ccc;", "}", ".blocklyIconGroup:hover>.blocklyIconShield {", "  fill: #00f;", "  stroke: #fff;", "}", ".blocklyIconGroup:hover>.blocklyIconMark {", "  fill: #fff;", "}", ".blocklyIconMark {", "  cursor: default !important;", "  font-family: sans-serif;", "  font-size: 9pt;", "  font-weight: bold;", "  fill: #ccc;", "  text-anchor: middle;", "}", ".blocklyWarningBody {", "}", ".blocklyMinimalBody {", 
-"  margin: 0;", "  padding: 0;", "}", ".blocklyCommentTextarea {", "  margin: 0;", "  padding: 2px;", "  border: 0;", "  resize: none;", "  background-color: #ffc;", "}", ".blocklyHtmlInput {", "  font-family: sans-serif;", "  font-size: 11pt;", "  border: none;", "  outline: none;", "  width: 100%;", "  -moz-appearance: textfield;", "}", ".blocklyHtmlInput::-webkit-inner-spin-button, .blocklyHtmlInput::-webkit-outer-spin-button {", "  -webkit-appearance: none;", "}", ".blocklyContextMenuBackground,", 
-".blocklyMutatorBackground {", "  fill: #fff;", "  stroke-width: 1;", "  stroke: #ddd;", "}", ".newFunctionDiv {", "  position: absolute;", "  top: 120px;", "  left: 600px;", "}", "#modalContainer .goog-flat-menu-button-caption {", "  color: #555555;", "  margin-left: 1px;", "  margin-right: 0;", "  min-width: 55px;", "}", ".blocklyContextMenuOptions>.blocklyMenuDiv,", ".blocklyContextMenuOptions>.blocklyMenuDivDisabled,", ".blocklyDropdownMenuOptions>.blocklyMenuDiv {", "  fill: #fff;", "}", ".blocklyContextMenuOptions>.blocklyMenuDiv:hover>rect,", 
-".blocklyDropdownMenuOptions>.blocklyMenuDiv:hover>rect {", "  fill: #57e;", "}", ".blocklyMenuSelected>rect {", "  fill: #57e;", "}", ".blocklyMenuText {", "  cursor: default !important;", "  font-family: sans-serif;", "  font-size: 15px; /* All context menu sizes are based on pixels. */", "  fill: #000;", "}", ".blocklyContextMenuOptions>.blocklyMenuDiv:hover>.blocklyMenuText,", ".blocklyDropdownMenuOptions>.blocklyMenuDiv:hover>.blocklyMenuText {", "  fill: #fff;", "}", ".blocklyMenuSelected>.blocklyMenuText {", 
-"  fill: #fff;", "}", ".blocklyMenuDivDisabled>.blocklyMenuText {", "  fill: #ccc;", "}", ".blocklyFlyoutBackground {", "  fill: #ddd;", "  fill-opacity: 0.8;", "}", ".blocklyToolboxBackground {", "  fill: #ddd;", "}", ".blocklyBackground {", "  fill: #666;", "}", ".blocklyScrollbarBackground {", "  fill: #fff;", "  stroke-width: 1;", "  stroke: #e4e4e4;", "}", ".blocklyScrollbarKnob {", "  fill: #ccc;", "}", ".blocklyScrollbarBackground:hover+.blocklyScrollbarKnob,", ".blocklyScrollbarKnob:hover {", 
-"  fill: #bbb;", "}", ".blocklyInvalidInput {", "  background: #faa;", "}", ".blocklyAngleCircle {", "  stroke: #444;", "  stroke-width: 1;", "  fill: #ddd;", "  fill-opacity: 0.8;", "}", ".blocklyAngleMarks {", "  stroke: #444;", "  stroke-width: 1;", "}", ".blocklyAngleGuage {", "  fill: #d00;", "  fill-opacity: 0.8;  ", "}", ".blocklyContextMenu {", "  border-radius: 4px;", "}", ".blocklyDropdownMenu {", "  padding: 0 !important;", "  position: relative !important;", "}", ".blocklyRectangularDropdownMenu .goog-menuitem {", 
-"  height: 100%;", "  padding: 0 !important;", "  border-radius: 5px;", "  margin-bottom: 4px !important;", "}", ".fieldRectangularDropdownBackdrop {", "  fill: #fff;", "  fill-opacity: 0.6;", "}", ".blocklyRectangularDropdownArrow {", "  fill: #7965a1;", "  font-size: 20px !important;", "}", ".blocklyRectangularDropdownMenu .goog-menuitem-highlight, .goog-menuitem-hover {", "  border-color: #7965a1 !important;", "  border-style: dotted !important;", "  border-width: 0px !important;", "  margin: -4px -4px 0 !important;", 
-"  border-width: 4px !important;", "  border-style: solid !important;", "  padding-bottom: 0px !important;", "  padding-top: 0px !important;", "}", ".colored-type-dropdown .goog-menuitem-content {", "  color: #555555;", "  float: left;", "}", ".colored-type-dropdown > .goog-menuitem {", "  padding: 0px 40px 2px 13px;", "}", ".goog-menu {", "  box-shadow: 4px 4px 6px #bbb;", "  border-width: 2px;", "}", ".goog-menuitem {", "  height: 20px;", "  padding-top: 0;", "  padding-bottom: 0;", "}", ".goog-menuitem-highlight,", 
-".goog-menuitem-hover {", "  border-width: 0;", "  background-color: #57e;", "}", ".goog-menuitem-highlight .goog-menuitem-content {", "  color: #fff;", "}", ".goog-option-selected .goog-menuitem-checkbox:before {", '  content: "\u2713";', "}", ".goog-menuitem-checkbox {", '  background: ""', "}", ".blocklyRectangularDropdownMenu img {", "  -webkit-border-radius: 5px;", "  -moz-border-radius: 5px;", "  border-radius: 5px;", "}", ".blocklyRectangularDropdownMenu {", "  border-radius: 5px;", "  box-shadow: none !important;", 
-"}", ".goog-option-selected .goog-menuitem-checkbox,", ".goog-option-selected .goog-menuitem-icon {", "}", "/* Category tree in Toolbox. */", ".blocklyToolboxDiv {", "  display: none;", "  overflow-x: visible;", "  overflow-y: auto;", "  position: absolute;", "}", ".blocklyTreeRoot {", "  padding: 4px 0;", "}", ".blocklyTreeRoot:focus {", "  outline: none;", "}", ".blocklyTreeRow {", "  line-height: 22px;", "  height: 22px;", "  padding-right: 1em;", "  white-space: nowrap;", "}", '.blocklyToolboxDiv[dir="RTL"] .blocklyTreeRow {', 
-"  padding-right: 0;", "  padding-left: 1em !important;", "}", ".blocklyTreeRow:hover {", "  background-color: #e4e4e4;", "}", ".blocklyTreeIcon {", "  height: 16px;", "  width: 16px;", "  vertical-align: middle;", "  background-image: url(%TREE_PATH%);", "}", ".blocklyTreeIconClosedLtr {", "  background-position: -32px -1px;", "}", ".blocklyTreeIconClosedRtl {", "  background-position: 0px -1px;", "}", ".blocklyTreeIconOpen {", "  background-position: -16px -1px;", "}", ".blocklyTreeIconNone {", 
-"  background-position: -48px -1px;", "}", ".blocklyTreeSelected>.blocklyTreeIconClosedLtr {", "  background-position: -32px -17px;", "}", ".blocklyTreeSelected>.blocklyTreeIconClosedRtl {", "  background-position: 0px -17px;", "}", ".blocklyTreeSelected>.blocklyTreeIconOpen {", "  background-position: -16px -17px;", "}", ".blocklyTreeSelected>.blocklyTreeIconNone {", "  background-position: -48px -17px;", "}", ".blocklyTreeLabel {", "  cursor: default;", "  font-family: sans-serif;", "  font-size: 16px;", 
-"  padding: 0 3px;", "  vertical-align: middle;", "  -moz-user-select: none;", "  -webkit-user-select: none;", "  -ms-user-select: none;", "  user-select: none;", "}", ".blocklyTreeSelected {", "  background-color: #57e !important;", "}", ".blocklyTreeSelected .blocklyTreeLabel {", "  color: #fff;", "}", ".blocklyArrow {", "  font-size: 80%;", "}", ".paramToolbox {", "  padding: 0 0 5px 0;", "  pointer-events: auto;", "}", ".paramToolbox input, .paramToolbox textarea {", "  box-sizing: border-box;", 
-"  width: 100%;", "  margin: 0;", "  resize: none;", "}", ".paramToolbox input, .paramToolbox button {", "  height: 30px;", "  margin: 0;", "}", ".paramToolbox div {", "  margin: 4px 10px;", "}", "#modalContainer {", "  position: absolute;", "  width: 100%;", "  bottom: 0;", "}", "#modalContainer > svg {", "  position: absolute;", "  top: 0;", "  left: 0;", "  background: transparent;", "  pointer-events: none;", "}", "#modalContainer > svg * {", "  pointer-events: visiblePainted;", "}", "/*", " * Copyright 2007 The Closure Library Authors. All Rights Reserved.", 
-" *", " * Use of this source code is governed by the Apache License, Version 2.0.", " * See the COPYING file for details.", " */", "/* Author: pupius@google.com (Daniel Pupius) */", "/*", " Styles to make the colorpicker look like the old gmail color picker", " NOTE: without CSS scoping this will override styles defined in palette.css", "*/", ".goog-palette {", "  outline: none;", "  cursor: default;", "}", ".goog-palette-table {", "  border: 1px solid #666;", "  border-collapse: collapse;", "}", 
-".goog-palette-cell {", "  height: 25px;", "  width: 25px;", "  margin: 0;", "  border: 0;", "  text-align: center;", "  vertical-align: middle;", "  border-right: 1px solid #666;", "  font-size: 1px;", "}", ".goog-palette-colorswatch {", "  position: relative;", "  height: 25px;", "  width: 25px;", "  border: 1px solid #666;", "}", ".goog-palette-cell-hover .goog-palette-colorswatch {", "  border: 1px solid #FFF;", "}", ".goog-palette-cell-selected .goog-palette-colorswatch {", "  border: 1px solid #000;", 
-"  color: #fff;", "}", ".goog-menu {", "  background: #fff;", "  border-color: #ccc #666 #666 #ccc;", "  border-style: solid;", "  border-width: 1px;", "  cursor: default;", "  font: normal 13px Arial, sans-serif;", "  margin: 0;", "  outline: none;", "  padding: 4px 0;", "  position: absolute;", "  z-index: 20000;", "}", ".goog-menuitem {", "  color: #000;", "  font: normal 13px Arial, sans-serif;", "  list-style: none;", "  margin: 0;", "  padding: 4px 7em 4px 28px;", "  white-space: nowrap;", 
-"}", ".goog-menuitem.goog-menuitem-rtl {", "  padding-left: 7em;", "  padding-right: 28px;", "}", ".goog-menu-nocheckbox .goog-menuitem,", ".goog-menu-noicon .goog-menuitem {", "  padding-left: 12px;", "}", ".goog-menu-noaccel .goog-menuitem:not(.goog-menuitem-rtl) {", "  padding-right: 20px;", "}", ".goog-menu-noaccel .goog-menuitem.goog-menuitem-rtl {", "  padding-left: 20px;", "}", ".goog-menuitem-content {", "  color: #000;", "  font-size: 15px;", "}", ".goog-menuitem-disabled .goog-menuitem-accel,", 
-".goog-menuitem-disabled .goog-menuitem-content {", "  color: #ccc !important;", "}", ".goog-menuitem-disabled .goog-menuitem-icon {", "  opacity: 0.3;", "  -moz-opacity: 0.3;", "  filter: alpha(opacity=30);", "}", ".goog-menuitem-highlight,", ".goog-menuitem-hover {", "  background-color: #d6e9f8;", "  border-color: #d6e9f8;", "  border-style: dotted;", "  border-width: 1px 0;", "  padding-bottom: 3px;", "  padding-top: 3px;", "}", ".goog-menuitem-checkbox,", ".goog-menuitem-icon {", "  background-repeat: no-repeat;", 
-"  height: 16px;", "  left: 6px;", "  position: absolute;", "  right: auto;", "  vertical-align: middle;", "  width: 16px;", "}", ".goog-menuitem-rtl .goog-menuitem-checkbox,", ".goog-menuitem-rtl .goog-menuitem-icon {", "  left: auto;", "  right: 6px;", "}", ".goog-option-selected .goog-menuitem-checkbox,", ".goog-option-selected .goog-menuitem-icon {", "}", ".goog-menuitem-accel {", "  color: #999;", "  direction: ltr;", "  left: auto;", "  padding: 0 6px;", "  position: absolute;", "  right: 0;", 
-"  text-align: right;", "}", ".goog-menuitem-rtl .goog-menuitem-accel {", "  left: 0;", "  right: auto;", "  text-align: left;", "}", ".goog-menuitem-mnemonic-hint {", "  text-decoration: underline;", "}", ".goog-menuitem-mnemonic-separator {", "  color: #999;", "  font-size: 12px;", "  padding-left: 4px;", "}", ".goog-menuseparator {", "  border-top: 1px solid #ccc;", "  margin: 4px 0;", "  padding: 0;", "}", ".goog-flat-menu-button {", "  background-color: #fff;", "  border: 1px solid #c9c9c9;", 
-"  color: #333;", "  cursor: pointer;", "  font: normal 95%;", "  list-style: none;", "  margin: 0 2px;", "  outline: none;", "  padding: 1px 4px;", "  position: relative;", "  text-decoration: none;", "  vertical-align: middle;", "}", ".goog-flat-menu-button-disabled * {", "  border-color: #ccc;", "  color: #999;", "  cursor: default;", "}", ".goog-flat-menu-button-hover {", "  border-color: #9cf #69e #69e #7af !important; /* Hover border wins. */", "}", ".goog-flat-menu-button-active {", "  background-color: #bbb;", 
-"  background-position: bottom left;", "}", ".goog-flat-menu-button-focused {", "  border-color: #bbb;", "}", ".goog-flat-menu-button-caption {", "  padding-right: 10px;", "  vertical-align: top;", "}", ".goog-flat-menu-button-dropdown {", "  /* Client apps may override the URL at which they serve the sprite. */", "  background: url(https://ssl.gstatic.com/editor/editortoolbar.png) no-repeat -388px 0;", "  position: absolute;", "  right: 2px;", "  top: 0;", "  vertical-align: top;", "  width: 7px;", 
-"}", ".goog-inline-block {", "  position: relative;", "  display: -moz-inline-box; /* Ignored by FF3 and later. */", "  display: inline-block;", "}", ""];
+"  fill: #aaa;", "  cursor: se-resize;", "}", ".blocklyResizeSW {", "  fill: #aaa;", "  cursor: sw-resize;", "}", ".blocklyResizeLine {", "  stroke-width: 1;", "  stroke: #888;", "}", ".blocklyHighlightedConnectionPath {", "  stroke-width: 4px;", "  stroke: #fc3;", "  fill: none;", "}", ".blocklyPathLight {", "  fill: none;", "  stroke-width: 2;", "  stroke-linecap: round;", "}", ".blocklyTypeHint {", "  fill: none;", "  stroke-width: 5;", "}", ".blocklySelected:not(.blocklyUndeletable)>.blocklyTypeHint {", 
+"  display: none;", "}", ".blocklySpotlight>.blocklyPath {", "  fill: #fc3;", "}", ".blocklySelected:not(.blocklyUndeletable)>.blocklyPath {", "  stroke-width: 3px;", "  stroke: #fc3;", "}", ".blocklySelected:not(.blocklyUndeletable)>.blocklyPathLight {", "  display: none;", "}", ".blocklyUndeletable>.blocklyEditableText>rect {", "  fill-opacity: 1.0;", "  fill: #ffdb74;", "}", "#blocklyDragCanvas {", "  display: none;", "  pointer-events: none;", "  position: absolute;", "  top: 0;", "  left: 0;", 
+"  z-index: 10;", "}", "#blocklyDragCanvas.isDragging {", "  display: block;", "}", ".blocklyDragging>.blocklyPath,", ".blocklyDragging>.blocklyPathLight {", "  fill-opacity: 0.8;", "  stroke-opacity: 0.8;", "}", ".blocklyDragging>.blocklyPathDark {", "  display: none;", "}", ".blocklyDisabled>.blocklyPath {", "  fill-opacity: 0.50;", "  stroke-opacity: 0.50;", "}", ".blocklyDisabled>.blocklyPathLight,", ".blocklyDisabled>.blocklyPathDark {", "  display: none;", "}", ".blocklyText {", "  cursor: default;", 
+"  font-family: sans-serif;", "  font-size: 11pt;", "  fill: #fff;", "}", ".innerModalDiv {", "  pointer-events: none !important;", "}", ".innerModalDiv .goog-flat-menu-button,", ".innerModalDiv textarea,", ".innerModalDiv input,", ".innerModalDiv button {", "  pointer-events: auto;", "}", ".flyoutColorGray {", "  background-color: #DDD;", "}", ".contractEditor #paramAddButton {", "  margin-top: 3px;", "  margin-left: 10px;", "  margin-bottom: 4px;", "}", ".contractEditorHeaderText {", "  cursor: default;", 
+"  font-size: 12pt;", "  fill: #fff;", "}", ".contract-type-hint {", "  color: #898989;", "  font-size: 11px;", "}", ".exampleAreaDiv {", "  pointer-events: none;", "}", ".callResultText {", "  color: #000;", "  position: absolute;", "}", ".exampleAreaButton {", "  pointer-events: initial;", "  position: absolute;", "}", ".core-clearfix {", "  overflow: auto;", "}", ".testButton {", "  padding: 3px 0 !important;", "  min-width: 95px !important;", "}", ".resetButton {", "  border: 1px solid #0094ca !important;", 
+"  background-color: #0094ca !important;", "}", ".example-result-text {", "  position: absolute;", "  font-size: 16px;", "}", ".color-square-icon {", "  float: left;", "  width: 21px;", "  height: 18px;", "  margin-right: 9px !important;", "  margin-left: 6px !important;", "}", ".goog-menuitem .color-square-icon {", "  margin-left: -3px !important;", "  margin-top: 2px !important;", "}", ".blocklyNonEditableText>text {", "  pointer-events: none;", "}", ".blocklyNonEditableText>rect,", ".blocklyEditableText>rect {", 
+"  fill: #fff;", "  fill-opacity: 0.6;", "}", ".blocklyNonEditableText>text,", ".blocklyEditableText>text {", "  fill: #000;", "}", ".blocklyEditableText:hover>rect {", "  stroke-width: 2;", "  stroke: #fff;", "}", "/*", " * Don't allow users to select text.  It gets annoying when trying to", " * drag a block and selected text moves instead.", " */", ".blocklySvg text {", "  -moz-user-select: none;", "  -webkit-user-select: none;", "  user-select: none;", "  cursor: inherit;", "}", ".blocklyHidden {", 
+"  display: none;", "}", ".blocklyFieldDropdown:not(.blocklyHidden) {", "  display: block;", "}", ".blocklyTooltipBackground {", "  fill: #ffffc7;", "  stroke-width: 1px;", "  stroke: #d8d8d8;", "}", ".blocklyTooltipShadow,", ".blocklyContextMenuShadow,", ".blocklyDropdownMenuShadow {", "  fill: #bbb;", "  filter: url(#blocklyShadowFilter);", "}", ".blocklyTooltipText {", "  font-family: sans-serif;", "  font-size: 9pt;", "  fill: #000;", "}", "#modalEditorClose:hover>rect {", "  fill: #0094ca;", 
+"}", ".svgTextButton:hover>rect {", "  fill: #0094ca;", "}", ".red-delete-button {", "  background-color: #cc0000 !important;", "  border: 1px solid #cc0000 !important;", "}", ".blocklyIconShield {", "  cursor: default;", "  fill: #00c;", "  stroke-width: 1px;", "  stroke: #ccc;", "}", ".blocklyIconGroup:hover>.blocklyIconShield {", "  fill: #00f;", "  stroke: #fff;", "}", ".blocklyIconGroup:hover>.blocklyIconMark {", "  fill: #fff;", "}", ".blocklyIconMark {", "  cursor: default !important;", "  font-family: sans-serif;", 
+"  font-size: 9pt;", "  font-weight: bold;", "  fill: #ccc;", "  text-anchor: middle;", "}", ".blocklyWarningBody {", "}", ".blocklyMinimalBody {", "  margin: 0;", "  padding: 0;", "}", ".blocklyCommentTextarea {", "  margin: 0;", "  padding: 2px;", "  border: 0;", "  resize: none;", "  background-color: #ffc;", "}", ".blocklyHtmlInput {", "  font-family: sans-serif;", "  font-size: 11pt;", "  border: none;", "  outline: none;", "  width: 100%;", "  -moz-appearance: textfield;", "}", ".blocklyHtmlInput::-webkit-inner-spin-button, .blocklyHtmlInput::-webkit-outer-spin-button {", 
+"  -webkit-appearance: none;", "}", ".blocklyContextMenuBackground,", ".blocklyMutatorBackground {", "  fill: #fff;", "  stroke-width: 1;", "  stroke: #ddd;", "}", ".newFunctionDiv {", "  position: absolute;", "  top: 120px;", "  left: 600px;", "}", "#modalContainer .goog-flat-menu-button-caption {", "  color: #555555;", "  margin-left: 1px;", "  margin-right: 0;", "  min-width: 55px;", "}", ".blocklyContextMenuOptions>.blocklyMenuDiv,", ".blocklyContextMenuOptions>.blocklyMenuDivDisabled,", ".blocklyDropdownMenuOptions>.blocklyMenuDiv {", 
+"  fill: #fff;", "}", ".blocklyContextMenuOptions>.blocklyMenuDiv:hover>rect,", ".blocklyDropdownMenuOptions>.blocklyMenuDiv:hover>rect {", "  fill: #57e;", "}", ".blocklyMenuSelected>rect {", "  fill: #57e;", "}", ".blocklyMenuText {", "  cursor: default !important;", "  font-family: sans-serif;", "  font-size: 15px; /* All context menu sizes are based on pixels. */", "  fill: #000;", "}", ".blocklyContextMenuOptions>.blocklyMenuDiv:hover>.blocklyMenuText,", ".blocklyDropdownMenuOptions>.blocklyMenuDiv:hover>.blocklyMenuText {", 
+"  fill: #fff;", "}", ".blocklyMenuSelected>.blocklyMenuText {", "  fill: #fff;", "}", ".blocklyMenuDivDisabled>.blocklyMenuText {", "  fill: #ccc;", "}", ".blocklyFlyoutBackground {", "  fill: #ddd;", "  fill-opacity: 0.8;", "}", ".blocklyToolboxBackground {", "  fill: #ddd;", "}", ".blocklyBackground {", "  fill: #666;", "}", ".blocklyScrollbarBackground {", "  fill: #fff;", "  stroke-width: 1;", "  stroke: #e4e4e4;", "}", ".blocklyScrollbarKnob {", "  fill: #ccc;", "}", ".blocklyScrollbarBackground:hover+.blocklyScrollbarKnob,", 
+".blocklyScrollbarKnob:hover {", "  fill: #bbb;", "}", ".blocklyInvalidInput {", "  background: #faa;", "}", ".blocklyAngleCircle {", "  stroke: #444;", "  stroke-width: 1;", "  fill: #ddd;", "  fill-opacity: 0.8;", "}", ".blocklyAngleMarks {", "  stroke: #444;", "  stroke-width: 1;", "}", ".blocklyAngleGuage {", "  fill: #d00;", "  fill-opacity: 0.8;  ", "}", ".blocklyContextMenu {", "  border-radius: 4px;", "}", ".blocklyDropdownMenu {", "  padding: 0 !important;", "  position: relative !important;", 
+"}", ".blocklyRectangularDropdownMenu .goog-menuitem {", "  height: 100%;", "  padding: 0 !important;", "  border-radius: 5px;", "  margin-bottom: 4px !important;", "}", ".fieldRectangularDropdownBackdrop {", "  fill: #fff;", "  fill-opacity: 0.6;", "}", ".blocklyRectangularDropdownArrow {", "  fill: #7965a1;", "  font-size: 20px !important;", "}", ".blocklyRectangularDropdownMenu .goog-menuitem-highlight, .goog-menuitem-hover {", "  border-color: #7965a1 !important;", "  border-style: dotted !important;", 
+"  border-width: 0px !important;", "  margin: -4px -4px 0 !important;", "  border-width: 4px !important;", "  border-style: solid !important;", "  padding-bottom: 0px !important;", "  padding-top: 0px !important;", "}", ".colored-type-dropdown .goog-menuitem-content {", "  color: #555555;", "  float: left;", "}", ".colored-type-dropdown > .goog-menuitem {", "  padding: 0px 40px 2px 13px;", "}", ".goog-menu {", "  box-shadow: 4px 4px 6px #bbb;", "  border-width: 2px;", "}", ".goog-menuitem {", "  height: 20px;", 
+"  padding-top: 0;", "  padding-bottom: 0;", "}", ".goog-menuitem-highlight,", ".goog-menuitem-hover {", "  border-width: 0;", "  background-color: #57e;", "}", ".goog-menuitem-highlight .goog-menuitem-content {", "  color: #fff;", "}", ".goog-option-selected .goog-menuitem-checkbox:before {", '  content: "\u2713";', "}", ".goog-menuitem-checkbox {", '  background: ""', "}", ".blocklyRectangularDropdownMenu img {", "  -webkit-border-radius: 5px;", "  -moz-border-radius: 5px;", "  border-radius: 5px;", 
+"}", ".blocklyRectangularDropdownMenu {", "  border-radius: 5px;", "  box-shadow: none !important;", "}", ".goog-option-selected .goog-menuitem-checkbox,", ".goog-option-selected .goog-menuitem-icon {", "}", "/* Category tree in Toolbox. */", ".blocklyToolboxDiv {", "  display: none;", "  overflow-x: visible;", "  overflow-y: auto;", "  position: absolute;", "}", ".blocklyTreeRoot {", "  padding: 4px 0;", "}", ".blocklyTreeRoot:focus {", "  outline: none;", "}", ".blocklyTreeRow {", "  line-height: 22px;", 
+"  height: 22px;", "  padding-right: 1em;", "  white-space: nowrap;", "}", '.blocklyToolboxDiv[dir="RTL"] .blocklyTreeRow {', "  padding-right: 0;", "  padding-left: 1em !important;", "}", ".blocklyTreeRow:hover {", "  background-color: #e4e4e4;", "}", ".blocklyTreeIcon {", "  height: 16px;", "  width: 16px;", "  vertical-align: middle;", "  background-image: url(%TREE_PATH%);", "}", ".blocklyTreeIconClosedLtr {", "  background-position: -32px -1px;", "}", ".blocklyTreeIconClosedRtl {", "  background-position: 0px -1px;", 
+"}", ".blocklyTreeIconOpen {", "  background-position: -16px -1px;", "}", ".blocklyTreeIconNone {", "  background-position: -48px -1px;", "}", ".blocklyTreeSelected>.blocklyTreeIconClosedLtr {", "  background-position: -32px -17px;", "}", ".blocklyTreeSelected>.blocklyTreeIconClosedRtl {", "  background-position: 0px -17px;", "}", ".blocklyTreeSelected>.blocklyTreeIconOpen {", "  background-position: -16px -17px;", "}", ".blocklyTreeSelected>.blocklyTreeIconNone {", "  background-position: -48px -17px;", 
+"}", ".blocklyTreeLabel {", "  cursor: default;", "  font-family: sans-serif;", "  font-size: 16px;", "  padding: 0 3px;", "  vertical-align: middle;", "  -moz-user-select: none;", "  -webkit-user-select: none;", "  -ms-user-select: none;", "  user-select: none;", "}", ".blocklyTreeSelected {", "  background-color: #57e !important;", "}", ".blocklyTreeSelected .blocklyTreeLabel {", "  color: #fff;", "}", ".blocklyArrow {", "  font-size: 80%;", "}", ".paramToolbox {", "  padding: 0 0 5px 0;", "  pointer-events: auto;", 
+"}", ".paramToolbox input, .paramToolbox textarea {", "  box-sizing: border-box;", "  width: 100%;", "  margin: 0;", "  resize: none;", "}", ".paramToolbox input, .paramToolbox button {", "  height: 30px;", "  margin: 0;", "}", ".paramToolbox div {", "  margin: 4px 10px;", "}", "#modalContainer {", "  position: absolute;", "  width: 100%;", "  bottom: 0;", "}", "#modalContainer > svg {", "  position: absolute;", "  top: 0;", "  left: 0;", "  background: transparent;", "  pointer-events: none;", "}", 
+"#modalContainer > svg * {", "  pointer-events: visiblePainted;", "}", "/*", " * Copyright 2007 The Closure Library Authors. All Rights Reserved.", " *", " * Use of this source code is governed by the Apache License, Version 2.0.", " * See the COPYING file for details.", " */", "/* Author: pupius@google.com (Daniel Pupius) */", "/*", " Styles to make the colorpicker look like the old gmail color picker", " NOTE: without CSS scoping this will override styles defined in palette.css", "*/", ".goog-palette {", 
+"  outline: none;", "  cursor: default;", "}", ".goog-palette-table {", "  border: 1px solid #666;", "  border-collapse: collapse;", "}", ".goog-palette-cell {", "  height: 25px;", "  width: 25px;", "  margin: 0;", "  border: 0;", "  text-align: center;", "  vertical-align: middle;", "  border-right: 1px solid #666;", "  font-size: 1px;", "}", ".goog-palette-colorswatch {", "  position: relative;", "  height: 25px;", "  width: 25px;", "  border: 1px solid #666;", "}", ".goog-palette-cell-hover .goog-palette-colorswatch {", 
+"  border: 1px solid #FFF;", "}", ".goog-palette-cell-selected .goog-palette-colorswatch {", "  border: 1px solid #000;", "  color: #fff;", "}", ".goog-menu {", "  background: #fff;", "  border-color: #ccc #666 #666 #ccc;", "  border-style: solid;", "  border-width: 1px;", "  cursor: default;", "  font: normal 13px Arial, sans-serif;", "  margin: 0;", "  outline: none;", "  padding: 4px 0;", "  position: absolute;", "  z-index: 20000;", "}", ".goog-menuitem {", "  color: #000;", "  font: normal 13px Arial, sans-serif;", 
+"  list-style: none;", "  margin: 0;", "  padding: 4px 7em 4px 28px;", "  white-space: nowrap;", "}", ".goog-menuitem.goog-menuitem-rtl {", "  padding-left: 7em;", "  padding-right: 28px;", "}", ".goog-menu-nocheckbox .goog-menuitem,", ".goog-menu-noicon .goog-menuitem {", "  padding-left: 12px;", "}", ".goog-menu-noaccel .goog-menuitem:not(.goog-menuitem-rtl) {", "  padding-right: 20px;", "}", ".goog-menu-noaccel .goog-menuitem.goog-menuitem-rtl {", "  padding-left: 20px;", "}", ".goog-menuitem-content {", 
+"  color: #000;", "  font-size: 15px;", "}", ".goog-menuitem-disabled .goog-menuitem-accel,", ".goog-menuitem-disabled .goog-menuitem-content {", "  color: #ccc !important;", "}", ".goog-menuitem-disabled .goog-menuitem-icon {", "  opacity: 0.3;", "  -moz-opacity: 0.3;", "  filter: alpha(opacity=30);", "}", ".goog-menuitem-highlight,", ".goog-menuitem-hover {", "  background-color: #d6e9f8;", "  border-color: #d6e9f8;", "  border-style: dotted;", "  border-width: 1px 0;", "  padding-bottom: 3px;", 
+"  padding-top: 3px;", "}", ".goog-menuitem-checkbox,", ".goog-menuitem-icon {", "  background-repeat: no-repeat;", "  height: 16px;", "  left: 6px;", "  position: absolute;", "  right: auto;", "  vertical-align: middle;", "  width: 16px;", "}", ".goog-menuitem-rtl .goog-menuitem-checkbox,", ".goog-menuitem-rtl .goog-menuitem-icon {", "  left: auto;", "  right: 6px;", "}", ".goog-option-selected .goog-menuitem-checkbox,", ".goog-option-selected .goog-menuitem-icon {", "}", ".goog-menuitem-accel {", 
+"  color: #999;", "  direction: ltr;", "  left: auto;", "  padding: 0 6px;", "  position: absolute;", "  right: 0;", "  text-align: right;", "}", ".goog-menuitem-rtl .goog-menuitem-accel {", "  left: 0;", "  right: auto;", "  text-align: left;", "}", ".goog-menuitem-mnemonic-hint {", "  text-decoration: underline;", "}", ".goog-menuitem-mnemonic-separator {", "  color: #999;", "  font-size: 12px;", "  padding-left: 4px;", "}", ".goog-menuseparator {", "  border-top: 1px solid #ccc;", "  margin: 4px 0;", 
+"  padding: 0;", "}", ".goog-flat-menu-button {", "  background-color: #fff;", "  border: 1px solid #c9c9c9;", "  color: #333;", "  cursor: pointer;", "  font: normal 95%;", "  list-style: none;", "  margin: 0 2px;", "  outline: none;", "  padding: 1px 4px;", "  position: relative;", "  text-decoration: none;", "  vertical-align: middle;", "}", ".goog-flat-menu-button-disabled * {", "  border-color: #ccc;", "  color: #999;", "  cursor: default;", "}", ".goog-flat-menu-button-hover {", "  border-color: #9cf #69e #69e #7af !important; /* Hover border wins. */", 
+"}", ".goog-flat-menu-button-active {", "  background-color: #bbb;", "  background-position: bottom left;", "}", ".goog-flat-menu-button-focused {", "  border-color: #bbb;", "}", ".goog-flat-menu-button-caption {", "  padding-right: 10px;", "  vertical-align: top;", "}", ".goog-flat-menu-button-dropdown {", "  /* Client apps may override the URL at which they serve the sprite. */", "  background: url(https://ssl.gstatic.com/editor/editortoolbar.png) no-repeat -388px 0;", "  position: absolute;", 
+"  right: 2px;", "  top: 0;", "  vertical-align: top;", "  width: 7px;", "}", ".goog-inline-block {", "  position: relative;", "  display: -moz-inline-box; /* Ignored by FF3 and later. */", "  display: inline-block;", "}", ""];
 goog.provide("Blockly.WidgetDiv");
 goog.require("Blockly.Css");
 goog.require("goog.dom");
@@ -29547,7 +29676,7 @@ Blockly.parseOptions_ = function(options) {
     return "./" + path;
   }, hasCategories:hasCategories, hasHorizontalScrollbars:options["hasHorizontalScrollbars"], hasVerticalScrollbars:options["hasVerticalScrollbars"], customSimpleDialog:options["customSimpleDialog"], hasTrashcan:hasTrashcan, varsInGlobals:options["varsInGlobals"] || false, languageTree:tree, disableIfElseEditing:options["disableIfElseEditing"] || false, disableParamEditing:options["disableParamEditing"] || false, disableVariableEditing:options["disableVariableEditing"] || false, disableProcedureAutopopulate:options["disableProcedureAutopopulate"] || 
   false, topLevelProcedureAutopopulate:options["topLevelProcedureAutopopulate"] || false, useModalFunctionEditor:options["useModalFunctionEditor"] || false, useContractEditor:options["useContractEditor"] || false, disableExamples:options["disableExamples"] || false, defaultNumExampleBlocks:options["defaultNumExampleBlocks"] || 0, grayOutUndeletableBlocks:grayOutUndeletableBlocks, editBlocks:options["editBlocks"] || false, showExampleTestButtons:options["showExampleTestButtons"] || false, valueTypeTabShapeMap:options["valueTypeTabShapeMap"] || 
-  {}};
+  {}, typeHints:options["typeHints"] || false};
 };
 Blockly.registerUISounds_ = function(audioPlayer) {
   audioPlayer.register({id:"click", mp3:Blockly.assetUrl("media/click.mp3"), wav:Blockly.assetUrl("media/click.wav"), ogg:Blockly.assetUrl("media/click.ogg")});

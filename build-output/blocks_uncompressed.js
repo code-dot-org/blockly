@@ -506,9 +506,7 @@ Blockly.Blocks.controls_for = {init:function() {
   this.setTooltip(function() {
     return Blockly.Msg.CONTROLS_FOR_TOOLTIP.replace("%1", a.getTitleValue("VAR"));
   });
-}, getVars:function() {
-  return [this.getTitleValue("VAR")];
-}, renameVar:function(a, b) {
+}, getVars:Blockly.Variables.getVars, renameVar:function(a, b) {
   Blockly.Names.equals(a, this.getTitleValue("VAR")) && this.setTitleValue(b, "VAR");
 }, customContextMenu:function(a) {
   var b = {enabled:!0}, c = this.getTitleValue("VAR");
@@ -534,9 +532,7 @@ Blockly.Blocks.controls_forEach = {init:function() {
   this.setTooltip(function() {
     return Blockly.Msg.CONTROLS_FOREACH_TOOLTIP.replace("%1", a.getTitleValue("VAR"));
   });
-}, getVars:function() {
-  return [this.getTitleValue("VAR")];
-}, renameVar:function(a, b) {
+}, getVars:Blockly.Variables.getVars, renameVar:function(a, b) {
   Blockly.Names.equals(a, this.getTitleValue("VAR")) && this.setTitleValue(b, "VAR");
 }, customContextMenu:Blockly.Blocks.controls_for.customContextMenu};
 Blockly.Blocks.controls_flow_statements = {init:function() {
@@ -648,9 +644,7 @@ Blockly.Blocks.math_change = {init:function() {
   this.setTooltip(function() {
     return Blockly.Msg.MATH_CHANGE_TOOLTIP.replace("%1", a.getTitleValue("VAR"));
   });
-}, getVars:function() {
-  return [this.getTitleValue("VAR")];
-}, renameVar:function(a, b) {
+}, getVars:Blockly.Variables.getVars, renameVar:function(a, b) {
   Blockly.Names.equals(a, this.getTitleValue("VAR")) && this.setTitleValue(b, "VAR");
 }};
 Blockly.Blocks.math_round = {init:function() {
@@ -782,7 +776,7 @@ Blockly.Blocks.procedures_defnoreturn = {shouldHideIfInMainBlockSpace:function()
 }, getProcedureInfo:function() {
   return {name:this.getTitleValue("NAME"), parameterNames:this.parameterNames_, parameterIDs:this.paramIds_, type:this.type, callType:this.callType_};
 }, getVars:function() {
-  return this.parameterNames_;
+  return {Default:this.parameterNames_};
 }, renameVar:function(a, b) {
   for (var c = !1, d = 0;d < this.parameterNames_.length;d++) {
     Blockly.Names.equals(a, this.parameterNames_[d]) && (this.parameterNames_[d] = b, c = !0);
@@ -1063,9 +1057,7 @@ Blockly.Blocks.text_append = {init:function() {
   this.setTooltip(function() {
     return Blockly.Msg.TEXT_APPEND_TOOLTIP.replace("%1", a.getTitleValue("VAR"));
   });
-}, getVars:function() {
-  return [this.getTitleValue("VAR")];
-}, renameVar:function(a, b) {
+}, getVars:Blockly.Variables.getVars, renameVar:function(a, b) {
   Blockly.Names.equals(a, this.getTitleValue("VAR")) && this.setTitleValue(b, "VAR");
 }};
 Blockly.Blocks.text_length = {init:function() {
@@ -1215,9 +1207,7 @@ Blockly.Blocks.variables_get = {init:function() {
   this.appendDummyInput().appendTitle(Blockly.Msg.VARIABLES_GET_TITLE).appendTitle(Blockly.disableVariableEditing ? a : new Blockly.FieldVariable(Blockly.Msg.VARIABLES_GET_ITEM), "VAR").appendTitle(Blockly.Msg.VARIABLES_GET_TAIL);
   this.setOutput(!0);
   this.setTooltip(Blockly.Msg.VARIABLES_GET_TOOLTIP);
-}, getVars:function() {
-  return [this.getTitleValue("VAR")];
-}, renameVar:function(a, b) {
+}, getVars:Blockly.Variables.getVars, renameVar:function(a, b) {
   Blockly.Names.equals(a, this.getTitleValue("VAR")) && this.setTitleValue(b, "VAR");
 }, removeVar:function(a) {
   Blockly.Names.equals(a, this.getTitleValue("VAR")) && this.dispose(!0, !0);
@@ -1240,9 +1230,7 @@ Blockly.Blocks.variables_set = {init:function() {
   this.setPreviousStatement(!0);
   this.setNextStatement(!0);
   this.setTooltip(Blockly.Msg.VARIABLES_SET_TOOLTIP);
-}, getVars:function() {
-  return [this.getTitleValue("VAR")];
-}, renameVar:function(a, b) {
+}, getVars:Blockly.Variables.getVars, renameVar:function(a, b) {
   Blockly.Names.equals(a, this.getTitleValue("VAR")) && this.setTitleValue(b, "VAR");
 }, contextMenuMsg_:Blockly.Msg.VARIABLES_SET_CREATE_GET, contextMenuType_:"variables_get", customContextMenu:Blockly.Blocks.variables_get.customContextMenu};
 Blockly.Blocks.parameters_get = {init:function() {
@@ -1335,7 +1323,7 @@ Blockly.Blocks.functional_definition = {shouldHideIfInMainBlockSpace:function() 
 }, getProcedureInfo:function() {
   return {name:this.getTitleValue("NAME"), type:this.type, callType:this.callType_, parameterNames:this.parameterNames_, parameterTypes:this.parameterTypes_, isFunctionalVariable:this.isFunctionalVariable_};
 }, getVars:function() {
-  return this.parameterNames_;
+  return {Default:this.parameterNames_};
 }, renameVar:function(a, b) {
   for (var c = !1, d = 0;d < this.parameterNames_.length;d++) {
     Blockly.Names.equals(a, this.parameterNames_[d]) && (this.parameterNames_[d] = b, c = !0);

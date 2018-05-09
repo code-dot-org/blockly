@@ -21796,7 +21796,7 @@ Blockly.Flyout.prototype.show = function(xmlList) {
   var firstBlock = xmlList && xmlList[0];
   if (firstBlock === Blockly.Variables.NAME_TYPE) {
     this.layoutXmlToBlocks_(xmlList.slice(1), blocks, gaps, margin);
-    Blockly.Variables.flyoutCategory(blocks, gaps, margin, this.blockSpace_);
+    Blockly.Variables.flyoutCategory(blocks, gaps, margin, this.blockSpace_, Blockly.Variables.DEFAULT_CATEGORY, true);
   } else {
     if (firstBlock === Blockly.Procedures.NAME_TYPE || Blockly.topLevelProcedureAutopopulate) {
       if (Blockly.functionEditor && !Blockly.functionEditor.isOpen()) {
@@ -21822,7 +21822,13 @@ Blockly.Flyout.prototype.show = function(xmlList) {
           return procedureInfo.isFunctionalVariable;
         });
       } else {
-        this.layoutXmlToBlocks_(xmlList, blocks, gaps, margin);
+        if (goog.isString(firstBlock)) {
+          var addDefaultVar = true;
+          this.layoutXmlToBlocks_(xmlList.slice(1), blocks, gaps, margin);
+          Blockly.Variables.flyoutCategory(blocks, gaps, margin, this.blockSpace_, firstBlock, addDefaultVar);
+        } else {
+          this.layoutXmlToBlocks_(xmlList, blocks, gaps, margin);
+        }
       }
     }
   }
@@ -24966,7 +24972,11 @@ goog.require("Blockly.Toolbox");
 goog.require("Blockly.BlockSpace");
 Blockly.Variables.NAME_TYPE = "VARIABLE";
 Blockly.Variables.NAME_TYPE_LOCAL = "LOCALVARIABLE";
-Blockly.Variables.allVariables = function(opt_blocks) {
+Blockly.Variables.DEFAULT_CATEGORY = "Default";
+Blockly.Variables.allVariables = function(opt_blocks, opt_category) {
+  if (opt_category && opt_category !== Blockly.Variables.DEFAULT_CATEGORY && (Blockly.valueTypeTabShapeMap && Blockly.valueTypeTabShapeMap[opt_category] === undefined)) {
+    throw new Error('Variable category must be "Default" or a strict type');
+  }
   var blocks;
   if (opt_blocks) {
     opt_blocks = Array.isArray(opt_blocks) ? opt_blocks : [opt_blocks];
@@ -24982,14 +24992,19 @@ Blockly.Variables.allVariables = function(opt_blocks) {
   }
   var variableHash = {};
   for (var x = 0;x < blocks.length;x++) {
-    var func = blocks[x].getVars;
-    if (func) {
-      var blockVariables = func.call(blocks[x]);
-      for (var y = 0;y < blockVariables.length;y++) {
-        var varName = blockVariables[y];
-        if (varName) {
-          variableHash[Blockly.Names.PREFIX_ + varName.toLowerCase()] = varName;
-        }
+    if (!blocks[x].getVars) {
+      continue;
+    }
+    var blockVariables;
+    if (opt_category) {
+      blockVariables = blocks[x].getVars()[opt_category] || [];
+    } else {
+      blockVariables = Blockly.Variables.allVariablesFromBlock(blocks[x]);
+    }
+    for (var y = 0;y < blockVariables.length;y++) {
+      var varName = blockVariables[y];
+      if (varName) {
+        variableHash[Blockly.Names.PREFIX_ + varName.toLowerCase()] = varName;
       }
     }
   }
@@ -24998,6 +25013,21 @@ Blockly.Variables.allVariables = function(opt_blocks) {
     variableList.push(variableHash[name]);
   }
   return variableList;
+};
+Blockly.Variables.allVariablesFromBlock = function(block) {
+  if (!block.getVars) {
+    return [];
+  }
+  var varsByCategory = block.getVars();
+  return Object.keys(varsByCategory).reduce(function(vars, category) {
+    return vars.concat(varsByCategory[category]);
+  }, []);
+};
+Blockly.Variables.getVars = function(opt_category) {
+  var category = opt_category || Blockly.Variables.DEFAULT_CATEGORY;
+  var vars = {};
+  vars[category] = [this.getTitleValue("VAR")];
+  return vars;
 };
 Blockly.Variables.renameVariable = function(oldName, newName, blockSpace) {
   if (newName === oldName) {
@@ -25028,21 +25058,23 @@ Blockly.Variables.deleteVariable = function(nameToRemove, blockSpace) {
     Blockly.functionEditor.refreshParamsEverywhere();
   }
 };
-Blockly.Variables.flyoutCategory = function(blocks, gaps, margin, blockSpace) {
-  var variableList = Blockly.Variables.allVariables();
+Blockly.Variables.flyoutCategory = function(blocks, gaps, margin, blockSpace, category, addDefaultVar) {
+  var variableList = Blockly.Variables.allVariables(null, category);
   variableList.sort(goog.string.caseInsensitiveCompare);
-  variableList.unshift(null);
+  if (addDefaultVar) {
+    variableList.unshift(null);
+  }
   var defaultVariable = undefined;
   for (var i = 0;i < variableList.length;i++) {
     if (variableList[i] === defaultVariable) {
       continue;
     }
-    var getBlock = Blockly.Blocks.variables_get ? new Blockly.Block(blockSpace, "variables_get") : null;
+    var getBlock = Blockly.Variables.getGetter(blockSpace, category);
     getBlock && getBlock.initSvg();
-    var setBlock = Blockly.Blocks.variables_set ? new Blockly.Block(blockSpace, "variables_set") : null;
+    var setBlock = Blockly.Variables.getSetter(blockSpace, category);
     setBlock && setBlock.initSvg();
-    if (variableList[i] === null) {
-      defaultVariable = (getBlock || setBlock).getVars()[0];
+    if (variableList[i] === null && (getBlock || setBlock)) {
+      defaultVariable = (getBlock || setBlock).getVars(category)[0];
     } else {
       getBlock && getBlock.setTitleValue(variableList[i], "VAR");
       setBlock && setBlock.setTitleValue(variableList[i], "VAR");
@@ -25055,6 +25087,22 @@ Blockly.Variables.flyoutCategory = function(blocks, gaps, margin, blockSpace) {
       gaps.push(margin * 2);
     }
   }
+};
+Blockly.Variables.getters = {"Default":"variables_get"};
+Blockly.Variables.getGetter = function(blockSpace, category) {
+  var getterName = Blockly.Variables.getters[category];
+  return getterName && Blockly.Blocks[getterName] ? new Blockly.Block(blockSpace, getterName) : null;
+};
+Blockly.Variables.registerGetter = function(category, blockName) {
+  Blockly.Variables.getters[category] = blockName;
+};
+Blockly.Variables.setters = {"Default":"variables_set"};
+Blockly.Variables.getSetter = function(blockSpace, category) {
+  var setterName = Blockly.Variables.setters[category];
+  return setterName && Blockly.Blocks[setterName] ? new Blockly.Block(blockSpace, setterName) : null;
+};
+Blockly.Variables.registerSetter = function(category, blockName) {
+  Blockly.Variables.setters[category] = blockName;
 };
 Blockly.Variables.generateUniqueName = function(baseName) {
   if (baseName) {
@@ -25118,7 +25166,8 @@ goog.provide("Blockly.FieldVariable");
 goog.require("Blockly.FieldDropdown");
 goog.require("Blockly.Msg");
 goog.require("Blockly.Variables");
-Blockly.FieldVariable = function(varname, opt_changeHandler, opt_createHandler) {
+Blockly.FieldVariable = function(varname, opt_changeHandler, opt_createHandler, opt_category) {
+  this.category = opt_category || Blockly.Variables.DEFAULT_CATEGORY;
   var changeHandler;
   if (opt_changeHandler === Blockly.FieldParameter.dropdownChange) {
     changeHandler = opt_changeHandler;
@@ -25160,7 +25209,7 @@ Blockly.FieldVariable.prototype.setValue = function(text) {
   this.setText(text);
 };
 Blockly.FieldVariable.dropdownCreate = function() {
-  var variableList = Blockly.Variables.allVariables();
+  var variableList = Blockly.Variables.allVariables(null, this.category);
   var name = this.getText();
   if (name && variableList.indexOf(name) == -1) {
     variableList.push(name);

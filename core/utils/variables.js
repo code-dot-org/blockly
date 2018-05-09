@@ -69,16 +69,20 @@ Blockly.Variables.allVariables = function(opt_blocks, opt_category) {
   var variableHash = {};
   // Iterate through every block and add each variable to the hash.
   for (var x = 0; x < blocks.length; x++) {
-    var func = blocks[x].getVars;
-    if (func) {
-      var blockVariables = func.call(blocks[x], opt_category);
-      for (var y = 0; y < blockVariables.length; y++) {
-        var varName = blockVariables[y];
-        // Variable name may be null if the block is only half-built.
-        if (varName) {
-          variableHash[Blockly.Names.PREFIX_ +
-              varName.toLowerCase()] = varName;
-        }
+    if (!blocks[x].getVars) {
+      continue;
+    }
+    var blockVariables;
+    if (opt_category) {
+      blockVariables = blocks[x].getVars()[opt_category] || [];
+    } else {
+      blockVariables = Blockly.Variables.allVariablesFromBlock(blocks[x]);
+    }
+    for (var y = 0; y < blockVariables.length; y++) {
+      var varName = blockVariables[y];
+      // Variable name may be null if the block is only half-built.
+      if (varName) {
+        variableHash[Blockly.Names.PREFIX_ + varName.toLowerCase()] = varName;
       }
     }
   }
@@ -89,6 +93,32 @@ Blockly.Variables.allVariables = function(opt_blocks, opt_category) {
   }
   return variableList;
 };
+
+/**
+ * Find all the variables used in the provided block.
+ * @param {Blockly.Block} block Block to check for variables
+ * @returns {string[]} Array of all the variables used.
+ */
+Blockly.Variables.allVariablesFromBlock = function(block) {
+  if (!block.getVars) {
+    return [];
+  }
+  var varsByCategory = block.getVars();
+  return Object.keys(varsByCategory).reduce(function (vars, category) {
+    return vars.concat(varsByCategory[category]);
+  }, []);
+}
+
+/**
+ * Standard implementation of getVars for blocks with a single 'VAR' title
+ * @param {string=} opt_category Variable category, defaults to 'Default'
+ */
+Blockly.Variables.getVars = function (opt_category) {
+  var category = opt_category || Blockly.Variables.DEFAULT_CATEGORY;
+  var vars = {}
+  vars[category] = [this.getTitleValue('VAR')];
+  return vars;
+}
 
 /**
  * Find all instances of the specified variable in the current workspace and

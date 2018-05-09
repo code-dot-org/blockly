@@ -186,11 +186,10 @@ Blockly.Blocks.procedures_defnoreturn = {
       callType: this.callType_
     };
   },
-  getVars: function(category) {
-    if (category && category !== Blockly.Variables.DEFAULT_CATEGORY) {
-      return [];
-    }
-    return this.parameterNames_;
+  getVars: function() {
+    return {
+      Default: this.parameterNames_,
+    };
   },
   renameVar: function(oldName, newName) {
     var change = false;

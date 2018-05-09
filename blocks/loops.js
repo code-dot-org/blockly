@@ -116,12 +116,7 @@ Blockly.Blocks.controls_for = {
           thisBlock.getTitleValue('VAR'));
     });
   },
-  getVars: function(category) {
-    if (category && category !== Blockly.Variables.DEFAULT_CATEGORY) {
-      return [];
-    }
-    return [this.getTitleValue('VAR')];
-  },
+  getVars: Blockly.Variables.getVars,
   renameVar: function(oldName, newName) {
     if (Blockly.Names.equals(oldName, this.getTitleValue('VAR'))) {
       this.setTitleValue(newName, 'VAR');
@@ -173,12 +168,7 @@ Blockly.Blocks.controls_forEach = {
           thisBlock.getTitleValue('VAR'));
     });
   },
-  getVars: function(category) {
-    if (category && category !== Blockly.Variables.DEFAULT_CATEGORY) {
-      return [];
-    }
-    return [this.getTitleValue('VAR')];
-  },
+  getVars: Blockly.Variables.getVars,
   renameVar: function(oldName, newName) {
     if (Blockly.Names.equals(oldName, this.getTitleValue('VAR'))) {
       this.setTitleValue(newName, 'VAR');

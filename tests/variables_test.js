@@ -9,11 +9,10 @@ function setUp() {
       this.setPreviousStatement(true);
       this.setNextStatement(true);
     },
-    getVars: function (category) {
-      if (category && category !== Blockly.BlockValueType.STRING) {
-	return [];
-      }
-      return [this.getTitleValue('VAR')];
+    getVars: function () {
+      return {
+        String: [this.getTitleValue('VAR')],
+      };
     },
   };
   Blockly.valueTypeTabShapeMap = {'String': 'square'};

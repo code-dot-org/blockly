@@ -19,7 +19,21 @@ Blockly.BlockValueType = {
   FUNCTION: 'Function',
   COLOUR: 'Colour',
   ARRAY: 'Array',
+
+  // p5.play Sprite
   SPRITE: 'Sprite',
+
+  /**
+   * {Object} Behavior
+   * {function} Behavior.func
+   * {Array} Behavior.extraArgs
+   */
   BEHAVIOR: 'Behavior',
+
+  /**
+   * {Object} Location
+   * {number} Location.x
+   * {number} Location.y
+   */
   LOCATION: 'Location',
 };

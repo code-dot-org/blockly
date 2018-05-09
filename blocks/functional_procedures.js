@@ -212,7 +212,9 @@ Blockly.Blocks.functional_definition = {
     }
   },
   getVars: function() {
-    return this.parameterNames_;
+    return {
+      Default: this.parameterNames_,
+    };
   },
   renameVar: function(oldName, newName) {
     var change = false;

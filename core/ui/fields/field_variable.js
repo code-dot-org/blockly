@@ -36,10 +36,16 @@ goog.require('Blockly.Variables');
  * @param {?Function} opt_changeHandler A function that is executed when a new
  *     option is selected.
  * @param {?Function} opt_createHandler A function that is executed after creation
+ * @param {?string} opt_category Only show variables from this category
  * @extends {Blockly.FieldDropdown}
  * @constructor
  */
-Blockly.FieldVariable = function(varname, opt_changeHandler, opt_createHandler) {
+Blockly.FieldVariable = function(
+    varname,
+    opt_changeHandler,
+    opt_createHandler,
+    opt_category) {
+  this.category = opt_category || Blockly.Variables.DEFAULT_CATEGORY;
   var changeHandler;
   if (opt_changeHandler === Blockly.FieldParameter.dropdownChange) {
     changeHandler = opt_changeHandler;
@@ -100,7 +106,7 @@ Blockly.FieldVariable.prototype.setValue = function(text) {
  * @this {!Blockly.FieldVariable}
  */
 Blockly.FieldVariable.dropdownCreate = function() {
-  var variableList = Blockly.Variables.allVariables();
+  var variableList = Blockly.Variables.allVariables(null, this.category);
   // Ensure that the currently selected variable is an option.
   var name = this.getText();
   if (name && variableList.indexOf(name) == -1) {

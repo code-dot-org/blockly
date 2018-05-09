@@ -185,9 +185,7 @@ Blockly.Blocks.text_append = {
           thisBlock.getTitleValue('VAR'));
     });
   },
-  getVars: function() {
-    return [this.getTitleValue('VAR')];
-  },
+  getVars: Blockly.Variables.getVars,
   renameVar: function(oldName, newName) {
     if (Blockly.Names.equals(oldName, this.getTitleValue('VAR'))) {
       this.setTitleValue(newName, 'VAR');

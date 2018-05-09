@@ -34,7 +34,9 @@ Blockly.Blocks.unittest_main = {
                     'then prints a summary.');
   },
   getVars: function() {
-    return ['unittestResults'];
+    return {
+      Default: ['unittestResults'],
+    };
   }
 };
 
@@ -53,7 +55,9 @@ Blockly.Blocks.unittest_assertequals = {
     this.setTooltip('Tests that "actual == expected".');
   },
   getVars: function() {
-    return ['unittestResults'];
+    return {
+      Default: ['unittestResults'],
+    };
   }
 };
 
@@ -72,7 +76,9 @@ Blockly.Blocks.unittest_assertvalue = {
     this.setTooltip('Tests that the value is true, false, or null.');
   },
   getVars: function() {
-    return ['unittestResults'];
+    return {
+      Default: ['unittestResults'],
+    };
   }
 };
 
@@ -88,6 +94,8 @@ Blockly.Blocks.unittest_fail = {
     this.setTooltip('Records an error.');
   },
   getVars: function() {
-    return ['unittestResults'];
+    return {
+      Default: ['unittestResults'],
+    };
   }
 };

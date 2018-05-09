@@ -156,8 +156,8 @@ Blockly.FunctionEditor.prototype.openAndEditFunction = function(functionName) {
   this.populateParamToolbox_();
   this.setupUIAfterBlockInEditor_();
 
-  goog.dom.getElement('functionNameText').value = functionName;
-  goog.dom.getElement('functionDescriptionText').value =
+  this.container_.querySelector('#functionNameText').value = functionName;
+  this.container_.querySelector('#functionDescriptionText').value =
       this.functionDefinitionBlock.description_ || '';
   this.deleteButton_.setVisible(targetFunctionDefinitionBlock.userCreated);
 
@@ -220,8 +220,8 @@ Blockly.FunctionEditor.prototype.openWithNewFunction = function() {
 };
 
 Blockly.FunctionEditor.prototype.bindToolboxHandlers_ = function() {
-  var paramAddTextElement = goog.dom.getElement('paramAddText');
-  var paramAddButton = goog.dom.getElement('paramAddButton');
+  var paramAddTextElement = this.container_.querySelector('#paramAddText');
+  var paramAddButton = this.container_.querySelector('#paramAddButton');
   if (!Blockly.disableParamEditing) {
     Blockly.bindEvent_(paramAddButton, 'click', this,
         goog.bind(this.addParamFromInputField_, this, paramAddTextElement));
@@ -400,10 +400,10 @@ Blockly.FunctionEditor.prototype.hideAndRestoreBlocks_ = function() {
   this.functionDefinitionBlock = null;
   this.moveToMainBlockSpace_(functionDefinitionBlock);
 
-  goog.dom.getElement('functionNameText').value = '';
-  goog.dom.getElement('functionDescriptionText').value = '';
-  if (goog.dom.getElement('paramAddText')) {
-    goog.dom.getElement('paramAddText').value = '';
+  this.container_.querySelector('#functionNameText').value = '';
+  this.container_.querySelector('#functionDescriptionText').value = '';
+  if (this.container_.querySelector('#paramAddText')) {
+    this.container_.querySelector('#paramAddText').value = '';
   }
 
   goog.style.setElementShown(this.container_, false);
@@ -535,7 +535,7 @@ Blockly.FunctionEditor.prototype.create_ = function() {
 
   // The function editor block space passes clicks through via
   // pointer-events:none, so register the unselect handler on lower elements
-  Blockly.bindEvent_(goog.dom.getElement('modalContainer'), 'mousedown', this,
+  Blockly.bindEvent_(this.container_, 'mousedown', this,
       function(e) {
     // Only handle clicks on modalContainer, not a descendant
     if (e.target === e.currentTarget) {
@@ -553,19 +553,19 @@ Blockly.FunctionEditor.prototype.create_ = function() {
     }
   });
 
-  Blockly.bindEvent_(goog.dom.getElement('modalEditorClose'), 'mousedown', this,
+  Blockly.bindEvent_(this.container_.querySelector('#modalEditorClose'), 'mousedown', this,
       this.onClose);
-  Blockly.bindEvent_(goog.dom.getElement('functionNameText'), 'input', this,
+  Blockly.bindEvent_(this.container_.querySelector('#functionNameText'), 'input', this,
       functionNameChange);
   // IE9 doesn't fire oninput when delete key is pressed, bind keydown also
-  Blockly.bindEvent_(goog.dom.getElement('functionNameText'), 'keydown', this,
+  Blockly.bindEvent_(this.container_.querySelector('#functionNameText'), 'keydown', this,
       functionNameChange);
   function functionNameChange(e) {
     var value = e.target.value;
     var disallowedCharacters = /\)|\(/g;
     if (disallowedCharacters.test(value)) {
       value = value.replace(disallowedCharacters, '');
-      goog.dom.getElement('functionNameText').value = value;
+      this.container_.querySelector('#functionNameText').value = value;
     }
     this.functionDefinitionBlock.setTitleValue(value, 'NAME');
   }
@@ -576,10 +576,10 @@ Blockly.FunctionEditor.prototype.create_ = function() {
     }
   });
 
-  Blockly.bindEvent_(goog.dom.getElement('functionDescriptionText'), 'input',
+  Blockly.bindEvent_(this.container_.querySelector('#functionDescriptionText'), 'input',
       this, functionDescriptionChange);
   // IE9 doesn't fire oninput when delete key is pressed, bind keydown also
-  Blockly.bindEvent_(goog.dom.getElement('functionDescriptionText'), 'keydown',
+  Blockly.bindEvent_(this.container_.querySelector('#functionDescriptionText'), 'keydown',
       this, functionDescriptionChange);
   function functionDescriptionChange(e) {
     this.functionDefinitionBlock.description_ = e.target.value;
@@ -892,7 +892,7 @@ Blockly.FunctionEditor.prototype.createParameterEditor_ = function() {
     return;
   }
 
-  goog.dom.getElement('paramEditingArea').innerHTML =
+  this.container_.querySelector('#paramEditingArea').innerHTML =
     '<div>' + Blockly.Msg.FUNCTION_PARAMETERS_LABEL + '</div>'
     + '<div>'
     + '<input id="paramAddText" type="text" style="width: 200px;"/> '

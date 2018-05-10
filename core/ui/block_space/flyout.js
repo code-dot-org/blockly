@@ -105,6 +105,18 @@ Blockly.Flyout = function(blockSpaceEditor, opt_static) {
 };
 
 /**
+ * Additional config for creating custom flyouts
+ * @type {string} type custom category for which to use the provided config
+ * @type {object} config
+ * @type {function} config.initialize
+ * @type {boolean} config.addDefaultVar
+ */
+Blockly.Flyout.configure = function (type, config) {
+  Blockly.Flyout.config[type] = config;
+}
+Blockly.Flyout.config = {};
+
+/**
  * Does the flyout automatically close when a block is created?
  * @type {boolean}
  */
@@ -478,10 +490,15 @@ Blockly.Flyout.prototype.show = function(xmlList) {
       function(procedureInfo) { return procedureInfo.isFunctionalVariable; }
     );
   } else if (goog.isString(firstBlock)) {
-    var addDefaultVar = true;
     // Special category for categorized variables.
     // Allow for a mix of static + dynamic blocks. Static blocks will appear
     // first in the category
+    var addDefaultVar = true;
+    var config = Blockly.Flyout.config[firstBlock];
+    if (config) {
+      addDefaultVar = config.addDefaultVar;
+      config.initialize(this, cursor);
+    }
     this.layoutXmlToBlocks_(xmlList.slice(1), blocks, gaps, margin);
     Blockly.Variables.flyoutCategory(
       blocks, gaps, margin, this.blockSpace_, firstBlock, addDefaultVar);

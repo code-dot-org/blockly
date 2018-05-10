@@ -86,6 +86,9 @@ Blockly.Blocks.procedures_defnoreturn = {
     for (var x = 0; x < this.parameterNames_.length; x++) {
       var parameter = document.createElement('arg');
       parameter.setAttribute('name', this.parameterNames_[x]);
+      if (this.parameterTypes_) {
+        parameter.setAttribute('type', this.parameterTypes_[x]);
+      }
       container.appendChild(parameter);
     }
     // Add description mutation
@@ -102,6 +105,13 @@ Blockly.Blocks.procedures_defnoreturn = {
       var nodeName = childNode.nodeName.toLowerCase();
       if (nodeName === 'arg') {
         this.parameterNames_.push(childNode.getAttribute('name'));
+        var type = childNode.getAttribute('type');
+        if (type) {
+          if (!this.parameterTypes_) {
+            this.parameterTypes_ = [];
+          }
+          this.parameterTypes_[this.parameterNames_.length - 1] = type;
+        }
       } else if (nodeName === 'description') {
         this.description_ = childNode.textContent;
       }
@@ -217,6 +227,9 @@ Blockly.Blocks.procedures_defnoreturn = {
     var index = this.parameterNames_.indexOf(oldName);
     if (index > -1) {
       this.parameterNames_.splice(index, 1);
+      if (this.parameterTypes_) {
+        this.parameterTypes_.splice(index, 1);
+      }
       this.updateParams_();
     }
   },

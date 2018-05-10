@@ -23,7 +23,8 @@ goog.require('goog.structs.LinkedMap');
 Blockly.FunctionEditor = function(
     opt_msgOverrides,
     opt_definitionBlockType,
-    opt_parameterBlockTypes) {
+    opt_parameterBlockTypes,
+    opt_disableParamEditing) {
   /**
    * Whether this editor has been initialized
    * @type {boolean}
@@ -81,6 +82,7 @@ Blockly.FunctionEditor = function(
     this.definitionBlockType = opt_definitionBlockType;
   }
   this.parameterBlockTypes = opt_parameterBlockTypes || {};
+  this.disableParamEditing = opt_disableParamEditing || false;
 };
 
 Blockly.FunctionEditor.BLOCK_LAYOUT_LEFT_MARGIN = Blockly.BlockSpaceEditor.BUMP_PADDING_LEFT;
@@ -110,6 +112,10 @@ Blockly.FunctionEditor.BUTTON_TOP_OFFSET = -22;
  */
 Blockly.FunctionEditor.prototype.getMsg = function(label) {
   return this.msgOverrides_[label] || Blockly.Msg[label];
+};
+
+Blockly.FunctionEditor.prototype.paramEditingDisabled = function () {
+  return Blockly.disableParamEditing || this.disableParamEditing;
 };
 
 /**
@@ -249,7 +255,7 @@ Blockly.FunctionEditor.prototype.openWithNewFunction = function() {
 Blockly.FunctionEditor.prototype.bindToolboxHandlers_ = function() {
   var paramAddTextElement = this.container_.querySelector('#paramAddText');
   var paramAddButton = this.container_.querySelector('#paramAddButton');
-  if (!Blockly.disableParamEditing) {
+  if (!this.paramEditingDisabled()) {
     Blockly.bindEvent_(paramAddButton, 'click', this,
         goog.bind(this.addParamFromInputField_, this, paramAddTextElement));
     Blockly.bindEvent_(paramAddTextElement, 'keydown', this, function(e) {
@@ -920,7 +926,7 @@ Blockly.FunctionEditor.prototype.getContractDomTopY_ = function() {
 };
 
 Blockly.FunctionEditor.prototype.createParameterEditor_ = function() {
-  if (Blockly.disableParamEditing) {
+  if (this.paramEditingDisabled()) {
     return;
   }
 

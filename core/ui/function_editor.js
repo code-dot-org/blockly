@@ -20,7 +20,10 @@ goog.require('goog.structs.LinkedMap');
  * Class for a modal function editor.
  * @constructor
  */
-Blockly.FunctionEditor = function(opt_msgOverrides) {
+Blockly.FunctionEditor = function(
+    opt_msgOverrides,
+    opt_definitionBlockType,
+    opt_parameterBlockTypes) {
   /**
    * Whether this editor has been initialized
    * @type {boolean}
@@ -74,6 +77,10 @@ Blockly.FunctionEditor = function(opt_msgOverrides) {
   this.modalBlockSpace = null;
 
   this.msgOverrides_ = opt_msgOverrides || {};
+  if (opt_definitionBlockType) {
+    this.definitionBlockType = opt_definitionBlockType;
+  }
+  this.parameterBlockTypes = opt_parameterBlockTypes || {};
 };
 
 Blockly.FunctionEditor.BLOCK_LAYOUT_LEFT_MARGIN = Blockly.BlockSpaceEditor.BUMP_PADDING_LEFT;
@@ -116,7 +123,7 @@ Blockly.FunctionEditor.prototype.definitionBlockType = 'procedures_defnoreturn';
  * The type of block to instantiate for parameter definition
  * @type {string}
  */
-Blockly.FunctionEditor.prototype.parameterBlockType = 'parameters_get';
+Blockly.FunctionEditor.prototype.defaultParameterBlockType = 'parameters_get';
 
 /**
  * @param {String} autoOpenFunction - name of function to auto-open
@@ -144,6 +151,13 @@ Blockly.FunctionEditor.prototype.autoOpenWithLevelConfiguration = function(confi
  */
 Blockly.FunctionEditor.prototype.openEditorForCallBlock_ = function(procedureBlock) {
   var functionName = procedureBlock.getTitleValue('NAME');
+  this.openEditorForFunction(procedureBlock, functionName);
+}
+
+/**
+ * @param {string} functionName name of function for which to open editor
+ */
+Blockly.FunctionEditor.prototype.openEditorForFunction = function(procedureBlock, functionName) {
   procedureBlock.blockSpace.blockSpaceEditor.hideChaff();
   this.hideIfOpen();
   this.openAndEditFunction(functionName);
@@ -200,7 +214,11 @@ Blockly.FunctionEditor.prototype.populateParamToolbox_ = function() {
 Blockly.FunctionEditor.prototype.addParamsFromProcedure_ = function() {
   var procedureInfo = this.functionDefinitionBlock.getProcedureInfo();
   for (var i = 0; i < procedureInfo.parameterNames.length; i++) {
-    this.addParameter(procedureInfo.parameterNames[i]);
+    if (procedureInfo.parameterTypes) {
+      this.addParameter(procedureInfo.parameterNames[i], procedureInfo.parameterTypes[i]);
+    } else {
+      this.addParameter(procedureInfo.parameterNames[i]);
+    }
   }
 };
 
@@ -250,12 +268,17 @@ Blockly.FunctionEditor.prototype.addParamFromInputField_ = function(
   this.refreshParamsEverywhere();
 };
 
-Blockly.FunctionEditor.prototype.addParameter = function(newParameterName) {
-  this.orderedParamIDsToBlocks_.set(goog.events.getUniqueId('parameter'), this.newParameterBlock(newParameterName));
+Blockly.FunctionEditor.prototype.addParameter = function(newParameterName, newParameterType) {
+  this.orderedParamIDsToBlocks_.set(goog.events.getUniqueId('parameter'), this.newParameterBlock(newParameterName, newParameterType));
 };
 
-Blockly.FunctionEditor.prototype.newParameterBlock = function(newParameterName) {
-  var param = Blockly.createSvgElement('block', {type: this.parameterBlockType});
+Blockly.FunctionEditor.prototype.getParameterBlockType = function(type) {
+  return this.parameterBlockTypes[type] || this.defaultParameterBlockType;
+}
+
+Blockly.FunctionEditor.prototype.newParameterBlock = function(newParameterName, newParameterType) {
+  var parameterBlockType = this.getParameterBlockType(newParameterType);
+  var param = Blockly.createSvgElement('block', {type: parameterBlockType});
   var v = Blockly.createSvgElement('title', {name: 'VAR'}, param);
   v.textContent = newParameterName;
   return param;

@@ -115,10 +115,12 @@ Blockly.Blocks.parameters_get = {
   },
   renameVar: function(oldName, newName) {
     // Params should only be used in the FunctionEditor but better to be safe
-    if (Blockly.functionEditor && Blockly.functionEditor.isOpen()) {
-      Blockly.functionEditor.renameParameter(oldName, newName);
-      Blockly.functionEditor.refreshParamsEverywhere();
-    }
+    Blockly.FunctionEditor.allFunctionEditors.forEach(function(functionEditor) {
+      if (functionEditor.isOpen()) {
+        functionEditor.renameParameter(oldName, newName);
+        functionEditor.refreshParamsEverywhere();
+      }
+    });
   },
   removeVar: Blockly.Blocks.variables_get.removeVar
 };

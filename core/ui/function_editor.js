@@ -83,6 +83,8 @@ Blockly.FunctionEditor = function(
   }
   this.parameterBlockTypes = opt_parameterBlockTypes || {};
   this.disableParamEditing = opt_disableParamEditing || false;
+
+  Blockly.FunctionEditor.allFunctionEditors.push(this);
 };
 
 Blockly.FunctionEditor.BLOCK_LAYOUT_LEFT_MARGIN = Blockly.BlockSpaceEditor.BUMP_PADDING_LEFT;
@@ -106,6 +108,9 @@ Blockly.FunctionEditor.RTL_CLOSE_BUTTON_OFFSET = 5;
 
 /** @type {number} */
 Blockly.FunctionEditor.BUTTON_TOP_OFFSET = -22;
+
+/** @type {Blockly.FunctionEditor[]} */
+Blockly.FunctionEditor.allFunctionEditors = [];
 
 /**
  * Get a string from Blockly.Msg, unless overridden by msgOverrides

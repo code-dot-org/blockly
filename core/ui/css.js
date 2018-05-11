@@ -230,7 +230,7 @@ Blockly.Css.CONTENT = [
   '  fill: none;',
   '  stroke-width: 5;',
   '}',
-  '.blocklySelected:not(.blocklyUndeletable)>.blocklyTypeHint {',
+  '.blocklySelected:not(.blocklyUndeletable)>.blocklyTypeHint, .blocklyUnused .blocklyTypeHint {',
   '  display: none;',
   '}',
   '.blocklySpotlight>.blocklyPath {',

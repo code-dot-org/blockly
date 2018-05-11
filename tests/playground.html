@@ -21,6 +21,7 @@ function start() {
   goog.tweak.registerBoolean('openContractEditor', 'pre-opens contract editor', false);
   goog.tweak.registerBoolean('toggleScrollDragDebug', 'enables autoscroll debugging', false);
   goog.tweak.registerBoolean('openFunctionEditor', 'pre-opens function editor', false);
+  goog.tweak.registerBoolean('openCustomizedFunctionEditor', 'pre-opens customized function editor', false);
   goog.tweak.registerBoolean('enableExampleRunning', 'enables running of examples', false);
   goog.tweak.registerBoolean('typeHints', 'glow typed inputs based on what color of block they expect', false);
   goog.tweak.registerNumber('addContractDomains', 'adds a given number of domain parameters to the auto-opened contract editor', 0);
@@ -48,6 +49,8 @@ function start() {
     newContractEditor();
   } else if (goog.tweak.getBoolean('openFunctionEditor')) {
     newFunctionEditor();
+  } else if (goog.tweak.getBoolean('openCustomizedFunctionEditor')) {
+    newCustomizedFunctionEditor();
   }
   if (goog.tweak.getBoolean('toggleScrollDragDebug')) {
     Blockly.ScrollOnBlockDragHandler.DEBUG = true;
@@ -113,6 +116,20 @@ function newFunctionEditor() {
   Blockly.functionEditor = new Blockly.FunctionEditor({
   });
   Blockly.functionEditor.openWithNewFunction();
+}
+
+function newCustomizedFunctionEditor() {
+  Blockly.oceanBoilerEditor = new Blockly.FunctionEditor(
+    {
+      FUNCTION_HEADER: 'Ocean Boiler',
+      FUNCTION_NAME_LABEL: 'Name your ocean boiler:',
+      FUNCTION_DESCRIPTION_LABEL: 'What kind of ocean is this supposed to boil?',
+    },
+    'ocean_boiler_definition',
+    null,
+    true,
+  );
+  Blockly.oceanBoilerEditor.openWithNewFunction();
 }
 
 function toXml() {

@@ -43,6 +43,7 @@ goog.require('Blockly.Xml');
 goog.require('goog.asserts');
 goog.require('goog.string');
 goog.require('goog.Timer');
+goog.require('goog.math.Box');
 
 
 /**
@@ -1191,6 +1192,34 @@ Blockly.Block.prototype.moveToFrontOfMainCanvas_ = function () {
   this.blockSpace.moveElementToMainCanvas(this.svg_.getRootElement());
 };
 
+Blockly.Block.prototype.findClosestOverlappingProcedureBlock = function (x, y) {
+  var allProcedureBlocks = this.blockSpace.getAllBlocks().filter(function (block) {
+    if (block.type === "procedures_callnoreturn") {
+      if (block === this || this.getDescendants().indexOf(block) !== -1) {
+        return false;
+      }
+      return true
+    }
+
+    return false
+  }, this);
+
+  var coord = new goog.math.Coordinate(x, y);
+
+  var closestOverlappingBlocks = allProcedureBlocks.filter(function (block) {
+    return goog.math.Box.intersects(block.getBox(), this.getBox());
+  }, this).sort(function (a, b) {
+    var dist_a = goog.math.Box.distance(a.getBox(), coord);
+    var dist_b = goog.math.Box.distance(b.getBox(), coord);
+
+    return dist_a - dist_b;
+  });
+
+  if (closestOverlappingBlocks.length) {
+    return closestOverlappingBlocks[0];
+  }
+};
+
 Blockly.Block.prototype.moveBlockBeingDragged_ = function (mouseX, mouseY) {
   Blockly.removeAllRanges();
   var dx = mouseX - this.startDragMouseX;
@@ -1237,6 +1266,44 @@ Blockly.Block.prototype.moveBlockBeingDragged_ = function (mouseX, mouseY) {
         closestConnection = neighbour.connection;
         localConnection = myConnection;
         radiusConnection = neighbour.radius;
+      }
+    }
+
+    if (this.blockSpace === Blockly.mainBlockSpace) {
+      var closestEditBlock = this.findClosestOverlappingProcedureBlock(x, y);
+      if (closestEditBlock) {
+        if (!this.closestEditBlock) {
+          this.extra = closestEditBlock.appendStatementInput('__EXTRA');
+          this.extra.appendTitle("copy code inside");
+
+          this.closestEditBlock = closestEditBlock;
+          this.extra.connection.onConnect = function (connectTo) {
+            var targetBlock = connectTo.sourceBlock_;
+            if (targetBlock && this.closestEditBlock) {
+              // clone block
+              var dom = Blockly.Xml.blockToDom(targetBlock);
+              var newCopyOfBlock = Blockly.Xml.domToBlock(this.blockSpace, dom);
+              var thisXY = this.getRelativeToSurfaceXY();
+              newCopyOfBlock.moveTo(thisXY.x + 10, thisXY.y + 10);
+
+              // add it to function editor
+              Blockly.functionEditor.openEditorForCallBlock_(this.closestEditBlock);
+              Blockly.functionEditor.moveToModalBlockSpace(targetBlock);
+
+              // TODO position the block within the new block space
+            }
+
+            this.closestEditBlock && this.closestEditBlock.removeInput(this.extra.name);
+            this.extra && this.extra.dispose();
+            this.extra = undefined;
+            this.closestEditBlock = undefined;
+          }.bind(this);
+        }
+      } else if (this.closestEditBlock) {
+        this.closestEditBlock.removeInput(this.extra.name);
+        this.extra && this.extra.dispose();
+        this.extra = undefined;
+        this.closestEditBlock = undefined;
       }
     }
 

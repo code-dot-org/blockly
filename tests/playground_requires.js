@@ -152,3 +152,18 @@ Blockly.Blocks.button_block = {
     this.setOutput(true, Blockly.BlockValueType.STRING);
   },
 };
+
+Blockly.Blocks.ocean_boiler_definition = Object.assign({},
+  Blockly.Blocks.procedures_defnoreturn,
+  {
+    init: function() {
+      Blockly.Blocks.procedures_defnoreturn.init.bind(this)();
+      this.appendDummyInput()
+          .appendTitle(new Blockly.FieldLabel('this is a different definition block'));
+      this.setInputsInline(false);
+      this.setHSV(20, 0.5, 0.5);
+    },
+  }
+);
+Blockly.Procedures.DEFINITION_BLOCK_TYPES.push('ocean_boiler_definition');
+

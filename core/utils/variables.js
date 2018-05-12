@@ -140,10 +140,12 @@ Blockly.Variables.renameVariable = function(oldName, newName, blockSpace) {
     }
   }
 
-  if (Blockly.functionEditor && Blockly.functionEditor.isOpen()) {
-    Blockly.functionEditor.renameParameter(oldName, newName);
-    Blockly.functionEditor.refreshParamsEverywhere();
-  }
+  Blockly.FunctionEditor.allFunctionEditors.forEach(function (functionEditor) {
+    if (functionEditor.isOpen()) {
+      functionEditor.renameParameter(oldName, newName);
+      functionEditor.refreshParamsEverywhere();
+    }
+  });
 };
 
 /**
@@ -162,10 +164,12 @@ Blockly.Variables.deleteVariable = function(nameToRemove, blockSpace) {
     }
   }
   // Notify the modal workspace to remove the parameter from its flyout
-  if (Blockly.functionEditor && Blockly.functionEditor.isOpen()) {
-    Blockly.functionEditor.removeParameter(nameToRemove);
-    Blockly.functionEditor.refreshParamsEverywhere();
-  }
+  Blockly.FunctionEditor.allFunctionEditors.forEach(function (functionEditor) {
+    if (functionEditor.isOpen()) {
+      functionEditor.removeParameter(nameToRemove);
+      functionEditor.refreshParamsEverywhere();
+    }
+  });
 };
 
 /**

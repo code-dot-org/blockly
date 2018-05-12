@@ -21624,6 +21624,10 @@ Blockly.Flyout = function(blockSpaceEditor, opt_static) {
   this.listeners_ = [];
   this.enabled_ = true;
 };
+Blockly.Flyout.configure = function(type, config) {
+  Blockly.Flyout.config[type] = config;
+};
+Blockly.Flyout.config = {};
 Blockly.Flyout.prototype.autoClose = true;
 Blockly.Flyout.prototype.CORNER_RADIUS = 8;
 Blockly.Flyout.prototype.onResizeWrapper_ = null;
@@ -21824,6 +21828,11 @@ Blockly.Flyout.prototype.show = function(xmlList) {
       } else {
         if (goog.isString(firstBlock)) {
           var addDefaultVar = true;
+          var config = Blockly.Flyout.config[firstBlock];
+          if (config) {
+            addDefaultVar = config.addDefaultVar;
+            config.initialize(this, cursor);
+          }
           this.layoutXmlToBlocks_(xmlList.slice(1), blocks, gaps, margin);
           Blockly.Variables.flyoutCategory(blocks, gaps, margin, this.blockSpace_, firstBlock, addDefaultVar);
         } else {
@@ -25040,10 +25049,12 @@ Blockly.Variables.renameVariable = function(oldName, newName, blockSpace) {
       func.call(blocks[x], oldName, newName);
     }
   }
-  if (Blockly.functionEditor && Blockly.functionEditor.isOpen()) {
-    Blockly.functionEditor.renameParameter(oldName, newName);
-    Blockly.functionEditor.refreshParamsEverywhere();
-  }
+  Blockly.FunctionEditor.allFunctionEditors.forEach(function(functionEditor) {
+    if (functionEditor.isOpen()) {
+      functionEditor.renameParameter(oldName, newName);
+      functionEditor.refreshParamsEverywhere();
+    }
+  });
 };
 Blockly.Variables.deleteVariable = function(nameToRemove, blockSpace) {
   var blocks = blockSpace.getAllBlocks({shareMainModal:false});
@@ -25053,10 +25064,12 @@ Blockly.Variables.deleteVariable = function(nameToRemove, blockSpace) {
       func.call(blocks[x], nameToRemove);
     }
   }
-  if (Blockly.functionEditor && Blockly.functionEditor.isOpen()) {
-    Blockly.functionEditor.removeParameter(nameToRemove);
-    Blockly.functionEditor.refreshParamsEverywhere();
-  }
+  Blockly.FunctionEditor.allFunctionEditors.forEach(function(functionEditor) {
+    if (functionEditor.isOpen()) {
+      functionEditor.removeParameter(nameToRemove);
+      functionEditor.refreshParamsEverywhere();
+    }
+  });
 };
 Blockly.Variables.flyoutCategory = function(blocks, gaps, margin, blockSpace, category, addDefaultVar) {
   var variableList = Blockly.Variables.allVariables(null, category);
@@ -26036,7 +26049,7 @@ goog.require("goog.dom");
 goog.require("goog.array");
 goog.require("goog.events");
 goog.require("goog.structs.LinkedMap");
-Blockly.FunctionEditor = function() {
+Blockly.FunctionEditor = function(opt_msgOverrides, opt_definitionBlockType, opt_parameterBlockTypes, opt_disableParamEditing) {
   this.created_ = false;
   this.orderedParamIDsToBlocks_ = new goog.structs.LinkedMap;
   this.functionDefinitionBlock = null;
@@ -26051,6 +26064,13 @@ Blockly.FunctionEditor = function() {
   this.modalBackground_ = null;
   this.onResizeWrapper_ = null;
   this.modalBlockSpace = null;
+  this.msgOverrides_ = opt_msgOverrides || {};
+  if (opt_definitionBlockType) {
+    this.definitionBlockType = opt_definitionBlockType;
+  }
+  this.parameterBlockTypes = opt_parameterBlockTypes || {};
+  this.disableParamEditing = opt_disableParamEditing || false;
+  Blockly.FunctionEditor.allFunctionEditors.push(this);
 };
 Blockly.FunctionEditor.BLOCK_LAYOUT_LEFT_MARGIN = Blockly.BlockSpaceEditor.BUMP_PADDING_LEFT;
 Blockly.FunctionEditor.BLOCK_LAYOUT_TOP_MARGIN = Blockly.BlockSpaceEditor.BUMP_PADDING_TOP;
@@ -26058,8 +26078,15 @@ Blockly.FunctionEditor.DELETE_BUTTON_MARGIN = 25;
 Blockly.FunctionEditor.CLOSE_BUTTON_OVERHANG = 14;
 Blockly.FunctionEditor.RTL_CLOSE_BUTTON_OFFSET = 5;
 Blockly.FunctionEditor.BUTTON_TOP_OFFSET = -22;
+Blockly.FunctionEditor.allFunctionEditors = [];
+Blockly.FunctionEditor.prototype.getMsg = function(label) {
+  return this.msgOverrides_[label] || Blockly.Msg[label];
+};
+Blockly.FunctionEditor.prototype.paramEditingDisabled = function() {
+  return Blockly.disableParamEditing || this.disableParamEditing;
+};
 Blockly.FunctionEditor.prototype.definitionBlockType = "procedures_defnoreturn";
-Blockly.FunctionEditor.prototype.parameterBlockType = "parameters_get";
+Blockly.FunctionEditor.prototype.defaultParameterBlockType = "parameters_get";
 Blockly.FunctionEditor.prototype.autoOpenFunction = function(autoOpenFunction) {
   this.autoOpenWithLevelConfiguration({autoOpenFunction:autoOpenFunction});
 };
@@ -26070,6 +26097,9 @@ Blockly.FunctionEditor.prototype.autoOpenWithLevelConfiguration = function(confi
 };
 Blockly.FunctionEditor.prototype.openEditorForCallBlock_ = function(procedureBlock) {
   var functionName = procedureBlock.getTitleValue("NAME");
+  this.openEditorForFunction(procedureBlock, functionName);
+};
+Blockly.FunctionEditor.prototype.openEditorForFunction = function(procedureBlock, functionName) {
   procedureBlock.blockSpace.blockSpaceEditor.hideChaff();
   this.hideIfOpen();
   this.openAndEditFunction(functionName);
@@ -26087,8 +26117,8 @@ Blockly.FunctionEditor.prototype.openAndEditFunction = function(functionName) {
   this.functionDefinitionBlock.setEditable(false);
   this.populateParamToolbox_();
   this.setupUIAfterBlockInEditor_();
-  goog.dom.getElement("functionNameText").value = functionName;
-  goog.dom.getElement("functionDescriptionText").value = this.functionDefinitionBlock.description_ || "";
+  this.container_.querySelector("#functionNameText").value = functionName;
+  this.container_.querySelector("#functionDescriptionText").value = this.functionDefinitionBlock.description_ || "";
   this.deleteButton_.setVisible(targetFunctionDefinitionBlock.userCreated);
   Blockly.fireUiEvent(window, "function_editor_opened");
 };
@@ -26105,7 +26135,11 @@ Blockly.FunctionEditor.prototype.populateParamToolbox_ = function() {
 Blockly.FunctionEditor.prototype.addParamsFromProcedure_ = function() {
   var procedureInfo = this.functionDefinitionBlock.getProcedureInfo();
   for (var i = 0;i < procedureInfo.parameterNames.length;i++) {
-    this.addParameter(procedureInfo.parameterNames[i]);
+    if (procedureInfo.parameterTypes) {
+      this.addParameter(procedureInfo.parameterNames[i], procedureInfo.parameterTypes[i]);
+    } else {
+      this.addParameter(procedureInfo.parameterNames[i]);
+    }
   }
 };
 Blockly.FunctionEditor.prototype.getParamNameType = function(parameterID) {
@@ -26128,9 +26162,9 @@ Blockly.FunctionEditor.prototype.openWithNewFunction = function() {
   this.openAndEditFunction(tempFunctionDefinitionBlock.getTitleValue("NAME"));
 };
 Blockly.FunctionEditor.prototype.bindToolboxHandlers_ = function() {
-  var paramAddTextElement = goog.dom.getElement("paramAddText");
-  var paramAddButton = goog.dom.getElement("paramAddButton");
-  if (!Blockly.disableParamEditing) {
+  var paramAddTextElement = this.container_.querySelector("#paramAddText");
+  var paramAddButton = this.container_.querySelector("#paramAddButton");
+  if (!this.paramEditingDisabled()) {
     Blockly.bindEvent_(paramAddButton, "click", this, goog.bind(this.addParamFromInputField_, this, paramAddTextElement));
     Blockly.bindEvent_(paramAddTextElement, "keydown", this, function(e) {
       if (e.keyCode === goog.events.KeyCodes.ENTER) {
@@ -26145,11 +26179,15 @@ Blockly.FunctionEditor.prototype.addParamFromInputField_ = function(parameterTex
   this.addParameter(newParamName);
   this.refreshParamsEverywhere();
 };
-Blockly.FunctionEditor.prototype.addParameter = function(newParameterName) {
-  this.orderedParamIDsToBlocks_.set(goog.events.getUniqueId("parameter"), this.newParameterBlock(newParameterName));
+Blockly.FunctionEditor.prototype.addParameter = function(newParameterName, newParameterType) {
+  this.orderedParamIDsToBlocks_.set(goog.events.getUniqueId("parameter"), this.newParameterBlock(newParameterName, newParameterType));
 };
-Blockly.FunctionEditor.prototype.newParameterBlock = function(newParameterName) {
-  var param = Blockly.createSvgElement("block", {type:this.parameterBlockType});
+Blockly.FunctionEditor.prototype.getParameterBlockType = function(type) {
+  return this.parameterBlockTypes[type] || this.defaultParameterBlockType;
+};
+Blockly.FunctionEditor.prototype.newParameterBlock = function(newParameterName, newParameterType) {
+  var parameterBlockType = this.getParameterBlockType(newParameterType);
+  var param = Blockly.createSvgElement("block", {type:parameterBlockType});
   var v = Blockly.createSvgElement("title", {name:"VAR"}, param);
   v.textContent = newParameterName;
   return param;
@@ -26262,10 +26300,10 @@ Blockly.FunctionEditor.prototype.hideAndRestoreBlocks_ = function() {
   var functionDefinitionBlock = this.functionDefinitionBlock;
   this.functionDefinitionBlock = null;
   this.moveToMainBlockSpace_(functionDefinitionBlock);
-  goog.dom.getElement("functionNameText").value = "";
-  goog.dom.getElement("functionDescriptionText").value = "";
-  if (goog.dom.getElement("paramAddText")) {
-    goog.dom.getElement("paramAddText").value = "";
+  this.container_.querySelector("#functionNameText").value = "";
+  this.container_.querySelector("#functionDescriptionText").value = "";
+  if (this.container_.querySelector("#paramAddText")) {
+    this.container_.querySelector("#paramAddText").value = "";
   }
   goog.style.setElementShown(this.container_, false);
   goog.style.setElementShown(this.modalBackground_, false);
@@ -26340,7 +26378,7 @@ Blockly.FunctionEditor.prototype.create_ = function() {
   this.setupParametersToolbox_();
   this.resizeUIComponents_();
   this.bindToolboxHandlers_();
-  Blockly.bindEvent_(goog.dom.getElement("modalContainer"), "mousedown", this, function(e) {
+  Blockly.bindEvent_(this.container_, "mousedown", this, function(e) {
     if (e.target === e.currentTarget) {
       this.modalBlockSpaceEditor.hideChaff();
       if (Blockly.selected) {
@@ -26353,15 +26391,15 @@ Blockly.FunctionEditor.prototype.create_ = function() {
       this.onClose();
     }
   });
-  Blockly.bindEvent_(goog.dom.getElement("modalEditorClose"), "mousedown", this, this.onClose);
-  Blockly.bindEvent_(goog.dom.getElement("functionNameText"), "input", this, functionNameChange);
-  Blockly.bindEvent_(goog.dom.getElement("functionNameText"), "keydown", this, functionNameChange);
+  Blockly.bindEvent_(this.container_.querySelector("#modalEditorClose"), "mousedown", this, this.onClose);
+  Blockly.bindEvent_(this.container_.querySelector("#functionNameText"), "input", this, functionNameChange);
+  Blockly.bindEvent_(this.container_.querySelector("#functionNameText"), "keydown", this, functionNameChange);
   function functionNameChange(e) {
     var value = e.target.value;
     var disallowedCharacters = /\)|\(/g;
     if (disallowedCharacters.test(value)) {
       value = value.replace(disallowedCharacters, "");
-      goog.dom.getElement("functionNameText").value = value;
+      this.container_.querySelector("#functionNameText").value = value;
     }
     this.functionDefinitionBlock.setTitleValue(value, "NAME");
   }
@@ -26370,8 +26408,8 @@ Blockly.FunctionEditor.prototype.create_ = function() {
       Blockly.selected.unselect();
     }
   });
-  Blockly.bindEvent_(goog.dom.getElement("functionDescriptionText"), "input", this, functionDescriptionChange);
-  Blockly.bindEvent_(goog.dom.getElement("functionDescriptionText"), "keydown", this, functionDescriptionChange);
+  Blockly.bindEvent_(this.container_.querySelector("#functionDescriptionText"), "input", this, functionDescriptionChange);
+  Blockly.bindEvent_(this.container_.querySelector("#functionDescriptionText"), "keydown", this, functionDescriptionChange);
   function functionDescriptionChange(e) {
     this.functionDefinitionBlock.description_ = e.target.value;
   }
@@ -26466,7 +26504,7 @@ Blockly.FunctionEditor.prototype.addCloseButton_ = function() {
   var padding = 7;
   var r = Blockly.createSvgElement("rect", {"rx":12, "ry":12, "fill":"#7665a0", "stroke":"white", "stroke-width":"2.5"}, this.closeButton_);
   var text = Blockly.createSvgElement("text", {"x":padding, "y":padding, "class":"blocklyText"}, this.closeButton_);
-  text.textContent = Blockly.Msg.CLOSE;
+  text.textContent = this.getMsg("CLOSE");
   this.modalBlockSpaceEditor.appendSVGChild(this.closeButton_);
   var bounds = text.getBoundingClientRect();
   r.setAttribute("width", bounds.width + 2 * padding);
@@ -26474,12 +26512,12 @@ Blockly.FunctionEditor.prototype.addCloseButton_ = function() {
   r.setAttribute("y", -bounds.height + padding - 1);
 };
 Blockly.FunctionEditor.prototype.addDeleteButton_ = function() {
-  this.deleteButton_ = new Blockly.SvgTextButton(this.modalBlockSpaceEditor.getSVGElement(), Blockly.Msg.DELETE, this.onDeletePressed.bind(this));
+  this.deleteButton_ = new Blockly.SvgTextButton(this.modalBlockSpaceEditor.getSVGElement(), this.getMsg("DELETE"), this.onDeletePressed.bind(this));
 };
 Blockly.FunctionEditor.prototype.onDeletePressed = function() {
   var functionName = this.functionDefinitionBlock.getProcedureInfo().name;
-  var deleteMessage = Blockly.Msg.CONFIRM_DELETE_FUNCTION_MESSAGE.replace("%1", functionName);
-  Blockly.showSimpleDialog({bodyText:deleteMessage, cancelText:Blockly.Msg.DELETE, confirmText:Blockly.Msg.KEEP, onConfirm:null, onCancel:this.onDeleteConfirmed.bind(this, functionName), cancelButtonClass:"red-delete-button"});
+  var deleteMessage = this.getMsg("CONFIRM_DELETE_FUNCTION_MESSAGE").replace("%1", functionName);
+  Blockly.showSimpleDialog({bodyText:deleteMessage, cancelText:this.getMsg("DELETE"), confirmText:this.getMsg("KEEP"), onConfirm:null, onCancel:this.onDeleteConfirmed.bind(this, functionName), cancelButtonClass:"red-delete-button"});
 };
 Blockly.FunctionEditor.prototype.onDeleteConfirmed = function(functionName) {
   this.hideIfOpen();
@@ -26501,7 +26539,7 @@ Blockly.FunctionEditor.prototype.addEditorFrame_ = function() {
   this.frameBase_ = Blockly.createSvgElement("rect", {x:left + FRAME_MARGIN_SIDE, y:top + FRAME_MARGIN_TOP, fill:"hsl(94, 73%, 35%)", rx:Blockly.Bubble.BORDER_WIDTH, ry:Blockly.Bubble.BORDER_WIDTH}, this.modalBackground_);
   this.frameInner_ = Blockly.createSvgElement("rect", {x:left + FRAME_MARGIN_SIDE + Blockly.Bubble.BORDER_WIDTH, y:top + FRAME_MARGIN_TOP + Blockly.Bubble.BORDER_WIDTH + FRAME_HEADER_HEIGHT, fill:"#ffffff"}, this.modalBackground_);
   this.frameText_ = Blockly.createSvgElement("text", {x:left + FRAME_MARGIN_SIDE + 16, y:top + FRAME_MARGIN_TOP + 22, "class":"blocklyText", style:"font-size: 12pt"}, this.modalBackground_);
-  this.frameText_.textContent = Blockly.Msg.FUNCTION_HEADER;
+  this.frameText_.textContent = this.getMsg("FUNCTION_HEADER");
 };
 Blockly.FunctionEditor.prototype.position_ = function() {
   if (!this.isOpen()) {
@@ -26517,10 +26555,10 @@ Blockly.FunctionEditor.prototype.getContractDomTopY_ = function() {
   return this.modalBlockSpace.yOffsetFromView;
 };
 Blockly.FunctionEditor.prototype.createParameterEditor_ = function() {
-  if (Blockly.disableParamEditing) {
+  if (this.paramEditingDisabled()) {
     return;
   }
-  goog.dom.getElement("paramEditingArea").innerHTML = "<div>" + Blockly.Msg.FUNCTION_PARAMETERS_LABEL + "</div>" + "<div>" + '<input id="paramAddText" type="text" style="width: 200px;"/> ' + '<button id="paramAddButton" class="btn no-mc">' + Blockly.Msg.ADD_PARAMETER + "</button>" + "</div>";
+  this.container_.querySelector("#paramEditingArea").innerHTML = "<div>" + this.getMsg("FUNCTION_PARAMETERS_LABEL") + "</div>" + "<div>" + '<input id="paramAddText" type="text" style="width: 200px;"/> ' + '<button id="paramAddButton" class="btn no-mc">' + this.getMsg("ADD_PARAMETER") + "</button>" + "</div>";
 };
 Blockly.FunctionEditor.prototype.createFrameClipDiv_ = function() {
   var frameClipDiv = goog.dom.createDom("div");
@@ -26534,7 +26572,7 @@ Blockly.FunctionEditor.prototype.createContractDom_ = function() {
   if (Blockly.RTL) {
     this.contractDiv_.setAttribute("dir", "RTL");
   }
-  this.contractDiv_.innerHTML = "<div>" + Blockly.Msg.FUNCTION_NAME_LABEL + "</div>" + '<div><input id="functionNameText" type="text"></div>' + "<div>" + Blockly.Msg.FUNCTION_DESCRIPTION_LABEL + "</div>" + '<div><textarea id="functionDescriptionText" rows="2"></textarea></div>' + '<div style="margin: 0;" id="paramEditingArea"></div>';
+  this.contractDiv_.innerHTML = "<div>" + this.getMsg("FUNCTION_NAME_LABEL") + "</div>" + '<div><input id="functionNameText" type="text"></div>' + "<div>" + this.getMsg("FUNCTION_DESCRIPTION_LABEL") + "</div>" + '<div><textarea id="functionDescriptionText" rows="2"></textarea></div>' + '<div style="margin: 0;" id="paramEditingArea"></div>';
   this.contractDiv_.style.display = "block";
   this.frameClipDiv_ = this.createFrameClipDiv_();
   this.frameClipDiv_.insertBefore(this.contractDiv_, this.frameClipDiv_.firstChild);
@@ -29570,7 +29608,7 @@ Blockly.Css.CONTENT = [".blocklyFieldAngleTextInput {", "  border: 1px solid #cc
 " opacity: 0.25;", "}", ".blocklyUnused .blocklyUnusedFrame {", " transition: opacity 2s;", " opacity: 0.8;", "}", ".blocklyUnused .blocklyUnusedFrame .blocklyText {", " fill: #000;", "}", ".blocklyUnused .blocklyUnusedFrame.hidden {", " opacity: 0;", " visibility: hidden", "}", ".blocklyUnused .blocklyHelp {", " cursor: pointer;", "}", ".blocklyUnused .blocklyHelp .blocklyText {", " fill: #fff;", " font-size: 10pt;", " text-anchor: middle;", " dominant-baseline: central;", "}", ".blocklyDraggable {", 
 "  cursor: url(%CURSOR_OPEN_PATH%) 8 5, auto;", "}", ".dragging, .dragging .blocklySvg, .dragging .blocklyDraggable {", "  cursor: url(%CURSOR_CLOSED_PATH%) 7 3, auto !important;", "}", "#%CONTAINER_ID% {", "  border: 1px solid #ddd;", "}", "#%CONTAINER_ID% .userHidden {", "  display: none;", "}", "#%CONTAINER_ID% .hiddenFlyout {", "  display: none !important;", "}", "#%CONTAINER_ID%.edit .userHidden {", "  display: inline;", "  fill-opacity: 0.5;", "}", "#%CONTAINER_ID%.edit .userHidden .blocklyPath {", 
 "  fill-opacity: 0.5;", "}", "#%CONTAINER_ID%.edit .userHidden .blocklyPathDark, #%CONTAINER_ID%.edit .userHidden .blocklyPathLight {", "  display: none;", "}", ".blocklySvg {", "  cursor: pointer;", "  background-color: #fff;", "  overflow: hidden;", "}", ".blocklySvg.inline {", "  vertical-align: top;", "}", "g.blocklyDraggable {", "  -ms-touch-action: none;", "  touch-action: none;", "}", ".blocklyWidgetDiv {", "  position: absolute;", "  display: none;", "  z-index: 999;", "}", ".blocklyResizeSE {", 
-"  fill: #aaa;", "  cursor: se-resize;", "}", ".blocklyResizeSW {", "  fill: #aaa;", "  cursor: sw-resize;", "}", ".blocklyResizeLine {", "  stroke-width: 1;", "  stroke: #888;", "}", ".blocklyHighlightedConnectionPath {", "  stroke-width: 4px;", "  stroke: #fc3;", "  fill: none;", "}", ".blocklyPathLight {", "  fill: none;", "  stroke-width: 2;", "  stroke-linecap: round;", "}", ".blocklyTypeHint {", "  fill: none;", "  stroke-width: 5;", "}", ".blocklySelected:not(.blocklyUndeletable)>.blocklyTypeHint {", 
+"  fill: #aaa;", "  cursor: se-resize;", "}", ".blocklyResizeSW {", "  fill: #aaa;", "  cursor: sw-resize;", "}", ".blocklyResizeLine {", "  stroke-width: 1;", "  stroke: #888;", "}", ".blocklyHighlightedConnectionPath {", "  stroke-width: 4px;", "  stroke: #fc3;", "  fill: none;", "}", ".blocklyPathLight {", "  fill: none;", "  stroke-width: 2;", "  stroke-linecap: round;", "}", ".blocklyTypeHint {", "  fill: none;", "  stroke-width: 5;", "}", ".blocklySelected:not(.blocklyUndeletable)>.blocklyTypeHint, .blocklyUnused .blocklyTypeHint {", 
 "  display: none;", "}", ".blocklySpotlight>.blocklyPath {", "  fill: #fc3;", "}", ".blocklySelected:not(.blocklyUndeletable)>.blocklyPath {", "  stroke-width: 3px;", "  stroke: #fc3;", "}", ".blocklySelected:not(.blocklyUndeletable)>.blocklyPathLight {", "  display: none;", "}", ".blocklyUndeletable>.blocklyEditableText>rect {", "  fill-opacity: 1.0;", "  fill: #ffdb74;", "}", "#blocklyDragCanvas {", "  display: none;", "  pointer-events: none;", "  position: absolute;", "  top: 0;", "  left: 0;", 
 "  z-index: 10;", "}", "#blocklyDragCanvas.isDragging {", "  display: block;", "}", ".blocklyDragging>.blocklyPath,", ".blocklyDragging>.blocklyPathLight {", "  fill-opacity: 0.8;", "  stroke-opacity: 0.8;", "}", ".blocklyDragging>.blocklyPathDark {", "  display: none;", "}", ".blocklyDisabled>.blocklyPath {", "  fill-opacity: 0.50;", "  stroke-opacity: 0.50;", "}", ".blocklyDisabled>.blocklyPathLight,", ".blocklyDisabled>.blocklyPathDark {", "  display: none;", "}", ".blocklyText {", "  cursor: default;", 
 "  font-family: sans-serif;", "  font-size: 11pt;", "  fill: #fff;", "}", ".innerModalDiv {", "  pointer-events: none !important;", "}", ".innerModalDiv .goog-flat-menu-button,", ".innerModalDiv textarea,", ".innerModalDiv input,", ".innerModalDiv button {", "  pointer-events: auto;", "}", ".flyoutColorGray {", "  background-color: #DDD;", "}", ".contractEditor #paramAddButton {", "  margin-top: 3px;", "  margin-left: 10px;", "  margin-bottom: 4px;", "}", ".contractEditorHeaderText {", "  cursor: default;", 

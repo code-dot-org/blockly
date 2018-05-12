@@ -730,6 +730,7 @@ Blockly.Blocks.procedures_defnoreturn = {shouldHideIfInMainBlockSpace:function()
   for (var a = document.createElement("mutation"), b = 0;b < this.parameterNames_.length;b++) {
     var c = document.createElement("arg");
     c.setAttribute("name", this.parameterNames_[b]);
+    this.parameterTypes_ && c.setAttribute("type", this.parameterTypes_[b]);
     a.appendChild(c);
   }
   this.description_ && (b = document.createElement("description"), b.textContent = this.description_, a.appendChild(b));
@@ -738,7 +739,13 @@ Blockly.Blocks.procedures_defnoreturn = {shouldHideIfInMainBlockSpace:function()
   this.parameterNames_ = [];
   for (var b = 0, c;c = a.childNodes[b];b++) {
     var d = c.nodeName.toLowerCase();
-    "arg" === d ? this.parameterNames_.push(c.getAttribute("name")) : "description" === d && (this.description_ = c.textContent);
+    if ("arg" === d) {
+      if (this.parameterNames_.push(c.getAttribute("name")), c = c.getAttribute("type")) {
+        this.parameterTypes_ || (this.parameterTypes_ = []), this.parameterTypes_[this.parameterNames_.length - 1] = c;
+      }
+    } else {
+      "description" === d && (this.description_ = c.textContent);
+    }
   }
   this.updateParams_();
 }, decompose:function(a) {
@@ -788,7 +795,7 @@ Blockly.Blocks.procedures_defnoreturn = {shouldHideIfInMainBlockSpace:function()
   }
 }, removeVar:function(a) {
   a = this.parameterNames_.indexOf(a);
-  -1 < a && (this.parameterNames_.splice(a, 1), this.updateParams_());
+  -1 < a && (this.parameterNames_.splice(a, 1), this.parameterTypes_ && this.parameterTypes_.splice(a, 1), this.updateParams_());
 }, customContextMenu:function(a) {
   var b = {enabled:!0}, c = this.getTitleValue("NAME");
   b.text = Blockly.Msg.PROCEDURES_CREATE_DO.replace("%1", c);
@@ -1242,7 +1249,9 @@ Blockly.Blocks.parameters_get = {init:function() {
   this.setOutput(!0);
   this.setTooltip(Blockly.Msg.VARIABLES_GET_TOOLTIP);
 }, renameVar:function(a, b) {
-  Blockly.functionEditor && Blockly.functionEditor.isOpen() && (Blockly.functionEditor.renameParameter(a, b), Blockly.functionEditor.refreshParamsEverywhere());
+  Blockly.FunctionEditor.allFunctionEditors.forEach(function(c) {
+    c.isOpen() && (c.renameParameter(a, b), c.refreshParamsEverywhere());
+  });
 }, removeVar:Blockly.Blocks.variables_get.removeVar};
 Blockly.Blocks.functionalProcedures = {};
 Blockly.Blocks.functional_definition = {shouldHideIfInMainBlockSpace:function() {

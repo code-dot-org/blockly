@@ -269,12 +269,18 @@ Blockly.Toolbox.TreeControl.prototype.enterDocument = function() {
       'onpointerdown' in window ||
       'onmspointerdown' in window) {
     var el = this.getElement();
-    Blockly.bindEvent_(el, goog.events.EventType.TOUCHSTART, this,
-        this.handleTouchEvent_);
-    Blockly.bindEvent_(el, goog.events.EventType.POINTERDOWN, this,
-        this.handleTouchEvent_);
-    Blockly.bindEvent_(el, goog.events.EventType.MSPOINTERDOWN, this,
-        this.handleTouchEvent_);
+    var debouncedHandler =
+      goog.functions.debounce(this.handleTouchEvent_, 50, this);
+    var handler = (function (e) {
+      if (this.getNodeFromEvent_(e)) {
+        e.preventDefault();
+        e.stopImmediatePropagation();
+        debouncedHandler(e);
+      }
+    }).bind(this);
+    Blockly.bindEvent_(el, goog.events.EventType.TOUCHSTART, this, handler);
+    Blockly.bindEvent_(el, goog.events.EventType.POINTERDOWN, this, handler);
+    Blockly.bindEvent_(el, goog.events.EventType.MSPOINTERDOWN, this, handler);
   }
 };
 /**
@@ -283,19 +289,12 @@ Blockly.Toolbox.TreeControl.prototype.enterDocument = function() {
  * @private
  */
 Blockly.Toolbox.TreeControl.prototype.handleTouchEvent_ = function(e) {
-  e.preventDefault();
   var node = this.getNodeFromEvent_(e);
   if (node && (e.type === goog.events.EventType.TOUCHSTART ||
                e.type === goog.events.EventType.POINTERDOWN ||
                e.type === goog.events.EventType.MSPOINTERDOWN)) {
     // Fire asynchronously since onMouseDown takes long enough that the browser
     // would fire the default mouse event before this method returns.
-    e.stopImmediatePropagation();
-    if (this.previousTouchEventTimeStamp === e.timeStamp) {
-      // This is a duplicate touch/pointer event, ignore it
-      return;
-    }
-    this.previousTouchEventTimeStamp = e.timeStamp;
     window.setTimeout(function() {
       node.onMouseDown(e);  // Same behavior for click and touch.
     }, 1);

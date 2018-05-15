@@ -30,7 +30,7 @@ goog.require('Blockly.Blocks');
 Blockly.Block.createProcedureDefinitionBlock = function(config) {
   config = config || {};
   config.overrides = config.overrides || {};
-  return Object.assign({
+  var block = {
     shouldHideIfInMainBlockSpace: function () {
       return Blockly.useModalFunctionEditor;
     },
@@ -275,8 +275,9 @@ Blockly.Block.createProcedureDefinitionBlock = function(config) {
       return false;
     },
     callType_: 'procedures_callnoreturn'
-  },
-  config.overrides);
+  };
+  goog.object.extend(block, config.overrides);
+  return block;
 }
 Blockly.Blocks.procedures_defnoreturn = Blockly.Block.createProcedureDefinitionBlock();
 

@@ -291,6 +291,11 @@ Blockly.Toolbox.TreeControl.prototype.handleTouchEvent_ = function(e) {
     // Fire asynchronously since onMouseDown takes long enough that the browser
     // would fire the default mouse event before this method returns.
     e.stopImmediatePropagation();
+    if (this.previousTouchEventTimeStamp === e.timeStamp) {
+      // This is a duplicate touch/pointer event, ignore it
+      return;
+    }
+    this.previousTouchEventTimeStamp = e.timeStamp;
     window.setTimeout(function() {
       node.onMouseDown(e);  // Same behavior for click and touch.
     }, 1);

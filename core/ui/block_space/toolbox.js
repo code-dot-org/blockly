@@ -269,12 +269,10 @@ Blockly.Toolbox.TreeControl.prototype.enterDocument = function() {
       'onpointerdown' in window ||
       'onmspointerdown' in window) {
     var el = this.getElement();
-    Blockly.bindEvent_(el, goog.events.EventType.TOUCHSTART, this,
-        this.handleTouchEvent_);
-    Blockly.bindEvent_(el, goog.events.EventType.POINTERDOWN, this,
-        this.handleTouchEvent_);
-    Blockly.bindEvent_(el, goog.events.EventType.MSPOINTERDOWN, this,
-        this.handleTouchEvent_);
+    var handler = goog.functions.rateLimit(this.handleTouchEvent_, 50, this);
+    Blockly.bindEvent_(el, goog.events.EventType.TOUCHSTART, this, handler);
+    Blockly.bindEvent_(el, goog.events.EventType.POINTERDOWN, this, handler);
+    Blockly.bindEvent_(el, goog.events.EventType.MSPOINTERDOWN, this, handler);
   }
 };
 /**

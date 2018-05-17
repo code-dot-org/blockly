@@ -702,8 +702,8 @@ Blockly.BlockSpace.prototype.fireChangeEvent = function() {
  */
 Blockly.BlockSpace.prototype.paste = function(clipboard) {
   var xmlBlock = clipboard.dom;
-  // When pasting into the main block space, remove parameter blocks
-  if (this === Blockly.mainBlockSpace) {
+  // When pasting into a different block spaces, remove parameter blocks
+  if (this !== clipboard.sourceBlockSpace) {
     if (xmlBlock.getAttribute('type') === 'parameters_get') {
       return;
     }

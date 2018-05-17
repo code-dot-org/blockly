@@ -512,6 +512,8 @@ Blockly.BlockSpaceEditor.prototype.init_ = function() {
     // Destroying and reinjecting Blockly should not bind again.
     Blockly.bindEvent_(window, 'resize', this, this.svgResize);
     Blockly.bindEvent_(document, 'keydown', this, this.onKeyDown_);
+    Blockly.bindEvent_(document, 'copy', this, this.onCopy_);
+    Blockly.bindEvent_(document, 'paste', this, this.onPaste_);
     // Some iPad versions don't fire resize after portrait to landscape change.
     if (goog.userAgent.IPAD) {
       Blockly.bindEvent_(window, 'orientationchange', document, function () {
@@ -736,13 +738,31 @@ Blockly.BlockSpaceEditor.prototype.onKeyDown_ = function(e) {
         Blockly.selected.dispose(true, true);
       }
     }
-    if (e.keyCode == 86) {
-      // 'v' for paste.
-      if (Blockly.clipboard_) {
-        Blockly.focusedBlockSpace.paste(Blockly.clipboard_);
-      }
-    }
   }
+};
+
+/**
+ * Handle a clipboard copy on SVG drawing surface.
+ * @param {!Event} e Copy event.
+ * @private
+ */
+Blockly.BlockSpaceEditor.prototype.onCopy_ = function(e) {
+  e.clipboardData.setData('text/xml', Blockly.clipboard_);
+  e.preventDefault();
+};
+
+/**
+ * Handle a clipboard paste on SVG drawing surface.
+ * @param {!Event} e Paste event.
+ * @private
+ */
+Blockly.BlockSpaceEditor.prototype.onPaste_ = function(e) {
+  try {
+    var xml = Blockly.Xml.textToDom(e.clipboardData.getData('text/xml'));
+    Blockly.focusedBlockSpace.paste({
+      dom: xml.firstElementChild
+    });
+  } catch (_) { }
 };
 
 /**
@@ -766,10 +786,8 @@ Blockly.BlockSpaceEditor.copy_ = function(block) {
   var xy = block.getRelativeToSurfaceXY();
   xmlBlock.setAttribute('x', Blockly.RTL ? -xy.x : xy.x);
   xmlBlock.setAttribute('y', xy.y);
-  Blockly.clipboard_ = {
-    dom: xmlBlock,
-    sourceBlockSpace: block.blockSpace
-  };
+  // To be read by `this.onCopy_`.
+  Blockly.clipboard_ = '<xml>' + Blockly.Xml.domToText(xmlBlock) + '</xml>';
 };
 
 /**

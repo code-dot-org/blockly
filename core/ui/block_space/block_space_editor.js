@@ -512,7 +512,8 @@ Blockly.BlockSpaceEditor.prototype.init_ = function() {
     // Destroying and reinjecting Blockly should not bind again.
     Blockly.bindEvent_(window, 'resize', this, this.svgResize);
     Blockly.bindEvent_(document, 'keydown', this, this.onKeyDown_);
-    Blockly.bindEvent_(document, 'copy', this, this.onCopy_);
+    Blockly.bindEvent_(document, 'copy', this, this.onCutCopy_);
+    Blockly.bindEvent_(document, 'cut', this, this.onCutCopy_);
     Blockly.bindEvent_(document, 'paste', this, this.onPaste_);
     // Some iPad versions don't fire resize after portrait to landscape change.
     if (goog.userAgent.IPAD) {
@@ -746,7 +747,7 @@ Blockly.BlockSpaceEditor.prototype.onKeyDown_ = function(e) {
  * @param {!Event} e Copy event.
  * @private
  */
-Blockly.BlockSpaceEditor.prototype.onCopy_ = function(e) {
+Blockly.BlockSpaceEditor.prototype.onCutCopy_ = function(e) {
   e.clipboardData.setData('text/xml', Blockly.clipboard_);
   e.preventDefault();
 };
@@ -786,7 +787,7 @@ Blockly.BlockSpaceEditor.copy_ = function(block) {
   var xy = block.getRelativeToSurfaceXY();
   xmlBlock.setAttribute('x', Blockly.RTL ? -xy.x : xy.x);
   xmlBlock.setAttribute('y', xy.y);
-  // To be read by `this.onCopy_`.
+  // To be read by `this.onCutCopy_`.
   Blockly.clipboard_ = '<xml>' + Blockly.Xml.domToText(xmlBlock) + '</xml>';
 };
 

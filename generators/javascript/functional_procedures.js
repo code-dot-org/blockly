@@ -41,13 +41,13 @@ Blockly.JavaScript.functional_definition = function() {
         Blockly.Variables.NAME_TYPE,
         Blockly.Variables.NAME_TYPE_LOCAL);
   }
-  var branch = Blockly.JavaScript.statementToCode(this, 'STACK');
+  var branch = '';
 
   if (Blockly.JavaScript.INFINITE_LOOP_TRAP) {
     branch = Blockly.JavaScript.INFINITE_LOOP_TRAP.replace(/%1/g,
         '\'' + this.id + '\'') + branch;
   }
-  var returnValue = Blockly.JavaScript.statementToCode(this, 'RETURN',
+  var returnValue = Blockly.JavaScript.statementToCode(this, 'STACK',
       Blockly.JavaScript.ORDER_NONE) || '';
   if (returnValue) {
     returnValue = '  return ' + returnValue + ';\n';
@@ -55,7 +55,7 @@ Blockly.JavaScript.functional_definition = function() {
   var code = (Blockly.varsInGlobals ?
                 'Globals.' + funcName + ' = function' :
                 'function ' + funcName) +
-             '(' + args.join(', ') + ') {\nreturn ' + branch + returnValue + '\n}';
+             '(' + args.join(', ') + ') {\n' + branch + returnValue + '\n}';
   code = Blockly.JavaScript.scrub_(this, code);
   Blockly.JavaScript.definitions_[funcName] = code;
   return null;

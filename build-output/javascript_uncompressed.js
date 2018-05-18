@@ -731,11 +731,11 @@ Blockly.JavaScript.functional_definition = function() {
   for (var a = Blockly.JavaScript.variableDB_.getName(this.getTitleValue("NAME"), Blockly.Procedures.NAME_TYPE), b = [], c = 0;c < this.parameterNames_.length;c++) {
     b[c] = Blockly.JavaScript.variableDB_.getName(this.parameterNames_[c], Blockly.Variables.NAME_TYPE, Blockly.Variables.NAME_TYPE_LOCAL);
   }
-  c = Blockly.JavaScript.statementToCode(this, "STACK");
+  c = "";
   Blockly.JavaScript.INFINITE_LOOP_TRAP && (c = Blockly.JavaScript.INFINITE_LOOP_TRAP.replace(/%1/g, "'" + this.id + "'") + c);
-  var d = Blockly.JavaScript.statementToCode(this, "RETURN", Blockly.JavaScript.ORDER_NONE) || "";
+  var d = Blockly.JavaScript.statementToCode(this, "STACK", Blockly.JavaScript.ORDER_NONE) || "";
   d && (d = "  return " + d + ";\n");
-  b = (Blockly.varsInGlobals ? "Globals." + a + " = function" : "function " + a) + "(" + b.join(", ") + ") {\nreturn " + c + d + "\n}";
+  b = (Blockly.varsInGlobals ? "Globals." + a + " = function" : "function " + a) + "(" + b.join(", ") + ") {\n" + c + d + "\n}";
   b = Blockly.JavaScript.scrub_(this, b);
   Blockly.JavaScript.definitions_[a] = b;
   return null;

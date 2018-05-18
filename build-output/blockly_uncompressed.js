@@ -7264,7 +7264,7 @@ Blockly.BlockSpace.prototype.fireChangeEvent = function() {
 };
 Blockly.BlockSpace.prototype.paste = function(clipboard) {
   var xmlBlock = clipboard.dom;
-  if (this !== clipboard.sourceBlockSpace) {
+  if (this === Blockly.mainBlockSpace) {
     if (xmlBlock.getAttribute("type") === "parameters_get") {
       return;
     }
@@ -25630,6 +25630,9 @@ Blockly.BlockSpaceEditor.prototype.init_ = function() {
   if (!this.disableEventBindings && !Blockly.documentEventsBound_) {
     Blockly.bindEvent_(window, "resize", this, this.svgResize);
     Blockly.bindEvent_(document, "keydown", this, this.onKeyDown_);
+    Blockly.bindEvent_(document, "copy", this, this.onCutCopy_);
+    Blockly.bindEvent_(document, "cut", this, this.onCutCopy_);
+    Blockly.bindEvent_(document, "paste", this, this.onPaste_);
     if (goog.userAgent.IPAD) {
       Blockly.bindEvent_(window, "orientationchange", document, function() {
         Blockly.fireUiEvent(window, "resize");
@@ -25769,13 +25772,19 @@ Blockly.BlockSpaceEditor.prototype.onKeyDown_ = function(e) {
             }
           }
         }
-        if (e.keyCode == 86) {
-          if (Blockly.clipboard_) {
-            Blockly.focusedBlockSpace.paste(Blockly.clipboard_);
-          }
-        }
       }
     }
+  }
+};
+Blockly.BlockSpaceEditor.prototype.onCutCopy_ = function(e) {
+  e.clipboardData.setData("text/xml", Blockly.clipboard_);
+  e.preventDefault();
+};
+Blockly.BlockSpaceEditor.prototype.onPaste_ = function(e) {
+  try {
+    var xml = Blockly.Xml.textToDom(e.clipboardData.getData("text/xml"));
+    Blockly.focusedBlockSpace.paste({dom:xml.firstElementChild});
+  } catch (_) {
   }
 };
 Blockly.BlockSpaceEditor.terminateDrag_ = function() {
@@ -25788,7 +25797,7 @@ Blockly.BlockSpaceEditor.copy_ = function(block) {
   var xy = block.getRelativeToSurfaceXY();
   xmlBlock.setAttribute("x", Blockly.RTL ? -xy.x : xy.x);
   xmlBlock.setAttribute("y", xy.y);
-  Blockly.clipboard_ = {dom:xmlBlock, sourceBlockSpace:block.blockSpace};
+  Blockly.clipboard_ = "<xml>" + Blockly.Xml.domToText(xmlBlock) + "</xml>";
 };
 Blockly.BlockSpaceEditor.showContextMenu_ = function(e) {
   if (this.isReadOnly()) {

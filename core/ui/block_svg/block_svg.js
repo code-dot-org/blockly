@@ -333,13 +333,13 @@ BS.SQUARE_TAB_PATH_DOWN_HIGHLIGHT_RTL =
  * @const
  */
 BS.SQUARE_TAB_PATH_UP =
-  'v -8 ' +
+  'V 17 ' +
   'h ' + (BS.TAB_WIDTH * -1) + ' ' +
   'v -10 ' +
   'h ' + BS.TAB_WIDTH;
 
 BS.SQUARE_TAB_PATH_UP_HIGHLIGHT =
-  'v -7 ' +
+  'V 18 ' +
   'm ' + (BS.TAB_WIDTH * -1) + ' -1.5 ' +
   'v -9 ' +
   'h ' + BS.TAB_WIDTH + ' ' +
@@ -375,12 +375,12 @@ BS.ROUNDED_TAB_PATH_DOWN_HIGHLIGHT_RTL =
  * @const
  */
 BS.ROUNDED_TAB_PATH_UP =
-  'v -6 ' +
+  'V 19 ' +
   'c ' + (BS.TAB_WIDTH * -0.5) + ' 0, ' + (BS.TAB_WIDTH * -1) + ' 0, ' + (BS.TAB_WIDTH * -1) + ' -6 ' +
   'c 0 -6, ' + (BS.TAB_WIDTH * 0.5) + ' -6, ' + BS.TAB_WIDTH + ' -6 ';
 
 BS.ROUNDED_TAB_PATH_UP_HIGHLIGHT =
-  'v -5.5 ' +
+  'V 19.5 ' +
   'm -6 -2 ' +
   'c -1 -1, -2 -2, -2 -4.5 ' +
   'c 0 -6, ' + (BS.TAB_WIDTH * 0.5) + ' -6, ' + BS.TAB_WIDTH + ' -6 ' +

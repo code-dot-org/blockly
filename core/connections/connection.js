@@ -435,11 +435,11 @@ Blockly.Connection.prototype.colorForType = function(checks) {
     case 'Colour':
       return '#0094ca';
     case 'Sprite':
-      return '#399e4b';
+      return '#b33540';
     case 'Behavior':
-      return '#d1c404';
+      return '#20cc4e';
     case 'Location':
-      return '#f318a2';
+      return '#ebd546';
     default:
       return;
   }

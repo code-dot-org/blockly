@@ -2015,6 +2015,9 @@ Blockly.Block.prototype.setOutput = function(hasOutput, opt_check, opt_strict) {
         new Blockly.Connection(this, Blockly.OUTPUT_VALUE);
     this.outputConnection.setCheck(opt_check, opt_strict);
   }
+  if (opt_check && !(opt_check instanceof Array) && !this.colourHue_) {
+    this.setHSV.apply(this, this.outputConnection.colorForType([opt_check]));
+  }
   this.refreshRender();
 };
 

@@ -429,17 +429,17 @@ Blockly.Connection.prototype.colorForType = function(checks) {
   }
   switch (checks[0]) {
     case 'String':
-      return '#5ba68d';
+      return [160, 0.45, 0.65];
     case 'Number':
-      return '#77679e';
+      return [258, 0.35, 0.62];
     case 'Colour':
-      return '#0094ca';
+      return [196, 1.0, 0.79];
     case 'Sprite':
-      return '#b33540';
+      return [0, 0.45, 0.65];
     case 'Behavior':
-      return '#20cc4e';
+      return [136, 0.84, 0.80];
     case 'Location':
-      return '#ebd546';
+      return [52, 0.70, 0.92];
     default:
       return;
   }

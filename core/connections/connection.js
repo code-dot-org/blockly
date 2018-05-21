@@ -432,10 +432,14 @@ Blockly.Connection.prototype.colorForType = function(checks) {
       return [160, 0.45, 0.65];
     case 'Number':
       return [258, 0.35, 0.62];
+    case 'Boolean':
+      return [196, 1.0, 0.79];
+    case 'Array':
+      return [40, 1.0, 0.99];
     case 'Colour':
       return [196, 1.0, 0.79];
     case 'Sprite':
-      return [0, 0.45, 0.65];
+      return [355, 0.70, 0.70];
     case 'Behavior':
       return [136, 0.84, 0.80];
     case 'Location':

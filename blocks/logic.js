@@ -244,7 +244,6 @@ Blockly.Blocks.logic_compare = {
       ];
     }
     this.setHelpUrl(Blockly.Msg.LOGIC_COMPARE_HELPURL);
-    this.setHSV(196, 1.0, 0.79);
     this.setOutput(true, Blockly.BlockValueType.BOOLEAN);
     this.appendValueInput('A');
     this.appendValueInput('B')
@@ -274,7 +273,6 @@ Blockly.Blocks.logic_operation = {
         [[Blockly.Msg.LOGIC_OPERATION_AND, 'AND'],
          [Blockly.Msg.LOGIC_OPERATION_OR, 'OR']];
     this.setHelpUrl(Blockly.Msg.LOGIC_OPERATION_HELPURL);
-    this.setHSV(196, 1.0, 0.79);
     this.setOutput(true, Blockly.BlockValueType.BOOLEAN);
     this.appendValueInput('A')
         .setCheck(Blockly.BlockValueType.BOOLEAN);
@@ -300,7 +298,6 @@ Blockly.Blocks.logic_negate = {
   // Negation.
   init: function() {
     this.setHelpUrl(Blockly.Msg.LOGIC_NEGATE_HELPURL);
-    this.setHSV(196, 1.0, 0.79);
     this.setOutput(true, Blockly.BlockValueType.BOOLEAN);
     this.interpolateMsg(Blockly.Msg.LOGIC_NEGATE_TITLE,
                         ['BOOL', Blockly.BlockValueType.BOOLEAN, Blockly.ALIGN_RIGHT],
@@ -316,7 +313,6 @@ Blockly.Blocks.logic_boolean = {
         [[Blockly.Msg.LOGIC_BOOLEAN_TRUE, 'TRUE'],
          [Blockly.Msg.LOGIC_BOOLEAN_FALSE, 'FALSE']];
     this.setHelpUrl(Blockly.Msg.LOGIC_BOOLEAN_HELPURL);
-    this.setHSV(196, 1.0, 0.79);
     this.setOutput(true, Blockly.BlockValueType.BOOLEAN);
     this.appendDummyInput()
         .appendTitle(new Blockly.FieldDropdown(BOOLEANS), 'BOOL');

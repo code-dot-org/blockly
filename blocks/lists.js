@@ -32,7 +32,6 @@ Blockly.Blocks.lists_create_empty = {
   // Create an empty list.
   init: function() {
     this.setHelpUrl(Blockly.Msg.LISTS_CREATE_EMPTY_HELPURL);
-    this.setHSV(40, 1.0, 0.99);
     this.setOutput(true, Blockly.BlockValueType.ARRAY);
     this.appendDummyInput()
         .appendTitle(Blockly.Msg.LISTS_CREATE_EMPTY_TITLE);
@@ -43,7 +42,6 @@ Blockly.Blocks.lists_create_empty = {
 Blockly.Blocks.lists_create_with = {
   // Create a list with any number of elements of any type.
   init: function() {
-    this.setHSV(40, 1.0, 0.99);
     this.appendValueInput('ADD0')
         .appendTitle(Blockly.Msg.LISTS_CREATE_WITH_INPUT_WITH);
     this.appendValueInput('ADD1');
@@ -160,7 +158,6 @@ Blockly.Blocks.lists_repeat = {
   // Create a list with one element repeated.
   init: function() {
     this.setHelpUrl(Blockly.Msg.LISTS_REPEAT_HELPURL);
-    this.setHSV(40, 1.0, 0.99);
     this.setOutput(true, Blockly.BlockValueType.ARRAY);
     this.interpolateMsg(Blockly.Msg.LISTS_REPEAT_TITLE,
                         ['ITEM', null, Blockly.ALIGN_RIGHT],
@@ -424,7 +421,6 @@ Blockly.Blocks.lists_getSublist = {
          [Blockly.Msg.LISTS_GET_INDEX_FROM_END, 'FROM_END'],
          [Blockly.Msg.LISTS_GET_INDEX_LAST, 'LAST']];
     this.setHelpUrl(Blockly.Msg.LISTS_GET_SUBLIST_HELPURL);
-    this.setHSV(40, 1.0, 0.99);
     this.appendValueInput('LIST')
         .setCheck(Blockly.BlockValueType.ARRAY)
         .appendTitle(Blockly.Msg.LISTS_GET_SUBLIST_INPUT_IN_LIST);

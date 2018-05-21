@@ -64,11 +64,6 @@ Blockly.BlockSvg = function(block) {
 };
 
 Blockly.BlockSvg.prototype.initChildren = function () {
-  this.svgPathDark_ = Blockly.createSvgElement('path', {
-    'class': 'blocklyPathDark',
-    'transform': 'translate(1, 1)',
-    'fill-rule': 'evenodd'
-  }, this.svgGroup_);
   if (Blockly.typeHints) {
     this.svgTypeHints_ = Blockly.createSvgElement('g', {
       'class': 'blocklyTypeHint'
@@ -79,6 +74,11 @@ Blockly.BlockSvg.prototype.initChildren = function () {
       }, this.svgTypeHints_);
     }
   }
+  this.svgPathDark_ = Blockly.createSvgElement('path', {
+    'class': 'blocklyPathDark',
+    'transform': 'translate(1, 1)',
+    'fill-rule': 'evenodd'
+  }, this.svgGroup_);
   this.svgPath_ = Blockly.createSvgElement('path', {
     'class': 'blocklyPath',
     'fill-rule': 'evenodd'

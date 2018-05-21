@@ -776,6 +776,12 @@ Blockly.Connection.prototype.setCheck = function(check, opt_strict) {
       // Bump away.
       this.sourceBlock_.bumpNeighbours_();
     }
+
+    // If the setting an output check, and the block has no color, make the
+    // block the default color for the given output type.
+    if (this.type === Blockly.OUTPUT_VALUE && !this.sourceBlock_.getColour()) {
+      this.sourceBlock_.setHSV.apply(this.sourceBlock_, this.colorForType(check));
+    }
   } else {
     this.check_ = null;
   }

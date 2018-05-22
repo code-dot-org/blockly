@@ -167,7 +167,7 @@ Blockly.JavaScript.scrubNakedValue = function(line) {
  * @return {string} Legal line of code.
  */
 Blockly.JavaScript.comment = function(line) {
-  return '/* ' + line + ' */\n';
+  return '/* ' + line.replace(/\*\//, '* /') + ' */\n';
 };
 
 /**

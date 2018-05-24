@@ -1180,11 +1180,12 @@ Blockly.BlockSvg.prototype.renderDraw_ = function(iconWidth, inputRows) {
     });
     for (var j = 0; j < this.svgTypeHints_.children.length; j++) {
       var pathInfo = typeHints[j];
-      if (pathInfo) {
+      if (pathInfo && pathInfo.color) {
         this.svgTypeHints_.children[j].setAttribute('d', pathInfo.steps);
         this.svgTypeHints_.children[j].setAttribute('transform',
           pathInfo.transform);
-        this.svgTypeHints_.children[j].setAttribute('stroke', pathInfo.color);
+        this.svgTypeHints_.children[j].setAttribute('stroke',
+          Blockly.makeColour.apply(null, pathInfo.color));
       } else {
         this.svgTypeHints_.children[j].setAttribute('d', '');
       }

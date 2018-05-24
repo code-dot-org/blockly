@@ -70,7 +70,7 @@ Blockly.Playground.customSimpleDialog = function (dialogOptions) {
   dialog.setVisible(true);
 };
 
-function createVariableGet(type, color) {
+function createVariableGet(type) {
   return {
     // Variable getter.
     init: function() {
@@ -78,7 +78,6 @@ function createVariableGet(type, color) {
       // Must be marked EDITABLE so that cloned blocks share the same var name
       fieldLabel.EDITABLE = true;
       this.setHelpUrl(Blockly.Msg.VARIABLES_GET_HELPURL);
-      this.setHSV.apply(this, color);
       this.appendDummyInput()
         .appendTitle(Blockly.Msg.VARIABLES_GET_TITLE)
         .appendTitle(Blockly.disableVariableEditing ? fieldLabel
@@ -90,7 +89,7 @@ function createVariableGet(type, color) {
   }
 }
 
-function createVariableSet(type, color) {
+function createVariableSet(type) {
   return {
     // Variable setter.
     init: function() {
@@ -98,7 +97,7 @@ function createVariableSet(type, color) {
       // Must be marked EDITABLE so that cloned blocks share the same var name
       fieldLabel.EDITABLE = true;
       this.setHelpUrl(Blockly.Msg.VARIABLES_SET_HELPURL);
-      this.setHSV.apply(this, color);
+      this.setHSV(312, 0.32, 0.62);
       this.appendValueInput('VALUE')
         .setStrictCheck(type)
         .appendTitle(Blockly.Msg.VARIABLES_SET_TITLE)
@@ -123,14 +122,14 @@ function createVariableSet(type, color) {
   }
 }
 
-Blockly.Blocks.sprite_variables_get = createVariableGet(Blockly.BlockValueType.SPRITE, [131, 0.64, 0.62]);
-Blockly.Blocks.sprite_variables_set = createVariableSet(Blockly.BlockValueType.SPRITE, [312, 0.32, 0.62]);
+Blockly.Blocks.sprite_variables_get = createVariableGet(Blockly.BlockValueType.SPRITE);
+Blockly.Blocks.sprite_variables_set = createVariableSet(Blockly.BlockValueType.SPRITE);
 
-Blockly.Blocks.behavior_variables_get = createVariableGet(Blockly.BlockValueType.BEHAVIOR, [52, .98, .82]);
-Blockly.Blocks.behavior_variables_set = createVariableSet(Blockly.BlockValueType.BEHAVIOR, [312, 0.32, 0.62]);
+Blockly.Blocks.behavior_variables_get = createVariableGet(Blockly.BlockValueType.BEHAVIOR);
+Blockly.Blocks.behavior_variables_set = createVariableSet(Blockly.BlockValueType.BEHAVIOR);
 
-Blockly.Blocks.location_variables_get = createVariableGet(Blockly.BlockValueType.LOCATION, [322, 0.90, 0.95]);
-Blockly.Blocks.location_variables_set = createVariableSet(Blockly.BlockValueType.LOCATION, [312, 0.32, 0.62]);
+Blockly.Blocks.location_variables_get = createVariableGet(Blockly.BlockValueType.LOCATION);
+Blockly.Blocks.location_variables_set = createVariableSet(Blockly.BlockValueType.LOCATION);
 
 Blockly.Blocks.button_block = {
   // Example block with button field

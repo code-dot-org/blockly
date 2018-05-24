@@ -429,17 +429,21 @@ Blockly.Connection.prototype.colorForType = function(checks) {
   }
   switch (checks[0]) {
     case 'String':
-      return '#5ba68d';
+      return [160, 0.45, 0.65];
     case 'Number':
-      return '#77679e';
+      return [258, 0.35, 0.62];
+    case 'Boolean':
+      return [196, 1.0, 0.79];
+    case 'Array':
+      return [40, 1.0, 0.99];
     case 'Colour':
-      return '#0094ca';
+      return [196, 1.0, 0.79];
     case 'Sprite':
-      return '#399e4b';
+      return [355, 0.70, 0.70];
     case 'Behavior':
-      return '#d1c404';
+      return [136, 0.84, 0.80];
     case 'Location':
-      return '#f318a2';
+      return [52, 0.70, 0.92];
     default:
       return;
   }
@@ -771,6 +775,12 @@ Blockly.Connection.prototype.setCheck = function(check, opt_strict) {
       }
       // Bump away.
       this.sourceBlock_.bumpNeighbours_();
+    }
+
+    // If the setting an output check, and the block has no color, make the
+    // block the default color for the given output type.
+    if (this.type === Blockly.OUTPUT_VALUE && !this.sourceBlock_.getColour()) {
+      this.sourceBlock_.setHSV.apply(this.sourceBlock_, this.colorForType(check));
     }
   } else {
     this.check_ = null;

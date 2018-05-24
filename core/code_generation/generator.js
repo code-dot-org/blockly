@@ -220,8 +220,7 @@ Blockly.CodeGenerator.prototype.blockToCode = function(block, opt_showHidden) {
 
   var func = this[block.type];
   if (!func) {
-    throw 'Language "' + this.name_ + '" does not know how to generate code ' +
-        'for block type "' + block.type + '".';
+    return this.comment('Unknown block: ' + block.type);
   }
   var code = func.call(block);
 

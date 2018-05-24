@@ -162,6 +162,15 @@ Blockly.JavaScript.scrubNakedValue = function(line) {
 };
 
 /**
+ * Generate commented code for unknown blocks.
+ * @param {string} line Line of generated code.
+ * @return {string} Legal line of code.
+ */
+Blockly.JavaScript.comment = function(line) {
+  return '/* ' + line.replace(/\*\//, '* /') + ' */\n';
+};
+
+/**
  * Encode a string as a properly escaped JavaScript string, complete with
  * quotes.
  * @param {string} string Text to encode.

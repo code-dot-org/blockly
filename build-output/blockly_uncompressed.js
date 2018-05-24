@@ -3020,13 +3020,13 @@ Blockly.BlockSvg = function(block) {
   this.forcedInputWidths = {};
 };
 Blockly.BlockSvg.prototype.initChildren = function() {
-  this.svgPathDark_ = Blockly.createSvgElement("path", {"class":"blocklyPathDark", "transform":"translate(1, 1)", "fill-rule":"evenodd"}, this.svgGroup_);
   if (Blockly.typeHints) {
     this.svgTypeHints_ = Blockly.createSvgElement("g", {"class":"blocklyTypeHint"}, this.svgGroup_);
     for (var i = 0;i < this.block_.inputList.length;i++) {
       Blockly.createSvgElement("path", {"filter":"url(#blocklyTypeHintFilter)"}, this.svgTypeHints_);
     }
   }
+  this.svgPathDark_ = Blockly.createSvgElement("path", {"class":"blocklyPathDark", "transform":"translate(1, 1)", "fill-rule":"evenodd"}, this.svgGroup_);
   this.svgPath_ = Blockly.createSvgElement("path", {"class":"blocklyPath", "fill-rule":"evenodd"}, this.svgGroup_);
   var pattern = this.block_.getFillPattern();
   if (pattern) {
@@ -3101,14 +3101,14 @@ BS.ANGLE_TAB_PATH_UP_HIGHLIGHT = "V " + (BS.TAB_HEIGHT + 2) + " " + "M " + (BS.T
 BS.SQUARE_TAB_PATH_DOWN = "v 7 " + "h " + BS.TAB_WIDTH * -1 + " " + "v 11 " + "h " + BS.TAB_WIDTH + " " + "v 2";
 BS.SQUARE_TAB_PATH_DOWN_HIGHLIGHT = "m 0 18.5 " + "h " + BS.TAB_WIDTH * -0.85;
 BS.SQUARE_TAB_PATH_DOWN_HIGHLIGHT_RTL = "v 6 " + "m " + BS.TAB_WIDTH * -1 + " 1 " + "v 11 " + "h " + BS.TAB_WIDTH + " " + "v 2";
-BS.SQUARE_TAB_PATH_UP = "v -8 " + "h " + BS.TAB_WIDTH * -1 + " " + "v -10 " + "h " + BS.TAB_WIDTH;
-BS.SQUARE_TAB_PATH_UP_HIGHLIGHT = "v -7 " + "m " + BS.TAB_WIDTH * -1 + " -1.5 " + "v -9 " + "h " + BS.TAB_WIDTH + " " + "v -6.5";
+BS.SQUARE_TAB_PATH_UP = "V 17 " + "h " + BS.TAB_WIDTH * -1 + " " + "v -10 " + "h " + BS.TAB_WIDTH;
+BS.SQUARE_TAB_PATH_UP_HIGHLIGHT = "V 18 " + "m " + BS.TAB_WIDTH * -1 + " -1.5 " + "v -9 " + "h " + BS.TAB_WIDTH + " " + "v -6.5";
 BS.SQUARE_TAB_PATH_UP_HIGHLIGHT_RTL = "M -1.5 7.5 " + "h " + BS.TAB_WIDTH * -0.8;
 BS.ROUNDED_TAB_PATH_DOWN = "v 5.5 " + "c " + BS.TAB_WIDTH * -0.5 + " 0, " + BS.TAB_WIDTH * -1 + " 2, " + BS.TAB_WIDTH * -1 + " 7 " + "c 0 5, " + BS.TAB_WIDTH * 0.5 + " 7, " + BS.TAB_WIDTH + " 7 " + "v 0.5";
 BS.ROUNDED_TAB_PATH_DOWN_HIGHLIGHT = "m 0 20 " + "c -2 0, -4 -0.5, -4 -0.5";
 BS.ROUNDED_TAB_PATH_DOWN_HIGHLIGHT_RTL = "v 4.5 " + "m -6 2.5 " + "c -2 0, -2 5, -2 5.5 " + "c 0 5, " + BS.TAB_WIDTH * 0.5 + " 7, " + BS.TAB_WIDTH + " 7 " + "v 1";
-BS.ROUNDED_TAB_PATH_UP = "v -6 " + "c " + BS.TAB_WIDTH * -0.5 + " 0, " + BS.TAB_WIDTH * -1 + " 0, " + BS.TAB_WIDTH * -1 + " -6 " + "c 0 -6, " + BS.TAB_WIDTH * 0.5 + " -6, " + BS.TAB_WIDTH + " -6 ";
-BS.ROUNDED_TAB_PATH_UP_HIGHLIGHT = "v -5.5 " + "m -6 -2 " + "c -1 -1, -2 -2, -2 -4.5 " + "c 0 -6, " + BS.TAB_WIDTH * 0.5 + " -6, " + BS.TAB_WIDTH + " -6 " + "v -6";
+BS.ROUNDED_TAB_PATH_UP = "V 19 " + "c " + BS.TAB_WIDTH * -0.5 + " 0, " + BS.TAB_WIDTH * -1 + " 0, " + BS.TAB_WIDTH * -1 + " -6 " + "c 0 -6, " + BS.TAB_WIDTH * 0.5 + " -6, " + BS.TAB_WIDTH + " -6 ";
+BS.ROUNDED_TAB_PATH_UP_HIGHLIGHT = "V 19.5 " + "m -6 -2 " + "c -1 -1, -2 -2, -2 -4.5 " + "c 0 -6, " + BS.TAB_WIDTH * 0.5 + " -6, " + BS.TAB_WIDTH + " -6 " + "v -6";
 BS.ROUNDED_TAB_PATH_UP_HIGHLIGHT_RTL = "M -0.5 7.5 " + "c -2 0, -4 0.5, -4 0.5";
 BS.TAB_PATHS_BY_SHAPE = {standard:{TAB_PATH_DOWN:BS.TAB_PATH_DOWN, TAB_PATH_DOWN_HIGHLIGHT:BS.TAB_PATH_DOWN_HIGHLIGHT, TAB_PATH_DOWN_HIGHLIGHT_RTL:BS.TAB_PATH_DOWN_HIGHLIGHT_RTL, TAB_PATH_UP:BS.TAB_PATH_UP, TAB_PATH_UP_HIGHLIGHT:BS.TAB_PATH_UP_HIGHLIGHT, TAB_PATH_UP_HIGHLIGHT_RTL:BS.TAB_PATH_UP_HIGHLIGHT_RTL}, angle:{TAB_PATH_DOWN:BS.ANGLE_TAB_PATH_DOWN, TAB_PATH_DOWN_HIGHLIGHT:"", TAB_PATH_DOWN_HIGHLIGHT_RTL:BS.ANGLE_TAB_PATH_DOWN_HIGHLIGHT_RTL, TAB_PATH_UP:BS.ANGLE_TAB_PATH_UP, TAB_PATH_UP_HIGHLIGHT:BS.ANGLE_TAB_PATH_UP_HIGHLIGHT, 
 TAB_PATH_UP_HIGHLIGHT_RTL:""}, square:{TAB_PATH_DOWN:BS.SQUARE_TAB_PATH_DOWN, TAB_PATH_DOWN_HIGHLIGHT:BS.SQUARE_TAB_PATH_DOWN_HIGHLIGHT, TAB_PATH_DOWN_HIGHLIGHT_RTL:BS.SQUARE_TAB_PATH_DOWN_HIGHLIGHT_RTL, TAB_PATH_UP:BS.SQUARE_TAB_PATH_UP, TAB_PATH_UP_HIGHLIGHT:BS.SQUARE_TAB_PATH_UP_HIGHLIGHT, TAB_PATH_UP_HIGHLIGHT_RTL:BS.SQUARE_TAB_PATH_UP_HIGHLIGHT_RTL}, rounded:{TAB_PATH_DOWN:BS.ROUNDED_TAB_PATH_DOWN, TAB_PATH_DOWN_HIGHLIGHT:BS.ROUNDED_TAB_PATH_DOWN_HIGHLIGHT, TAB_PATH_DOWN_HIGHLIGHT_RTL:BS.ROUNDED_TAB_PATH_DOWN_HIGHLIGHT_RTL, 
@@ -3509,10 +3509,10 @@ Blockly.BlockSvg.prototype.renderDraw_ = function(iconWidth, inputRows) {
     });
     for (var j = 0;j < this.svgTypeHints_.children.length;j++) {
       var pathInfo = typeHints[j];
-      if (pathInfo) {
+      if (pathInfo && pathInfo.color) {
         this.svgTypeHints_.children[j].setAttribute("d", pathInfo.steps);
         this.svgTypeHints_.children[j].setAttribute("transform", pathInfo.transform);
-        this.svgTypeHints_.children[j].setAttribute("stroke", pathInfo.color);
+        this.svgTypeHints_.children[j].setAttribute("stroke", Blockly.makeColour.apply(null, pathInfo.color));
       } else {
         this.svgTypeHints_.children[j].setAttribute("d", "");
       }
@@ -8268,17 +8268,21 @@ Blockly.Connection.prototype.colorForType = function(checks) {
   }
   switch(checks[0]) {
     case "String":
-      return "#5ba68d";
+      return [160, 0.45, 0.65];
     case "Number":
-      return "#77679e";
+      return [258, 0.35, 0.62];
+    case "Boolean":
+      return [196, 1.0, 0.79];
+    case "Array":
+      return [40, 1.0, 0.99];
     case "Colour":
-      return "#0094ca";
+      return [196, 1.0, 0.79];
     case "Sprite":
-      return "#399e4b";
+      return [355, 0.70, 0.70];
     case "Behavior":
-      return "#d1c404";
+      return [136, 0.84, 0.80];
     case "Location":
-      return "#f318a2";
+      return [52, 0.70, 0.92];
     default:
       return;
   }
@@ -8465,6 +8469,9 @@ Blockly.Connection.prototype.setCheck = function(check, opt_strict) {
         this.sourceBlock_.setParent(null);
       }
       this.sourceBlock_.bumpNeighbours_();
+    }
+    if (this.type === Blockly.OUTPUT_VALUE && !this.sourceBlock_.getColour()) {
+      this.sourceBlock_.setHSV.apply(this.sourceBlock_, this.colorForType(check));
     }
   } else {
     this.check_ = null;
@@ -18490,7 +18497,7 @@ Blockly.CodeGenerator.prototype.blockToCode = function(block, opt_showHidden) {
   }
   var func = this[block.type];
   if (!func) {
-    throw 'Language "' + this.name_ + '" does not know how to generate code ' + 'for block type "' + block.type + '".';
+    return this.comment("Unknown block: " + block.type);
   }
   var code = func.call(block);
   if (code instanceof Array) {

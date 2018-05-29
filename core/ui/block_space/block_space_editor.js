@@ -748,8 +748,10 @@ Blockly.BlockSpaceEditor.prototype.onKeyDown_ = function(e) {
  * @private
  */
 Blockly.BlockSpaceEditor.prototype.onCutCopy_ = function(e) {
-  e.clipboardData.setData('text/xml', Blockly.clipboard_);
-  e.preventDefault();
+  if (Blockly.selected) {
+    e.clipboardData.setData('text/xml', Blockly.clipboard_);
+    e.preventDefault();
+  }
 };
 
 /**

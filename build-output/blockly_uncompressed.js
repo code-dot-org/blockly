@@ -25770,13 +25770,8 @@ Blockly.BlockSpaceEditor.prototype.onKeyDown_ = function(e) {
       if (e.altKey || e.ctrlKey || e.metaKey) {
         if (Blockly.selected && Blockly.selected.isDeletable() && Blockly.selected.isCopyable()) {
           this.hideChaff();
-          if (e.keyCode == 67) {
+          if (e.keyCode == 67 || e.keyCode == 88) {
             Blockly.BlockSpaceEditor.copy_(Blockly.selected);
-          } else {
-            if (e.keyCode == 88) {
-              Blockly.BlockSpaceEditor.copy_(Blockly.selected);
-              Blockly.selected.dispose(true, true);
-            }
           }
         }
       }
@@ -25787,6 +25782,9 @@ Blockly.BlockSpaceEditor.prototype.onCutCopy_ = function(e) {
   if (Blockly.selected) {
     e.clipboardData.setData("text/xml", Blockly.clipboard_);
     e.preventDefault();
+    if (e.type === "cut") {
+      Blockly.selected.dispose(true, true);
+    }
   }
 };
 Blockly.BlockSpaceEditor.prototype.onPaste_ = function(e) {

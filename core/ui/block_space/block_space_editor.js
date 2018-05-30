@@ -709,8 +709,8 @@ Blockly.BlockSpaceEditor.prototype.onKeyDown_ = function(e) {
     // When focused on an HTML text input widget, don't trap any keys.
     return;
   }
-  if (e.keyCode == 27) {
-    // Pressing esc closes the context menu.
+  if (e.keyCode == 9 || e.keyCode == 27) {
+    // Pressing tab or esc closes the context menu.
     this.hideChaff();
   } else if (e.keyCode == 8 || e.keyCode == 46) {
     // Delete or backspace.

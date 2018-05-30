@@ -46,6 +46,7 @@ Blockly.BlockSvg = function(block) {
 
   this.block_ = block;
   var options = {
+    "tabindex": 0,
     "block-id": block.id
   };
   if (block.htmlId) {

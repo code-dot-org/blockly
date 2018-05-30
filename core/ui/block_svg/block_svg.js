@@ -778,12 +778,14 @@ Blockly.BlockSvg.prototype.updateLimit = function (limit) {
 };
 
 /**
- * Select this block.  Highlight it visually.  Move to top of the stack.
+ * Select this block.  Highlight it visually.
+ * @param {boolean} moveToTop Move the selected block to the top of the stack.
  */
-Blockly.BlockSvg.prototype.addSelect = function() {
+Blockly.BlockSvg.prototype.addSelect = function(moveToTop) {
   Blockly.addClass_(this.svgGroup_, 'blocklySelected');
-  // Move the selected block to the top of the stack.
-  this.svgGroup_.parentNode.appendChild(this.svgGroup_);
+  if (moveToTop) {
+    this.svgGroup_.parentNode.appendChild(this.svgGroup_);
+  }
 };
 
 /**

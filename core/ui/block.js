@@ -387,7 +387,7 @@ Blockly.Block.prototype.select = function(spotlight) {
     Blockly.selected.unselect();
   }
   Blockly.selected = this;
-  this.svg_.addSelect();
+  this.svg_.addSelect(!this.parentBlock_);
   if (spotlight) {
     this.svg_.addSpotlight();
   }

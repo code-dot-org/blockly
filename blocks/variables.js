@@ -126,7 +126,8 @@ Blockly.Blocks.parameters_get = {
     if (type) {
       // Clear current color, so we can infer it from output type.
       this.setColour(null);
-      this.outputConnection.setCheck(type, true);
+      var strict = !!Blockly.valueTypeTabShapeMap[type];
+      this.outputConnection.setCheck(type, strict);
     }
   },
   renameVar: function(oldName, newName) {

@@ -104,6 +104,7 @@ Blockly.Blocks.parameters_get = {
     // Must be marked EDITABLE so that cloned blocks share the same var name
     fieldLabel.EDITABLE = true;
     this.setHelpUrl(Blockly.Msg.VARIABLES_GET_HELPURL);
+    this.setHSV(7, 0.80, 0.95);
     this.appendDummyInput()
         .appendTitle(Blockly.Msg.VARIABLES_GET_TITLE)
         .appendTitle(Blockly.disableVariableEditing ? fieldLabel
@@ -123,9 +124,9 @@ Blockly.Blocks.parameters_get = {
   domToMutation: function(container) {
     var type = container.getAttribute('output');
     if (type) {
+      // Clear current color, so we can infer it from output type.
+      this.setColour(null);
       this.outputConnection.setCheck(type, true);
-    } else {
-      this.setHSV(7, 0.80, 0.95);
     }
   },
   renameVar: function(oldName, newName) {

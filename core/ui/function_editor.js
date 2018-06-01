@@ -295,7 +295,9 @@ Blockly.FunctionEditor.prototype.newParameterBlock = function(newParameterName, 
   var parameterBlockType = this.getParameterBlockType(newParameterType);
   var param = Blockly.createSvgElement('block', {type: parameterBlockType});
   var v = Blockly.createSvgElement('title', {name: 'VAR'}, param);
-  Blockly.createSvgElement('mutation', {output: newParameterType}, param);
+  if (newParameterType) {
+    Blockly.createSvgElement('mutation', {output: newParameterType}, param);
+  }
   v.textContent = newParameterName;
   return param;
 };

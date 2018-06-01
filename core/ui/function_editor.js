@@ -381,7 +381,8 @@ Blockly.FunctionEditor.prototype.paramsAsParallelArrays_ = function() {
     paramNames.push(blockXML.firstElementChild.textContent);
     paramIDs.push(paramID);
     if (blockXML.childNodes.length > 1) {
-      paramTypes.push(blockXML.childNodes[1].textContent);
+      var node = blockXML.childNodes[1];
+      paramTypes.push(node.getAttribute('output') || node.textContent);
     }
   }, this);
   return {paramNames: paramNames, paramIDs: paramIDs, paramTypes: paramTypes};

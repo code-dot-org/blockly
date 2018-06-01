@@ -98,6 +98,18 @@ var PROCEDURE_WITH_PARAM =
   '</block>' +
 '</xml>';
 
+var PROCEDURE_WITH_TYPED_PARAM =
+'<xml>' +
+  '<block type="procedures_defnoreturn">' +
+    '<mutation>' +
+      '<arg name="abc" type="Number"/>' +
+      '<arg name="zzz" type="String"/>' +
+    '</mutation>' +
+    '<title name="NAME">procedure with typed param</title>' +
+    '<statement name="STACK"/>' +
+  '</block>' +
+'</xml>';
+
 var USER_CREATED_PROCEDURE =
 '<xml>' +
   '<block type="procedures_defnoreturn" usercreated="true">' +
@@ -319,6 +331,22 @@ function test_functionEditor_useSimpleDialogForParamDeletion() {
   assertEquals('One parameter left', 1, paramsUsed.length);
 
   resetCustomSimpleDialog();
+  cleanupFunctionEditor();
+  goog.dom.removeNode(container);
+}
+
+function test_functionEditor_typedParams() {
+  var container = Blockly.Test.initializeBlockSpaceEditor();
+  initializeFunctionEditor(PROCEDURE_WITH_TYPED_PARAM);
+  openFunctionEditor('procedure with typed param');
+
+  var params = Blockly.functionEditor.orderedParamIDsToBlocks_.getValues();
+  var paramTypes = params.map(function (node) {
+    return node.querySelector('mutation').getAttribute('output');
+  });
+  assertEquals('First param has Number type', 'Number', paramTypes[0]);
+  assertEquals('Second param has String type', 'String', paramTypes[1]);
+
   cleanupFunctionEditor();
   goog.dom.removeNode(container);
 }

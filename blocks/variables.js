@@ -104,7 +104,6 @@ Blockly.Blocks.parameters_get = {
     // Must be marked EDITABLE so that cloned blocks share the same var name
     fieldLabel.EDITABLE = true;
     this.setHelpUrl(Blockly.Msg.VARIABLES_GET_HELPURL);
-    this.setHSV(7, 0.80, 0.95);
     this.appendDummyInput()
         .appendTitle(Blockly.Msg.VARIABLES_GET_TITLE)
         .appendTitle(Blockly.disableVariableEditing ? fieldLabel
@@ -112,6 +111,22 @@ Blockly.Blocks.parameters_get = {
         .appendTitle(Blockly.Msg.VARIABLES_GET_TAIL);
     this.setOutput(true);
     this.setTooltip(Blockly.Msg.VARIABLES_GET_TOOLTIP);
+  },
+  mutationToDom: function() {
+    var checks = this.outputConnection.getCheck();
+    if (checks && checks.length === 1) {
+      var container = document.createElement('mutation');
+      container.setAttribute('output', checks[0]);
+      return container;
+    }
+  },
+  domToMutation: function(container) {
+    var type = container.getAttribute('output');
+    if (type) {
+      this.outputConnection.setCheck(type, true);
+    } else {
+      this.setHSV(7, 0.80, 0.95);
+    }
   },
   renameVar: function(oldName, newName) {
     // Params should only be used in the FunctionEditor but better to be safe

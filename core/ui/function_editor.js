@@ -24,7 +24,8 @@ Blockly.FunctionEditor = function(
     opt_msgOverrides,
     opt_definitionBlockType,
     opt_parameterBlockTypes,
-    opt_disableParamEditing) {
+    opt_disableParamEditing,
+    opt_paramTypes) {
   /**
    * Whether this editor has been initialized
    * @type {boolean}
@@ -83,6 +84,7 @@ Blockly.FunctionEditor = function(
   }
   this.parameterBlockTypes = opt_parameterBlockTypes || {};
   this.disableParamEditing = opt_disableParamEditing || false;
+  this.paramTypes = opt_paramTypes || [];
 
   Blockly.FunctionEditor.allFunctionEditors.push(this);
 };
@@ -935,10 +937,19 @@ Blockly.FunctionEditor.prototype.createParameterEditor_ = function() {
     return;
   }
 
+  var paramTypeSelect = '';
+  if (this.paramTypes.length > 0) {
+    paramTypeSelect = this.paramTypes.map(function (type) {
+      return '<option>' + type + '</option>';
+    }).join('\n');
+    paramTypeSelect = '<select id="paramAddType" style="pointer-events: auto; margin: 0; width: 100px;">' + paramTypeSelect + '</select> ';
+  }
+
   this.container_.querySelector('#paramEditingArea').innerHTML =
     '<div>' + this.getMsg('FUNCTION_PARAMETERS_LABEL') + '</div>'
     + '<div>'
     + '<input id="paramAddText" type="text" style="width: 200px;"/> '
+    + paramTypeSelect
     + '<button id="paramAddButton" class="btn no-mc">' + this.getMsg('ADD_PARAMETER') + '</button>'
     + '</div>';
 };

@@ -126,9 +126,19 @@ function newCustomizedFunctionEditor() {
       FUNCTION_DESCRIPTION_LABEL: 'What kind of ocean is this supposed to boil?',
     },
     'ocean_boiler_definition',
-    null,
+    {
+      [Blockly.BlockValueType.SPRITE]: 'sprite_variables_get',
+      [Blockly.BlockValueType.LOCATION]: 'location_variables_get'
+    },
     false,
-    ['number', 'string', 'color', 'boolean', 'sprite', 'location']
+    [
+      Blockly.BlockValueType.NUMBER,
+      Blockly.BlockValueType.STRING,
+      Blockly.BlockValueType.COLOUR,
+      Blockly.BlockValueType.BOOLEAN,
+      Blockly.BlockValueType.SPRITE,
+      Blockly.BlockValueType.LOCATION
+    ]
   );
   Blockly.oceanBoilerEditor.openWithNewFunction();
 }

@@ -261,23 +261,25 @@ Blockly.FunctionEditor.prototype.openWithNewFunction = function() {
 
 Blockly.FunctionEditor.prototype.bindToolboxHandlers_ = function() {
   var paramAddTextElement = this.container_.querySelector('#paramAddText');
+  var paramAddTypeSelect = this.container_.querySelector('#paramAddType');
   var paramAddButton = this.container_.querySelector('#paramAddButton');
   if (!this.paramEditingDisabled()) {
     Blockly.bindEvent_(paramAddButton, 'click', this,
-        goog.bind(this.addParamFromInputField_, this, paramAddTextElement));
+        goog.bind(this.addParamFromInputField_, this, paramAddTextElement, paramAddTypeSelect));
     Blockly.bindEvent_(paramAddTextElement, 'keydown', this, function(e) {
       if (e.keyCode === goog.events.KeyCodes.ENTER) {
-        this.addParamFromInputField_(paramAddTextElement);
+        this.addParamFromInputField_(paramAddTextElement, paramAddTypeSelect);
       }
     });
   }
 };
 
 Blockly.FunctionEditor.prototype.addParamFromInputField_ = function(
-    parameterTextElement) {
+    parameterTextElement, paramAddTypeSelect) {
   var newParamName = parameterTextElement.value;
   parameterTextElement.value = '';
-  this.addParameter(newParamName);
+  var newParamType = paramAddTypeSelect && paramAddTypeSelect.value;
+  this.addParameter(newParamName, newParamType);
   this.refreshParamsEverywhere();
 };
 

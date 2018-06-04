@@ -1173,14 +1173,18 @@ Blockly.BlockSvg.prototype.renderDraw_ = function(iconWidth, inputRows) {
   }
   if (this.svgTypeHints_) {
     var g = this.svgTypeHints_;
-    this.block_.inputList.forEach(function (input, j) {
-      if (!input.connection) {
-        return;
-      }
-      var pathInfo = input.connection.getPathInfo();
+    var max = Math.max(this.block_.inputList.length, g.children.length);
+    for (var j = 0; j < max; j++) {
       var element = g.children[j] || Blockly.createSvgElement('path', {
         'filter': 'url(#blocklyTypeHintFilter)'
       }, g);
+      var input = this.block_.inputList[j];
+      if (!input || !input.connection) {
+        element.setAttribute('d', '');
+        continue;
+      }
+
+      var pathInfo = input.connection.getPathInfo();
       if (pathInfo && pathInfo.color) {
         element.setAttribute('d', pathInfo.steps);
         element.setAttribute('transform',
@@ -1190,7 +1194,7 @@ Blockly.BlockSvg.prototype.renderDraw_ = function(iconWidth, inputRows) {
       } else {
         element.setAttribute('d', '');
       }
-    });
+    }
   }
   this.svgPathDark_.setAttribute('d', pathString);
   pathString = renderInfo.highlight.join(' ') + '\n' + renderInfo.highlightInline.join(' ');

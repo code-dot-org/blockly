@@ -57,6 +57,7 @@ Blockly.Block.createProcedureDefinitionBlock = function(config) {
       // the toolbox or in the feedback dialog (which is readonly).
       this.setFramed(this.blockSpace === Blockly.mainBlockSpace && !this.blockSpace.isReadOnly());
       this.parameterNames_ = [];
+      this.parameterTypes_ = [];
       if (config.initPostScript) {
         config.initPostScript(this);
       }
@@ -91,7 +92,7 @@ Blockly.Block.createProcedureDefinitionBlock = function(config) {
       for (var x = 0; x < this.parameterNames_.length; x++) {
         var parameter = document.createElement('arg');
         parameter.setAttribute('name', this.parameterNames_[x]);
-        if (this.parameterTypes_) {
+        if (this.parameterTypes_ && this.parameterTypes_[x]) {
           parameter.setAttribute('type', this.parameterTypes_[x]);
         }
         container.appendChild(parameter);
@@ -149,6 +150,7 @@ Blockly.Block.createProcedureDefinitionBlock = function(config) {
     compose: function(containerBlock) {
       var currentParamBlock = containerBlock.getInputTargetBlock('STACK');
       var paramNames = [];
+      var paramTypes = [];
       var paramIDs = [];
       while (currentParamBlock) {
         paramNames.push(currentParamBlock.getTitleValue('NAME'));
@@ -156,7 +158,7 @@ Blockly.Block.createProcedureDefinitionBlock = function(config) {
         currentParamBlock = currentParamBlock.nextConnection &&
           currentParamBlock.nextConnection.targetBlock();
       }
-      this.updateParamsFromArrays(paramNames, paramIDs);
+      this.updateParamsFromArrays(paramNames, paramIDs, paramTypes);
     },
     /**
      * Updates parameters (renaming, deleting, adding as appropriate)
@@ -164,16 +166,22 @@ Blockly.Block.createProcedureDefinitionBlock = function(config) {
      * @param {Array.<String>} paramNames ordered names of parameters for this procedure
      * @param {Array.<String>} paramIDs unique IDs for each parameter, used to update existing
      *     references to parameters across renames
+     * @param {Array.<String>} paramTypes ordered types of parameters for this procedure
      */
-    updateParamsFromArrays: function(paramNames, paramIDs) {
+    updateParamsFromArrays: function(paramNames, paramIDs, paramTypes) {
       this.parameterNames_ = goog.array.clone(paramNames);
+      this.parameterTypes_ = goog.array.clone(paramTypes);
       this.paramIds_ = paramIDs ? goog.array.clone(paramIDs) : null;
       this.updateParams_();
       this.updateCallerParams_();
     },
     updateCallerParams_: function() {
       Blockly.Procedures.mutateCallers(this.getTitleValue('NAME'),
-          this.blockSpace, this.parameterNames_, this.paramIds_);
+        this.blockSpace,
+        this.parameterNames_,
+        this.paramIds_,
+        this.parameterTypes_
+      );
     },
     /**
      * Disposes of this block and (optionally) its callers
@@ -405,7 +413,7 @@ Blockly.Blocks.procedures_callnoreturn = {
           .replace('%1', newName));
     }
   },
-  setProcedureParameters: function(paramNames, paramIds) {
+  setProcedureParameters: function(paramNames, paramIds, paramTypes) {
     // Data structures for parameters on each call block:
     // this.arguments = ['x', 'y']
     //     Existing param names.
@@ -456,9 +464,11 @@ Blockly.Blocks.procedures_callnoreturn = {
     // Rebuild the block's arguments.
     this.currentParameterNames_ = [].concat(paramNames);
     this.currentParameterIDs = paramIds;
+    this.currentParameterTypes_ = paramTypes;
     for (var x = 0; x < this.currentParameterNames_.length; x++) {
       var input = this.appendValueInput('ARG' + x)
           .setAlign(Blockly.ALIGN_RIGHT)
+          .setStrictCheck(this.currentParameterTypes_[x])
           .appendTitle(this.currentParameterNames_[x]);
       if (this.currentParameterIDs) {
         // Reconnect any child blocks.
@@ -488,6 +498,7 @@ Blockly.Blocks.procedures_callnoreturn = {
     for (var x = 0; x < this.currentParameterNames_.length; x++) {
       var parameter = document.createElement('arg');
       parameter.setAttribute('name', this.currentParameterNames_[x]);
+      parameter.setAttribute('type', this.currentParameterTypes_[x]);
       container.appendChild(parameter);
     }
     return container;
@@ -503,16 +514,18 @@ Blockly.Blocks.procedures_callnoreturn = {
     if (definitionBlock && definitionBlock.mutator && definitionBlock.mutator.isVisible()) {
       // Initialize caller with the mutator's IDs.
       var procedureInfo = definitionBlock.getProcedureInfo();
-      this.setProcedureParameters(procedureInfo.parameterNames, procedureInfo.parameterIDs);
+      this.setProcedureParameters(procedureInfo.parameterNames, procedureInfo.parameterIDs, procedureInfo.parameterTypes);
     } else {
       this.currentParameterNames_ = [];
+      this.currentParameterTypes_ = [];
       for (var x = 0, childNode; childNode = xmlElement.childNodes[x]; x++) {
         if (childNode.nodeName.toLowerCase() == 'arg') {
           this.currentParameterNames_.push(childNode.getAttribute('name'));
+          this.currentParameterTypes_.push(childNode.getAttribute('type'));
         }
       }
       // Use parameter names as dummy IDs during initialization
-      this.setProcedureParameters(this.currentParameterNames_, this.currentParameterNames_);
+      this.setProcedureParameters(this.currentParameterNames_, this.currentParameterNames_, this.currentParameterTypes_);
     }
   },
   renameVar: function(oldName, newName) {

@@ -511,7 +511,9 @@ Blockly.Blocks.procedures_callnoreturn = {
     for (var x = 0; x < this.currentParameterNames_.length; x++) {
       var parameter = document.createElement('arg');
       parameter.setAttribute('name', this.currentParameterNames_[x]);
-      parameter.setAttribute('type', this.currentParameterTypes_[x]);
+      if (this.currentParameterTypes_[x]) {
+        parameter.setAttribute('type', this.currentParameterTypes_[x]);
+      }
       container.appendChild(parameter);
     }
     return container;

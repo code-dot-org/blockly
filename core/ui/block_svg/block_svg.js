@@ -1172,24 +1172,25 @@ Blockly.BlockSvg.prototype.renderDraw_ = function(iconWidth, inputRows) {
     this.svgPathFill_.setAttribute('d', pathString);
   }
   if (this.svgTypeHints_) {
-    var typeHints = [];
-    this.block_.inputList.forEach(function (input) {
-      if (input.connection) {
-        typeHints.push(input.connection.getPathInfo());
+    var g = this.svgTypeHints_;
+    this.block_.inputList.forEach(function (input, j) {
+      if (!input.connection) {
+        return;
       }
-    });
-    for (var j = 0; j < this.svgTypeHints_.children.length; j++) {
-      var pathInfo = typeHints[j];
+      var pathInfo = input.connection.getPathInfo();
+      var element = g.children[j] || Blockly.createSvgElement('path', {
+        'filter': 'url(#blocklyTypeHintFilter)'
+      }, g);
       if (pathInfo && pathInfo.color) {
-        this.svgTypeHints_.children[j].setAttribute('d', pathInfo.steps);
-        this.svgTypeHints_.children[j].setAttribute('transform',
+        element.setAttribute('d', pathInfo.steps);
+        element.setAttribute('transform',
           pathInfo.transform);
-        this.svgTypeHints_.children[j].setAttribute('stroke',
+        element.setAttribute('stroke',
           Blockly.makeColour.apply(null, pathInfo.color));
       } else {
-        this.svgTypeHints_.children[j].setAttribute('d', '');
+        element.setAttribute('d', '');
       }
-    }
+    });
   }
   this.svgPathDark_.setAttribute('d', pathString);
   pathString = renderInfo.highlight.join(' ') + '\n' + renderInfo.highlightInline.join(' ');

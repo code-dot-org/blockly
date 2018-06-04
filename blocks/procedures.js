@@ -133,6 +133,7 @@ Blockly.Block.createProcedureDefinitionBlock = function(config) {
         var paramBlock = new Blockly.Block(blockSpace, 'procedures_mutatorarg');
         paramBlock.initSvg();
         paramBlock.setTitleValue(this.parameterNames_[x], 'NAME');
+        paramBlock.setTitleValue(this.parameterTypes_[x], 'TYPE');
         // Store the old location.
         paramBlock.oldLocation = x;
         connection.connect(paramBlock.previousConnection);
@@ -154,6 +155,7 @@ Blockly.Block.createProcedureDefinitionBlock = function(config) {
       var paramIDs = [];
       while (currentParamBlock) {
         paramNames.push(currentParamBlock.getTitleValue('NAME'));
+        paramTypes.push(currentParamBlock.getTitleValue('TYPE'));
         paramIDs.push(currentParamBlock.id);
         currentParamBlock = currentParamBlock.nextConnection &&
           currentParamBlock.nextConnection.targetBlock();
@@ -360,6 +362,17 @@ Blockly.Blocks.procedures_mutatorarg = {
     this.appendDummyInput()
         .appendTitle(Blockly.Msg.PROCEDURES_MUTATORARG_TITLE)
         .appendTitle(new Blockly.FieldTextInput('x', this.validator), 'NAME');
+    if (Blockly.typeHints) {
+      var typeOptions = function () {
+        return goog.object.getValues(Blockly.BlockValueType).map(function (v) {
+          return [v, v];
+        });
+      };
+      this.appendDummyInput()
+        .appendTitle(Blockly.Msg.PROCEDURES_MUTATORARG_TYPE)
+        .appendTitle(new Blockly.FieldDropdown(typeOptions), 'TYPE');
+      this.setInputsInline(true);
+    }
     this.setPreviousStatement(true);
     this.setNextStatement(true);
     this.setTooltip('');

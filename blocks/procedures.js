@@ -362,7 +362,7 @@ Blockly.Blocks.procedures_mutatorarg = {
     this.appendDummyInput()
         .appendTitle(Blockly.Msg.PROCEDURES_MUTATORARG_TITLE)
         .appendTitle(new Blockly.FieldTextInput('x', this.validator), 'NAME');
-    if (Blockly.typeHints) {
+    if (Blockly.valueTypeTabShapeMap) {
       var typeOptions = function () {
         return goog.object.getValues(Blockly.BlockValueType).map(function (v) {
           return [v, v];

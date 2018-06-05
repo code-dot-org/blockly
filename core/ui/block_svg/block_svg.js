@@ -1172,22 +1172,27 @@ Blockly.BlockSvg.prototype.renderDraw_ = function(iconWidth, inputRows) {
     this.svgPathFill_.setAttribute('d', pathString);
   }
   if (this.svgTypeHints_) {
-    var typeHints = [];
-    this.block_.inputList.forEach(function (input) {
-      if (input.connection) {
-        typeHints.push(input.connection.getPathInfo());
+    var g = this.svgTypeHints_;
+    var max = Math.max(this.block_.inputList.length, g.children.length);
+    for (var j = 0; j < max; j++) {
+      var element = g.children[j] || Blockly.createSvgElement('path', {
+        'filter': 'url(#blocklyTypeHintFilter)'
+      }, g);
+      var input = this.block_.inputList[j];
+      if (!input || !input.connection) {
+        element.setAttribute('d', '');
+        continue;
       }
-    });
-    for (var j = 0; j < this.svgTypeHints_.children.length; j++) {
-      var pathInfo = typeHints[j];
+
+      var pathInfo = input.connection.getPathInfo();
       if (pathInfo && pathInfo.color) {
-        this.svgTypeHints_.children[j].setAttribute('d', pathInfo.steps);
-        this.svgTypeHints_.children[j].setAttribute('transform',
+        element.setAttribute('d', pathInfo.steps);
+        element.setAttribute('transform',
           pathInfo.transform);
-        this.svgTypeHints_.children[j].setAttribute('stroke',
+        element.setAttribute('stroke',
           Blockly.makeColour.apply(null, pathInfo.color));
       } else {
-        this.svgTypeHints_.children[j].setAttribute('d', '');
+        element.setAttribute('d', '');
       }
     }
   }

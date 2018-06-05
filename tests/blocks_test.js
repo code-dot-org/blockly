@@ -358,3 +358,40 @@ function test_unknownLanguageBlocks() {
 
   goog.dom.removeNode(containerDiv);
 }
+
+function test_typedParams() {
+  var containerDiv = Blockly.Test.initializeBlockSpaceEditor();
+  var blockSpace = Blockly.mainBlockSpace;
+
+  Blockly.Xml.domToBlockSpace(blockSpace, Blockly.Xml.textToDom(
+    '<xml>' +
+      '<block type="procedures_defnoreturn">' +
+        '<mutation>' +
+          '<arg name="x" type="Number"></arg>' +
+          '<arg name="y" type="Number"></arg>' +
+        '</mutation>' +
+        '<title name="NAME">do something</title>' +
+      '</block>' +
+      '<block type="procedures_callnoreturn" inline="false">' +
+        '<mutation name="do something">' +
+          '<arg name="x" type="Number"></arg>' +
+          '<arg name="y" type="Number"></arg>' +
+        '</mutation>' +
+      '</block>' +
+    '</xml>'
+  ));
+
+  var blocks = Blockly.mainBlockSpace.getTopBlocks();
+  var definition = blocks[0];
+  var call = blocks[1];
+
+  definition.updateParamsFromArrays(['abc', 'def'], [1, 2], ['String', 'Sprite']);
+
+  var procInfo = definition.getProcedureInfo();
+
+  assert(goog.array.equals(['abc', 'def'], procInfo.parameterNames));
+  assert(goog.array.equals(['String', 'Sprite'], procInfo.parameterTypes));
+  assert(goog.array.equals(['String', 'Sprite'], call.currentParameterTypes_));
+
+  goog.dom.removeNode(containerDiv);
+}

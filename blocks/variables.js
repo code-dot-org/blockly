@@ -113,6 +113,23 @@ Blockly.Blocks.parameters_get = {
     this.setOutput(true);
     this.setTooltip(Blockly.Msg.VARIABLES_GET_TOOLTIP);
   },
+  mutationToDom: function() {
+    var checks = this.outputConnection.getCheck();
+    if (checks && checks.length === 1) {
+      var container = document.createElement('mutation');
+      container.setAttribute('output', checks[0]);
+      return container;
+    }
+  },
+  domToMutation: function(container) {
+    var type = container.getAttribute('output');
+    if (type) {
+      // Clear current color, so we can infer it from output type.
+      this.setColour(null);
+      var strict = !!Blockly.valueTypeTabShapeMap[type];
+      this.outputConnection.setCheck(type, strict);
+    }
+  },
   renameVar: function(oldName, newName) {
     // Params should only be used in the FunctionEditor but better to be safe
     Blockly.FunctionEditor.allFunctionEditors.forEach(function(functionEditor) {

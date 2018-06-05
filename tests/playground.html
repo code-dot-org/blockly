@@ -127,7 +127,15 @@ function newCustomizedFunctionEditor() {
     },
     'ocean_boiler_definition',
     null,
-    true,
+    false,
+    [
+      Blockly.BlockValueType.NUMBER,
+      Blockly.BlockValueType.STRING,
+      Blockly.BlockValueType.COLOUR,
+      Blockly.BlockValueType.BOOLEAN,
+      Blockly.BlockValueType.SPRITE,
+      Blockly.BlockValueType.LOCATION
+    ]
   );
   Blockly.oceanBoilerEditor.openWithNewFunction();
 }

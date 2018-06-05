@@ -62,11 +62,11 @@ Blockly.Blocks.lists_create_with = {init:function() {
 }, decompose:function(a) {
   var b = new Blockly.Block(a, "lists_create_with_container");
   b.initSvg();
-  for (var c = b.getInput("STACK").connection, d = 0;d < this.itemCount_;d++) {
-    var e = new Blockly.Block(a, "lists_create_with_item");
-    e.initSvg();
-    c.connect(e.previousConnection);
-    c = e.nextConnection;
+  for (var c = b.getInput("STACK").connection, e = 0;e < this.itemCount_;e++) {
+    var d = new Blockly.Block(a, "lists_create_with_item");
+    d.initSvg();
+    c.connect(d.previousConnection);
+    c = d.nextConnection;
   }
   return b;
 }, compose:function(a) {
@@ -177,9 +177,9 @@ Blockly.Blocks.lists_getIndex = {init:function() {
   var b = new Blockly.FieldDropdown(this.WHERE_OPTIONS, function(b) {
     var c = "FROM_START" == b || "FROM_END" == b;
     if (c != a) {
-      var e = this.sourceBlock_;
-      e.updateAt(c);
-      e.setTitleValue(b, "WHERE");
+      var d = this.sourceBlock_;
+      d.updateAt(c);
+      d.setTitleValue(b, "WHERE");
       return null;
     }
   });
@@ -219,9 +219,9 @@ Blockly.Blocks.lists_setIndex = {init:function() {
   var b = new Blockly.FieldDropdown(this.WHERE_OPTIONS, function(b) {
     var c = "FROM_START" == b || "FROM_END" == b;
     if (c != a) {
-      var e = this.sourceBlock_;
-      e.updateAt(c);
-      e.setTitleValue(b, "WHERE");
+      var d = this.sourceBlock_;
+      d.updateAt(c);
+      d.setTitleValue(b, "WHERE");
       return null;
     }
   });
@@ -260,9 +260,9 @@ Blockly.Blocks.lists_getSublist = {init:function() {
   var c = new Blockly.FieldDropdown(this["WHERE_OPTIONS_" + a], function(c) {
     var d = "FROM_START" == c || "FROM_END" == c;
     if (d != b) {
-      var f = this.sourceBlock_;
-      f.updateAt(a, d);
-      f.setTitleValue(c, "WHERE" + a);
+      var e = this.sourceBlock_;
+      e.updateAt(a, d);
+      e.setTitleValue(c, "WHERE" + a);
       return null;
     }
   });
@@ -315,11 +315,11 @@ Blockly.Blocks.controls_if = {init:function() {
 }, decompose:function(a) {
   var b = new Blockly.Block(a, "controls_if_if");
   b.initSvg();
-  for (var c = b.getInput("STACK").connection, d = 1;d <= this.elseifCount_;d++) {
-    var e = new Blockly.Block(a, "controls_if_elseif");
-    e.initSvg();
-    c.connect(e.previousConnection);
-    c = e.nextConnection;
+  for (var c = b.getInput("STACK").connection, e = 1;e <= this.elseifCount_;e++) {
+    var d = new Blockly.Block(a, "controls_if_elseif");
+    d.initSvg();
+    c.connect(d.previousConnection);
+    c = d.nextConnection;
   }
   this.elseCount_ && (a = new Blockly.Block(a, "controls_if_else"), a.initSvg(), c.connect(a.previousConnection));
   return b;
@@ -355,14 +355,14 @@ Blockly.Blocks.controls_if = {init:function() {
   for (var b = 1;a;) {
     switch(a.type) {
       case "controls_if_elseif":
-        var c = this.getInput("IF" + b), d = this.getInput("DO" + b);
+        var c = this.getInput("IF" + b), e = this.getInput("DO" + b);
         a.valueConnection_ = c && c.connection.targetConnection;
-        a.statementConnection_ = d && d.connection.targetConnection;
+        a.statementConnection_ = e && e.connection.targetConnection;
         b++;
         break;
       case "controls_if_else":
-        d = this.getInput("ELSE");
-        a.statementConnection_ = d && d.connection.targetConnection;
+        e = this.getInput("ELSE");
+        a.statementConnection_ = e && e.connection.targetConnection;
         break;
       default:
         throw "Unknown block type.";
@@ -686,21 +686,22 @@ Blockly.Block.createProcedureDefinitionBlock = function(a) {
     var b = !Blockly.disableParamEditing && !Blockly.useModalFunctionEditor;
     this.setHelpUrl(Blockly.Msg.PROCEDURES_DEFNORETURN_HELPURL);
     this.setHSV(94, 0.84, 0.60);
-    var d = Blockly.Procedures.findLegalName(Blockly.Msg.PROCEDURES_DEFNORETURN_PROCEDURE, this);
-    this.appendDummyInput().appendTitle(b ? "" : " ").appendTitle(new Blockly.FieldTextInput(d, Blockly.Procedures.rename), "NAME").appendTitle("", "PARAMS");
+    var e = Blockly.Procedures.findLegalName(Blockly.Msg.PROCEDURES_DEFNORETURN_PROCEDURE, this);
+    this.appendDummyInput().appendTitle(b ? "" : " ").appendTitle(new Blockly.FieldTextInput(e, Blockly.Procedures.rename), "NAME").appendTitle("", "PARAMS");
     this.appendStatementInput("STACK").appendTitle(Blockly.Msg.PROCEDURES_DEFNORETURN_DO);
     b && this.setMutator(new Blockly.Mutator(["procedures_mutatorarg"]));
     this.setTooltip(Blockly.Msg.PROCEDURES_DEFNORETURN_TOOLTIP);
     this.setFramed(this.blockSpace === Blockly.mainBlockSpace && !this.blockSpace.isReadOnly());
     this.parameterNames_ = [];
+    this.parameterTypes_ = [];
     a.initPostScript && a.initPostScript(this);
   }, updateParams_:function() {
-    for (var a = !1, b = {}, e = 0;e < this.parameterNames_.length;e++) {
-      if (b["arg_" + this.parameterNames_[e].toLowerCase()]) {
+    for (var a = !1, b = {}, d = 0;d < this.parameterNames_.length;d++) {
+      if (b["arg_" + this.parameterNames_[d].toLowerCase()]) {
         a = !0;
         break;
       }
-      b["arg_" + this.parameterNames_[e].toLowerCase()] = !0;
+      b["arg_" + this.parameterNames_[d].toLowerCase()] = !0;
     }
     a ? this.setWarningText(Blockly.Msg.PROCEDURES_DEF_DUPLICATE_WARNING) : this.setWarningText(null);
     a = "";
@@ -708,10 +709,10 @@ Blockly.Block.createProcedureDefinitionBlock = function(a) {
     this.setTitleValue(a, "PARAMS");
   }, mutationToDom:function() {
     for (var a = document.createElement("mutation"), b = 0;b < this.parameterNames_.length;b++) {
-      var e = document.createElement("arg");
-      e.setAttribute("name", this.parameterNames_[b]);
-      this.parameterTypes_ && e.setAttribute("type", this.parameterTypes_[b]);
-      a.appendChild(e);
+      var d = document.createElement("arg");
+      d.setAttribute("name", this.parameterNames_[b]);
+      this.parameterTypes_ && this.parameterTypes_[b] && d.setAttribute("type", this.parameterTypes_[b]);
+      a.appendChild(d);
     }
     this.description_ && (b = document.createElement("description"), b.textContent = this.description_, a.appendChild(b));
     return a;
@@ -735,6 +736,7 @@ Blockly.Block.createProcedureDefinitionBlock = function(a) {
       var g = new Blockly.Block(a, "procedures_mutatorarg");
       g.initSvg();
       g.setTitleValue(this.parameterNames_[f], "NAME");
+      g.setTitleValue(this.parameterTypes_[f], "TYPE");
       g.oldLocation = f;
       c.connect(g.previousConnection);
       c = g.nextConnection;
@@ -743,19 +745,20 @@ Blockly.Block.createProcedureDefinitionBlock = function(a) {
     return b;
   }, compose:function(a) {
     a = a.getInputTargetBlock("STACK");
-    for (var b = [], c = [];a;) {
-      b.push(a.getTitleValue("NAME")), c.push(a.id), a = a.nextConnection && a.nextConnection.targetBlock();
+    for (var b = [], c = [], f = [];a;) {
+      b.push(a.getTitleValue("NAME")), c.push(a.getTitleValue("TYPE")), f.push(a.id), a = a.nextConnection && a.nextConnection.targetBlock();
     }
-    this.updateParamsFromArrays(b, c);
-  }, updateParamsFromArrays:function(a, b) {
+    this.updateParamsFromArrays(b, f, c);
+  }, updateParamsFromArrays:function(a, b, d) {
     this.parameterNames_ = goog.array.clone(a);
+    this.parameterTypes_ = goog.array.clone(d);
     this.paramIds_ = b ? goog.array.clone(b) : null;
     this.updateParams_();
     this.updateCallerParams_();
   }, updateCallerParams_:function() {
-    Blockly.Procedures.mutateCallers(this.getTitleValue("NAME"), this.blockSpace, this.parameterNames_, this.paramIds_);
-  }, dispose:function(a, b, e) {
-    if (!e) {
+    Blockly.Procedures.mutateCallers(this.getTitleValue("NAME"), this.blockSpace, this.parameterNames_, this.paramIds_, this.parameterTypes_);
+  }, dispose:function(a, b, d) {
+    if (!d) {
       var c = this.getTitleValue("NAME");
       Blockly.Procedures.disposeCallers(c, this.blockSpace);
     }
@@ -765,11 +768,11 @@ Blockly.Block.createProcedureDefinitionBlock = function(a) {
   }, getVars:function() {
     return {Default:this.parameterNames_};
   }, renameVar:function(a, b) {
-    for (var c = !1, d = 0;d < this.parameterNames_.length;d++) {
-      Blockly.Names.equals(a, this.parameterNames_[d]) && (this.parameterNames_[d] = b, c = !0);
+    for (var c = !1, e = 0;e < this.parameterNames_.length;e++) {
+      Blockly.Names.equals(a, this.parameterNames_[e]) && (this.parameterNames_[e] = b, c = !0);
     }
     if (c && (this.updateParams_(), this.mutator && this.mutator.isVisible())) {
-      for (var c = this.mutator.blockSpace_.getAllBlocks(), d = 0, g;g = c[d];d++) {
+      for (var c = this.mutator.blockSpace_.getAllBlocks(), e = 0, g;g = c[e];e++) {
         "procedures_mutatorarg" == g.type && Blockly.Names.equals(a, g.getTitleValue("NAME")) && g.setTitleValue(b, "NAME");
       }
     }
@@ -825,6 +828,11 @@ Blockly.Blocks.procedures_mutatorcontainer = {init:function() {
 Blockly.Blocks.procedures_mutatorarg = {init:function() {
   this.setHSV(94, 0.84, 0.60);
   this.appendDummyInput().appendTitle(Blockly.Msg.PROCEDURES_MUTATORARG_TITLE).appendTitle(new Blockly.FieldTextInput("x", this.validator), "NAME");
+  Blockly.valueTypeTabShapeMap && (this.appendDummyInput().appendTitle(Blockly.Msg.PROCEDURES_MUTATORARG_TYPE).appendTitle(new Blockly.FieldDropdown(function() {
+    return goog.object.getValues(Blockly.BlockValueType).map(function(a) {
+      return [a, a];
+    });
+  }), "TYPE"), this.setInputsInline(!0));
   this.setPreviousStatement(!0);
   this.setNextStatement(!0);
   this.setTooltip("");
@@ -854,31 +862,29 @@ Blockly.Blocks.procedures_callnoreturn = {init:function() {
   return this.getTitleValue("NAME");
 }, renameProcedure:function(a, b) {
   Blockly.Names.equals(a, this.getTitleValue("NAME")) && (this.setTitleValue(b, "NAME"), this.setTooltip((this.outputConnection ? Blockly.Msg.PROCEDURES_CALLRETURN_TOOLTIP : Blockly.Msg.PROCEDURES_CALLNORETURN_TOOLTIP).replace("%1", b)));
-}, setProcedureParameters:function(a, b) {
+}, setProcedureParameters:function(a, b, c) {
   if (b) {
     if (b.length != a.length) {
       throw "Error: paramNames and paramIds must be the same length.";
     }
     this.currentParameterIDs || (this.parameterIDsToArgumentConnections = {}, a.join("\n") == this.currentParameterNames_.join("\n") ? this.currentParameterIDs = b : this.currentParameterIDs = []);
-    var c = this.rendered;
+    var e = this.rendered;
     this.rendered = !1;
     for (var d = this.currentParameterNames_.length - 1;0 <= d;d--) {
-      var e = this.getInput("ARG" + d);
-      if (e) {
-        var f = e.connection.targetConnection;
-        this.parameterIDsToArgumentConnections[this.currentParameterIDs[d]] = f;
+      var f = this.getInput("ARG" + d);
+      if (f) {
+        var g = f.connection.targetConnection;
+        this.parameterIDsToArgumentConnections[this.currentParameterIDs[d]] = g;
         this.removeInput("ARG" + d);
       }
     }
     this.currentParameterNames_ = [].concat(a);
     this.currentParameterIDs = b;
+    this.currentParameterTypes_ = c;
     for (d = 0;d < this.currentParameterNames_.length;d++) {
-      if (e = this.appendValueInput("ARG" + d).setAlign(Blockly.ALIGN_RIGHT).appendTitle(this.currentParameterNames_[d]), this.currentParameterIDs) {
-        var g = this.currentParameterIDs[d];
-        g in this.parameterIDsToArgumentConnections && (f = this.parameterIDsToArgumentConnections[g], !f || f.targetConnection || f.sourceBlock_.blockSpace != this.blockSpace ? delete this.parameterIDsToArgumentConnections[g] : e.connection.connect(f));
-      }
+      f = this.appendValueInput("ARG" + d).setAlign(Blockly.ALIGN_RIGHT).setStrictCheck(this.currentParameterTypes_[d]).appendTitle(this.currentParameterNames_[d]), this.currentParameterIDs && (a = this.currentParameterIDs[d], a in this.parameterIDsToArgumentConnections && (g = this.parameterIDsToArgumentConnections[a], !g || g.targetConnection || g.sourceBlock_.blockSpace != this.blockSpace ? delete this.parameterIDsToArgumentConnections[a] : f.connection.connect(g)));
     }
-    (this.rendered = c) && this.render();
+    (this.rendered = e) && this.render();
   } else {
     this.parameterIDsToArgumentConnections = {}, this.currentParameterIDs = null;
   }
@@ -888,6 +894,7 @@ Blockly.Blocks.procedures_callnoreturn = {init:function() {
   for (var b = 0;b < this.currentParameterNames_.length;b++) {
     var c = document.createElement("arg");
     c.setAttribute("name", this.currentParameterNames_[b]);
+    this.currentParameterTypes_[b] && c.setAttribute("type", this.currentParameterTypes_[b]);
     a.appendChild(c);
   }
   return a;
@@ -896,13 +903,14 @@ Blockly.Blocks.procedures_callnoreturn = {init:function() {
   this.setTitleValue(b, "NAME");
   this.setTooltip((this.outputConnection ? Blockly.Msg.PROCEDURES_CALLRETURN_TOOLTIP : Blockly.Msg.PROCEDURES_CALLNORETURN_TOOLTIP).replace("%1", b));
   if ((b = Blockly.Procedures.getDefinition(b, this.blockSpace)) && b.mutator && b.mutator.isVisible()) {
-    a = b.getProcedureInfo(), this.setProcedureParameters(a.parameterNames, a.parameterIDs);
+    a = b.getProcedureInfo(), this.setProcedureParameters(a.parameterNames, a.parameterIDs, a.parameterTypes);
   } else {
     this.currentParameterNames_ = [];
+    this.currentParameterTypes_ = [];
     for (var b = 0, c;c = a.childNodes[b];b++) {
-      "arg" == c.nodeName.toLowerCase() && this.currentParameterNames_.push(c.getAttribute("name"));
+      "arg" == c.nodeName.toLowerCase() && (this.currentParameterNames_.push(c.getAttribute("name")), this.currentParameterTypes_.push(c.getAttribute("type")));
     }
-    this.setProcedureParameters(this.currentParameterNames_, this.currentParameterNames_);
+    this.setProcedureParameters(this.currentParameterNames_, this.currentParameterNames_, this.currentParameterTypes_);
   }
 }, renameVar:function(a, b) {
   for (var c = 0;c < this.currentParameterNames_.length;c++) {
@@ -911,9 +919,9 @@ Blockly.Blocks.procedures_callnoreturn = {init:function() {
 }, customContextMenu:function(a) {
   var b = {enabled:!0};
   b.text = Blockly.Msg.PROCEDURES_HIGHLIGHT_DEF;
-  var c = this.getTitleValue("NAME"), d = this.blockSpace;
+  var c = this.getTitleValue("NAME"), e = this.blockSpace;
   b.callback = function() {
-    var a = Blockly.Procedures.getDefinition(c, d);
+    var a = Blockly.Procedures.getDefinition(c, e);
     a && a.select();
   };
   a.push(b);
@@ -992,11 +1000,11 @@ Blockly.Blocks.text_join = {init:function() {
 }, decompose:function(a) {
   var b = new Blockly.Block(a, "text_create_join_container");
   b.initSvg();
-  for (var c = b.getInput("STACK").connection, d = 0;d < this.itemCount_;d++) {
-    var e = new Blockly.Block(a, "text_create_join_item");
-    e.initSvg();
-    c.connect(e.previousConnection);
-    c = e.nextConnection;
+  for (var c = b.getInput("STACK").connection, e = 0;e < this.itemCount_;e++) {
+    var d = new Blockly.Block(a, "text_create_join_item");
+    d.initSvg();
+    c.connect(d.previousConnection);
+    c = d.nextConnection;
   }
   return b;
 }, compose:function(a) {
@@ -1098,9 +1106,9 @@ Blockly.Blocks.text_charAt = {init:function() {
   var b = new Blockly.FieldDropdown(this.WHERE_OPTIONS, function(b) {
     var c = "FROM_START" == b || "FROM_END" == b;
     if (c != a) {
-      var e = this.sourceBlock_;
-      e.updateAt(c);
-      e.setTitleValue(b, "WHERE");
+      var d = this.sourceBlock_;
+      d.updateAt(c);
+      d.setTitleValue(b, "WHERE");
       return null;
     }
   });
@@ -1138,9 +1146,9 @@ Blockly.Blocks.text_getSubstring = {init:function() {
   var c = new Blockly.FieldDropdown(this["WHERE_OPTIONS_" + a], function(c) {
     var d = "FROM_START" == c || "FROM_END" == c;
     if (d != b) {
-      var f = this.sourceBlock_;
-      f.updateAt(a, d);
-      f.setTitleValue(c, "WHERE" + a);
+      var e = this.sourceBlock_;
+      e.updateAt(a, d);
+      e.setTitleValue(c, "WHERE" + a);
       return null;
     }
   });
@@ -1225,6 +1233,17 @@ Blockly.Blocks.parameters_get = {init:function() {
   this.appendDummyInput().appendTitle(Blockly.Msg.VARIABLES_GET_TITLE).appendTitle(Blockly.disableVariableEditing ? a : new Blockly.FieldParameter(Blockly.Msg.VARIABLES_GET_ITEM), "VAR").appendTitle(Blockly.Msg.VARIABLES_GET_TAIL);
   this.setOutput(!0);
   this.setTooltip(Blockly.Msg.VARIABLES_GET_TOOLTIP);
+}, mutationToDom:function() {
+  var a = this.outputConnection.getCheck();
+  if (a && 1 === a.length) {
+    var b = document.createElement("mutation");
+    b.setAttribute("output", a[0]);
+    return b;
+  }
+}, domToMutation:function(a) {
+  if (a = a.getAttribute("output")) {
+    this.setColour(null), this.outputConnection.setCheck(a, !!Blockly.valueTypeTabShapeMap[a]);
+  }
 }, renameVar:function(a, b) {
   Blockly.FunctionEditor.allFunctionEditors.forEach(function(c) {
     c.isOpen() && (c.renameParameter(a, b), c.refreshParamsEverywhere());
@@ -1267,8 +1286,8 @@ Blockly.Blocks.functional_definition = {shouldHideIfInMainBlockSpace:function() 
 }, domToMutation:function(a) {
   this.parameterNames_ = [];
   for (var b = 0, c;c = a.childNodes[b];b++) {
-    var d = c.nodeName.toLowerCase();
-    "arg" === d ? (this.parameterNames_.push(c.getAttribute("name")), this.parameterTypes_.push(c.getAttribute("type"))) : "description" === d ? this.description_ = c.textContent : "outputtype" === d ? this.updateOutputType(c.textContent) : "isfunctionalvariable" === d && (this.isFunctionalVariable_ = !0);
+    var e = c.nodeName.toLowerCase();
+    "arg" === e ? (this.parameterNames_.push(c.getAttribute("name")), this.parameterTypes_.push(c.getAttribute("type"))) : "description" === e ? this.description_ = c.textContent : "outputtype" === e ? this.updateOutputType(c.textContent) : "isfunctionalvariable" === e && (this.isFunctionalVariable_ = !0);
   }
   this.updateParams_();
 }, isVariable:function() {
@@ -1302,8 +1321,8 @@ Blockly.Blocks.functional_definition = {shouldHideIfInMainBlockSpace:function() 
   this.setHSV.apply(this, Blockly.FunctionalTypeColors[a]);
 }, dispose:function(a, b, c) {
   if (!c) {
-    var d = this.getTitleValue("NAME");
-    Blockly.Procedures.disposeCallers(d, this.blockSpace);
+    var e = this.getTitleValue("NAME");
+    Blockly.Procedures.disposeCallers(e, this.blockSpace);
   }
   Blockly.Block.prototype.dispose.apply(this, arguments);
 }, getProcedureInfo:function() {
@@ -1311,20 +1330,20 @@ Blockly.Blocks.functional_definition = {shouldHideIfInMainBlockSpace:function() 
 }, getVars:function() {
   return {Default:this.parameterNames_};
 }, renameVar:function(a, b) {
-  for (var c = !1, d = 0;d < this.parameterNames_.length;d++) {
-    Blockly.Names.equals(a, this.parameterNames_[d]) && (this.parameterNames_[d] = b, c = !0);
+  for (var c = !1, e = 0;e < this.parameterNames_.length;e++) {
+    Blockly.Names.equals(a, this.parameterNames_[e]) && (this.parameterNames_[e] = b, c = !0);
   }
   if (c && (this.updateParams_(), this.mutator && this.mutator.isVisible())) {
-    for (var c = this.mutator.blockSpace_.getAllBlocks(), d = 0, e;e = c[d];d++) {
-      "functional_procedures_mutatorarg" == e.type && Blockly.Names.equals(a, e.getTitleValue("NAME")) && e.setTitleValue(b, "NAME");
+    for (var c = this.mutator.blockSpace_.getAllBlocks(), e = 0, d;d = c[e];e++) {
+      "functional_procedures_mutatorarg" == d.type && Blockly.Names.equals(a, d.getTitleValue("NAME")) && d.setTitleValue(b, "NAME");
     }
   }
 }, removeVar:function(a) {
   a = this.parameterNames_.indexOf(a);
   -1 < a && (this.parameterNames_.splice(a, 1), this.updateParams_());
 }, changeParamType:function(a, b) {
-  for (var c = !1, d = 0;d < this.parameterNames_.length;d++) {
-    Blockly.Names.equals(a, this.parameterNames_[d]) && (this.parameterTypes_[d] = b, c = !0);
+  for (var c = !1, e = 0;e < this.parameterNames_.length;e++) {
+    Blockly.Names.equals(a, this.parameterNames_[e]) && (this.parameterTypes_[e] = b, c = !0);
   }
   c && (this.updateParams_(), this.updateCallerParams_());
 }, shouldBeGrayedOut:function() {
@@ -1369,24 +1388,24 @@ Blockly.Blocks.functional_call = {init:function() {
       throw "Error: paramNames and paramIds must be the same length.";
     }
     this.currentParameterIDs_ || (this.parameterIDsToArgumentConnections_ = {}, a.join("\n") === this.currentParameterNames_.join("\n") ? this.currentParameterIDs_ = b : this.currentParameterIDs_ = []);
-    var d = this.rendered;
+    var e = this.rendered;
     this.rendered = !1;
-    for (var e = this.currentParameterNames_.length - 1;0 <= e;e--) {
-      var f = this.getInput("ARG" + e);
+    for (var d = this.currentParameterNames_.length - 1;0 <= d;d--) {
+      var f = this.getInput("ARG" + d);
       if (f) {
         var g = f.connection.targetConnection;
-        this.parameterIDsToArgumentConnections_[this.currentParameterIDs_[e]] = g;
-        this.removeInput("ARG" + e);
+        this.parameterIDsToArgumentConnections_[this.currentParameterIDs_[d]] = g;
+        this.removeInput("ARG" + d);
       }
     }
     this.currentParameterNames_ = goog.array.clone(a);
     this.currentParameterIDs_ = goog.array.clone(b);
     this.currentParameterTypes_ = goog.array.clone(c);
-    for (e = 0;e < this.currentParameterNames_.length;e++) {
-      f = this.appendFunctionalInput("ARG" + e).setAlign(Blockly.ALIGN_CENTRE).setInline(0 < e), g = this.currentParameterTypes_[e], f.setHSV.apply(f, Blockly.FunctionalTypeColors[g]), f.setCheck(g), this.currentParameterIDs_ && (a = this.currentParameterIDs_[e], a in this.parameterIDsToArgumentConnections_ && (g = this.parameterIDsToArgumentConnections_[a], !g || g.targetConnection || g.sourceBlock_.blockSpace != this.blockSpace ? delete this.parameterIDsToArgumentConnections_[a] : f.connection.connect(g)));
+    for (d = 0;d < this.currentParameterNames_.length;d++) {
+      f = this.appendFunctionalInput("ARG" + d).setAlign(Blockly.ALIGN_CENTRE).setInline(0 < d), g = this.currentParameterTypes_[d], f.setHSV.apply(f, Blockly.FunctionalTypeColors[g]), f.setCheck(g), this.currentParameterIDs_ && (a = this.currentParameterIDs_[d], a in this.parameterIDsToArgumentConnections_ && (g = this.parameterIDsToArgumentConnections_[a], !g || g.targetConnection || g.sourceBlock_.blockSpace != this.blockSpace ? delete this.parameterIDsToArgumentConnections_[a] : f.connection.connect(g)));
     }
     this.refreshParameterTitleString_();
-    (this.rendered = d) && this.render();
+    (this.rendered = e) && this.render();
   } else {
     this.parameterIDsToArgumentConnections_ = {}, this.currentParameterIDs_ = null;
   }
@@ -1506,8 +1525,8 @@ Blockly.Blocks.functional_parameters_get = {init:function() {
   return a;
 }, domToMutation:function(a) {
   for (var b = 0, c;c = a.childNodes[b];b++) {
-    var d = c.nodeName.toLowerCase();
-    "description" === d ? this.description_ = c.textContent : "outputtype" === d && (this.outputType_ = c.textContent, this.changeFunctionalOutput(this.outputType_));
+    var e = c.nodeName.toLowerCase();
+    "description" === e ? this.description_ = c.textContent : "outputtype" === e && (this.outputType_ = c.textContent, this.changeFunctionalOutput(this.outputType_));
   }
 }};
 Blockly.Blocks.unknown = {unknownBlock:!0, init:function() {

@@ -3501,20 +3501,22 @@ Blockly.BlockSvg.prototype.renderDraw_ = function(iconWidth, inputRows) {
     this.svgPathFill_.setAttribute("d", pathString);
   }
   if (this.svgTypeHints_) {
-    var typeHints = [];
-    this.block_.inputList.forEach(function(input) {
-      if (input.connection) {
-        typeHints.push(input.connection.getPathInfo());
+    var g = this.svgTypeHints_;
+    var max = Math.max(this.block_.inputList.length, g.children.length);
+    for (var j = 0;j < max;j++) {
+      var element = g.children[j] || Blockly.createSvgElement("path", {"filter":"url(#blocklyTypeHintFilter)"}, g);
+      var input = this.block_.inputList[j];
+      if (!input || !input.connection) {
+        element.setAttribute("d", "");
+        continue;
       }
-    });
-    for (var j = 0;j < this.svgTypeHints_.children.length;j++) {
-      var pathInfo = typeHints[j];
+      var pathInfo = input.connection.getPathInfo();
       if (pathInfo && pathInfo.color) {
-        this.svgTypeHints_.children[j].setAttribute("d", pathInfo.steps);
-        this.svgTypeHints_.children[j].setAttribute("transform", pathInfo.transform);
-        this.svgTypeHints_.children[j].setAttribute("stroke", Blockly.makeColour.apply(null, pathInfo.color));
+        element.setAttribute("d", pathInfo.steps);
+        element.setAttribute("transform", pathInfo.transform);
+        element.setAttribute("stroke", Blockly.makeColour.apply(null, pathInfo.color));
       } else {
-        this.svgTypeHints_.children[j].setAttribute("d", "");
+        element.setAttribute("d", "");
       }
     }
   }
@@ -26188,7 +26190,7 @@ goog.require("goog.dom");
 goog.require("goog.array");
 goog.require("goog.events");
 goog.require("goog.structs.LinkedMap");
-Blockly.FunctionEditor = function(opt_msgOverrides, opt_definitionBlockType, opt_parameterBlockTypes, opt_disableParamEditing) {
+Blockly.FunctionEditor = function(opt_msgOverrides, opt_definitionBlockType, opt_parameterBlockTypes, opt_disableParamEditing, opt_paramTypes) {
   this.created_ = false;
   this.orderedParamIDsToBlocks_ = new goog.structs.LinkedMap;
   this.functionDefinitionBlock = null;
@@ -26209,6 +26211,7 @@ Blockly.FunctionEditor = function(opt_msgOverrides, opt_definitionBlockType, opt
   }
   this.parameterBlockTypes = opt_parameterBlockTypes || {};
   this.disableParamEditing = opt_disableParamEditing || false;
+  this.paramTypes = opt_paramTypes || [];
   Blockly.FunctionEditor.allFunctionEditors.push(this);
 };
 Blockly.FunctionEditor.BLOCK_LAYOUT_LEFT_MARGIN = Blockly.BlockSpaceEditor.BUMP_PADDING_LEFT;
@@ -26302,20 +26305,22 @@ Blockly.FunctionEditor.prototype.openWithNewFunction = function() {
 };
 Blockly.FunctionEditor.prototype.bindToolboxHandlers_ = function() {
   var paramAddTextElement = this.container_.querySelector("#paramAddText");
+  var paramAddTypeSelect = this.container_.querySelector("#paramAddType");
   var paramAddButton = this.container_.querySelector("#paramAddButton");
   if (!this.paramEditingDisabled()) {
-    Blockly.bindEvent_(paramAddButton, "click", this, goog.bind(this.addParamFromInputField_, this, paramAddTextElement));
+    Blockly.bindEvent_(paramAddButton, "click", this, goog.bind(this.addParamFromInputField_, this, paramAddTextElement, paramAddTypeSelect));
     Blockly.bindEvent_(paramAddTextElement, "keydown", this, function(e) {
       if (e.keyCode === goog.events.KeyCodes.ENTER) {
-        this.addParamFromInputField_(paramAddTextElement);
+        this.addParamFromInputField_(paramAddTextElement, paramAddTypeSelect);
       }
     });
   }
 };
-Blockly.FunctionEditor.prototype.addParamFromInputField_ = function(parameterTextElement) {
+Blockly.FunctionEditor.prototype.addParamFromInputField_ = function(parameterTextElement, paramAddTypeSelect) {
   var newParamName = parameterTextElement.value;
   parameterTextElement.value = "";
-  this.addParameter(newParamName);
+  var newParamType = paramAddTypeSelect && paramAddTypeSelect.value;
+  this.addParameter(newParamName, newParamType);
   this.refreshParamsEverywhere();
 };
 Blockly.FunctionEditor.prototype.addParameter = function(newParameterName, newParameterType) {
@@ -26328,6 +26333,9 @@ Blockly.FunctionEditor.prototype.newParameterBlock = function(newParameterName, 
   var parameterBlockType = this.getParameterBlockType(newParameterType);
   var param = Blockly.createSvgElement("block", {type:parameterBlockType});
   var v = Blockly.createSvgElement("title", {name:"VAR"}, param);
+  if (newParameterType) {
+    Blockly.createSvgElement("mutation", {output:newParameterType}, param);
+  }
   v.textContent = newParameterName;
   return param;
 };
@@ -26389,7 +26397,8 @@ Blockly.FunctionEditor.prototype.paramsAsParallelArrays_ = function() {
     paramNames.push(blockXML.firstElementChild.textContent);
     paramIDs.push(paramID);
     if (blockXML.childNodes.length > 1) {
-      paramTypes.push(blockXML.childNodes[1].textContent);
+      var node = blockXML.childNodes[1];
+      paramTypes.push(node.getAttribute("output") || node.textContent);
     }
   }, this);
   return {paramNames:paramNames, paramIDs:paramIDs, paramTypes:paramTypes};
@@ -26697,7 +26706,14 @@ Blockly.FunctionEditor.prototype.createParameterEditor_ = function() {
   if (this.paramEditingDisabled()) {
     return;
   }
-  this.container_.querySelector("#paramEditingArea").innerHTML = "<div>" + this.getMsg("FUNCTION_PARAMETERS_LABEL") + "</div>" + "<div>" + '<input id="paramAddText" type="text" style="width: 200px;"/> ' + '<button id="paramAddButton" class="btn no-mc">' + this.getMsg("ADD_PARAMETER") + "</button>" + "</div>";
+  var paramTypeSelect = "";
+  if (this.paramTypes.length > 0) {
+    paramTypeSelect = this.paramTypes.map(function(type) {
+      return "<option>" + type + "</option>";
+    }).join("\n");
+    paramTypeSelect = '<select id="paramAddType" style="pointer-events: auto; margin: 0; width: 100px;">' + paramTypeSelect + "</select> ";
+  }
+  this.container_.querySelector("#paramEditingArea").innerHTML = "<div>" + this.getMsg("FUNCTION_PARAMETERS_LABEL") + "</div>" + "<div>" + '<input id="paramAddText" type="text" style="width: 200px;"/> ' + paramTypeSelect + '<button id="paramAddButton" class="btn no-mc">' + this.getMsg("ADD_PARAMETER") + "</button>" + "</div>";
 };
 Blockly.FunctionEditor.prototype.createFrameClipDiv_ = function() {
   var frameClipDiv = goog.dom.createDom("div");

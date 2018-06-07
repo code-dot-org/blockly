@@ -266,8 +266,6 @@ Blockly.Block.prototype.initSvg = function() {
                        this.onMouseDown_);
     Blockly.bindEvent_(this.svg_.getRootElement(), 'focus', this,
       this.select.bind(this, false));
-    Blockly.bindEvent_(this.svg_.getRootElement(), 'blur', this,
-      this.unselect);
   }
   this.setCurrentlyHidden(this.currentlyHidden_);
   this.moveToFrontOfMainCanvas_();

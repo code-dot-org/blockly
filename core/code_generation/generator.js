@@ -220,7 +220,7 @@ Blockly.CodeGenerator.prototype.blockToCode = function(block, opt_showHidden) {
 
   var func = this[block.type];
   if (!func) {
-    return this.comment('Unknown block: ' + block.type);
+    return this.scrubComment_('Unknown block: ' + block.type);
   }
   var code = func.call(block);
 

@@ -264,6 +264,8 @@ Blockly.Block.prototype.initSvg = function() {
   if (!this.blockSpace.isReadOnly()) {
     Blockly.bindEvent_(this.svg_.getRootElement(), 'mousedown', this,
                        this.onMouseDown_);
+    Blockly.bindEvent_(this.svg_.getRootElement(), 'focus', this,
+      this.select.bind(this, false));
   }
   this.setCurrentlyHidden(this.currentlyHidden_);
   this.moveToFrontOfMainCanvas_();
@@ -387,7 +389,7 @@ Blockly.Block.prototype.select = function(spotlight) {
     Blockly.selected.unselect();
   }
   Blockly.selected = this;
-  this.svg_.addSelect();
+  this.svg_.addSelect(!this.parentBlock_);
   if (spotlight) {
     this.svg_.addSpotlight();
   }
@@ -398,6 +400,10 @@ Blockly.Block.prototype.select = function(spotlight) {
  * Unselect this block.  Remove its highlighting.
  */
 Blockly.Block.prototype.unselect = function() {
+  if (Blockly.selected !== this) {
+    return;
+  }
+
   if (!this.svg_) {
     throw 'Block is not rendered.';
   }

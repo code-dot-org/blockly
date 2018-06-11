@@ -380,14 +380,23 @@ Blockly.Block.terminateDrag_ = function() {
 /**
  * Select this block.  Highlight it visually.
  */
-Blockly.Block.prototype.select = function(spotlight) {
+Blockly.Block.prototype.select = function(spotlight, multiSelect, rangeSelect) {
   if (!this.svg_) {
     throw 'Block is not rendered.';
   }
-  if (Blockly.selected) {
+  if (multiSelect) {
+    //
+  } else if (rangeSelect) {
+    // TODO: push intervening blocks
+  } else {
     // Unselect any previously selected block.
-    Blockly.selected.unselect();
+    Blockly.selectedBlocks.forEach(function (block) {
+      block.unselect();
+    });
+    Blockly.selectedBlocks.length = 0;
+    Blockly.selected = null;
   }
+  Blockly.selectedBlocks.push(this);
   Blockly.selected = this;
   this.svg_.addSelect(!this.parentBlock_);
   if (spotlight) {
@@ -400,10 +409,6 @@ Blockly.Block.prototype.select = function(spotlight) {
  * Unselect this block.  Remove its highlighting.
  */
 Blockly.Block.prototype.unselect = function() {
-  if (Blockly.selected !== this) {
-    return;
-  }
-
   if (!this.svg_) {
     throw 'Block is not rendered.';
   }
@@ -711,7 +716,7 @@ Blockly.Block.prototype.onMouseDown_ = function(e) {
   this.blockSpace.blockSpaceEditor.svgResize();
   Blockly.BlockSpaceEditor.terminateDrag_();
 
-  this.select();
+  this.select(true, e.shiftKey);
 
   this.blockSpace.blockSpaceEditor.hideChaff();
 

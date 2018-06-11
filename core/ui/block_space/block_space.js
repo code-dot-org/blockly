@@ -63,6 +63,12 @@ Blockly.BlockSpace = function(blockSpaceEditor, getMetrics, setMetrics) {
   this.topBlocks_ = [];
 
   /**
+   * @type {Object.<number, boolean>}
+   * @private
+   */
+  this.selectedBlocks_ = {};
+
+  /**
    * @type {!Array.<!goog.math.Rect>}
    * @private
    */

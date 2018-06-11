@@ -172,10 +172,16 @@ Blockly.OPPOSITE_TYPE[Blockly.FUNCTIONAL_INPUT] = Blockly.FUNCTIONAL_OUTPUT;
 Blockly.OPPOSITE_TYPE[Blockly.FUNCTIONAL_OUTPUT] = Blockly.FUNCTIONAL_INPUT;
 
 /**
- * Currently selected block.
+ * Primary selected block.
  * @type {Blockly.Block}
  */
 Blockly.selected = null;
+
+/**
+ * All selected block.
+ * @type {Array.<Blockly.Block>}
+ */
+Blockly.selectedBlocks = [];
 
 /**
  * Is Blockly in a read-only, non-editable mode?

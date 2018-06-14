@@ -1197,7 +1197,7 @@ Blockly.Block.prototype.moveToFrontOfMainCanvas_ = function () {
   this.blockSpace.moveElementToMainCanvas(this.svg_.getRootElement());
 };
 
-Blockly.Block.prototype.moveBlockBeingDragged_ = function (mouseX, mouseY) {
+Blockly.Block.prototype.moveBlockBeingDragged_ = function (mouseX, mouseY, singleBlock) {
   Blockly.removeAllRanges();
   var dx = mouseX - this.startDragMouseX;
   var dy = mouseY - this.startDragMouseY;
@@ -1210,6 +1210,9 @@ Blockly.Block.prototype.moveBlockBeingDragged_ = function (mouseX, mouseY) {
       Blockly.Block.dragMode_ = Blockly.Block.DRAG_MODE_FREELY_DRAGGING;
       // Push this block to the very top of the stack.
       var firstImmovableBlockHandler = this.generateReconnector_(this.previousConnection);
+      if (singleBlock) {
+        this.unplug(true, false);
+      }
       this.setParent(null);
       this.setDraggingHandleImmovable_(true, firstImmovableBlockHandler);
       this.moveToDragCanvas_();
@@ -1297,7 +1300,7 @@ Blockly.Block.prototype.onMouseMove_ = function(e) {
     e.stopPropagation();
     return;
   }
-  this.moveBlockBeingDragged_(e.clientX, e.clientY);
+  this.moveBlockBeingDragged_(e.clientX, e.clientY, e.ctrlKey || e.metaKey);
   this.blockSpace.panIfOverEdge(this, e.clientX, e.clientY);
   // This event has been handled.  No need to bubble up to the document.
   e.stopPropagation();

@@ -1790,7 +1790,7 @@ Blockly.Block.prototype.setFramed = function(isFramed) {
 };
 
 Blockly.Block.prototype.isUnused = function() {
-  return this.svg_.isUnused();
+  return this.svg_.isUnused() || this.isCurrentlyBeingDragged();
 };
 
 Blockly.Block.prototype.setIsUnused = function(isUnused) {

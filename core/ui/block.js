@@ -1470,7 +1470,12 @@ Blockly.Block.prototype.setParent = function(newParent) {
     // Add this block to the new parent's child list.
     newParent.childBlocks_.push(this);
 
+    // Account for the transform added by the relative position of the parent.
     var oldXY = this.getRelativeToSurfaceXY();
+    var parentXY = newParent.getRelativeToSurfaceXY();
+    this.svg_.getRootElement().setAttribute('transform', 'translate(' +
+      (oldXY.x - parentXY.x) + ', ' + (oldXY.y - parentXY.y) + ')');
+
     if (newParent.svg_ && this.svg_) {
       newParent.svg_.getRootElement().appendChild(this.svg_.getRootElement());
     }

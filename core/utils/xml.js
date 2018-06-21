@@ -333,6 +333,7 @@ Blockly.Xml.domToBlockSpace = function(blockSpace, xml) {
   }
 
   blockSpace.events.dispatchEvent(Blockly.BlockSpace.EVENTS.EVENT_BLOCKS_IMPORTED);
+  return blocks;
 };
 
 /**

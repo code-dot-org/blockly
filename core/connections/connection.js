@@ -829,7 +829,26 @@ Blockly.Connection.prototype.getCheck = function () {
 Blockly.Connection.prototype.neighbours_ = function(maxLimit) {
   // Determine the opposite type of connection.
   var oppositeType = Blockly.OPPOSITE_TYPE[this.type];
-  var db = this.dbList_[oppositeType];
+  var db1 = this.dbList_[this.type];
+  var db2 = this.dbList_[oppositeType];
+
+  // Construct a new connection DB, with matching and opposing connections.
+  var db = [];
+  var a = 0, b = 0;
+  while (a < db1.length || b < db2.length) {
+    if (!db2[b] || (db1[a] && db1[a].y_ < db2[b].y_)) {
+      db.push(db1[a]);
+      a++;
+    } else {
+      db.push(db2[b]);
+      b++;
+    }
+  }
+  for (var i = 0; i < db.length; i++) {
+    if (i === this) {
+      db.splice(i, 1);
+    }
+  }
 
   var currentX = this.x_;
   var currentY = this.y_;

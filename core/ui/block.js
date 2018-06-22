@@ -1358,13 +1358,28 @@ Blockly.Block.prototype.bumpNeighbours_ = function() {
       // If both connections are connected, that's probably fine.  But if
       // either one of them is unconnected, then there could be confusion.
       if (!connection.targetConnection || !otherConnection.targetConnection) {
+        // If one is connected and the other is unconnected, always bump the
+        // unconnected block.
+        if (connection.targetConnection && !otherConnection.targetConnection) {
+          otherConnection.bumpAwayFrom_(connection);
+        } else if (!connection.targetConnection && otherConnection.targetConnection) {
+          connection.bumpAwayFrom_(otherConnection);
         // Only bump blocks if they are from different tree structures.
-        if (otherConnection.sourceBlock_.getRootBlock() != rootBlock) {
+        } else if (otherConnection.sourceBlock_.getRootBlock() != rootBlock) {
           // Always bump the inferior block.
-          if (connection.isSuperior()) {
-            otherConnection.bumpAwayFrom_(connection);
+          if (connection.isSuperior() ^ otherConnection.isSuperior()) {
+            if (connection.isSuperior()) {
+              otherConnection.bumpAwayFrom_(connection);
+            } else {
+              connection.bumpAwayFrom_(otherConnection);
+            }
+          // If connections are the same type, bump the newer block.
           } else {
-            connection.bumpAwayFrom_(otherConnection);
+            if (connection.sourceBlock_.id > otherConnection.sourceBlock_.id) {
+              connection.bumpAwayFrom_(otherConnection);
+            } else {
+              otherConnection.bumpAwayFrom_(connection);
+            }
           }
         }
       }

@@ -712,37 +712,10 @@ Blockly.BlockSpace.prototype.paste = function(xml) {
     return;
   }
   var blocks = Blockly.Xml.domToBlockSpace(this, xml);
-  // // Move the duplicate to original position.
-  // var blockX = parseInt(xmlBlock.getAttribute('x'), 10) || -Blockly.mainBlockSpace.xOffsetFromView + 10;
-  // var blockY = parseInt(xmlBlock.getAttribute('y'), 10) || -Blockly.mainBlockSpace.yOffsetFromView + 10;
-  // if (!isNaN(blockX) && !isNaN(blockY)) {
-  //   if (Blockly.RTL) {
-  //     blockX = -blockX;
-  //   }
-  //   // Offset block until not clobbering another block.
-  //   var collide;
-  //   do {
-  //     collide = false;
-  //     var allBlocks = this.getAllBlocks();
-  //     for (var x = 0, otherBlock; x < allBlocks.length; x++) {
-  //       otherBlock = allBlocks[x];
-  //       var otherXY = otherBlock.getRelativeToSurfaceXY();
-  //       if (Math.abs(blockX - otherXY.x) <= 1 &&
-  //           Math.abs(blockY - otherXY.y) <= 1) {
-  //         if (Blockly.RTL) {
-  //           blockX -= Blockly.SNAP_RADIUS;
-  //         } else {
-  //           blockX += Blockly.SNAP_RADIUS;
-  //         }
-  //         blockY += Blockly.SNAP_RADIUS * 2;
-  //         collide = true;
-  //       }
-  //     }
-  //   } while (collide);
-  //   block.moveTo(blockX, blockY);
-  // }
-  //block.setUserVisible(true);
-  blocks[0].blockly_block.bumpNeighbours_();
+
+  blocks.forEach(function(b) {
+    b.blockly_block.bumpNeighbours_();
+  });
   blocks[0].blockly_block.select();
 };
 

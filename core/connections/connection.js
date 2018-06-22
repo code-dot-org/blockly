@@ -393,6 +393,7 @@ Blockly.Connection.prototype.bumpAwayFrom_ = function(staticConnection) {
     dx = -dx;
   }
   rootBlock.moveBy(dx, dy);
+  rootBlock.bumpNeighbours_();
 };
 
 /**

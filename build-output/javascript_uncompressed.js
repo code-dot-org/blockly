@@ -107,7 +107,7 @@ Blockly.JavaScript.finish = function(a) {
 Blockly.JavaScript.scrubNakedValue = function(a) {
   return a + ";\n";
 };
-Blockly.JavaScript.comment = function(a) {
+Blockly.JavaScript.scrubComment_ = function(a) {
   return "/* " + a.replace(/\*\//, "* /") + " */\n";
 };
 Blockly.JavaScript.quote_ = function(a) {

@@ -97,7 +97,6 @@ Blockly.Xml.blockToDom = function(block, ignoreChildBlocks) {
     element.appendChild(commentElement);
   }
 
-  var setInlineAttribute = false;
   for (i = 0; i < block.inputList.length; i++) {
     input = block.inputList[i];
     var empty = true;
@@ -108,14 +107,12 @@ Blockly.Xml.blockToDom = function(block, ignoreChildBlocks) {
       var childBlock = input.connection.targetBlock();
       if (input.type === Blockly.INPUT_VALUE) {
         container = goog.dom.createDom('value');
-        setInlineAttribute = true;
       } else if (input.type === Blockly.NEXT_STATEMENT) {
         container = goog.dom.createDom('statement');
         ignoreChild = ignoreChildBlocks;
       } else if (input.type === Blockly.FUNCTIONAL_INPUT) {
         container = goog.dom.createDom('functional_input');
         ignoreChild = ignoreChildBlocks;
-        setInlineAttribute = true;
       }
       if (childBlock && !ignoreChild) {
         container.appendChild(Blockly.Xml.blockToDom(childBlock));
@@ -126,9 +123,6 @@ Blockly.Xml.blockToDom = function(block, ignoreChildBlocks) {
     if (!empty) {
       element.appendChild(container);
     }
-  }
-  if (setInlineAttribute) {
-    element.setAttribute('inline', block.inputsInline);
   }
   if (block.isCollapsed()) {
     element.setAttribute('collapsed', true);
@@ -348,10 +342,6 @@ Blockly.Xml.domToBlock = function(blockSpace, xmlBlock) {
   var block = new Blockly.Block(blockSpace, prototypeName, id);
   block.initSvg();
 
-  var inline = xmlBlock.getAttribute('inline');
-  if (inline) {
-    block.setInputsInline(inline === 'true');
-  }
   var collapsed = xmlBlock.getAttribute('collapsed');
   if (collapsed) {
     block.setCollapsed(collapsed === 'true');

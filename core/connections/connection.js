@@ -835,19 +835,20 @@ Blockly.Connection.prototype.neighbours_ = function(maxLimit) {
 
   // Construct a new connection DB, with matching and opposing connections.
   var db = [];
-  var a = 0, b = 0;
+  var a = 0, b = 0, connection;
   while (a < db1.length || b < db2.length) {
     if (!db2[b] || (db1[a] && db1[a].y_ < db2[b].y_)) {
-      db.push(db1[a]);
+      connection = db1[a];
+      if (connection !== this) {
+        db.push(connection)
+      }
       a++;
     } else {
-      db.push(db2[b]);
+      connection = db2[b];
+      if (connection !== this) {
+        db.push(connection)
+      }
       b++;
-    }
-  }
-  for (var i = 0; i < db.length; i++) {
-    if (i === this) {
-      db.splice(i, 1);
     }
   }
 

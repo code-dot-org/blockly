@@ -1365,28 +1365,28 @@ Blockly.Block.prototype.bumpNeighbours_ = function() {
       if (otherRootBlock === rootBlock) {
         continue;
       }
+
+      var bumpOther = false;
       // When bumping connections of opposite types, always bump the inferior block.
       if (connection.type !== otherConnection.type) {
-        if (connection.isSuperior()) {
-          otherConnection.bumpAwayFrom_(connection);
-        } else {
-          connection.bumpAwayFrom_(otherConnection);
-        }
+        bumpOther = connection.isSuperior();
       // If one is connected and the other is unconnected, always bump the
       // unconnected block.
       } else if (connection.targetConnection && !otherConnection.targetConnection) {
-        otherConnection.bumpAwayFrom_(connection);
+        bumpOther = true;
       } else if (!connection.targetConnection && otherConnection.targetConnection) {
-        connection.bumpAwayFrom_(otherConnection);
+        bumpOther = false;
       // Otherwise bump the block that is lower on the screen.
       } else {
         var rootY = rootBlock.getRelativeToSurfaceXY().y;
         var otherY = otherRootBlock.getRelativeToSurfaceXY().y;
-        if (rootY > otherY) {
-          connection.bumpAwayFrom_(otherConnection);
-        } else {
-          otherConnection.bumpAwayFrom_(connection);
-        }
+        bumpOther = rootY < otherY;
+      }
+
+      if (bumpOther) {
+        otherConnection.bumpAwayFrom_(connection);
+      } else {
+        connection.bumpAwayFrom_(otherConnection);
       }
     }
   }

@@ -183,9 +183,14 @@ Blockly.PanDragHandler.prototype.onPanDragTargetMouseDown_ = function (e) {
   }
 
   var clickIsOnTarget = e.target && e.target === this.target_;
+  var onlyOneTouch = !e.touches || e.touches.length === 1;
+
+  if (!onlyOneTouch) {
+    this.currentTouchId = e.targetTouches[0].identifier;
+  }
 
   // Clicking on the flyout background clears the global selection
-  if (Blockly.selected && !this.blockSpace_.isReadOnly() && clickIsOnTarget) {
+  if (Blockly.selected && !this.blockSpace_.isReadOnly() && clickIsOnTarget && onlyOneTouch) {
     Blockly.selected.unselect();
   }
 
@@ -213,6 +218,9 @@ Blockly.PanDragHandler.prototype.onPanDragTargetMouseDown_ = function (e) {
  * @private
  */
 Blockly.PanDragHandler.prototype.beginDragScroll_ = function (e) {
+  if (this.currentTouchId && e.identifier !== this.currentTouchId) {
+    return;
+  }
   // Record the current mouse position.
   this.startMouseX_ = e.clientX;
   this.startMouseY_ = e.clientY;

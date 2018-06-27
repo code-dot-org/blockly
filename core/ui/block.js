@@ -2539,12 +2539,15 @@ Blockly.Block.prototype.svgInitialized = function() {
 /**
  * Render the block.
  * Lays out and reflows a block based on its contents and settings.
+ * @param {boolean} selfOnly Whether to render only this block and NOT also
+ * its parents which in turn would trigger a window resize event. Defaults to
+ * false.
  */
-Blockly.Block.prototype.render = function() {
+Blockly.Block.prototype.render = function(selfOnly) {
   if (!this.svg_) {
     throw 'Uninitialized block cannot be rendered.  Call block.initSvg()';
   }
-  this.svg_.render();
+  this.svg_.render(selfOnly);
 };
 
 /**

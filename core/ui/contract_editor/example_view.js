@@ -150,7 +150,7 @@ Blockly.ExampleView.prototype.placeExampleAndGetNewY = function (
       }
       input.extraSpace = exampleMaxInputWidth - width;
       if (input.extraSpace !== originalExtraSpace) {
-        block.getSvgRenderer().render(true);
+        block.render(true);
       }
     }
 

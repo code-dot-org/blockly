@@ -270,7 +270,6 @@ Blockly.Block.prototype.initSvg = function() {
   this.setCurrentlyHidden(this.currentlyHidden_);
   this.moveToFrontOfMainCanvas_();
   this.setIsUnused();
-  this.render();
 };
 
 /**

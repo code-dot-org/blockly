@@ -1647,7 +1647,7 @@ Blockly.Block.prototype.setNextConnectionDisabled = function(disabled) {
  * @returns {boolean} whether this block is selected and mid-drag
  */
 Blockly.Block.prototype.isCurrentlyBeingDragged = function () {
-  return Blockly.selected === this && Blockly.Block.isFreelyDragging();
+  return Blockly.selected === this && Blockly.Block.isDragging();
 };
 
 /**

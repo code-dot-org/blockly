@@ -520,7 +520,7 @@ Blockly.Flyout.prototype.show = function(xmlList) {
       child.setCommentText(null);
     }
 
-    block.render();
+    block.render(true);
     this.layoutBlock_(block, cursor, gaps[i], initialX);
     // Create an invisible rectangle under the block to act as a button.  Just
     // using the block as a button is poor, since blocks have holes in them.

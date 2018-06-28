@@ -393,7 +393,7 @@ Blockly.Connection.prototype.bumpAwayFrom_ = function(staticConnection) {
     dx = -dx;
   }
   rootBlock.moveBy(dx, dy);
-  rootBlock.bumpNeighbours_();
+  rootBlock.bumpNeighbours();
 };
 
 /**
@@ -775,7 +775,7 @@ Blockly.Connection.prototype.setCheck = function(check, opt_strict) {
         this.sourceBlock_.setParent(null);
       }
       // Bump away.
-      this.sourceBlock_.bumpNeighbours_();
+      this.sourceBlock_.bumpNeighbours();
     }
 
     // If the setting an output check, and the block has no color, make the

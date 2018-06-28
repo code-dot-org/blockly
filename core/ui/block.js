@@ -354,7 +354,7 @@ Blockly.Block.terminateDrag_ = function() {
       selected.moveToFrontOfMainCanvas_();
       selected.render();
       goog.Timer.callOnce(
-          selected.bumpNeighbours_, Blockly.BUMP_DELAY, selected);
+          selected.bumpNeighbours, Blockly.BUMP_DELAY, selected);
       selected.blockSpace.blockSpaceEditor.bumpBlocksIntoBlockSpace();
       selected.blockSpace.scrollIntoView(selected);
 
@@ -1333,7 +1333,7 @@ Blockly.Block.prototype.generateReconnector_ = function(earlierConnection) {
  * connected should not coincidentally line up on screen.
  * @private
  */
-Blockly.Block.prototype.bumpNeighbours_ = function() {
+Blockly.Block.prototype.bumpNeighbours = function() {
   if (Blockly.Block.isDragging() || !Blockly.BUMP_UNCONNECTED) {
     // Don't bump blocks during a drag.
     return;
@@ -1349,7 +1349,7 @@ Blockly.Block.prototype.bumpNeighbours_ = function() {
     var connection = myConnections[x];
     // Spider down from this block bumping all sub-blocks.
     if (connection.targetConnection && connection.isSuperior()) {
-      connection.targetBlock().bumpNeighbours_();
+      connection.targetBlock().bumpNeighbours();
     }
 
     var neighbours = connection.neighbours_(Blockly.SNAP_RADIUS);
@@ -2055,7 +2055,7 @@ Blockly.Block.prototype.setOutput = function(hasOutput, opt_check, opt_strict) {
 Blockly.Block.prototype.refreshRender = function () {
   if (this.rendered) {
     this.render();
-    this.bumpNeighbours_();
+    this.bumpNeighbours();
   }
 };
 /**
@@ -2108,7 +2108,7 @@ Blockly.Block.prototype.setInputsInline = function(inputsInline) {
   this.inputsInline = inputsInline;
   if (this.rendered) {
     this.render();
-    this.bumpNeighbours_();
+    this.bumpNeighbours();
     this.blockSpace.fireChangeEvent();
   }
 };
@@ -2187,7 +2187,7 @@ Blockly.Block.prototype.setCollapsed = function(collapsed) {
     for (var x = 0, block; block = renderList[x]; x++) {
       block.render();
     }
-    this.bumpNeighbours_();
+    this.bumpNeighbours();
   }
 };
 
@@ -2337,7 +2337,7 @@ Blockly.Block.prototype.appendInput_ = function(type, name, spacing) {
   if (this.rendered) {
     this.render();
     // Adding an input will cause the block to change shape.
-    this.bumpNeighbours_();
+    this.bumpNeighbours();
   }
   return input;
 };
@@ -2383,7 +2383,7 @@ Blockly.Block.prototype.moveInputBefore = function(name, refName) {
   if (this.rendered) {
     this.render();
     // Moving an input will cause the block to change shape.
-    this.bumpNeighbours_();
+    this.bumpNeighbours();
   }
 };
 
@@ -2412,7 +2412,7 @@ Blockly.Block.prototype.removeInput = function(name, opt_quiet) {
       if (this.rendered) {
         this.render();
         // Removing an input will cause the block to change shape.
-        this.bumpNeighbours_();
+        this.bumpNeighbours();
       }
       return;
     }
@@ -2512,7 +2512,7 @@ Blockly.Block.prototype.setCommentText = function(text) {
     this.render();
     if (changedState) {
       // Adding or removing a comment icon will cause the block to change shape.
-      this.bumpNeighbours_();
+      this.bumpNeighbours();
     }
   }
 };
@@ -2544,7 +2544,7 @@ Blockly.Block.prototype.setWarningText = function(text) {
   if (changedState && this.rendered) {
     this.render();
     // Adding or removing a warning icon will cause the block to change shape.
-    this.bumpNeighbours_();
+    this.bumpNeighbours();
   }
 };
 

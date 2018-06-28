@@ -502,7 +502,7 @@ Blockly.Blocks.procedures_callnoreturn = {
     this.rendered = savedRendered;
     if (this.rendered) {
       this.render();
-      this.bumpNeighbours_();
+      this.bumpNeighbours();
     }
   },
   mutationToDom: function() {

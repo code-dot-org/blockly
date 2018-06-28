@@ -714,7 +714,7 @@ Blockly.BlockSpace.prototype.paste = function(xml) {
   var blocks = Blockly.Xml.domToBlockSpace(this, xml);
 
   blocks.forEach(function(b) {
-    b.blockly_block.bumpNeighbours_();
+    b.blockly_block.bumpNeighbours();
   });
   blocks[0].blockly_block.select();
 };

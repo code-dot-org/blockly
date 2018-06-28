@@ -45,7 +45,7 @@ function test_blockSpaceBumpsBlocks() {
   assertEquals(100, child.getRelativeToSurfaceXY().y);
   var connection = parent.getConnections_()[2];
 
-  parent.bumpNeighbours_();
+  parent.bumpNeighbours();
   assertEquals(connection.x_ + Blockly.SNAP_RADIUS, child.getRelativeToSurfaceXY().x);
   assertEquals(connection.y_ + Blockly.SNAP_RADIUS * 2, child.getRelativeToSurfaceXY().y);
 

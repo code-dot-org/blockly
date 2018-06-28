@@ -761,10 +761,8 @@ Blockly.BlockSpaceEditor.prototype.onCutCopy_ = function(e) {
  */
 Blockly.BlockSpaceEditor.prototype.onPaste_ = function(e) {
   try {
-    var xml = Blockly.Xml.textToDom(e.clipboardData.getData('text/xml'));
-    Blockly.focusedBlockSpace.paste({
-      dom: xml.firstElementChild
-    });
+    var xml = Blockly.Xml.textToDom(e.clipboardData.getData('text/xml') || e.clipboardData.getData('text/plain'));
+    Blockly.focusedBlockSpace.paste(xml);
   } catch (_) { }
 };
 

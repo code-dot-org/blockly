@@ -1357,16 +1357,36 @@ Blockly.Block.prototype.bumpNeighbours_ = function() {
       var otherConnection = neighbours[y];
       // If both connections are connected, that's probably fine.  But if
       // either one of them is unconnected, then there could be confusion.
-      if (!connection.targetConnection || !otherConnection.targetConnection) {
-        // Only bump blocks if they are from different tree structures.
-        if (otherConnection.sourceBlock_.getRootBlock() != rootBlock) {
-          // Always bump the inferior block.
-          if (connection.isSuperior()) {
-            otherConnection.bumpAwayFrom_(connection);
-          } else {
-            connection.bumpAwayFrom_(otherConnection);
-          }
-        }
+      if (connection.targetConnection && otherConnection.targetConnection) {
+        continue;
+      }
+      // Only bump blocks if they are from different tree structures.
+      var otherRootBlock = otherConnection.sourceBlock_.getRootBlock();
+      if (otherRootBlock === rootBlock) {
+        continue;
+      }
+
+      var bumpOther = false;
+      // When bumping connections of opposite types, always bump the inferior block.
+      if (connection.type !== otherConnection.type) {
+        bumpOther = connection.isSuperior();
+      // If one is connected and the other is unconnected, always bump the
+      // unconnected block.
+      } else if (connection.targetConnection && !otherConnection.targetConnection) {
+        bumpOther = true;
+      } else if (!connection.targetConnection && otherConnection.targetConnection) {
+        bumpOther = false;
+      // Otherwise bump the block that is lower on the screen.
+      } else {
+        var rootY = rootBlock.getRelativeToSurfaceXY().y;
+        var otherY = otherRootBlock.getRelativeToSurfaceXY().y;
+        bumpOther = rootY < otherY;
+      }
+
+      if (bumpOther) {
+        otherConnection.bumpAwayFrom_(connection);
+      } else {
+        connection.bumpAwayFrom_(otherConnection);
       }
     }
   }

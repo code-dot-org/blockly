@@ -35,6 +35,26 @@ function test_initializeBlockSpace() {
 function test_blockSpaceBumpsBlocks() {
   var container = Blockly.Test.initializeBlockSpaceEditor();
 
+  var blockXML = '<xml><block type="text_print" x="100" y="100"></block><block type="text" x="150" y="100"><title name="TEXT"></title></block></xml>';
+  Blockly.Xml.domToBlockSpace(Blockly.mainBlockSpace, Blockly.Xml.textToDom(blockXML));
+  var parent = Blockly.mainBlockSpace.getTopBlocks()[0];
+  var child = Blockly.mainBlockSpace.getTopBlocks()[1];
+  assertEquals('text_print', parent.type);
+  assertEquals('text', child.type);
+  assertEquals(150, child.getRelativeToSurfaceXY().x);
+  assertEquals(100, child.getRelativeToSurfaceXY().y);
+  var connection = parent.getConnections_()[2];
+
+  parent.bumpNeighbours_();
+  assertEquals(connection.x_ + Blockly.SNAP_RADIUS, child.getRelativeToSurfaceXY().x);
+  assertEquals(connection.y_ + Blockly.SNAP_RADIUS * 2, child.getRelativeToSurfaceXY().y);
+
+  goog.dom.removeNode(container);
+}
+
+function test_bumpNeighbours() {
+  var container = Blockly.Test.initializeBlockSpaceEditor();
+
   var blockXML = '<xml><block type="math_number"><title name="NUM">0</title></block></xml>';
   Blockly.Xml.domToBlockSpace(Blockly.mainBlockSpace, Blockly.Xml.textToDom(blockXML));
   var numberBlock = Blockly.mainBlockSpace.getTopBlocks()[0];

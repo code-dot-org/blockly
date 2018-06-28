@@ -481,7 +481,6 @@ Blockly.Blocks.procedures_callnoreturn = {
     for (var x = 0; x < this.currentParameterNames_.length; x++) {
       var input = this.appendValueInput('ARG' + x)
           .setAlign(Blockly.ALIGN_RIGHT)
-          .setStrictCheck(this.currentParameterTypes_[x])
           .appendTitle(this.currentParameterNames_[x]);
       if (this.currentParameterIDs) {
         // Reconnect any child blocks.
@@ -497,11 +496,13 @@ Blockly.Blocks.procedures_callnoreturn = {
           }
         }
       }
+      input.setStrictCheck(this.currentParameterTypes_[x]);
     }
     // Restore rendering and show the changes.
     this.rendered = savedRendered;
     if (this.rendered) {
       this.render();
+      this.bumpNeighbours_();
     }
   },
   mutationToDom: function() {

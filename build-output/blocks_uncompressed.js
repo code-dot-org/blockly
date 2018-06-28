@@ -882,9 +882,11 @@ Blockly.Blocks.procedures_callnoreturn = {init:function() {
     this.currentParameterIDs = b;
     this.currentParameterTypes_ = c;
     for (d = 0;d < this.currentParameterNames_.length;d++) {
-      f = this.appendValueInput("ARG" + d).setAlign(Blockly.ALIGN_RIGHT).setStrictCheck(this.currentParameterTypes_[d]).appendTitle(this.currentParameterNames_[d]), this.currentParameterIDs && (a = this.currentParameterIDs[d], a in this.parameterIDsToArgumentConnections && (g = this.parameterIDsToArgumentConnections[a], !g || g.targetConnection || g.sourceBlock_.blockSpace != this.blockSpace ? delete this.parameterIDsToArgumentConnections[a] : f.connection.connect(g)));
+      f = this.appendValueInput("ARG" + d).setAlign(Blockly.ALIGN_RIGHT).appendTitle(this.currentParameterNames_[d]), this.currentParameterIDs && (a = this.currentParameterIDs[d], a in this.parameterIDsToArgumentConnections && (g = this.parameterIDsToArgumentConnections[a], !g || g.targetConnection || g.sourceBlock_.blockSpace != this.blockSpace ? delete this.parameterIDsToArgumentConnections[a] : f.connection.connect(g))), f.setStrictCheck(this.currentParameterTypes_[d]);
     }
-    (this.rendered = e) && this.render();
+    if (this.rendered = e) {
+      this.render(), this.bumpNeighbours_();
+    }
   } else {
     this.parameterIDsToArgumentConnections = {}, this.currentParameterIDs = null;
   }

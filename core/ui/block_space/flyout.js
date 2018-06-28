@@ -377,7 +377,7 @@ Blockly.Flyout.prototype.hide = function(opt_saveBlock) {
   // Delete all the blocks.
   this.blockSpace_.getTopBlocks(false).forEach(function (block) {
     if (block.rendered && block !== opt_saveBlock) {
-      block.dispose(false, false);
+      block.dispose(false, false, true);
     }
   });
   // Delete all the background buttons.

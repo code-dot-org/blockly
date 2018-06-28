@@ -393,6 +393,7 @@ Blockly.Connection.prototype.bumpAwayFrom_ = function(staticConnection) {
     dx = -dx;
   }
   rootBlock.moveBy(dx, dy);
+  rootBlock.bumpNeighbours_();
 };
 
 /**
@@ -829,7 +830,27 @@ Blockly.Connection.prototype.getCheck = function () {
 Blockly.Connection.prototype.neighbours_ = function(maxLimit) {
   // Determine the opposite type of connection.
   var oppositeType = Blockly.OPPOSITE_TYPE[this.type];
-  var db = this.dbList_[oppositeType];
+  var db1 = this.dbList_[this.type];
+  var db2 = this.dbList_[oppositeType];
+
+  // Construct a new connection DB, with matching and opposing connections.
+  var db = [];
+  var a = 0, b = 0, connection;
+  while (a < db1.length || b < db2.length) {
+    if (!db2[b] || (db1[a] && db1[a].y_ < db2[b].y_)) {
+      connection = db1[a];
+      if (connection !== this) {
+        db.push(connection)
+      }
+      a++;
+    } else {
+      connection = db2[b];
+      if (connection !== this) {
+        db.push(connection)
+      }
+      b++;
+    }
+  }
 
   var currentX = this.x_;
   var currentY = this.y_;

@@ -6603,7 +6603,6 @@ Blockly.Xml.blockToDom = function(block, ignoreChildBlocks) {
     commentElement.setAttribute("w", hw.width);
     element.appendChild(commentElement);
   }
-  var setInlineAttribute = false;
   for (i = 0;i < block.inputList.length;i++) {
     input = block.inputList[i];
     var empty = true;
@@ -6614,7 +6613,6 @@ Blockly.Xml.blockToDom = function(block, ignoreChildBlocks) {
       var childBlock = input.connection.targetBlock();
       if (input.type === Blockly.INPUT_VALUE) {
         container = goog.dom.createDom("value");
-        setInlineAttribute = true;
       } else {
         if (input.type === Blockly.NEXT_STATEMENT) {
           container = goog.dom.createDom("statement");
@@ -6623,7 +6621,6 @@ Blockly.Xml.blockToDom = function(block, ignoreChildBlocks) {
           if (input.type === Blockly.FUNCTIONAL_INPUT) {
             container = goog.dom.createDom("functional_input");
             ignoreChild = ignoreChildBlocks;
-            setInlineAttribute = true;
           }
         }
       }
@@ -6636,9 +6633,6 @@ Blockly.Xml.blockToDom = function(block, ignoreChildBlocks) {
     if (!empty) {
       element.appendChild(container);
     }
-  }
-  if (setInlineAttribute) {
-    element.setAttribute("inline", block.inputsInline);
   }
   if (block.isCollapsed()) {
     element.setAttribute("collapsed", true);
@@ -6766,10 +6760,6 @@ Blockly.Xml.domToBlock = function(blockSpace, xmlBlock) {
   var id = xmlBlock.getAttribute("id");
   var block = new Blockly.Block(blockSpace, prototypeName, id);
   block.initSvg();
-  var inline = xmlBlock.getAttribute("inline");
-  if (inline) {
-    block.setInputsInline(inline === "true");
-  }
   var collapsed = xmlBlock.getAttribute("collapsed");
   if (collapsed) {
     block.setCollapsed(collapsed === "true");
@@ -17857,7 +17847,7 @@ Blockly.Block.prototype.setNextConnectionDisabled = function(disabled) {
   this.setNextStatement(!disabled);
 };
 Blockly.Block.prototype.isCurrentlyBeingDragged = function() {
-  return Blockly.selected === this && Blockly.Block.isFreelyDragging();
+  return Blockly.selected === this && Blockly.Block.isDragging();
 };
 Blockly.Block.prototype.isCurrentlyHidden_ = function() {
   return this.currentlyHidden_;
@@ -21906,7 +21896,7 @@ Blockly.Flyout.prototype.hide = function(opt_saveBlock) {
   }
   this.blockSpace_.getTopBlocks(false).forEach(function(block) {
     if (block.rendered && block !== opt_saveBlock) {
-      block.dispose(false, false);
+      block.dispose(false, false, true);
     }
   });
   for (var x = 0, rect;rect = this.buttons_[x];x++) {

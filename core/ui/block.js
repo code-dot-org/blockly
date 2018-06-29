@@ -269,8 +269,6 @@ Blockly.Block.prototype.initSvg = function() {
   }
   this.setCurrentlyHidden(this.currentlyHidden_);
   this.moveToFrontOfMainCanvas_();
-  this.setIsUnused();
-  this.render();
 };
 
 /**
@@ -1831,7 +1829,7 @@ Blockly.Block.prototype.setIsUnused = function(isUnused) {
         Blockly.mainBlockSpace.isTopBlock(this);
   }
   if (Blockly.showUnusedBlocks && isUnused !== this.svg_.isUnused()) {
-    this.svg_.setIsUnused(isUnused);
+    this.svg_.updateUnusedDom(isUnused);
     this.childBlocks_.forEach(function (block) {
       block.setIsUnused(false);
     });

@@ -1661,7 +1661,7 @@ Blockly.BlockSvg.prototype.isUnused = function () {
   return !!this.unusedSvg_;
 };
 
-Blockly.BlockSvg.prototype.setIsUnused = function (isUnused) {
+Blockly.BlockSvg.prototype.updateUnusedDom = function (isUnused) {
   if (isUnused) {
     Blockly.addClass_(this.svgGroup_, 'blocklyUnused');
   } else {
@@ -1673,6 +1673,4 @@ Blockly.BlockSvg.prototype.setIsUnused = function (isUnused) {
   } else if (isUnused && !this.unusedSvg_) {
     this.unusedSvg_ = new Blockly.BlockSvgUnused(this.block_);
   }
-
-  this.render();
 };

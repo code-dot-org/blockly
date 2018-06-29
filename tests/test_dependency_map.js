@@ -20,12 +20,12 @@ goog.addDependency('../../../../core/initialization/blockly.js', ['Blockly'], ['
 goog.addDependency('../../../../core/initialization/inject.js', ['Blockly.inject'], ['Blockly.BlockSpaceEditor', 'Blockly.Css', 'goog.dom'], false);
 goog.addDependency('../../../../core/namespaces/blocks.js', ['Blockly.Blocks'], [], false);
 goog.addDependency('../../../../core/namespaces/msg.js', ['Blockly.Msg'], [], false);
-goog.addDependency('../../../../core/ui/block.js', ['Blockly.Block'], ['Blockly.BlockSpace', 'Blockly.BlockSvg', 'Blockly.BlockSvgFramed', 'Blockly.BlockSvgFunctional', 'Blockly.Blocks', 'Blockly.Comment', 'Blockly.Connection', 'Blockly.ContextMenu', 'Blockly.Input', 'Blockly.Msg', 'Blockly.Mutator', 'Blockly.Warning', 'Blockly.Xml', 'goog.Timer', 'goog.asserts', 'goog.string'], false);
+goog.addDependency('../../../../core/ui/block.js', ['Blockly.Block'], ['Blockly.BlockSpace', 'Blockly.BlockSvg', 'Blockly.BlockSvgFramed', 'Blockly.BlockSvgFunctional', 'Blockly.Blocks', 'Blockly.Connection', 'Blockly.ContextMenu', 'Blockly.Input', 'Blockly.Msg', 'Blockly.Mutator', 'Blockly.Warning', 'Blockly.Xml', 'goog.Timer', 'goog.asserts', 'goog.string'], false);
 goog.addDependency('../../../../core/ui/block_space/auto_scroll.js', ['Blockly.AutoScroll'], ['goog.async.AnimationDelay'], false);
 goog.addDependency('../../../../core/ui/block_space/block_limits.js', ['Blockly.BlockLimits'], ['Blockly.Block'], false);
 goog.addDependency('../../../../core/ui/block_space/block_space.js', ['Blockly.BlockSpace'], ['Blockly.PanDragHandler', 'Blockly.ScrollOnBlockDragHandler', 'Blockly.ScrollOnWheelHandler', 'Blockly.ScrollbarPair', 'Blockly.Trashcan', 'Blockly.Xml', 'goog.array', 'goog.math', 'goog.math.Coordinate'], false);
 goog.addDependency('../../../../core/ui/block_space/block_space_editor.js', ['Blockly.BlockSpaceEditor'], ['Blockly.BlockSpace', 'Blockly.BlockSvgUnused', 'goog.array', 'goog.style'], false);
-goog.addDependency('../../../../core/ui/block_space/flyout.js', ['Blockly.Flyout'], ['Blockly.Block', 'Blockly.BlockLimits', 'Blockly.Comment', 'goog.math.Rect'], false);
+goog.addDependency('../../../../core/ui/block_space/flyout.js', ['Blockly.Flyout'], ['Blockly.Block', 'Blockly.BlockLimits', 'goog.math.Rect'], false);
 goog.addDependency('../../../../core/ui/block_space/horizontal_flyout.js', ['Blockly.HorizontalFlyout'], ['Blockly.Block', 'Blockly.Flyout'], false);
 goog.addDependency('../../../../core/ui/block_space/pan_drag_handler.js', ['Blockly.PanDragHandler'], [], false);
 goog.addDependency('../../../../core/ui/block_space/scroll_on_block_drag_handler.js', ['Blockly.ScrollOnBlockDragHandler'], ['Blockly.AutoScroll', 'goog.math.Vec2'], false);
@@ -39,7 +39,6 @@ goog.addDependency('../../../../core/ui/block_svg/block_svg_functional.js', ['Bl
 goog.addDependency('../../../../core/ui/block_svg/block_svg_unused.js', ['Blockly.BlockSvgUnused'], [], false);
 goog.addDependency('../../../../core/ui/bubble.js', ['Blockly.Bubble'], ['Blockly.BlockSpace'], false);
 goog.addDependency('../../../../core/ui/closure_tools/custom_css_class_menu_renderer.js', ['Blockly.CustomCssClassMenuRenderer'], ['goog.ui.MenuRenderer'], false);
-goog.addDependency('../../../../core/ui/comment.js', ['Blockly.Comment'], ['Blockly.Bubble', 'Blockly.Icon'], false);
 goog.addDependency('../../../../core/ui/contextmenu.js', ['Blockly.ContextMenu'], ['goog.dom', 'goog.style', 'goog.ui.Menu', 'goog.ui.MenuItem'], false);
 goog.addDependency('../../../../core/ui/contract_editor/contract_definition_section.js', ['Blockly.ContractDefinitionSection'], ['Blockly.BlockSpaceEditor'], false);
 goog.addDependency('../../../../core/ui/contract_editor/contract_editor.js', ['Blockly.ContractEditor'], ['Blockly.BlockValueType', 'Blockly.ContractDefinitionSection', 'Blockly.ContractEditorSectionView', 'Blockly.CustomCssClassMenuRenderer', 'Blockly.DomainEditor', 'Blockly.ExampleView', 'Blockly.FunctionEditor', 'Blockly.FunctionalBlockUtils', 'Blockly.FunctionalTypeColors', 'Blockly.SvgHeader', 'Blockly.SvgHighlightBox', 'Blockly.SvgTextButton', 'Blockly.TypeDropdown', 'goog.array', 'goog.color', 'goog.events', 'goog.ui.Component.EventType', 'goog.ui.FlatMenuButtonRenderer', 'goog.ui.Option', 'goog.ui.Select', 'goog.ui.Separator', 'goog.ui.decorate'], false);

@@ -162,15 +162,6 @@ Blockly.JavaScript.scrubNakedValue = function(line) {
 };
 
 /**
- * Generate commented code for unknown blocks.
- * @param {string} line Line of generated code.
- * @return {string} Legal line of code.
- */
-Blockly.JavaScript.scrubComment_ = function(line) {
-  return '/* ' + line.replace(/\*\//, '* /') + ' */\n';
-};
-
-/**
  * Encode a string as a properly escaped JavaScript string, complete with
  * quotes.
  * @param {string} string Text to encode.
@@ -206,13 +197,12 @@ Blockly.JavaScript.translateVarName = function(name) {
 
 /**
  * Common tasks for generating JavaScript from blocks.
- * Handles comments for the specified block and any connected value blocks.
  * Calls any statements following this block.
  * @param {!Blockly.Block} block The current block.
  * @param {string} code The JavaScript code created for this block.
  * @param {boolean} opt_showHidden Whether or not to show non-user visible
  *     blocks, defaults to true.
- * @return {string} JavaScript code with comments and subsequent blocks added.
+ * @return {string} JavaScript code with subsequent blocks added.
  * @this {Blockly.CodeGenerator}
  * @private
  */
@@ -221,30 +211,8 @@ Blockly.JavaScript.scrub_ = function(block, code, opt_showHidden) {
     // Block has handled code generation itself.
     return '';
   }
-  var commentCode = '';
-  // Only collect comments for blocks that aren't inline.
-  if (!block.outputConnection || !block.outputConnection.targetConnection) {
-    // Collect comment for this block.
-    var comment = block.getCommentText();
-    if (comment) {
-      commentCode += Blockly.Generator.prefixLines(comment, '// ') + '\n';
-    }
-    // Collect comments for all value arguments.
-    // Don't collect comments for nested statements.
-    for (var x = 0; x < block.inputList.length; x++) {
-      if (block.inputList[x].type == Blockly.INPUT_VALUE) {
-        var childBlock = block.inputList[x].connection.targetBlock();
-        if (childBlock) {
-          var comment = Blockly.Generator.allNestedComments(childBlock);
-          if (comment) {
-            commentCode += Blockly.Generator.prefixLines(comment, '// ');
-          }
-        }
-      }
-    }
-  }
   var nextBlock = !block.skipNextBlockGeneration && block.nextConnection &&
       block.nextConnection.targetBlock();
   var nextCode = this.blockToCode(nextBlock, opt_showHidden);
-  return commentCode + code + nextCode;
+  return code + nextCode;
 };

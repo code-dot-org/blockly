@@ -347,6 +347,14 @@ Blockly.BlockSpace.prototype.createDom = function() {
   }
   this.svgDragCanvas_ = Blockly.createSvgElement('g', {'class': 'svgDragCanvas'}, Blockly.dragSvg);
 
+  Blockly.bindEvent_(this.svgBlockCanvas_, Blockly.BlockSpace.EVENTS.RUN_BUTTON_CLICKED, this, function () {
+    this.getTopBlocks().forEach(function (block) {
+      if (block.isUnused()) {
+        block.svg_.addUnusedFrame();
+      }
+    });
+  });
+
   this.fireChangeEvent();
   return this.svgGroup_;
 };

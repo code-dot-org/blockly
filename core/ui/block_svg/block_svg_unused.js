@@ -24,8 +24,6 @@ Blockly.BlockSvgUnused = function (block) {
   this.frameHeader_ = undefined;
   this.frameText_ = undefined;
   this.frameHelp_ = undefined;
-
-  this.initChildren();
 };
 
 Blockly.BlockSvgUnused.UNUSED_BLOCK_HELP_EVENT = 'blocklyUnusedBlockHelpClicked';
@@ -127,11 +125,18 @@ Blockly.BlockSvgUnused.prototype.bindClickEvent = function () {
   });
 };
 
+Blockly.BlockSvgUnused.prototype.hide = function () {
+  Blockly.addClass_(this.frameGroup_, 'hidden');
+};
+
 Blockly.BlockSvgUnused.prototype.unhide = function () {
-  this.frameGroup_ && Blockly.removeClass_(this.frameGroup_, 'hidden');
+  Blockly.removeClass_(this.frameGroup_, 'hidden');
 };
 
 Blockly.BlockSvgUnused.prototype.render = function (svgGroup) {
+  if (!this.frameGroup_) {
+    this.initChildren();
+  }
 
   // Remove ourselves from the DOM and calculate the size of our
   // container, then insert ourselves into the container.
@@ -141,8 +146,6 @@ Blockly.BlockSvgUnused.prototype.render = function (svgGroup) {
   goog.dom.removeNode(this.frameGroup_);
   var groupRect = svgGroup.getBoundingClientRect();
   goog.dom.insertChildAt(svgGroup, this.frameGroup_, 0);
-
-  Blockly.addClass_(this.frameGroup_, 'hidden');
 
   this.bindClickEvent();
 

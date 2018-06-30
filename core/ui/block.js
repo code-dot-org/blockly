@@ -406,6 +406,7 @@ Blockly.Block.prototype.unselect = function() {
     throw 'Block is not rendered.';
   }
   Blockly.BlockSpaceEditor.terminateDrag_();
+  Blockly.selected.svg_.updateUnused();
   Blockly.selected = null;
   this.svg_.removeSelect();
   this.svg_.removeSpotlight();
@@ -727,7 +728,7 @@ Blockly.Block.prototype.onMouseDown_ = function(e) {
   } else {
     // Left-click (or middle click)
     Blockly.removeAllRanges();
-    this.setIsUnused(false);
+    this.svg_.updateUnused(false);
     this.blockSpace.blockSpaceEditor.setCursor(Blockly.Css.Cursor.CLOSED);
     // Look up the current translation and record it.
     var xy = this.getRelativeToSurfaceXY();
@@ -817,7 +818,7 @@ Blockly.Block.prototype.onMouseUp_ = function(e) {
   }
 
   if (Blockly.selected) {
-    Blockly.selected.setIsUnused();
+    Blockly.selected.svg_.updateUnused();
   }
 
   if (Blockly.highlightedConnection_) {
@@ -1480,7 +1481,7 @@ Blockly.Block.prototype.setParent = function(newParent) {
   } else {
     // Remove this block from the blockSpace's list of top-most blocks.
     this.blockSpace.removeTopBlock(this);
-    this.setIsUnused();
+    this.svg_.updateUnused();
   }
 
   this.parentBlock_ = newParent;
@@ -1814,26 +1815,6 @@ Blockly.Block.prototype.setFramed = function(isFramed) {
 
 Blockly.Block.prototype.isUnused = function() {
   return this.svg_.isUnused() || this.isCurrentlyBeingDragged();
-};
-
-Blockly.Block.prototype.setIsUnused = function(isUnused) {
-  if (isUnused === undefined) {
-    var shouldBeTopBlock = this.previousConnection === null &&
-        this.outputConnection === null;
-
-    isUnused = !shouldBeTopBlock &&
-        this.isUserVisible() &&
-        this.type !== 'functional_definition' &&
-        Blockly.mainBlockSpace &&
-        Blockly.mainBlockSpace.isReadOnly() === false &&
-        Blockly.mainBlockSpace.isTopBlock(this);
-  }
-  if (Blockly.showUnusedBlocks && isUnused !== this.svg_.isUnused()) {
-    this.svg_.updateUnusedDom(isUnused);
-    this.childBlocks_.forEach(function (block) {
-      block.setIsUnused(false);
-    });
-  }
 };
 
 /**

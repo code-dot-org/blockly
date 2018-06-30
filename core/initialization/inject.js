@@ -97,7 +97,7 @@ Blockly.parseOptions_ = function(options) {
     hasScrollbars;
 
   var readOnly = !!options['readOnly'];
-  var showUnusedBlocks = !!options['showUnusedBlocks'];
+  var showUnusedBlocks = options['showUnusedBlocks'] !== false;
 
   if (readOnly) {
     hasCategories = false;

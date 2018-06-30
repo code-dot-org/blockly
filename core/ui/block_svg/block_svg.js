@@ -117,6 +117,39 @@ Blockly.BlockSvg.prototype.init = function() {
 };
 
 /**
+ * Add or remove the UI indicating if this block is unused or not.
+ * @param isUnused
+ */
+Blockly.BlockSvg.prototype.updateUnused = function(isUnused) {
+  if (this.unusedSvg_) {
+    this.unusedSvg_.hide();
+  }
+
+  var block = this.block_;
+  if (isUnused === undefined) {
+    var shouldBeTopBlock = block.previousConnection === null &&
+      block.outputConnection === null;
+
+    isUnused = !shouldBeTopBlock &&
+      block.isUserVisible() &&
+      block.type !== 'functional_definition' &&
+      Blockly.mainBlockSpace &&
+      Blockly.mainBlockSpace.isReadOnly() === false &&
+      Blockly.mainBlockSpace.isTopBlock(block);
+  }
+  if (Blockly.showUnusedBlocks && isUnused !== this.isUnused()) {
+    if (isUnused) {
+      Blockly.addClass_(this.svgGroup_, 'blocklyUnused');
+    } else {
+      Blockly.removeClass_(this.svgGroup_, 'blocklyUnused');
+    }
+    block.childBlocks_.forEach(function (child) {
+      child.svg_.updateUnused(false);
+    });
+  }
+};
+
+/**
  * Add or remove the UI indicating if this block is movable or not.
  */
 Blockly.BlockSvg.prototype.updateMovable = function() {
@@ -562,8 +595,9 @@ Blockly.BlockSvg.prototype.dispose = function() {
   this.svgPathLight_ = null;
   this.svgPathDark_ = null;
   // dispose of children
-  if (this.isUnused()) {
+  if (this.unusedSvg_) {
     this.unusedSvg_.dispose();
+    this.unusedSvg_ = null;
   }
   // Break circular references.
   this.block_ = null;
@@ -870,8 +904,8 @@ Blockly.BlockSvg.prototype.render = function(selfOnly) {
     }
   }
 
-  if (this.isUnused()) {
-    this.unusedSvg_.render(this.svgGroup_);
+  if (this.unusedSvg_) {
+    this.unusedSvg_.hide();
   }
 };
 
@@ -1658,19 +1692,5 @@ Blockly.BlockSvg.prototype.innerTopLeftCorner = function (notchPathRight) {
 };
 
 Blockly.BlockSvg.prototype.isUnused = function () {
-  return !!this.unusedSvg_;
-};
-
-Blockly.BlockSvg.prototype.updateUnusedDom = function (isUnused) {
-  if (isUnused) {
-    Blockly.addClass_(this.svgGroup_, 'blocklyUnused');
-  } else {
-    Blockly.removeClass_(this.svgGroup_, 'blocklyUnused');
-  }
-  if (!isUnused && this.unusedSvg_) {
-    this.unusedSvg_.dispose();
-    this.unusedSvg_ = null;
-  } else if (isUnused && !this.unusedSvg_) {
-    this.unusedSvg_ = new Blockly.BlockSvgUnused(this.block_);
-  }
+  return Blockly.elementHasClass_(this.svgGroup_, 'blocklyUnused');
 };

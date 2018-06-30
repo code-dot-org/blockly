@@ -347,6 +347,17 @@ Blockly.BlockSpace.prototype.createDom = function() {
   }
   this.svgDragCanvas_ = Blockly.createSvgElement('g', {'class': 'svgDragCanvas'}, Blockly.dragSvg);
 
+  Blockly.bindEvent_(this.svgBlockCanvas_, Blockly.BlockSpace.EVENTS.RUN_BUTTON_CLICKED, this, function () {
+    this.getTopBlocks().forEach(function (block) {
+      if (block.isUnused()) {
+        if (!block.svg_.unusedSvg_) {
+          block.svg_.unusedSvg_ = new Blockly.BlockSvgUnused(block);
+        }
+        block.svg_.unusedSvg_.render(block.svg_.svgGroup_);
+      }
+    });
+  });
+
   this.fireChangeEvent();
   return this.svgGroup_;
 };

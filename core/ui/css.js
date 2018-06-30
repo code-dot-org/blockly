@@ -149,7 +149,7 @@ Blockly.Css.CONTENT = [
   '.blocklyUnused .blocklyUnusedFrame .blocklyText {',
   ' fill: #000;',
   '}',
-  '.blocklyUnused .blocklyUnusedFrame.hidden {',
+  '.blocklyUnusedFrame.hidden {',
   ' opacity: 0;',
   ' visibility: hidden',
   '}',

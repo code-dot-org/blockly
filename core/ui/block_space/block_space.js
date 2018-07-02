@@ -350,7 +350,7 @@ Blockly.BlockSpace.prototype.createDom = function() {
   Blockly.bindEvent_(this.svgBlockCanvas_, Blockly.BlockSpace.EVENTS.RUN_BUTTON_CLICKED, this, function () {
     this.getTopBlocks().forEach(function (block) {
       if (block.isUnused()) {
-        block.svg_.addUnusedFrame();
+        block.getSvgRenderer().addUnusedFrame();
       }
     });
   });

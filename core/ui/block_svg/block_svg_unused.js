@@ -135,6 +135,7 @@ Blockly.BlockSvgUnused.prototype.render = function (svgGroup) {
 
   Blockly.addClass_(this.frameGroup_, 'hidden');
   var frameGroup = this.frameGroup_;
+  // Trigger the CSS fade-in transition.
   setTimeout(function () {
     Blockly.removeClass_(frameGroup, 'hidden');
   }, 0);

@@ -763,7 +763,11 @@ Blockly.BlockSpaceEditor.prototype.onPaste_ = function(e) {
   try {
     var xml = Blockly.Xml.textToDom(e.clipboardData.getData('text/xml') || e.clipboardData.getData('text/plain'));
     Blockly.focusedBlockSpace.paste(xml);
-  } catch (_) { }
+  } catch (e) {
+    if (!/did not obtain a valid XML tree/.test(e)) {
+      throw e;
+    }
+  }
 };
 
 /**

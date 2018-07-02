@@ -284,3 +284,51 @@ function test_blockSpaceWithLimitedQuantitiesOfBlocks() {
 
   goog.dom.removeNode(container);
 }
+
+function test_paste() {
+  var container = Blockly.Test.initializeBlockSpaceEditor();
+  Blockly.focusedBlockSpace = Blockly.mainBlockSpace;
+
+  function createMockClipboardEvent(type, data) {
+    return {
+      type: type,
+      clipboardData: {
+        getData: function () {
+          return data;
+        }
+      }
+    };
+  }
+
+  // Ignores malformed XML on the clipboard.
+  Blockly.mainBlockSpaceEditor.onPaste_(createMockClipboardEvent('paste', 'not real XML'));
+  assertEquals('Ignores malformed XML on the clipboard', 0, Blockly.mainBlockSpace.getTopBlocks().length);
+
+  // Can paste a block.
+  Blockly.mainBlockSpaceEditor.onPaste_(createMockClipboardEvent('paste', '<xml><block type="math_number"/></xml>'));
+  var topBlocks = Blockly.mainBlockSpace.getTopBlocks();
+  assertEquals('Can paste a block', 1, topBlocks.length);
+  assertEquals('math_number', topBlocks[0].type);
+
+  // Doesn't swallow errors not related to XML formatting.
+  var xml = '<xml>' +
+    '<block type="controls_repeat_ext">' +
+      '<value name="TIMES">' +
+        '<block type="math_number">' +
+          '<title name="NUM">10</title>' +
+        '</block>' +
+      '</value>' +
+      '<value name="TIMES">' +
+        '<block type="math_number">' +
+          '<title name="NUM">20</title>' +
+        '</block>' +
+      '</value>' +
+    '</block>' +
+  '</xml>';
+  var mockEvent = createMockClipboardEvent('paste', xml);
+  assertThrows(function () {
+    Blockly.mainBlockSpaceEditor.onPaste_(mockEvent);
+  });
+
+  goog.dom.removeNode(container);
+}

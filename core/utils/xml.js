@@ -504,10 +504,10 @@ Blockly.Xml.domToBlock = function(blockSpace, xmlBlock) {
   var next = block.nextConnection && block.nextConnection.targetBlock();
   if (next) {
     // Next block in a stack needs to square off its corners.
-    // Rendering a child will render its parent.
-    next.render();
+    next.render(true);
+    block.render(true);
   } else {
-    block.render();
+    block.render(true);
   }
   return block;
 };

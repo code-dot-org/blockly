@@ -522,7 +522,7 @@ BS.INNER_BOTTOM_LEFT_CORNER_HIGHLIGHT_LTR =
  * @return {Object} object with padding values for top, bottom, left, and right
  */
 Blockly.BlockSvg.prototype.getPadding = function() {
-  if (this.isUnused()) {
+  if (this.unusedSvg_) {
     return this.unusedSvg_.getPadding();
   }
   return {
@@ -562,9 +562,7 @@ Blockly.BlockSvg.prototype.dispose = function() {
   this.svgPathLight_ = null;
   this.svgPathDark_ = null;
   // dispose of children
-  if (this.isUnused()) {
-    this.unusedSvg_.dispose();
-  }
+  this.removeUnusedFrame();
   // Break circular references.
   this.block_ = null;
 };
@@ -870,9 +868,7 @@ Blockly.BlockSvg.prototype.render = function(selfOnly) {
     }
   }
 
-  if (this.isUnused()) {
-    this.unusedSvg_.render(this.svgGroup_);
-  }
+  this.removeUnusedFrame();
 };
 
 /**
@@ -1658,7 +1654,7 @@ Blockly.BlockSvg.prototype.innerTopLeftCorner = function (notchPathRight) {
 };
 
 Blockly.BlockSvg.prototype.isUnused = function () {
-  return !!this.unusedSvg_;
+  return Blockly.elementHasClass_(this.svgGroup_, 'blocklyUnused');
 };
 
 Blockly.BlockSvg.prototype.setIsUnused = function (isUnused) {
@@ -1667,12 +1663,20 @@ Blockly.BlockSvg.prototype.setIsUnused = function (isUnused) {
   } else {
     Blockly.removeClass_(this.svgGroup_, 'blocklyUnused');
   }
-  if (!isUnused && this.unusedSvg_) {
+
+  this.removeUnusedFrame();
+};
+
+Blockly.BlockSvg.prototype.addUnusedFrame = function () {
+  if (!this.unusedSvg_) {
+    this.unusedSvg_ = new Blockly.BlockSvgUnused(this);
+  }
+  this.unusedSvg_.render(this.svgGroup_);
+};
+
+Blockly.BlockSvg.prototype.removeUnusedFrame = function () {
+  if (this.unusedSvg_) {
     this.unusedSvg_.dispose();
     this.unusedSvg_ = null;
-  } else if (isUnused && !this.unusedSvg_) {
-    this.unusedSvg_ = new Blockly.BlockSvgUnused(this.block_);
   }
-
-  this.render();
 };

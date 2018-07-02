@@ -31,11 +31,6 @@ Blockly.BlockSvgUnused = function (block) {
 Blockly.BlockSvgUnused.UNUSED_BLOCK_HELP_EVENT = 'blocklyUnusedBlockHelpClicked';
 
 Blockly.BlockSvgUnused.prototype.initChildren = function () {
-
-  // Unhide when run button pressed. Save binding data so we can unbind.
-  this.bindData_ = Blockly.bindEvent_(Blockly.mainBlockSpace.getCanvas(),
-      Blockly.BlockSpace.EVENTS.RUN_BUTTON_CLICKED, this, this.unhide.bind(this));
-
   this.frameGroup_ = Blockly.createSvgElement('g', {
     'class': 'blocklyUnusedFrame'
   });
@@ -127,10 +122,6 @@ Blockly.BlockSvgUnused.prototype.bindClickEvent = function () {
   });
 };
 
-Blockly.BlockSvgUnused.prototype.unhide = function () {
-  this.frameGroup_ && Blockly.removeClass_(this.frameGroup_, 'hidden');
-};
-
 Blockly.BlockSvgUnused.prototype.render = function (svgGroup) {
 
   // Remove ourselves from the DOM and calculate the size of our
@@ -143,6 +134,11 @@ Blockly.BlockSvgUnused.prototype.render = function (svgGroup) {
   goog.dom.insertChildAt(svgGroup, this.frameGroup_, 0);
 
   Blockly.addClass_(this.frameGroup_, 'hidden');
+  var frameGroup = this.frameGroup_;
+  // Trigger the CSS fade-in transition.
+  setTimeout(function () {
+    Blockly.removeClass_(frameGroup, 'hidden');
+  }, 0);
 
   this.bindClickEvent();
 

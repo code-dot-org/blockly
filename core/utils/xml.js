@@ -87,16 +87,6 @@ Blockly.Xml.blockToDom = function(block, ignoreChildBlocks) {
     }
   }
 
-  if (block.comment) {
-    var commentElement = goog.dom.createDom('comment', null,
-        block.comment.getText());
-    commentElement.setAttribute('pinned', block.comment.isVisible());
-    var hw = block.comment.getBubbleSize();
-    commentElement.setAttribute('h', hw.height);
-    commentElement.setAttribute('w', hw.width);
-    element.appendChild(commentElement);
-  }
-
   for (i = 0; i < block.inputList.length; i++) {
     input = block.inputList[i];
     var empty = true;
@@ -416,18 +406,6 @@ Blockly.Xml.domToBlock = function(blockSpace, xmlBlock) {
         // Custom data for an advanced block.
         if (block.domToMutation) {
           block.domToMutation(xmlChild);
-        }
-        break;
-      case 'comment':
-        block.setCommentText(xmlChild.textContent);
-        var visible = xmlChild.getAttribute('pinned');
-        if (visible) {
-          block.comment.setVisible(visible == 'true');
-        }
-        var bubbleW = parseInt(xmlChild.getAttribute('w'), 10);
-        var bubbleH = parseInt(xmlChild.getAttribute('h'), 10);
-        if (!isNaN(bubbleW) && !isNaN(bubbleH)) {
-          block.comment.setBubbleSize(bubbleW, bubbleH);
         }
         break;
       case 'title':

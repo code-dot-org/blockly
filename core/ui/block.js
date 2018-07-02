@@ -31,7 +31,6 @@ goog.require('Blockly.BlockSvg');
 goog.require('Blockly.BlockSvgFramed');
 goog.require('Blockly.BlockSvgFunctional');
 goog.require('Blockly.Blocks');
-goog.require('Blockly.Comment');
 goog.require('Blockly.Connection');
 goog.require('Blockly.ContextMenu');
 goog.require('Blockly.Input');
@@ -169,12 +168,6 @@ Blockly.Block.prototype.svg_ = null;
 Blockly.Block.prototype.mutator = null;
 
 /**
- * Block's comment icon (if any).
- * @type {?Blockly.Comment}
- */
-Blockly.Block.prototype.comment = null;
-
-/**
  * Block's warning icon (if any).
  * @type {?Blockly.Warning}
  */
@@ -238,16 +231,13 @@ Blockly.Block.prototype.setRenderBlockSpace = function(blockSpace) {
 };
 
 /**
- * Returns a list of mutator, comment, and warning icons.
+ * Returns a list of mutator and warning icons.
  * @return {!Array} List of icons.
  */
 Blockly.Block.prototype.getIcons = function() {
   var icons = [];
   if (this.mutator) {
     icons.push(this.mutator);
-  }
-  if (this.comment) {
-    icons.push(this.comment);
   }
   if (this.warning) {
     icons.push(this.warning);
@@ -1228,9 +1218,8 @@ Blockly.Block.prototype.moveBlockBeingDragged_ = function (mouseX, mouseY, singl
         'translate(' + x + ', ' + y + ')');
     // Drag all the nested bubbles.
     for (var i = 0; i < this.draggedBubbles_.length; i++) {
-      var commentData = this.draggedBubbles_[i];
-      commentData.bubble.setIconLocation(commentData.x + dx,
-        commentData.y + dy);
+      var data = this.draggedBubbles_[i];
+      data.bubble.setIconLocation(data.x + dx, data.y + dy);
     }
 
     // Check to see if any of this block's connections are within range of
@@ -2470,49 +2459,6 @@ Blockly.Block.prototype.setMutator = function(mutator) {
     this.mutator = mutator;
     if (this.svg_) {
       mutator.createIcon();
-    }
-  }
-};
-
-/**
- * Returns the comment on this block (or '' if none).
- * @return {string} Block's comment.
- */
-Blockly.Block.prototype.getCommentText = function() {
-  if (this.comment) {
-    var comment = this.comment.getText();
-    // Trim off trailing whitespace.
-    return comment.replace(/\s+$/, '').replace(/ +\n/g, '\n');
-  }
-  return '';
-};
-
-/**
- * Set this block's comment text.
- * @param {?string} text The text, or null to delete.
- */
-Blockly.Block.prototype.setCommentText = function(text) {
-  if (!Blockly.Comment) {
-    throw 'Comments not supported.';
-  }
-  var changedState = false;
-  if (goog.isString(text)) {
-    if (!this.comment) {
-      this.comment = new Blockly.Comment(this);
-      changedState = true;
-    }
-    this.comment.setText(/** @type {string} */ (text));
-  } else {
-    if (this.comment) {
-      this.comment.dispose();
-      changedState = true;
-    }
-  }
-  if (this.rendered) {
-    this.render();
-    if (changedState) {
-      // Adding or removing a comment icon will cause the block to change shape.
-      this.bumpNeighbours();
     }
   }
 };

@@ -913,7 +913,6 @@ Blockly.Connection.prototype.neighbours_ = function(maxLimit) {
 /**
  * Hide this connection, as well as all down-stream connections on any block
  * attached to this connection.  This happens when a block is collapsed.
- * Also hides down-stream comments.
  */
 Blockly.Connection.prototype.hideAll = function() {
   if (this.inDB_) {
@@ -943,7 +942,6 @@ Blockly.Connection.prototype.hideAll = function() {
 /**
  * Unhide this connection, as well as all down-stream connections on any block
  * attached to this connection.  This happens when a block is expanded.
- * Also unhides down-stream comments.
  * @return {!Array.<!Blockly.Block>} List of blocks to render.
  */
 Blockly.Connection.prototype.unhideAll = function() {

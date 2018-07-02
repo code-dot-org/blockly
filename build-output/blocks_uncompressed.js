@@ -885,7 +885,7 @@ Blockly.Blocks.procedures_callnoreturn = {init:function() {
       f = this.appendValueInput("ARG" + d).setAlign(Blockly.ALIGN_RIGHT).appendTitle(this.currentParameterNames_[d]), this.currentParameterIDs && (a = this.currentParameterIDs[d], a in this.parameterIDsToArgumentConnections && (g = this.parameterIDsToArgumentConnections[a], !g || g.targetConnection || g.sourceBlock_.blockSpace != this.blockSpace ? delete this.parameterIDsToArgumentConnections[a] : f.connection.connect(g))), f.setStrictCheck(this.currentParameterTypes_[d]);
     }
     if (this.rendered = e) {
-      this.render(), this.bumpNeighbours_();
+      this.render(), this.bumpNeighbours();
     }
   } else {
     this.parameterIDsToArgumentConnections = {}, this.currentParameterIDs = null;

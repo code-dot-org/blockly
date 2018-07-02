@@ -107,9 +107,6 @@ Blockly.JavaScript.finish = function(a) {
 Blockly.JavaScript.scrubNakedValue = function(a) {
   return a + ";\n";
 };
-Blockly.JavaScript.scrubComment_ = function(a) {
-  return "/* " + a.replace(/\*\//, "* /") + " */\n";
-};
 Blockly.JavaScript.quote_ = function(a) {
   a = a.replace(/\\/g, "\\\\").replace(/\n/g, "\\\n").replace(/'/g, "\\'");
   return "'" + a + "'";
@@ -122,17 +119,9 @@ Blockly.JavaScript.scrub_ = function(a, b, c) {
   if (null === b) {
     return "";
   }
-  var d = "";
-  if (!a.outputConnection || !a.outputConnection.targetConnection) {
-    var e = a.getCommentText();
-    e && (d += Blockly.Generator.prefixLines(e, "// ") + "\n");
-    for (var g = 0;g < a.inputList.length;g++) {
-      a.inputList[g].type == Blockly.INPUT_VALUE && (e = a.inputList[g].connection.targetBlock()) && (e = Blockly.Generator.allNestedComments(e)) && (d += Blockly.Generator.prefixLines(e, "// "));
-    }
-  }
   a = !a.skipNextBlockGeneration && a.nextConnection && a.nextConnection.targetBlock();
   c = this.blockToCode(a, c);
-  return d + b + c;
+  return b + c;
 };
 Blockly.JavaScript.colour = {};
 Blockly.JavaScript.colour_picker = function() {

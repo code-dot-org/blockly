@@ -185,8 +185,14 @@ Blockly.PanDragHandler.prototype.onPanDragTargetMouseDown_ = function (e) {
   var clickIsOnTarget = e.target && e.target === this.target_;
   var onlyOneTouch = !e.touches || e.touches.length === 1;
 
-  if (!onlyOneTouch) {
-    this.currentTouchId = e.targetTouches[0].identifier;
+  if (!this.currentTouchId && e.touches) {
+    var backdrop = this.blockSpace_.blockSpaceEditor.getSVGElement();
+    var firstBackdropTouch = goog.array.find(e.touches, function (touch) {
+      return touch.target === backdrop;
+    });
+    if (firstBackdropTouch) {
+      this.currentTouchId = firstBackdropTouch.identifier;
+    }
   }
 
   // Clicking on the flyout background clears the global selection
@@ -218,8 +224,11 @@ Blockly.PanDragHandler.prototype.onPanDragTargetMouseDown_ = function (e) {
  * @private
  */
 Blockly.PanDragHandler.prototype.beginDragScroll_ = function (e) {
-  if (this.currentTouchId && e.identifier !== this.currentTouchId) {
-    return;
+  if (this.currentTouchId) {
+    e = findTouch(e, this.currentTouchId);
+    if (!e) {
+      return;
+    }
   }
   // Record the current mouse position.
   this.startMouseX_ = e.clientX;
@@ -240,6 +249,13 @@ Blockly.PanDragHandler.prototype.onPanDragMouseMove_ = function (e) {
   // Prevent text selection on page
   Blockly.removeAllRanges();
 
+  if (this.currentTouchId) {
+    e = findTouch(e, this.currentTouchId);
+    if (!e) {
+      return;
+    }
+  }
+
   var mouseDx = e.clientX - this.startMouseX_; // + if mouse right
   var mouseDy = e.clientY - this.startMouseY_; // + if mouse down
 
@@ -250,8 +266,8 @@ Blockly.PanDragHandler.prototype.onPanDragMouseMove_ = function (e) {
   this.blockSpace_.scrollTo(
     this.startScrollX_ + scrollDx,
     this.startScrollY_ + scrollDy);
-  e.stopPropagation();
-  e.preventDefault();
+  e.stopPropagation && e.stopPropagation();
+  e.preventDefault && e.preventDefault();
 };
 
 /**
@@ -261,7 +277,18 @@ Blockly.PanDragHandler.prototype.onPanDragMouseMove_ = function (e) {
  * @private
  */
 Blockly.PanDragHandler.prototype.onPanDragMouseUp_ = function (e) {
-  this.unbindDuringPanDragHandlers_();
-  e.stopPropagation();
-  e.preventDefault();
+  if (!findTouch(e, this.currentTouchId)) {
+    this.currentTouchId = null;
+    this.unbindDuringPanDragHandlers_();
+    e.stopPropagation();
+    e.preventDefault();
+  }
 };
+
+function findTouch(e, currentId) {
+  if (currentId && e.touches) {
+    return goog.array.find(e.touches, function (touch) {
+      return touch.identifier === currentId;
+    });
+  }
+}

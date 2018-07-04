@@ -95,6 +95,11 @@ Blockly.PanDragHandler = function (blockSpace) {
    * @private {number}
    */
   this.startScrollY_ = null;
+
+  /**
+   * @private {number}
+   */
+  this.currentTouchId_ = null;
 };
 
 /**
@@ -185,13 +190,13 @@ Blockly.PanDragHandler.prototype.onPanDragTargetMouseDown_ = function (e) {
   var clickIsOnTarget = e.target && e.target === this.target_;
   var onlyOneTouch = !e.touches || e.touches.length === 1;
 
-  if (!this.currentTouchId && e.touches) {
+  if (!this.currentTouchId_ && e.touches) {
     var backdrop = this.blockSpace_.blockSpaceEditor.getSVGElement();
     var firstBackdropTouch = goog.array.find(e.touches, function (touch) {
       return touch.target === backdrop;
     });
     if (firstBackdropTouch) {
-      this.currentTouchId = firstBackdropTouch.identifier;
+      this.currentTouchId_ = firstBackdropTouch.identifier;
     }
   }
 
@@ -224,8 +229,8 @@ Blockly.PanDragHandler.prototype.onPanDragTargetMouseDown_ = function (e) {
  * @private
  */
 Blockly.PanDragHandler.prototype.beginDragScroll_ = function (e) {
-  if (this.currentTouchId) {
-    e = findTouch(e, this.currentTouchId);
+  if (this.currentTouchId_) {
+    e = Blockly.findTouch(e, this.currentTouchId_);
     if (!e) {
       return;
     }
@@ -249,8 +254,8 @@ Blockly.PanDragHandler.prototype.onPanDragMouseMove_ = function (e) {
   // Prevent text selection on page
   Blockly.removeAllRanges();
 
-  if (this.currentTouchId) {
-    e = findTouch(e, this.currentTouchId);
+  if (this.currentTouchId_) {
+    e = Blockly.findTouch(e, this.currentTouchId_);
     if (!e) {
       return;
     }
@@ -277,18 +282,10 @@ Blockly.PanDragHandler.prototype.onPanDragMouseMove_ = function (e) {
  * @private
  */
 Blockly.PanDragHandler.prototype.onPanDragMouseUp_ = function (e) {
-  if (!findTouch(e, this.currentTouchId)) {
-    this.currentTouchId = null;
+  if (!Blockly.findTouch(e, this.currentTouchId_)) {
+    this.currentTouchId_ = null;
     this.unbindDuringPanDragHandlers_();
     e.stopPropagation();
     e.preventDefault();
   }
 };
-
-function findTouch(e, currentId) {
-  if (currentId && e.touches) {
-    return goog.array.find(e.touches, function (touch) {
-      return touch.identifier === currentId;
-    });
-  }
-}

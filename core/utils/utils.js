@@ -873,3 +873,11 @@ Blockly.aggregateCounts = function (list) {
     return prev;
   }, {});
 };
+
+Blockly.findTouch = function (e, currentId) {
+  if (currentId && e.touches) {
+    return goog.array.find(e.touches, function (touch) {
+      return touch.identifier === currentId;
+    });
+  }
+};

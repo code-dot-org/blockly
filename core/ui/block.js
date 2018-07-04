@@ -82,6 +82,11 @@ Blockly.Block = function(blockSpace, prototypeName, htmlId) {
   this.collapsed_ = false;
   this.dragging_ = false;
 
+  /**
+   * @private {number}
+   */
+  this.currentTouchId_ = null;
+
   // Used to hide function blocks when not in modal workspace. This property
   // is not serialized/deserialized.
   this.currentlyHidden_ = false;
@@ -707,6 +712,11 @@ Blockly.Block.prototype.onMouseDown_ = function(e) {
   if (this.isInFlyout) {
     return;
   }
+
+  if (!this.currentTouchId_ && e.targetTouches) {
+    this.currentTouchId_ = e.targetTouches[0].identifier;
+  }
+
   // Update Blockly's knowledge of its own location.
   this.blockSpace.blockSpaceEditor.svgResize();
   Blockly.BlockSpaceEditor.terminateDrag_();
@@ -766,7 +776,7 @@ Blockly.Block.prototype.onMouseDown_ = function(e) {
     }
   }
   // This event has been handled.  No need to bubble up to the document.
-  e.stopPropagation();
+  e.stopPropagation && e.stopPropagation();
 };
 
 /**
@@ -777,6 +787,10 @@ Blockly.Block.prototype.onMouseDown_ = function(e) {
  * @private
  */
 Blockly.Block.prototype.onMouseUp_ = function(e) {
+  if (Blockly.findTouch(e, this.currentTouchId_)) {
+    return;
+  }
+  this.currentTouchId_ = null;
   var thisBlockSpace = this.blockSpace;
   Blockly.BlockSpaceEditor.terminateDrag_();
   if (Blockly.selected && Blockly.highlightedConnection_) {
@@ -1300,10 +1314,16 @@ Blockly.Block.prototype.onMouseMove_ = function(e) {
     e.stopPropagation();
     return;
   }
+  if (this.currentTouchId_) {
+    e = Blockly.findTouch(e, this.currentTouchId_);
+    if (!e) {
+      return;
+    }
+  }
   this.moveBlockBeingDragged_(e.clientX, e.clientY, e.ctrlKey || e.metaKey);
   this.blockSpace.panIfOverEdge(this, e.clientX, e.clientY);
   // This event has been handled.  No need to bubble up to the document.
-  e.stopPropagation();
+  e.stopPropagation && e.stopPropagation();
 };
 
 /**

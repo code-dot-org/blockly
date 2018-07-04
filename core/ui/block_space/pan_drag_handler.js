@@ -190,14 +190,8 @@ Blockly.PanDragHandler.prototype.onPanDragTargetMouseDown_ = function (e) {
   var clickIsOnTarget = e.target && e.target === this.target_;
   var onlyOneTouch = !e.touches || e.touches.length === 1;
 
-  if (!this.currentTouchId_ && e.touches) {
-    var backdrop = this.blockSpace_.blockSpaceEditor.getSVGElement();
-    var firstBackdropTouch = goog.array.find(e.touches, function (touch) {
-      return touch.target === backdrop;
-    });
-    if (firstBackdropTouch) {
-      this.currentTouchId_ = firstBackdropTouch.identifier;
-    }
+  if (!this.currentTouchId_ && e.targetTouches) {
+    this.currentTouchId_ = e.targetTouches[0].identifier;
   }
 
   // Clicking on the flyout background clears the global selection
@@ -218,8 +212,8 @@ Blockly.PanDragHandler.prototype.onPanDragTargetMouseDown_ = function (e) {
 
     // Don't click through to the workspace drag handler, or the browser
     // default drag/scroll handlers
-    e.stopPropagation();
-    e.preventDefault();
+    e.stopPropagation && e.stopPropagation();
+    e.preventDefault && e.preventDefault();
   }
 };
 

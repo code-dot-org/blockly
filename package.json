@@ -17,8 +17,8 @@
     "media"
   ],
   "scripts": {
-    "build": "./deploy.sh",
-    "build:dev": "./deploy.sh debug",
+    "build": "webpack-cli",
+    "build:dev": "DEV=1 webpack-cli",
     "preversion": "npm run test",
     "version": "npm run build:dev && npm run build && git add -A build-output",
     "postversion": "git push && git push --tags && npm publish",

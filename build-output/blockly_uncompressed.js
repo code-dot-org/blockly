@@ -3500,9 +3500,9 @@ Blockly.BlockSvg.prototype.renderDraw_ = function(iconWidth, inputRows) {
   }
   if (this.svgTypeHints_) {
     var g = this.svgTypeHints_;
-    var max = Math.max(this.block_.inputList.length, g.children.length);
+    var max = Math.max(this.block_.inputList.length, g.childNodes.length);
     for (var j = 0;j < max;j++) {
-      var element = g.children[j] || Blockly.createSvgElement("path", {"filter":"url(#blocklyTypeHintFilter)"}, g);
+      var element = g.childNodes[j] || Blockly.createSvgElement("path", {"filter":"url(#blocklyTypeHintFilter)"}, g);
       var input = this.block_.inputList[j];
       if (!input || !input.connection) {
         element.setAttribute("d", "");

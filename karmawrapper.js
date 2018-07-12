@@ -24,7 +24,7 @@ function tearDown() {
 }
 
 function tearDownPage() {
-  karma.complete({});
+  karma.complete({ coverage: window.__coverage__ });
 }
 
 window.karmaCustomEnv = {

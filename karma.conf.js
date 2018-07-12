@@ -1,5 +1,6 @@
 // Karma configuration
 module.exports = function(config) {
+  const coverage = !!process.env.COVERAGE;
   config.set({
 
     // base path that will be used to resolve all patterns (eg. files, exclude)
@@ -33,13 +34,24 @@ module.exports = function(config) {
 
     // preprocess matching files before serving them to the browser
     // available preprocessors: https://npmjs.org/browse/keyword/karma-preprocessor
-    preprocessors: {},
+    preprocessors: coverage ? {
+      'core/**/*.js': ['coverage'],
+      'blocks/**/*.js': ['coverage'],
+      'generators/**/*.js': ['coverage'],
+    } : {},
 
 
     // test results reporter to use
     // possible values: 'dots', 'progress'
     // available reporters: https://npmjs.org/browse/keyword/karma-reporter
-    reporters: ['progress'],
+    reporters: coverage ? ['progress', 'coverage'] : ['progress'],
+
+    coverageReporter: {
+      reporters: [
+        { type: 'html', subdir: '.' },
+        { type: 'lcovonly', subdir: '.' },
+      ],
+    },
 
 
     // web server port

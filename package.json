@@ -23,6 +23,7 @@
     "version": "npm run build:dev && npm run build && git add -A build-output",
     "postversion": "git push && git push --tags && npm publish",
     "test": "karma start --single-run",
+    "test:coverage": "COVERAGE=1 karma start --single-run",
     "test:watch": "karma start"
   },
   "devDependencies": {
@@ -30,6 +31,7 @@
     "google-closure-library": "~20170124.0.0",
     "karma": "^2.0.4",
     "karma-chrome-launcher": "^2.2.0",
+    "karma-coverage": "^1.1.2",
     "karma-custom": "^1.1.9",
     "webpack": "^4.14.0",
     "webpack-cli": "^3.0.8",

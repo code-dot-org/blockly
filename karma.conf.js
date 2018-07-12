@@ -8,7 +8,7 @@ module.exports = function(config) {
       'node_modules/google-closure-library/closure/goog/base.js',
       'tests/test_dependency_map.js',
       'tests/*.js',
-      'karmawrapper.js',
+      'jsunitAdapter.js',
       'msg/js/en_us.js',
       { pattern: 'node_modules/google-closure-library/**/*.js', watched: false, included: false },
       { pattern: 'core/**/*.js', included: false },

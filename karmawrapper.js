@@ -16,7 +16,10 @@ function tearDown() {
     description: G_testRunner.testCase.curTest_.name,
     success,
     suite: ['Blockly'],
-    log: success ? [] : [lastError.message, ...lastError.stack.split('\n').slice(0, 3)],
+    log: success ? [] : [
+      lastError.message,
+      ...lastError.stack.split('\n').slice(0, 3)
+    ],
   });
 }
 

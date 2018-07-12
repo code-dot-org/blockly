@@ -24,9 +24,11 @@
     "postversion": "git push && git push --tags && npm publish",
     "test": "karma start --single-run",
     "test:coverage": "COVERAGE=1 karma start --single-run",
-    "test:watch": "karma start"
+    "test:watch": "karma start",
+    "report-coverage": "codecove"
   },
   "devDependencies": {
+    "codecov": "^3.0.4",
     "google-closure-compiler": "~20180610.0.2",
     "google-closure-library": "~20170124.0.0",
     "karma": "^2.0.4",

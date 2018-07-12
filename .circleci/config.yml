@@ -15,4 +15,5 @@ jobs:
         key: v3-dep-{{ checksum "package.json" }}
         paths:
         - ./node_modules
-    - run: npm test
+    - run: 'npm run test:coverage'
+    - run: 'npm run report-coverage'

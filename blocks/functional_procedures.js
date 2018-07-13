@@ -26,6 +26,7 @@
 goog.provide('Blockly.Blocks.functionalProcedures');
 
 goog.require('Blockly.Blocks');
+goog.require('Blockly.Blocks.procedures');
 
 /**
  * Definition block for a custom functional block

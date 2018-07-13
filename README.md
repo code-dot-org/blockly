@@ -35,7 +35,7 @@ Major additions and changes in this fork:
 ```
 cd blockly
 npm install
-./deploy.sh
+npm run build
 ```
 
 ## Usage
@@ -59,11 +59,11 @@ cd {code-dot-org repo directory}/apps
 npm link @code-dot-org/blockly
 ```
 
-Apps will now reference your local blockly repository rather than the npm package. If you then make local changes to your repo, you can simply rebuild blockly (via `./deploy`) and then apps (via `npm run build`) to communicate those changes to apps.
+Apps will now reference your local blockly repository rather than the npm package. If you then make local changes to your repo, you can simply rebuild blockly (via `npm run build` in this repo) and then apps (via `npm run build` in code-dot-org/apps) to communicate those changes to apps.
 
 ### Publishing changes
 
-To publish a new version to npm switch to the master branch, use `npm login` to sign in as an account with access to the `@code-dot-org` scope, then `npm version [major|minor|patch]` for the appropriate version bump.  This will do the following:
+To publish a new version to npm switch to the master branch, use `npm login` to sign in as an account with access to the `@code-dot-org` scope, then `npm version [major|minor|patch|premajor|preminor|prepatch]` for the appropriate version bump.  This will do the following:
 
 * Run linting and tests to verify your local repo.
 * Rebuild the release package.

@@ -20,7 +20,7 @@
     "build": "webpack-cli",
     "build:dev": "DEV=1 webpack-cli",
     "preversion": "npm run test",
-    "version": "npm run build:dev && npm run build",
+    "version": "npm run build",
     "postversion": "git push && git push --tags && npm publish",
     "test": "./test.sh"
   },

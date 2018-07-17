@@ -282,21 +282,20 @@ Blockly.Toolbox.TreeControl.prototype.enterDocument = function() {
  * @private
  */
 Blockly.Toolbox.TreeControl.prototype.handleTouchEvent_ = function(e) {
+  // Rate limit to once every 50ms
+  if (this.touchRateLimited) {
+    return;
+  }
+  this.touchRateLimited = true;
+  setTimeout(function () {
+    this.touchRateLimited = false;
+  }.bind(this));
+
   e.preventDefault();
   var node = this.getNodeFromEvent_(e);
   if (node && (e.type === goog.events.EventType.TOUCHSTART ||
                e.type === goog.events.EventType.POINTERDOWN ||
                e.type === goog.events.EventType.MSPOINTERDOWN)) {
-
-    // Rate limit to once every 50ms
-    if (this.touchRateLimited) {
-      return;
-    }
-    this.touchRateLimited = true;
-    setTimeout(function () {
-      this.touchRateLimited = false;
-    }.bind(this));
-
     // Fire asynchronously since onMouseDown takes long enough that the browser
     // would fire the default mouse event before this method returns.
     e.stopImmediatePropagation();

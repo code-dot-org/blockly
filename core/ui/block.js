@@ -41,7 +41,6 @@ goog.require('Blockly.BlockSpace');
 goog.require('Blockly.Xml');
 goog.require('goog.asserts');
 goog.require('goog.string');
-goog.require('goog.Timer');
 
 
 /**
@@ -342,8 +341,7 @@ Blockly.Block.terminateDrag_ = function() {
       selected.setDragging_(false);
       selected.moveToFrontOfMainCanvas_();
       selected.render();
-      goog.Timer.callOnce(
-          selected.bumpNeighbours, Blockly.BUMP_DELAY, selected);
+      window.setTimeout(selected.bumpNeighbours.bind(selected), Blockly.BUMP_DELAY);
       selected.blockSpace.blockSpaceEditor.bumpBlocksIntoBlockSpace();
       selected.blockSpace.scrollIntoView(selected);
 
@@ -793,7 +791,7 @@ Blockly.Block.prototype.onMouseUp_ = function(e) {
     // has a side effect of opening the trash can.
     var trashcan = thisBlockSpace.trashcan;
     if (trashcan) {
-      goog.Timer.callOnce(trashcan.close, 100, trashcan);
+      window.setTimeout(trashcan.close.bind(trashcan), 100);
     }
     Blockly.selected.dispose(false, true);
     if (Blockly.topLevelProcedureAutopopulate && this.isFunctionDefinition()) {

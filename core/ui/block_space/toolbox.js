@@ -269,12 +269,13 @@ Blockly.Toolbox.TreeControl.prototype.enterDocument = function() {
       'onpointerdown' in window ||
       'onmspointerdown' in window) {
     var el = this.getElement();
-    var handler = goog.functions.rateLimit(this.handleTouchEvent_, 50, this);
+    var handler = this.handleTouchEvent_.bind(this);
     Blockly.bindEvent_(el, goog.events.EventType.TOUCHSTART, this, handler);
     Blockly.bindEvent_(el, goog.events.EventType.POINTERDOWN, this, handler);
     Blockly.bindEvent_(el, goog.events.EventType.MSPOINTERDOWN, this, handler);
   }
 };
+
 /**
  * Handles touch events.
  * @param {!goog.events.BrowserEvent} e The browser event.
@@ -286,6 +287,16 @@ Blockly.Toolbox.TreeControl.prototype.handleTouchEvent_ = function(e) {
   if (node && (e.type === goog.events.EventType.TOUCHSTART ||
                e.type === goog.events.EventType.POINTERDOWN ||
                e.type === goog.events.EventType.MSPOINTERDOWN)) {
+
+    // Rate limit to once every 50ms
+    if (this.touchRateLimited) {
+      return;
+    }
+    this.touchRateLimited = true;
+    setTimeout(function () {
+      this.touchRateLimited = false;
+    }.bind(this));
+
     // Fire asynchronously since onMouseDown takes long enough that the browser
     // would fire the default mouse event before this method returns.
     e.stopImmediatePropagation();

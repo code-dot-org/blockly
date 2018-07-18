@@ -10,6 +10,7 @@ jobs:
     - restore_cache:
         keys:
         - v3-dep-{{ checksum "package.json" }}
+        - v3-dep-
     - run: npm install
     - save_cache:
         key: v3-dep-{{ checksum "package.json" }}

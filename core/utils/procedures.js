@@ -54,6 +54,7 @@ Blockly.Procedures.allProcedures = function() {
   var proceduresReturn = [];
   var proceduresNoReturn = [];
   var proceduresFunctional = [];
+  var proceduresOther = [];
 
   Blockly.mainBlockSpace.getAllBlocks().forEach(function(block) {
     if (!block.getProcedureInfo) {
@@ -77,13 +78,16 @@ Blockly.Procedures.allProcedures = function() {
       case 'procedures_defnoreturn':
         proceduresNoReturn.push(procedureInfo);
         break;
+      default:
+        proceduresOther.push(procedureInfo);
     }
   });
 
   proceduresNoReturn.sort(Blockly.Procedures.procedureInfoSort_);
   proceduresReturn.sort(Blockly.Procedures.procedureInfoSort_);
   proceduresFunctional.sort(Blockly.Procedures.procedureInfoSort_);
-  return goog.array.concat(proceduresNoReturn, proceduresReturn, proceduresFunctional);
+  proceduresOther.sort(Blockly.Procedures.procedureInfoSort_);
+  return goog.array.concat(proceduresNoReturn, proceduresReturn, proceduresFunctional, proceduresOther);
 };
 
 /**

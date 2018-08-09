@@ -26,6 +26,7 @@
 goog.provide('Blockly.JavaScript');
 
 goog.require('Blockly.Generator');
+goog.require('Blockly.CodeGenerator');
 
 
 Blockly.JavaScript = Blockly.Generator.get('JavaScript');

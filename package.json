@@ -1,7 +1,8 @@
 {
   "name": "@code-dot-org/blockly",
-  "version": "2.5.1",
+  "version": "3.0.2",
   "description": "Code.org fork of google/blockly for use within the Code Studio learning environment.",
+  "main": "dist/blockly.js",
   "repository": {
     "type": "git",
     "url": "http://github.com/code-dot-org/blockly.git"
@@ -11,21 +12,31 @@
     "npm": "^3.10.8"
   },
   "files": [
-    "build-output",
+    "dist",
     "i18n",
     "media"
   ],
   "scripts": {
-    "build": "./deploy.sh",
-    "build:dev": "./deploy.sh debug",
+    "build": "webpack-cli",
+    "build:dev": "DEV=1 webpack-cli",
     "preversion": "npm run test",
-    "version": "npm run build:dev && npm run build && git add -A build-output",
+    "version": "npm run build",
     "postversion": "git push && git push --tags && npm publish",
-    "test": "./test.sh"
+    "test": "karma start --single-run",
+    "test:coverage": "COVERAGE=1 karma start --single-run",
+    "test:watch": "karma start",
+    "report-coverage": "codecov"
   },
   "devDependencies": {
-    "phantomjs-prebuilt": "~2.1.3",
-    "google-closure-compiler": "~20170218.0.0",
-    "google-closure-library": "~20170124.0.0"
+    "codecov": "^3.0.4",
+    "google-closure-compiler": "~20180610.0.2",
+    "google-closure-library": "~20170124.0.0",
+    "karma": "^2.0.4",
+    "karma-chrome-launcher": "^2.2.0",
+    "karma-coverage": "^1.1.2",
+    "karma-custom": "^1.1.9",
+    "webpack": "^4.14.0",
+    "webpack-cli": "^3.0.8",
+    "webpack-closure-compiler": "^2.1.6"
   }
 }

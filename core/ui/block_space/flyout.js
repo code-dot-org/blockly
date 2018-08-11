@@ -475,7 +475,10 @@ Blockly.Flyout.prototype.show = function(xmlList) {
     if (Blockly.mainBlockSpace) {
       Blockly.Procedures.flyoutCategory(blocks, gaps, margin,
         this.blockSpace_,
-        function(procedureInfo) { return !procedureInfo.isFunctionalVariable; }
+        function(procedureInfo) {
+          return !procedureInfo.isFunctionalVariable &&
+            procedureInfo.type !== 'behavior_definition';
+        }
       );
     }
   } else if (firstBlock === Blockly.Procedures.NAME_TYPE_FUNCTIONAL_VARIABLE) {
@@ -488,6 +491,24 @@ Blockly.Flyout.prototype.show = function(xmlList) {
       this.blockSpace_,
       function(procedureInfo) { return procedureInfo.isFunctionalVariable; }
     );
+  } else if (firstBlock === 'Behavior' || Blockly.topLevelProcedureAutopopulate) {
+    // Special category for behaviors.
+    if (Blockly.disableProcedureAutopopulate) {
+      this.layoutXmlToBlocks_(xmlList.slice(1), blocks, gaps, margin);
+    }
+
+    if (Blockly.topLevelProcedureAutopopulate) {
+      this.layoutXmlToBlocks_(xmlList, blocks, gaps, margin);
+    }
+
+    if (Blockly.mainBlockSpace) {
+      Blockly.Procedures.flyoutCategory(blocks, gaps, margin,
+        this.blockSpace_,
+        function(procedureInfo) {
+          return procedureInfo.type === 'behavior_definition';
+        }
+      );
+    }
   } else if (goog.isString(firstBlock)) {
     // Special category for categorized variables.
     // Allow for a mix of static + dynamic blocks. Static blocks will appear

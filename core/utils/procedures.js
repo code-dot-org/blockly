@@ -241,8 +241,9 @@ Blockly.Procedures.createCallerFromDefinition = function(blockSpace, definitionB
 };
 
 Blockly.Procedures.createCallerBlock = function(blockSpace, procedureDefinitionInfo) {
+  var title = procedureDefinitionInfo.callType === 'gamelab_behavior_get' ? 'VAR' : 'NAME';
   var newCallBlock = new Blockly.Block(blockSpace, procedureDefinitionInfo.callType);
-  newCallBlock.setTitleValue(procedureDefinitionInfo.name, 'NAME');
+  newCallBlock.setTitleValue(procedureDefinitionInfo.name, title);
   var tempIds = [];
   for (var t = 0; t < procedureDefinitionInfo.parameterNames.length; t++) {
     tempIds[t] = 'ARG' + t;

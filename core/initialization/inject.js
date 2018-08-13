@@ -140,6 +140,11 @@ Blockly.parseOptions_ = function(options) {
     options['hasVerticalScrollbars'] = true;
     options['hasHorizontalScrollbars'] = true;
   }
+  var topLevelProcedureAutopopulate = options['topLevelProcedureAutopopulate'] || false;
+  if (topLevelProcedureAutopopulate && hasCategories) {
+    console.warn("Don't use topLevelProcedureAutopopulate with a categorized toolbox");
+    topLevelProcedureAutopopulate = false;
+  }
   return {
     RTL: !!options['rtl'],
     collapse: hasCollapse,
@@ -160,7 +165,7 @@ Blockly.parseOptions_ = function(options) {
     disableParamEditing: options['disableParamEditing'] || false,
     disableVariableEditing: options['disableVariableEditing'] || false,
     disableProcedureAutopopulate: options['disableProcedureAutopopulate'] || false,
-    topLevelProcedureAutopopulate: options['topLevelProcedureAutopopulate'] || false,
+    topLevelProcedureAutopopulate: topLevelProcedureAutopopulate,
     useModalFunctionEditor: options['useModalFunctionEditor'] || false,
     useContractEditor: options['useContractEditor'] || false,
     disableExamples: options['disableExamples'] || false,

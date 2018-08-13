@@ -263,3 +263,25 @@ function test_addToNonZeroSides() {
   assert(goog.math.Box.equals(expectedBox, actualBox));
 }
 
+function test_parseOptions_noTopLevelProcedureAutopopulate() {
+  var options = Blockly.parseOptions_({
+    toolbox: '<xml><block/></xml>',
+  });
+  assert(!options.topLevelProcedureAutopopulate);
+}
+
+function test_parseOptions_topLevelProcedureAutopopulate() {
+  var options = Blockly.parseOptions_({
+    toolbox: '<xml><block/></xml>',
+    topLevelProcedureAutopopulate: true,
+  });
+  assert(options.topLevelProcedureAutopopulate);
+}
+
+function test_parseOptions_topLevelProcedureAutopopulateWithCategories() {
+  var options = Blockly.parseOptions_({
+    toolbox: '<xml><category name="CAT"><block/></category></xml>',
+    topLevelProcedureAutopopulate: true,
+  });
+  assert(!options.topLevelProcedureAutopopulate);
+}

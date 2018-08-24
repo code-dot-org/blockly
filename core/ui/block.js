@@ -1557,7 +1557,8 @@ Blockly.Block.prototype.shouldBeGrayedOut = function() {
  * @return {boolean} True if movable.
  */
 Blockly.Block.prototype.isMovable = function() {
-  return this.movable_ && !this.blockSpace.isReadOnly();
+  return this.movable_ && !this.blockSpace.isReadOnly() &&
+    !this.blockSpace.isMovementLocked();
 };
 
 /**

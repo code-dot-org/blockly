@@ -5,7 +5,7 @@ const DEV = process.env.DEV;
 
 const compilerOptions = {
   jar: 'node_modules/google-closure-compiler/compiler.jar',
-  compilation_level: DEV ? 'WHITESPACE_ONLY' : 'SIMPLE',
+  compilation_level: 'SIMPLE',
   entry_point: 'BlocklyModule',
   only_closure_dependencies: true,
   create_source_map: true,

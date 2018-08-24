@@ -284,6 +284,10 @@ Blockly.BlockSpace.prototype.isReadOnly = function() {
   return (Blockly.readOnly || this.blockSpaceEditor.isReadOnly());
 };
 
+Blockly.BlockSpace.prototype.isMovementLocked = function() {
+  return this.blockSpaceEditor.isMovementLocked();
+};
+
 /**
  * Sets up debug console logging for events
  */

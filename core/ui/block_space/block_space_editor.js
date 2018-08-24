@@ -77,6 +77,7 @@ Blockly.BlockSpaceEditor = function(container, opt_options) {
   this.readOnly_ = !!opt_options.readOnly;
   this.noScrolling_ = !!opt_options.noScrolling;
   this.inline_ = !!opt_options.inline;
+  this.movementLocked_ = false;
 
   /**
    * @type {Blockly.BlockSpace}
@@ -1016,6 +1017,21 @@ Blockly.BlockSpaceEditor.prototype.addUnusedBlocksHelpListener = function(func) 
  */
 Blockly.BlockSpaceEditor.prototype.isReadOnly = function() {
   return (Blockly.readOnly || this.readOnly_);
+};
+
+/**
+ * Disable block movement, but unlike readonly mode still allow field editing.
+ */
+Blockly.BlockSpaceEditor.prototype.lockMovement = function() {
+  this.movementLocked_ = true;
+};
+
+Blockly.BlockSpaceEditor.prototype.unlockMovement = function() {
+  this.movementLocked_ = false;
+};
+
+Blockly.BlockSpaceEditor.prototype.isMovementLocked = function() {
+  return this.movementLocked_;
 };
 
 /**

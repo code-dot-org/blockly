@@ -2,6 +2,7 @@ Blockly.Msg.ACTUAL = "call";
 Blockly.Msg.ADD = "Add";
 Blockly.Msg.ADD_COMMENT = "Add Comment";
 Blockly.Msg.ADD_PARAMETER = "Add Parameter";
+Blockly.Msg.BEHAVIOR_CREATE = "Create a Behavior";
 Blockly.Msg.CANCEL = "Cancel";
 Blockly.Msg.CHANGE_VALUE_TITLE = "Change value:";
 Blockly.Msg.CLOSE = "Close";

@@ -708,7 +708,9 @@ Blockly.Block.prototype.onMouseDown_ = function(e) {
     if (Blockly.editBlocks) {
       this.showContextMenu_(e);
     }
-  } else if (!this.isMovable() || !this.canDisconnectFromParent()) {
+  } else if (this.blockSpace.isMovementLocked() ||
+      !this.isMovable() ||
+      !this.canDisconnectFromParent()) {
     // Allow unmovable blocks to be selected and context menued, but not
     // dragged.  Let this event bubble up to document, so the blockSpace may be
     // dragged instead.
@@ -1557,8 +1559,7 @@ Blockly.Block.prototype.shouldBeGrayedOut = function() {
  * @return {boolean} True if movable.
  */
 Blockly.Block.prototype.isMovable = function() {
-  return this.movable_ && !this.blockSpace.isReadOnly() &&
-    !this.blockSpace.isMovementLocked();
+  return this.movable_ && !this.blockSpace.isReadOnly();
 };
 
 /**

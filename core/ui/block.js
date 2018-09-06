@@ -1555,7 +1555,9 @@ Blockly.Block.prototype.shouldBeGrayedOut = function() {
 };
 
 /**
- * Get whether this block is movable or not.
+ * Get whether this block is movable or not. Note that this can still return
+ * true if block movement is locked for the entire blockSpace, check
+ * blockSpaceEditor.isMovementLocked() separately.
  * @return {boolean} True if movable.
  */
 Blockly.Block.prototype.isMovable = function() {

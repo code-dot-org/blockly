@@ -117,7 +117,7 @@ Blockly.JavaScript.controls_for = function() {
       code += (up ? ' += ' : ' -= ') + step;
       if (step === 0) {
         // guaranteed to loop infinitely if we're looping with step
-        branch = '  throw Infinity;\n' + branch;
+        branch = '  throw new Error("Infinity");\n' + branch;
       }
     }
     code += ') {\n' + branch + '}\n';

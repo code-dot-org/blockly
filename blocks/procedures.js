@@ -29,7 +29,8 @@ goog.require('Blockly.Blocks');
 
 Blockly.Block.createProcedureDefinitionBlock = function(config) {
   config = config || {};
-  config.overrides = config.overrides || {};
+  config.overrides = config['overrides'] || {};
+  config.initPostScript = config['initPostScript'] || undefined;
   var block = {
     shouldHideIfInMainBlockSpace: function () {
       return Blockly.useModalFunctionEditor;
@@ -214,7 +215,7 @@ Blockly.Block.createProcedureDefinitionBlock = function(config) {
     },
     getVars: function() {
       return {
-        Default: this.parameterNames_,
+        'Default': this.parameterNames_,
       };
     },
     renameVar: function(oldName, newName) {
@@ -289,8 +290,10 @@ Blockly.Block.createProcedureDefinitionBlock = function(config) {
   goog.object.extend(block, config.overrides);
   return block;
 }
+/** @export */
 Blockly.Blocks.procedures_defnoreturn = Blockly.Block.createProcedureDefinitionBlock();
 
+/** @export */
 Blockly.Blocks.procedures_defreturn = {
   shouldHideIfInMainBlockSpace: function () {
     return Blockly.useModalFunctionEditor;
@@ -343,6 +346,7 @@ Blockly.Blocks.procedures_defreturn = {
   callType_: 'procedures_callreturn'
 };
 
+/** @export */
 Blockly.Blocks.procedures_mutatorcontainer = {
   // Procedure container (for mutator dialog).
   init: function() {
@@ -355,6 +359,7 @@ Blockly.Blocks.procedures_mutatorcontainer = {
   }
 };
 
+/** @export */
 Blockly.Blocks.procedures_mutatorarg = {
   // Procedure argument (for mutator dialog).
   init: function() {
@@ -380,6 +385,7 @@ Blockly.Blocks.procedures_mutatorarg = {
   }
 };
 
+/** @export */
 Blockly.Blocks.procedures_mutatorarg.validator = function(newVar) {
   // Merge runs of whitespace.  Strip leading and trailing whitespace.
   // Beyond this, all names are legal.
@@ -387,6 +393,7 @@ Blockly.Blocks.procedures_mutatorarg.validator = function(newVar) {
   return newVar || null;
 };
 
+/** @export */
 Blockly.Blocks.procedures_callnoreturn = {
   // Call a procedure with no return value.
   init: function() {
@@ -566,6 +573,7 @@ Blockly.Blocks.procedures_callnoreturn = {
   }
 };
 
+/** @export */
 Blockly.Blocks.procedures_callreturn = {
   // Call a procedure with a return value.
   init: function() {
@@ -596,6 +604,7 @@ Blockly.Blocks.procedures_callreturn = {
   customContextMenu: Blockly.Blocks.procedures_callnoreturn.customContextMenu
 };
 
+/** @export */
 Blockly.Blocks.procedures_ifreturn = {
   // Conditionally return value from a procedure.
   init: function() {

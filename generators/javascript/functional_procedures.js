@@ -28,6 +28,7 @@ goog.provide('Blockly.JavaScript.functionalProcedures');
 goog.require('Blockly.JavaScript');
 
 
+/** @export */
 Blockly.JavaScript.functional_definition = function() {
   // Define a functional procedure with a return value.
   var funcName = Blockly.JavaScript.variableDB_.getName(
@@ -61,6 +62,7 @@ Blockly.JavaScript.functional_definition = function() {
   return null;
 };
 
+/** @export */
 Blockly.JavaScript.functional_call = function() {
   // Call a functional procedure with a return value.
   var funcName = Blockly.JavaScript.variableDB_.getName(
@@ -75,6 +77,7 @@ Blockly.JavaScript.functional_call = function() {
   return code;
 };
 
+/** @export */
 Blockly.JavaScript.functional_pass = function() {
   // Pass a functional procedure
   var funcName = Blockly.JavaScript.variableDB_.getName(
@@ -83,6 +86,7 @@ Blockly.JavaScript.functional_pass = function() {
   return code;
 };
 
+/** @export */
 Blockly.JavaScript.procedural_to_functional_call = function() {
   // Call a functional procedure with a return value.
   var funcName = Blockly.JavaScript.variableDB_.getName(

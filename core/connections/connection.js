@@ -105,6 +105,7 @@ Blockly.Connection.Shapes = {
 
 /**
  * Is this connection currently connected to another connection.
+ * @export
  */
 Blockly.Connection.prototype.isConnected = function () {
   return this.targetConnection !== null;
@@ -142,6 +143,7 @@ Blockly.Connection.prototype.isSuperior = function() {
 /**
  * Connect this connection to another connection.
  * @param {!Blockly.Connection} connectTo Connection to connect to.
+ * @export
  */
 Blockly.Connection.prototype.connect = function(connectTo) {
   if (this.sourceBlock_ == connectTo.sourceBlock_) {
@@ -308,6 +310,7 @@ Blockly.Connection.singleConnection_ = function(block, orphanBlock) {
 
 /**
  * Disconnect this connection.
+ * @export
  */
 Blockly.Connection.prototype.disconnect = function() {
   var otherConnection = this.targetConnection;
@@ -343,6 +346,7 @@ Blockly.Connection.prototype.disconnect = function() {
 /**
  * Returns the block that this connection connects to.
  * @return {Blockly.Block} The connected block or null if none is connected.
+ * @export
  */
 Blockly.Connection.prototype.targetBlock = function() {
   if (this.targetConnection) {
@@ -400,6 +404,7 @@ Blockly.Connection.prototype.bumpAwayFrom_ = function(staticConnection) {
  * Change the connection's coordinates.
  * @param {number} x New absolute x coordinate.
  * @param {number} y New absolute y coordinate.
+ * @export
  */
 Blockly.Connection.prototype.moveTo = function(x, y) {
   // Remove it from its old location in the database (if already present)
@@ -416,6 +421,7 @@ Blockly.Connection.prototype.moveTo = function(x, y) {
  * Change the connection's coordinates.
  * @param {number} dx Change to x coordinate.
  * @param {number} dy Change to y coordinate.
+ * @export
  */
 Blockly.Connection.prototype.moveBy = function(dx, dy) {
   this.moveTo(this.x_ + dx, this.y_ + dy);
@@ -481,6 +487,7 @@ Blockly.Connection.prototype.getPathInfo = function() {
 
 /**
  * Add highlighting around this connection.
+ * @export
  */
 Blockly.Connection.prototype.highlight = function() {
   var pathInfo = this.getPathInfo();
@@ -499,9 +506,6 @@ Blockly.Connection.prototype.unhighlight = function() {
   delete Blockly.Connection.highlightedPath_;
 };
 
-/**
- *
- */
 Blockly.Connection.prototype.getNotchPaths = function () {
   if (Blockly.Connection.NOTCH_PATHS_OVERRIDE) {
     return Blockly.Connection.NOTCH_PATHS_OVERRIDE;
@@ -562,6 +566,7 @@ Blockly.Connection.prototype.tighten_ = function() {
  *     in the database and the current location (as a result of dragging).
  * @return {!Object} Contains two properties: 'connection' which is either
  *     another connection or null, and 'radius' which is the distance.
+ * @export
  */
 Blockly.Connection.prototype.closest = function(maxLimit, dx, dy) {
   if (this.isConnected()) {
@@ -740,6 +745,7 @@ Blockly.Connection.prototype.acceptsType = function(type) {
  * @param {*} check Compatible value type or list of value types.
  * @return {!Blockly.Connection} The connection being modified
  *     (to allow chaining).
+ * @export
  */
 Blockly.Connection.prototype.setStrictCheck = function(check) {
   return this.setCheck(check, true);
@@ -753,6 +759,7 @@ Blockly.Connection.prototype.setStrictCheck = function(check) {
  *     connections of the exact same type.
  * @return {!Blockly.Connection} The connection being modified
  *     (to allow chaining).
+ * @export
  */
 Blockly.Connection.prototype.setCheck = function(check, opt_strict) {
   if (check && check !== Blockly.BlockValueType.NONE) {
@@ -797,6 +804,7 @@ Blockly.Connection.prototype.setCheck = function(check, opt_strict) {
  * @param {*} options for this helper
  * @return {!Blockly.Connection} The connection being modified
  *     (to allow chaining).
+ * @export
  */
 Blockly.Connection.prototype.addFieldHelper = function (fieldHelper, options) {
   this.fieldHelpers_[fieldHelper] = options;

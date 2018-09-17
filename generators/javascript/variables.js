@@ -28,12 +28,14 @@ goog.provide('Blockly.JavaScript.variables');
 goog.require('Blockly.JavaScript');
 
 
+/** @export */
 Blockly.JavaScript.variables_get = function() {
   // Variable getter.
   var code = Blockly.JavaScript.translateVarName(this.getTitleValue('VAR'));
   return [code, Blockly.JavaScript.ORDER_ATOMIC];
 };
 
+/** @export */
 Blockly.JavaScript.variables_set = function() {
   // Variable setter.
   var argument0 = Blockly.JavaScript.valueToCode(this, 'VALUE',
@@ -42,7 +44,7 @@ Blockly.JavaScript.variables_set = function() {
   return varName + ' = ' + argument0 + ';\n';
 };
 
-Blockly.JavaScript.parameters_get = Blockly.JavaScript.variables_get;
-Blockly.JavaScript.parameters_set = Blockly.JavaScript.variables_set;
-Blockly.JavaScript.sprite_variables_get = Blockly.JavaScript.variables_get;
-Blockly.JavaScript.sprite_variables_set = Blockly.JavaScript.variables_set;
+goog.exportSymbol('Blockly.JavaScript.parameters_get', Blockly.JavaScript.variables_get);
+goog.exportSymbol('Blockly.JavaScript.parameters_set', Blockly.JavaScript.variables_set);
+goog.exportSymbol('Blockly.JavaScript.sprite_variables_get', Blockly.JavaScript.variables_get);
+goog.exportSymbol('Blockly.JavaScript.sprite_variables_set', Blockly.JavaScript.variables_set);

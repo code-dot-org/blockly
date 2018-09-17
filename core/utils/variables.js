@@ -230,6 +230,8 @@ Blockly.Variables.getGetter = function(blockSpace, category) {
   return (getterName && Blockly.Blocks[getterName]) ?
       new Blockly.Block(blockSpace, getterName) : null;
 };
+
+/** @export */
 Blockly.Variables.registerGetter = function(category, blockName) {
   Blockly.Variables.getters[category] = blockName;
 };
@@ -242,6 +244,8 @@ Blockly.Variables.getSetter = function(blockSpace, category) {
   return (setterName && Blockly.Blocks[setterName]) ?
       new Blockly.Block(blockSpace, setterName) : null;
 };
+
+/** @export */
 Blockly.Variables.registerSetter = function(category, blockName) {
   Blockly.Variables.setters[category] = blockName;
 };

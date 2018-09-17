@@ -28,6 +28,7 @@ goog.provide('Blockly.Blocks.math');
 goog.require('Blockly.Blocks');
 
 
+/** @export */
 Blockly.Blocks.math_number = {
   // Numeric value.
   init: function() {
@@ -40,6 +41,7 @@ Blockly.Blocks.math_number = {
   }
 };
 
+/** @export */
 Blockly.Blocks.math_arithmetic = {
   // Basic arithmetic operator.
   init: function() {
@@ -73,6 +75,7 @@ Blockly.Blocks.math_arithmetic = {
   }
 };
 
+/** @export */
 Blockly.Blocks.math_single = {
   // Advanced math operators with single operand.
   init: function() {
@@ -107,6 +110,7 @@ Blockly.Blocks.math_single = {
   }
 };
 
+/** @export */
 Blockly.Blocks.math_trig = {
   // Trigonometry operators.
   init: function() {
@@ -139,6 +143,7 @@ Blockly.Blocks.math_trig = {
   }
 };
 
+/** @export */
 Blockly.Blocks.math_constant = {
   // Constants: PI, E, the Golden Ratio, sqrt(2), 1/sqrt(2), INFINITY.
   init: function() {
@@ -157,6 +162,7 @@ Blockly.Blocks.math_constant = {
   }
 };
 
+/** @export */
 Blockly.Blocks.math_number_property = {
   // Check if a number is even, odd, prime, whole, positive, or negative
   // or if it is divisible by certain number. Returns true or false.
@@ -207,6 +213,7 @@ Blockly.Blocks.math_number_property = {
   }
 };
 
+/** @export */
 Blockly.Blocks.math_change = {
   // Add to a variable in place.
   init: function() {
@@ -235,6 +242,7 @@ Blockly.Blocks.math_change = {
   }
 };
 
+/** @export */
 Blockly.Blocks.math_round = {
   // Rounding functions.
   init: function() {
@@ -251,6 +259,7 @@ Blockly.Blocks.math_round = {
   }
 };
 
+/** @export */
 Blockly.Blocks.math_on_list = {
   // Evaluate a list of numbers to return sum, average, min, max, etc.
   // Some functions also work on text (min, max, mode, median).
@@ -295,6 +304,7 @@ Blockly.Blocks.math_on_list = {
   }
 };
 
+/** @export */
 Blockly.Blocks.math_modulo = {
   // Remainder of a division.
   init: function() {
@@ -309,6 +319,7 @@ Blockly.Blocks.math_modulo = {
   }
 };
 
+/** @export */
 Blockly.Blocks.math_constrain = {
   // Constrain a number between two limits.
   init: function() {
@@ -324,6 +335,7 @@ Blockly.Blocks.math_constrain = {
   }
 };
 
+/** @export */
 Blockly.Blocks.math_random_int = {
   // Random integer between [X] and [Y].
   init: function() {
@@ -338,6 +350,7 @@ Blockly.Blocks.math_random_int = {
   }
 };
 
+/** @export */
 Blockly.Blocks.math_random_float = {
   // Random fraction between 0 and 1.
   init: function() {

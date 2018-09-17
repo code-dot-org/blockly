@@ -128,13 +128,39 @@ Blockly.ScrollbarPair.prototype.resize = function() {
   this.oldHostMetrics_ = hostMetrics;
 };
 
+Blockly.ScrollbarPair.prototype.getMetric = function(metric, propName) {
+  switch(propName) {
+    case 'viewHeight':
+      return metric.viewHeight;
+    case 'viewWidth':
+      return metric.viewWidth;
+    case 'viewTop':
+      return metric.viewTop;
+    case 'viewLeft':
+      return metric.viewLeft;
+    case 'contentHeight':
+      return metric.contentHeight;
+    case 'contentWidth':
+      return metric.contentWidth;
+    case 'contentTop':
+      return metric.contentTop;
+    case 'contentLeft':
+      return metric.contentLeft;
+    case 'absoluteTop':
+      return metric.absoluteTop;
+    case 'absoluteLeft':
+      return metric.absoluteLeft;
+  }
+};
+
 Blockly.ScrollbarPair.prototype.metricsChangedOnAxis = function(oldMetrics, currentMetrics, propertiesToCheck) {
   if (!oldMetrics) {
     return true;
   }
 
   return propertiesToCheck.some(function (propName) {
-    return oldMetrics[propName] != currentMetrics[propName];
+    return this.getMetric(oldMetrics, propName) !=
+      this.getMetric(currentMetrics, propName);
   });
 };
 

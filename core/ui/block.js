@@ -99,6 +99,7 @@ Blockly.Block = function(blockSpace, prototypeName, htmlId) {
 
   /**
    * @type {!Blockly.BlockSpace}
+   * @export
    */
   this.blockSpace = blockSpace;
   this.isInFlyout = blockSpace.isFlyout;
@@ -127,6 +128,7 @@ Blockly.Block = function(blockSpace, prototypeName, htmlId) {
       this.appendDummyInput().appendTitle('unknown: ' + prototypeName);
       console.warn('Warning: "' + prototypeName + '" is an unknown language block.');
     }
+    prototype = Object.assign({}, prototype);
     goog.mixin(this, prototype);
   }
   // Call an initialization function, if it exists.
@@ -156,7 +158,7 @@ Blockly.Block.EVENTS = {
 /**
  * Pointer to SVG representation of the block.
  * @type {Blockly.BlockSvg}
- * @private
+ * @export
  */
 Blockly.Block.prototype.svg_ = null;
 
@@ -176,6 +178,7 @@ Blockly.Block.prototype.warning = null;
  * Callback function called after initialization
  * (typically defined by subclasses)
  * @type {?function()}
+ * @export
  */
 Blockly.Block.prototype.init = null;
 
@@ -183,11 +186,13 @@ Blockly.Block.prototype.init = null;
  * Callback function called after initialization
  * (typically defined by subclasses)
  * @type {?function()}
+ * @export
  */
 Blockly.Block.prototype.onchange = null;
 
 /**
  * Update limit UI on block count changes.
+ * @export
  */
 Blockly.Block.prototype.handleBlockLimitChanges = function() {
   if (this.blockSpace && this.blockSpace.blockSpaceEditor) {
@@ -202,6 +207,7 @@ Blockly.Block.prototype.handleBlockLimitChanges = function() {
   }
 };
 
+/** @export */
 Blockly.Block.prototype.onBlockLimitChange = function(eventObject) {
   if (eventObject.type !== this.type) {
     return;
@@ -217,6 +223,7 @@ Blockly.Block.prototype.onBlockLimitChange = function(eventObject) {
 
 /**
  * @param {Blockly.BlockSpace} blockSpace target blockspace to begin rendering on
+ * @export
  */
 Blockly.Block.prototype.setRenderBlockSpace = function(blockSpace) {
   this.blockSpace = blockSpace;
@@ -264,6 +271,7 @@ Blockly.Block.prototype.initSvg = function() {
 /**
  * Return the root node of the SVG or null if none exists.
  * @return {Element} The root SVG node (probably a group).
+ * @export
  */
 Blockly.Block.prototype.getSvgRoot = function() {
   return this.svg_ && this.svg_.getRootElement();
@@ -282,10 +290,12 @@ Blockly.Block.DRAG_MODE_FREELY_DRAGGING = 2;
  */
 Blockly.Block.dragMode_ = Blockly.Block.DRAG_MODE_NOT_DRAGGING;
 
+/** @export */
 Blockly.Block.isDragging = function() {
   return Blockly.Block.dragMode_ !== Blockly.Block.DRAG_MODE_NOT_DRAGGING;
 };
 
+/** @export */
 Blockly.Block.isFreelyDragging = function() {
   return Blockly.Block.dragMode_ === Blockly.Block.DRAG_MODE_FREELY_DRAGGING;
 };
@@ -294,6 +304,7 @@ Blockly.Block.isFreelyDragging = function() {
  * Pretend that we've already started dragging a block. This ensures that any
  * methods called between now and onMouseDown behave as though a block is being
  * dragged, e.g. skipping neighbour bumping.
+ * @export
  */
 Blockly.Block.startDragging = function() {
   Blockly.Block.dragMode_ = Blockly.Block.DRAG_MODE_INSIDE_STICKY_RADIUS;
@@ -366,6 +377,7 @@ Blockly.Block.terminateDrag_ = function() {
 
 /**
  * Select this block.  Highlight it visually.
+ * @export
  */
 Blockly.Block.prototype.select = function(spotlight) {
   if (!this.svg_) {
@@ -385,6 +397,7 @@ Blockly.Block.prototype.select = function(spotlight) {
 
 /**
  * Unselect this block.  Remove its highlighting.
+ * @export
  */
 Blockly.Block.prototype.unselect = function() {
   if (Blockly.selected !== this) {
@@ -405,6 +418,7 @@ Blockly.Block.prototype.unselect = function() {
  * Whether this block can be copied, cut, and pasted.
  * Can be overridden by individual block types.
  * @returns {boolean}
+ * @export
  */
 Blockly.Block.prototype.isCopyable = function() {
   return true;
@@ -416,6 +430,7 @@ Blockly.Block.prototype.isCopyable = function() {
  *     the next statement with the previous statement.  Otherwise, dispose of
  *     all children of this block.
  * @param {boolean} animate If true, show a disposal animation and sound.
+ * @export
  */
 Blockly.Block.prototype.dispose = function(healStack, animate) {
   if (goog.isFunction(this.beforeDispose)) {
@@ -491,6 +506,7 @@ Blockly.Block.prototype.dispose = function(healStack, animate) {
  * optionally reconnect the block underneath with the block on top.
  * @param {boolean} healStack Disconnect child statement and reconnect stack.
  * @param {boolean} bump Move the unplugged block sideways a short distance.
+ * @export
  */
 Blockly.Block.prototype.unplug = function(healStack, bump) {
   bump = bump && !!this.getParent();
@@ -531,6 +547,7 @@ Blockly.Block.prototype.unplug = function(healStack, bump) {
  * Return the coordinates of the top-left corner of this block relative to the
  * drawing surface's origin (0,0).
  * @return {!Object} Object with .x and .y properties.
+ * @export
  */
 Blockly.Block.prototype.getRelativeToSurfaceXY = function() {
   var x = 0;
@@ -555,6 +572,7 @@ Blockly.Block.prototype.getRelativeToSurfaceXY = function() {
  * Move a block to a specific location on the drawing surface.
  * @param {number} x Horizontal location.
  * @param {number} y Vertical location.
+ * @export
  */
 Blockly.Block.prototype.moveTo = function(x, y) {
   var oldXY = this.getRelativeToSurfaceXY();
@@ -567,6 +585,7 @@ Blockly.Block.prototype.moveTo = function(x, y) {
  * Move a block by a relative offset.
  * @param {number} dx Horizontal offset.
  * @param {number} dy Vertical offset.
+ * @export
  */
 Blockly.Block.prototype.moveBy = function(dx, dy) {
   var xy = this.getRelativeToSurfaceXY();
@@ -578,6 +597,7 @@ Blockly.Block.prototype.moveBy = function(dx, dy) {
 /**
  * Gets box dimensions of block
  * @returns {goog.math.Box}
+ * @export
  */
 Blockly.Block.prototype.getBox = function() {
   var heightWidth = this.getHeightWidth();
@@ -598,6 +618,7 @@ Blockly.Block.prototype.getBox = function() {
 /**
  * Returns the padding of the SVG or null if none exists
  * @return {Object} object with padding values for top, bottom, left, and right
+ * @export
  */
 Blockly.Block.prototype.getSvgPadding = function() {
   return this.svg_ && this.svg_.getPadding();
@@ -606,6 +627,7 @@ Blockly.Block.prototype.getSvgPadding = function() {
 /**
  * Returns a bounding box describing the dimensions of this block.
  * @return {!Object} Object with height and width properties.
+ * @export
  */
 Blockly.Block.prototype.getHeightWidth = function() {
   var bBox;
@@ -1266,6 +1288,7 @@ Blockly.Block.prototype.moveBlockBeingDragged_ = function (mouseX, mouseY, singl
 /**
  * This is called when a block is dragged to or away from one of this block's
  * inputs. Override in subclasses if needed.
+ * @export
  */
 Blockly.Block.prototype.pendingConnection =
     function(oldConnection, newConnection) {};
@@ -1381,6 +1404,7 @@ Blockly.Block.prototype.bumpNeighbours = function() {
 /**
  * Return the parent block or null if this block is at the top level.
  * @return {Blockly.Block} The block that holds the current block.
+ * @export
  */
 Blockly.Block.prototype.getParent = function() {
   // Look at the DOM to see if we are nested in another block.
@@ -1392,6 +1416,7 @@ Blockly.Block.prototype.getParent = function() {
  * block has no surrounding block.  A parent block might just be the previous
  * statement, whereas the surrounding block is an if statement, while loop, etc.
  * @return {Blockly.Block} The block that surrounds the current block.
+ * @export
  */
 Blockly.Block.prototype.getSurroundParent = function() {
   var block = this;
@@ -1414,6 +1439,7 @@ Blockly.Block.prototype.getSurroundParent = function() {
  * Return the top-most block in this block's tree.
  * This will return itself if this block is at the top level.
  * @return {!Blockly.Block} The root block.
+ * @export
  */
 Blockly.Block.prototype.getRootBlock = function() {
   var rootBlock;
@@ -1430,6 +1456,7 @@ Blockly.Block.prototype.getRootBlock = function() {
  * Includes value and block inputs, as well as any following statement.
  * Excludes any connection on an output tab or any preceding statement.
  * @return {!Array.<!Blockly.Block>} Array of blocks.
+ * @export
  */
 Blockly.Block.prototype.getChildren = function() {
   return this.childBlocks_;
@@ -1438,6 +1465,7 @@ Blockly.Block.prototype.getChildren = function() {
 /**
  * Set parent of this block to be a new block or null.
  * @param {Blockly.Block} newParent New parent block.
+ * @export
  */
 Blockly.Block.prototype.setParent = function(newParent) {
   if (this.parentBlock_) {
@@ -1499,6 +1527,7 @@ Blockly.Block.prototype.setParent = function(newParent) {
  * Includes value and block inputs, as well as any following statements.
  * Excludes any connection on an output tab or any preceding statements.
  * @return {!Array.<!Blockly.Block>} Flattened array of blocks.
+ * @export
  */
 Blockly.Block.prototype.getDescendants = function() {
   var blocks = [this];
@@ -1515,6 +1544,7 @@ Blockly.Block.prototype.getDescendants = function() {
  * be deletable.
  * @return {boolean} True if this block and all blocks connected
  *    below it are deleteable.
+ * @export
  */
 Blockly.Block.prototype.areBlockAndDescendantsDeletable = function() {
   var deleteBlockedByChildren = this.childBlocks_.some(
@@ -1527,6 +1557,7 @@ Blockly.Block.prototype.areBlockAndDescendantsDeletable = function() {
 /**
  * Get whether this block is deletable or not.
  * @return {boolean} True if deletable.
+ * @export
  */
 Blockly.Block.prototype.isDeletable = function() {
   return this.deletable_ && !this.blockSpace.isReadOnly();
@@ -1535,6 +1566,7 @@ Blockly.Block.prototype.isDeletable = function() {
 /**
  * Set whether this block is deletable or not.
  * @param {boolean} deletable True if deletable.
+ * @export
  */
 Blockly.Block.prototype.setDeletable = function(deletable) {
   this.deletable_ = deletable;
@@ -1545,6 +1577,7 @@ Blockly.Block.prototype.setDeletable = function(deletable) {
 
 /**
  * @returns {boolean} whether this block should be rendered as grayed out
+ * @export
  */
 Blockly.Block.prototype.shouldBeGrayedOut = function() {
   return Blockly.grayOutUndeletableBlocks
@@ -1555,6 +1588,7 @@ Blockly.Block.prototype.shouldBeGrayedOut = function() {
 /**
  * Get whether this block is movable or not.
  * @return {boolean} True if movable.
+ * @export
  */
 Blockly.Block.prototype.isMovable = function() {
   return this.movable_ && !this.blockSpace.isReadOnly() &&
@@ -1564,6 +1598,7 @@ Blockly.Block.prototype.isMovable = function() {
 /**
  * Set whether this block is movable or not.
  * @param {boolean} movable True if movable.
+ * @export
  */
 Blockly.Block.prototype.setMovable = function(movable) {
   this.movable_ = movable;
@@ -1573,6 +1608,7 @@ Blockly.Block.prototype.setMovable = function(movable) {
 /**
  * Get whether this block is editable or not.
  * @return {boolean} True if editable.
+ * @export
  */
 Blockly.Block.prototype.isEditable = function() {
   return this.editable_ && !this.blockSpace.isReadOnly();
@@ -1581,6 +1617,7 @@ Blockly.Block.prototype.isEditable = function() {
 /**
  * Set whether this block is editable or not.
  * @param {boolean} editable True if editable.
+ * @export
  */
 Blockly.Block.prototype.setEditable = function(editable) {
   this.editable_ = editable;
@@ -1601,6 +1638,7 @@ Blockly.Block.prototype.setEditable = function(editable) {
 /**
  * Get whether this block is visible to the user.
  * @return {boolean} True if visible to the user.
+ * @export
  */
 Blockly.Block.prototype.isUserVisible = function() {
   return this.userVisible_;
@@ -1610,6 +1648,7 @@ Blockly.Block.prototype.isUserVisible = function() {
  * Set whether this block and all child blocks are visible to the user.
  * @param {boolean} userVisible True if visible to user.
  * @param {boolean} opt_renderAfterVisible True if should render once if set to visible
+ * @export
  */
 Blockly.Block.prototype.setUserVisible = function(userVisible, opt_renderAfterVisible) {
   this.userVisible_ = userVisible;
@@ -1629,10 +1668,12 @@ Blockly.Block.prototype.setUserVisible = function(userVisible, opt_renderAfterVi
   }
 };
 
+/** @export */
 Blockly.Block.prototype.isNextConnectionDisabled = function() {
   return this.nextConnectionDisabled_;
 };
 
+/** @export */
 Blockly.Block.prototype.isFunctionDefinition = function() {
   return !!this.getProcedureInfo;
 };
@@ -1641,6 +1682,7 @@ Blockly.Block.prototype.isFunctionDefinition = function() {
  * Set whether this block should allow for succeeding connections.
  * Called by Xml.domToBlock, primarily used as a passthrough to
  * setNextStatement to disable any existing connections.
+ * @export
  */
 Blockly.Block.prototype.setNextConnectionDisabled = function(disabled) {
   this.nextConnectionDisabled_ = disabled;
@@ -1652,6 +1694,7 @@ Blockly.Block.prototype.setNextConnectionDisabled = function(disabled) {
 
 /**
  * @returns {boolean} whether this block is selected and mid-drag
+ * @export
  */
 Blockly.Block.prototype.isCurrentlyBeingDragged = function () {
   return Blockly.selected === this && Blockly.Block.isDragging();
@@ -1667,6 +1710,7 @@ Blockly.Block.prototype.isCurrentlyHidden_ = function () {
 /**
  * Set whether this block is currently hidden (a non-persistent property)
  * Note: Does not set children to currently hidden, but they will display as hidden
+ * @export
  */
 Blockly.Block.prototype.setCurrentlyHidden = function (hidden) {
   this.currentlyHidden_ = hidden;
@@ -1688,6 +1732,7 @@ Blockly.Block.prototype.setCurrentlyHidden = function (hidden) {
  * This method calculates whether this block is currently visible based
  * on our current block-editing state (Blockly.editBlocks)
  * @returns true if both visibility conditions are met.
+ * @export
  */
 Blockly.Block.prototype.isVisible = function () {
   var visibleThroughParent = !this.parentBlock_ || this.parentBlock_.isVisible();
@@ -1706,6 +1751,7 @@ Blockly.Block.prototype.isVisible = function () {
  * Set the URL of this block's help page.
  * @param {string|Function} url URL string for block help, or function that
  *     returns a URL.  Null for no help.
+ * @export
  */
 Blockly.Block.prototype.setHelpUrl = function(url) {
   this.helpUrl = url;
@@ -1714,6 +1760,7 @@ Blockly.Block.prototype.setHelpUrl = function(url) {
 /**
  * Get the current colour of this block
  * @returns {string} hexadecimal colour value
+ * @export
  */
 Blockly.Block.prototype.getHexColour = function() {
   return Blockly.makeColour(this.getColour(), this.getSaturation(), this.getValue());
@@ -1722,6 +1769,7 @@ Blockly.Block.prototype.getHexColour = function() {
 /**
  * Get the colour of a block.
  * @return {number} HSV hue value.
+ * @export
  */
 Blockly.Block.prototype.getColour = function() {
   return this.colourHue_;
@@ -1730,6 +1778,7 @@ Blockly.Block.prototype.getColour = function() {
 /**
  * Get the saturation of a block.
  * @return {number} HSV saturation.
+ * @export
  */
 Blockly.Block.prototype.getSaturation = function() {
   return this.colourSaturation_;
@@ -1738,6 +1787,7 @@ Blockly.Block.prototype.getSaturation = function() {
 /**
  * Get the fill pattern for the block
  * @return {string} Pattern name xlink
+ * @export
  */
 Blockly.Block.prototype.getFillPattern = function() {
   return this.fillPattern_;
@@ -1747,6 +1797,7 @@ Blockly.Block.prototype.getFillPattern = function() {
  * Whether or not this block has a frame around it. Should only be true for
  * function definitions
  * @return {boolean}
+ * @export
  */
 Blockly.Block.prototype.isFramed = function() {
   return this.blockSvgClass_ === Blockly.BlockSvgFramed;
@@ -1755,6 +1806,7 @@ Blockly.Block.prototype.isFramed = function() {
 /**
  * Get the value of a block.
  * @return {number} HSV value.
+ * @export
  */
 Blockly.Block.prototype.getValue = function() {
   return this.colourValue_;
@@ -1763,6 +1815,7 @@ Blockly.Block.prototype.getValue = function() {
 /**
  * Change the colour of a block.
  * @param {number} colourHue HSV hue value.
+ * @export
  */
 Blockly.Block.prototype.setColour = function(colourHue) {
   this.colourHue_ = colourHue;
@@ -1787,6 +1840,7 @@ Blockly.Block.prototype.setColour = function(colourHue) {
 /**
  * Change the fill pattern of a block
  * @param {string} pattern The id of the pattern
+ * @export
  */
 Blockly.Block.prototype.setFillPattern = function(pattern) {
   this.fillPattern_ = pattern;
@@ -1796,15 +1850,18 @@ Blockly.Block.prototype.setFillPattern = function(pattern) {
  * Set whether or not this block should be framed.  Should only be set for
  * function definitions.
  * @param {boolean} isFramed
+ * @export
  */
 Blockly.Block.prototype.setFramed = function(isFramed) {
   this.blockSvgClass_ = isFramed ? Blockly.BlockSvgFramed : Blockly.BlockSvg;
 };
 
+/** @export */
 Blockly.Block.prototype.isUnused = function() {
   return this.svg_.isUnused() || this.isCurrentlyBeingDragged();
 };
 
+/** @export */
 Blockly.Block.prototype.setIsUnused = function(isUnused) {
   if (isUnused === undefined) {
     var shouldBeTopBlock = this.previousConnection === null &&
@@ -1828,6 +1885,7 @@ Blockly.Block.prototype.setIsUnused = function(isUnused) {
 /**
  * Set whether or not this block should use the functional svg
  * @param {boolean} isFramed
+ * @export
  */
 Blockly.Block.prototype.setFunctional = function(isFunctional, options) {
   this.blockSvgClass_ = isFunctional ? Blockly.BlockSvgFunctional : Blockly.BlockSvg;
@@ -1840,6 +1898,7 @@ Blockly.Block.prototype.setFunctional = function(isFunctional, options) {
  * @param {number} colourHue HSV hue value.
  * @param {number} colourSaturation HSV saturation value.
  * @param {number} colourValue HSV value.
+ * @export
  */
 Blockly.Block.prototype.setHSV = function(
     colourHue, colourSaturation, colourValue) {
@@ -1881,6 +1940,7 @@ Blockly.Block.prototype.getTitle_ = function(name) {
   return null;
 };
 
+/** @export */
 Blockly.Block.prototype.getTitles = function() {
   var titles = [];
   for (var x = 0, input; input = this.inputList[x]; x++) {
@@ -1895,6 +1955,7 @@ Blockly.Block.prototype.getTitles = function() {
  * Returns the language-neutral value from the title of a block.
  * @param {string} name The name of the title.
  * @return {?string} Value from the title or null if title does not exist.
+ * @export
  */
 Blockly.Block.prototype.getTitleValue = function(name) {
   var title = this.getTitle_(name);
@@ -1908,6 +1969,7 @@ Blockly.Block.prototype.getTitleValue = function(name) {
  * Change the title value for a block (e.g. 'CHOOSE' or 'REMOVE').
  * @param {string} newValue Value to be the new title.
  * @param {string} name The name of the title.
+ * @export
  */
 Blockly.Block.prototype.setTitleValue = function(newValue, name) {
   var title = this.getTitle_(name);
@@ -1923,6 +1985,7 @@ Blockly.Block.prototype.setTitleValue = function(newValue, name) {
  * Change the config value for a given field on the block
  * @param {string} fieldName The name of the field
  * @param {string} configString configuration to set for the field
+ * @export
  */
 Blockly.Block.prototype.setFieldConfig = function(fieldName, configString) {
   var field = this.getTitle_(fieldName);
@@ -1940,6 +2003,7 @@ Blockly.Block.prototype.setFieldConfig = function(fieldName, configString) {
  * Change the tooltip text for a block.
  * @param {string|!Element} newTip Text for tooltip or a parent element to
  *     link to for its tooltip.
+ * @export
  */
 Blockly.Block.prototype.setTooltip = function(newTip) {
   this.tooltip = newTip;
@@ -1950,6 +2014,7 @@ Blockly.Block.prototype.setTooltip = function(newTip) {
  * @param {boolean} hasPrevious True if there can be a previous statement.
  * @param {string|Array.<string>|null} opt_check Statement type or list of
  *     statement types.  Null or undefined if any type could be connected.
+ * @export
  */
 Blockly.Block.prototype.setPreviousStatement = function(hasPrevious, opt_check) {
   if (this.previousConnection) {
@@ -1978,6 +2043,7 @@ Blockly.Block.prototype.setPreviousStatement = function(hasPrevious, opt_check) 
  * @param {boolean} hasNext True if there can be a next statement.
  * @param {string|Array.<string>|null} opt_check Statement type or list of
  *     statement types.  Null or undefined if any type could be connected.
+ * @export
  */
 Blockly.Block.prototype.setNextStatement = function(hasNext, opt_check) {
   if (this.nextConnection) {
@@ -2004,6 +2070,7 @@ Blockly.Block.prototype.setNextStatement = function(hasNext, opt_check) {
  * @param {string|Array.<string>|null} opt_check Returned type or list of
  *     returned types.  Null or undefined if any type could be returned
  *     (e.g. variable get).
+ * @export
  */
 Blockly.Block.prototype.setStrictOutput = function(hasOutput, opt_check) {
   this.setOutput(hasOutput, opt_check, true);
@@ -2016,6 +2083,7 @@ Blockly.Block.prototype.setStrictOutput = function(hasOutput, opt_check) {
  *     (e.g. variable get).
  * @param {boolean} opt_strict Specify if the output type is strict, i.e. it
  *     can only connect to inputs that expect the exact same type
+ * @export
  */
 Blockly.Block.prototype.setOutput = function(hasOutput, opt_check, opt_strict) {
   if (this.outputConnection) {
@@ -2053,6 +2121,7 @@ Blockly.Block.prototype.refreshRender = function () {
  * @param {string|Array.<string>|null} opt_check Returned type or list of
  *     returned types.  Null or undefined if any type could be returned
  *     (e.g. variable get).
+ * @export
  */
 Blockly.Block.prototype.setFunctionalOutput = function(hasOutput, opt_check) {
   if (this.previousConnection) {
@@ -2079,6 +2148,7 @@ Blockly.Block.prototype.setFunctionalOutput = function(hasOutput, opt_check) {
 /**
  * Sets this block to have a new functional output type
  * @param {Blockly.BlockValueType} newType
+ * @export
  */
 Blockly.Block.prototype.changeFunctionalOutput = function(newType) {
   this.setHSV.apply(this, Blockly.FunctionalTypeColors[newType]);
@@ -2090,6 +2160,7 @@ Blockly.Block.prototype.changeFunctionalOutput = function(newType) {
 /**
  * Set whether value inputs are arranged horizontally or vertically.
  * @param {boolean} inputsInline True if inputs are horizontal.
+ * @export
  */
 Blockly.Block.prototype.setInputsInline = function(inputsInline) {
   this.inputsInline = inputsInline;
@@ -2103,6 +2174,7 @@ Blockly.Block.prototype.setInputsInline = function(inputsInline) {
 /**
  * Set whether the block is disabled or not.
  * @param {boolean} disabled True if disabled.
+ * @export
  */
 Blockly.Block.prototype.setDisabled = function(disabled) {
   if (this.disabled == disabled) {
@@ -2117,6 +2189,7 @@ Blockly.Block.prototype.setDisabled = function(disabled) {
  * Get whether the block is disabled or not due to parents.
  * The block's own disabled property is not considered.
  * @return {boolean} True if disabled.
+ * @export
  */
 Blockly.Block.prototype.getInheritedDisabled = function() {
   var block = this;
@@ -2182,6 +2255,7 @@ Blockly.Block.prototype.setCollapsed = function(collapsed) {
  * Create a human-readable text representation of this block and any children.
  * @param {?number} opt_maxLength Truncate the string to this length.
  * @return {string} Text of block.
+ * @export
  */
 Blockly.Block.prototype.toString = function(opt_maxLength) {
   var text = [];
@@ -2212,6 +2286,7 @@ Blockly.Block.prototype.toString = function(opt_maxLength) {
  * @param {string} name Language-neutral identifier which may used to find this
  *     input again.  Should be unique to this block.
  * @return {!Blockly.Input} The input object created.
+ * @export
  */
 Blockly.Block.prototype.appendValueInput = function(name) {
   return this.appendInput_(Blockly.INPUT_VALUE, name);
@@ -2224,6 +2299,7 @@ Blockly.Block.prototype.appendValueInput = function(name) {
  * @param {?number} trailingSpacing Extra space to leave below the input's last
  *     block.
  * @return {!Blockly.Input} The input object created.
+ * @export
  */
 Blockly.Block.prototype.appendStatementInput = function(name, trailingSpacing) {
   trailingSpacing = trailingSpacing || 0;
@@ -2235,6 +2311,7 @@ Blockly.Block.prototype.appendStatementInput = function(name, trailingSpacing) {
  * @param {?string} opt_name Language-neutral identifier which may used to find
  *     this input again.  Should be unique to this block.
  * @return {!Blockly.Input} The input object created.
+ * @export
  */
 Blockly.Block.prototype.appendDummyInput = function(opt_name) {
   return this.appendInput_(Blockly.DUMMY_INPUT, opt_name || '');
@@ -2247,6 +2324,7 @@ Blockly.Block.prototype.appendDummyInput = function(opt_name) {
  * @param {string} opt_name Language-neutral identifier which may used to find
  *     this input again.  Should be unique to this block.
  * @return {!Blockly.Input} The input object created.
+ * @export
  */
 Blockly.Block.prototype.appendFunctionalInput = function(name) {
   return this.appendInput_(Blockly.FUNCTIONAL_INPUT, name);
@@ -2262,6 +2340,7 @@ Blockly.Block.prototype.appendFunctionalInput = function(name) {
  *     parameter is not a tuple, but just an alignment for any trailing dummy
  *     input.  This last parameter is mandatory; there may be any number of
  *     tuples (though the number of tuples must match the symbols in msg).
+ * @export
  */
 Blockly.Block.prototype.interpolateMsg = function(msg, var_args) {
   // Remove the msg from the start and the dummy alignment from the end of args.
@@ -2333,6 +2412,7 @@ Blockly.Block.prototype.appendInput_ = function(type, name, spacing) {
  * Move an input to a different location on this block.
  * @param {string} name The name of the input to move.
  * @param {string} refName Name of input that should be after the moved input.
+ * @export
  */
 Blockly.Block.prototype.moveInputBefore = function(name, refName) {
   if (name == refName) {
@@ -2380,6 +2460,7 @@ Blockly.Block.prototype.moveInputBefore = function(name, refName) {
  * @param {boolean} opt_quiet True to prevent error if input is not present.
  * @throws {goog.asserts.AssertionError} if the input is not present and
  *     opt_quiet is not true.
+ * @export
  */
 Blockly.Block.prototype.removeInput = function(name, opt_quiet) {
   for (var x = 0, input; input = this.inputList[x]; x++) {
@@ -2413,6 +2494,7 @@ Blockly.Block.prototype.removeInput = function(name, opt_quiet) {
  * Fetches the named input object.
  * @param {string} name The name of the input.
  * @return {Blockly.Input|null} The input object, or null of the input does not exist.
+ * @export
  */
 Blockly.Block.prototype.getInput = function(name) {
   for (var x = 0, input; input = this.inputList[x]; x++) {
@@ -2429,16 +2511,18 @@ Blockly.Block.prototype.getInput = function(name) {
  * @param {string} name The name of the input.
  * @return {Blockly.Block} The attached value block, or null if the input is
  *     either disconnected or if the input does not exist.
+ * @export
  */
 Blockly.Block.prototype.getInputTargetBlock = function(name) {
   var input = this.getInput(name);
   return input && input.connection && input.connection.targetBlock();
 };
 
+/** @export */
 Blockly.Block.prototype.attachBlockToInputName = function(newBlock, inputName) {
   var input = this.getInput(inputName);
   if (!input || !input.connection) {
-    throw 'Block has no input named ' + name;
+    throw 'Block has no input named ' + inputName;
   }
 
   newBlock.previousConnection.connect(input.connection);
@@ -2447,6 +2531,7 @@ Blockly.Block.prototype.attachBlockToInputName = function(newBlock, inputName) {
 /**
  * Give this block a mutator dialog.
  * @param {Blockly.Mutator} mutator A mutator dialog instance or null to remove.
+ * @export
  */
 Blockly.Block.prototype.setMutator = function(mutator) {
   if (this.mutator && this.mutator !== mutator) {
@@ -2492,6 +2577,7 @@ Blockly.Block.prototype.setWarningText = function(text) {
   }
 };
 
+/** @export */
 Blockly.Block.prototype.setInputCount = function(inputCount) {
   this.inputCount = parseInt(inputCount);
 };
@@ -2506,6 +2592,7 @@ Blockly.Block.prototype.svgInitialized = function() {
  * @param {boolean} selfOnly Whether to render only this block and NOT also
  * its parents which in turn would trigger a window resize event. Defaults to
  * false.
+ * @export
  */
 Blockly.Block.prototype.render = function(selfOnly) {
   if (!this.svg_) {
@@ -2523,6 +2610,7 @@ Blockly.Block.prototype.getSvgRenderer = function () {
 
 /**
  * Get the oldest ancestor of this block.
+ * @export
  */
 Blockly.Block.prototype.getRootBlock = function () {
   var rootBlock;
@@ -2537,6 +2625,7 @@ Blockly.Block.prototype.getRootBlock = function () {
 
 /**
  * @returns True if any of this blocks inputs have a connection that is unfilled
+ * @export
  */
 Blockly.Block.prototype.hasUnfilledFunctionalInput = function () {
   // Does this block have a connection without a block attached

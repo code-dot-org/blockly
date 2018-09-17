@@ -105,12 +105,14 @@ Blockly.FieldImage.prototype.clickRectElement_ = null;
 
 /**
  * Editable fields are saved by the XML renderer, non-editable fields are not.
+ * @export
  */
 Blockly.FieldImage.prototype.EDITABLE = false;
 
 /**
  * Install this text on a block.
  * @param {!Blockly.Block} block The block containing this text.
+ * @export
  */
 Blockly.FieldImage.prototype.init = function(block) {
   if (this.sourceBlock_) {
@@ -146,6 +148,7 @@ Blockly.FieldImage.prototype.getClickTarget = function () {
  * Change the tooltip text for this field.
  * @param {string|!Element} newTip Text for tooltip or a parent element to
  *     link to for its tooltip.
+ * @export
  */
 Blockly.FieldImage.prototype.setTooltip = function(newTip) {
   this.getClickTarget().tooltip = newTip;
@@ -155,6 +158,7 @@ Blockly.FieldImage.prototype.setTooltip = function(newTip) {
  * Get the source URL of this image.
  * @return {string} Current text.
  * @override
+ * @export
  */
 Blockly.FieldImage.prototype.getText = function() {
   return this.src_;
@@ -164,6 +168,7 @@ Blockly.FieldImage.prototype.getText = function() {
  * Set the source URL of this image.
  * @param {?string} src New source.
  * @override
+ * @export
  */
 Blockly.FieldImage.prototype.setText = function(src) {
   if (src === null) {

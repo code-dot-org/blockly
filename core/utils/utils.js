@@ -619,8 +619,11 @@ Blockly.printerRangeToNumbers = function(rangeString) {
  * Generates a globally unique ID
  * @returns {string|*}
  */
-Blockly.getUID = function() {
-  return goog.events.getUniqueId('blocklyUID');
+Blockly.uniqueIdCounter_ = 0;
+Blockly.getUID = function(identifier) {
+  identifier = identifier || 'blocklyUID'
+  var next = Blockly.uniqueIdCounter_++;
+  return identifier + '_' + (Blockly.uniqueIdCounter_++);
 };
 
 /**

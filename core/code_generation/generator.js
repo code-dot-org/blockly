@@ -49,6 +49,7 @@ Blockly.Generator.languages = {};
  * Return the code generator for the specified language.  Create one if needed.
  * @param {string} name The language's name.
  * @return {!Blockly.CodeGenerator} Generator for this language.
+ * @export
  */
 Blockly.Generator.get = function(name) {
   if (!(name in Blockly.Generator.languages)) {
@@ -65,6 +66,7 @@ Blockly.Generator.get = function(name) {
  * @param {boolean} opt_showHidden Whether or not to show non-user visible
  *   blocks, defaults to true. Nested blocks always inherit visibility.
  * @return {string} Generated code.
+ * @export
  */
 Blockly.Generator.blocksToCode = function(name, blocks, opt_showHidden) {
   var code = [];
@@ -106,6 +108,7 @@ Blockly.Generator.blocksToCode = function(name, blocks, opt_showHidden) {
  * @param {!Element} xml XML block
  *   blocks, defaults to true. Nested blocks always inherit visibility.
  * @return {string} Generated code.
+ * @export
  */
 Blockly.Generator.xmlToCode = function(name, xml) {
   var blocks = Blockly.Generator.xmlToBlocks(name, xml);
@@ -119,6 +122,7 @@ Blockly.Generator.xmlToCode = function(name, xml) {
  * @param {!Element} xml XML block
  *   blocks, defaults to true. Nested blocks always inherit visibility.
  * @return {string} Generated code.
+ * @export
  */
 Blockly.Generator.xmlToBlocks = function(name, xml) {
   var div = document.createElement('div');
@@ -136,6 +140,7 @@ Blockly.Generator.xmlToBlocks = function(name, xml) {
  * @param {boolean} opt_showHidden Whether or not to show non-user visible
  *   blocks, defaults to true. Nested blocks always inherit visibility.
  * @return {string} Generated code.
+ * @export
  */
 Blockly.Generator.blockSpaceToCode = function(name, opt_typeFilter, opt_showHidden) {
   var blocksToGenerate;
@@ -162,6 +167,7 @@ Blockly.Generator.blockSpaceToCode = function(name, opt_typeFilter, opt_showHidd
  * @param {string} text The lines of code.
  * @param {string} prefix The common prefix.
  * @return {string} The prefixed lines of code.
+ * @export
  */
 Blockly.Generator.prefixLines = function(text, prefix) {
   return prefix + text.replace(/\n(.)/g, '\n' + prefix + '$1');
@@ -185,6 +191,7 @@ Blockly.CodeGenerator = function(name) {
  * @return {string|!Array} For statement blocks, the generated code.
  *     For value blocks, an array containing the generated code and an
  *     operator order value.  Returns '' if block is null.
+ * @export
  */
 Blockly.CodeGenerator.prototype.blockToCode = function(block, opt_showHidden) {
   if (!block) {
@@ -219,6 +226,7 @@ Blockly.CodeGenerator.prototype.blockToCode = function(block, opt_showHidden) {
  *     of any operators adjacent to "block".
  * @return {string} Generated code or '' if no blocks are connected or the
  *     specified input does not exist.
+ * @export
  */
 Blockly.CodeGenerator.prototype.valueToCode = function(block, name, order) {
   if (isNaN(order)) {
@@ -259,6 +267,7 @@ Blockly.CodeGenerator.prototype.valueToCode = function(block, name, order) {
  * @param {!Blockly.Block} block The block containing the input.
  * @param {string} name The name of the input.
  * @return {string} Generated code or '' if no blocks are connected.
+ * @export
  */
 Blockly.CodeGenerator.prototype.statementToCode = function(block, name) {
   var targetBlock = block.getInputTargetBlock(name);
@@ -278,6 +287,7 @@ Blockly.CodeGenerator.prototype.statementToCode = function(block, name) {
  * Add one or more words to the list of reserved words for this language.
  * @param {string} words Comma-separated list of words to add to the list.
  *     No spaces.  Duplicates are ok.
+ * @export
  */
 Blockly.CodeGenerator.prototype.addReservedWords = function(words) {
   this.RESERVED_WORDS_ += words + ',';

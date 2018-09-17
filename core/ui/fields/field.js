@@ -40,6 +40,7 @@ goog.require('Blockly.BlockSvg');
 Blockly.Field = function(text) {
   this.sourceBlock_ = null;
   // Build the DOM.
+  /** @export */
   this.fieldGroup_ = Blockly.createSvgElement('g', {}, null);
   this.borderRect_ = Blockly.createSvgElement('rect',
       {'rx': 4,
@@ -95,12 +96,14 @@ Blockly.Field.NBSP = '\u00A0';
 
 /**
  * Editable fields are saved by the XML renderer, non-editable fields are not.
+ * @export
  */
 Blockly.Field.prototype.EDITABLE = true;
 
 /**
  * Install this field on a block.
  * @param {!Blockly.Block} block The block containing this field.
+ * @export
  */
 Blockly.Field.prototype.init = function(block) {
   if (this.sourceBlock_) {
@@ -121,6 +124,7 @@ Blockly.Field.prototype.init = function(block) {
 
 /**
  * Dispose of all DOM objects belonging to this editable field.
+ * @export
  */
 Blockly.Field.prototype.dispose = function() {
   if (this.mouseDownWrapper_) {
@@ -167,6 +171,7 @@ Blockly.Field.prototype.updateEditable = function() {
 /**
  * Gets whether this editable field is visible or not.
  * @return {boolean} True if visible.
+ * @export
  */
 Blockly.Field.prototype.isVisible = function() {
   return this.visible_;
@@ -185,6 +190,7 @@ Blockly.Field.prototype.setVisible = function(visible) {
  * Gets the group element for this editable field.
  * Used for measuring the size and for positioning.
  * @return {!Element} The group element.
+ * @export
  */
 Blockly.Field.prototype.getRootElement = function() {
   return /** @type {!Element} */ (this.fieldGroup_);
@@ -234,6 +240,7 @@ Blockly.Field.prototype.getBufferY = function() {
 /**
  * Get the text from this field.
  * @return {string} Current text.
+ * @export
  */
 Blockly.Field.prototype.getText = function() {
   return this.text_;
@@ -242,6 +249,7 @@ Blockly.Field.prototype.getText = function() {
 /**
  * Set the text in this field.  Trigger a rerender of the source block.
  * @param {?string} text New text.
+ * @export
  */
 Blockly.Field.prototype.setText = function(text) {
   if (text === null || text === this.text_) {
@@ -281,6 +289,7 @@ Blockly.Field.prototype.refreshRender = function () {
  * By default there is no difference between the human-readable text and
  * the language-neutral values.  Subclasses (such as dropdown) may define this.
  * @return {string} Current text.
+ * @export
  */
 Blockly.Field.prototype.getValue = function() {
   return this.getText();
@@ -290,6 +299,7 @@ Blockly.Field.prototype.getValue = function() {
  * By default there is no difference between the human-readable text and
  * the language-neutral values.  Subclasses (such as dropdown) may define this.
  * @param {string} text New text.
+ * @export
  */
 Blockly.Field.prototype.setValue = function(text) {
   this.setText(text);
@@ -387,6 +397,7 @@ Blockly.Field.prototype.onClick_ = function(e) {
  * Change the tooltip text for this field.
  * @param {string|!Element} newTip Text for tooltip or a parent element to
  *     link to for its tooltip.
+ * @export
  */
 Blockly.Field.prototype.setTooltip = function(newTip) {
   // Non-abstract sub-classes may wish to implement this.  See FieldLabel.

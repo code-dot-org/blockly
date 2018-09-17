@@ -9,24 +9,29 @@ goog.provide('Blockly.BlockValueType');
  * Enum of block types. Used for e.g., configuring allowable input connections
  * and occasionally block coloring
  * @enum {string}
+ * @export
  */
 Blockly.BlockValueType = {
-  NONE: 'None', // Typically as a connection/input check means "accepts any type"
-  STRING: 'String',
-  NUMBER: 'Number',
-  IMAGE: 'Image',
-  BOOLEAN: 'Boolean',
-  FUNCTION: 'Function',
-  COLOUR: 'Colour',
-  ARRAY: 'Array',
+  /** @export */ NONE: 'None', // Typically as a connection/input check means "accepts any type"
+  /** @export */ STRING: 'String',
+  /** @export */ NUMBER: 'Number',
+  /** @export */ IMAGE: 'Image',
+  /** @export */ BOOLEAN: 'Boolean',
+  /** @export */ FUNCTION: 'Function',
+  /** @export */ COLOUR: 'Colour',
+  /** @export */ ARRAY: 'Array',
 
-  // p5.play Sprite
+  /**
+   * p5.play Sprite
+   * @export
+   */
   SPRITE: 'Sprite',
 
   /**
    * {Object} Behavior
    * {function} Behavior.func
    * {Array} Behavior.extraArgs
+   * @export
    */
   BEHAVIOR: 'Behavior',
 
@@ -34,6 +39,7 @@ Blockly.BlockValueType = {
    * {Object} Location
    * {number} Location.x
    * {number} Location.y
+   * @export
    */
   LOCATION: 'Location',
 };

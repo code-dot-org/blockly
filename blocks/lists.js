@@ -28,6 +28,7 @@ goog.provide('Blockly.Blocks.lists');
 goog.require('Blockly.Blocks');
 
 
+/** @export */
 Blockly.Blocks.lists_create_empty = {
   // Create an empty list.
   init: function() {
@@ -39,6 +40,7 @@ Blockly.Blocks.lists_create_empty = {
   }
 };
 
+/** @export */
 Blockly.Blocks.lists_create_with = {
   // Create a list with any number of elements of any type.
   init: function() {
@@ -129,6 +131,7 @@ Blockly.Blocks.lists_create_with = {
   }
 };
 
+/** @export */
 Blockly.Blocks.lists_create_with_container = {
   // Container.
   init: function() {
@@ -141,6 +144,7 @@ Blockly.Blocks.lists_create_with_container = {
   }
 };
 
+/** @export */
 Blockly.Blocks.lists_create_with_item = {
   // Add items.
   init: function() {
@@ -154,6 +158,7 @@ Blockly.Blocks.lists_create_with_item = {
   }
 };
 
+/** @export */
 Blockly.Blocks.lists_repeat = {
   // Create a list with one element repeated.
   init: function() {
@@ -167,6 +172,7 @@ Blockly.Blocks.lists_repeat = {
   }
 };
 
+/** @export */
 Blockly.Blocks.lists_length = {
   // List length.
   init: function() {
@@ -180,6 +186,7 @@ Blockly.Blocks.lists_length = {
   }
 };
 
+/** @export */
 Blockly.Blocks.lists_isEmpty = {
   // Is the list empty?
   init: function() {
@@ -194,6 +201,7 @@ Blockly.Blocks.lists_isEmpty = {
   }
 };
 
+/** @export */
 Blockly.Blocks.lists_indexOf = {
   // Find an item in the list.
   init: function() {
@@ -213,6 +221,7 @@ Blockly.Blocks.lists_indexOf = {
   }
 };
 
+/** @export */
 Blockly.Blocks.lists_getIndex = {
   // Get element at index.
   init: function() {
@@ -323,6 +332,7 @@ Blockly.Blocks.lists_getIndex = {
   }
 };
 
+/** @export */
 Blockly.Blocks.lists_setIndex = {
   // Set element at index.
   init: function() {
@@ -409,6 +419,7 @@ Blockly.Blocks.lists_setIndex = {
   }
 };
 
+/** @export */
 Blockly.Blocks.lists_getSublist = {
   // Get sublist.
   init: function() {

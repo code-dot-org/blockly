@@ -28,12 +28,14 @@ goog.provide('Blockly.JavaScript.math');
 goog.require('Blockly.JavaScript');
 
 
+/** @export */
 Blockly.JavaScript.math_number = function() {
   // Numeric value.
   var code = window.parseFloat(this.getTitleValue('NUM')) || 0;
   return [code, Blockly.JavaScript.ORDER_ATOMIC];
 };
 
+/** @export */
 Blockly.JavaScript.math_arithmetic = function() {
   // Basic arithmetic operators, and power.
   var mode = this.getTitleValue('OP');
@@ -52,14 +54,16 @@ Blockly.JavaScript.math_arithmetic = function() {
   return [code, order];
 };
 
+/** @export */
 Blockly.JavaScript.math_arithmetic.OPERATORS = {
-  ADD: [' + ', Blockly.JavaScript.ORDER_ADDITION],
-  MINUS: [' - ', Blockly.JavaScript.ORDER_SUBTRACTION],
-  MULTIPLY: [' * ', Blockly.JavaScript.ORDER_MULTIPLICATION],
-  DIVIDE: [' / ', Blockly.JavaScript.ORDER_DIVISION],
-  POWER: [null, Blockly.JavaScript.ORDER_COMMA]  // Handle power separately.
+  'ADD': [' + ', Blockly.JavaScript.ORDER_ADDITION],
+  'MINUS': [' - ', Blockly.JavaScript.ORDER_SUBTRACTION],
+  'MULTIPLY': [' * ', Blockly.JavaScript.ORDER_MULTIPLICATION],
+  'DIVIDE': [' / ', Blockly.JavaScript.ORDER_DIVISION],
+  'POWER': [null, Blockly.JavaScript.ORDER_COMMA]  // Handle power separately.
 };
 
+/** @export */
 Blockly.JavaScript.math_single = function() {
   // Math operators with single operand.
   var operator = this.getTitleValue('OP');
@@ -144,12 +148,14 @@ Blockly.JavaScript.math_single = function() {
   return [code, Blockly.JavaScript.ORDER_DIVISION];
 };
 
+/** @export */
 Blockly.JavaScript.math_constant = function() {
   // Constants: PI, E, the Golden Ratio, sqrt(2), 1/sqrt(2), INFINITY.
   var constant = this.getTitleValue('CONSTANT');
   return Blockly.JavaScript.math_constant.CONSTANTS[constant];
 };
 
+/** @export */
 Blockly.JavaScript.math_constant.CONSTANTS = {
   PI: ['Math.PI', Blockly.JavaScript.ORDER_MEMBER],
   E: ['Math.E', Blockly.JavaScript.ORDER_MEMBER],
@@ -159,6 +165,7 @@ Blockly.JavaScript.math_constant.CONSTANTS = {
   INFINITY: ['Infinity', Blockly.JavaScript.ORDER_ATOMIC]
 };
 
+/** @export */
 Blockly.JavaScript.math_number_property = function() {
   // Check if a number is even, odd, prime, whole, positive, or negative
   // or if it is divisible by certain number. Returns true or false.
@@ -222,6 +229,7 @@ Blockly.JavaScript.math_number_property = function() {
   return [code, Blockly.JavaScript.ORDER_EQUALITY];
 };
 
+/** @export */
 Blockly.JavaScript.math_change = function() {
   // Add to a variable in place.
   var argument0 = Blockly.JavaScript.valueToCode(this, 'DELTA',
@@ -231,11 +239,19 @@ Blockly.JavaScript.math_change = function() {
       ' : 0) + ' + argument0 + ';\n';
 };
 
-// Rounding functions have a single operand.
+/**
+ * Rounding functions have a single operand.
+ * @export
+ */
 Blockly.JavaScript.math_round = Blockly.JavaScript.math_single;
-// Trigonometry functions have a single operand.
+
+/**
+ * Trigonometry functions have a single operand.
+ * @export
+ */
 Blockly.JavaScript.math_trig = Blockly.JavaScript.math_single;
 
+/** @export */
 Blockly.JavaScript.math_on_list = function() {
   // Math functions for lists.
   var func = this.getTitleValue('OP');
@@ -390,6 +406,7 @@ Blockly.JavaScript.math_on_list = function() {
   return [code, Blockly.JavaScript.ORDER_FUNCTION_CALL];
 };
 
+/** @export */
 Blockly.JavaScript.math_modulo = function() {
   // Remainder computation.
   var argument0 = Blockly.JavaScript.valueToCode(this, 'DIVIDEND',
@@ -400,6 +417,7 @@ Blockly.JavaScript.math_modulo = function() {
   return [code, Blockly.JavaScript.ORDER_MODULUS];
 };
 
+/** @export */
 Blockly.JavaScript.math_constrain = function() {
   // Constrain a number between two limits.
   var argument0 = Blockly.JavaScript.valueToCode(this, 'VALUE',
@@ -413,6 +431,7 @@ Blockly.JavaScript.math_constrain = function() {
   return [code, Blockly.JavaScript.ORDER_FUNCTION_CALL];
 };
 
+/** @export */
 Blockly.JavaScript.math_random_int = function() {
   // Random integer between [X] and [Y].
   var argument0 = Blockly.JavaScript.valueToCode(this, 'FROM',
@@ -440,6 +459,7 @@ Blockly.JavaScript.math_random_int = function() {
   return [code, Blockly.JavaScript.ORDER_FUNCTION_CALL];
 };
 
+/** @export */
 Blockly.JavaScript.math_random_float = function() {
   // Random fraction between 0 and 1.
   return ['Math.random()', Blockly.JavaScript.ORDER_FUNCTION_CALL];

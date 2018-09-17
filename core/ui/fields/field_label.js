@@ -58,12 +58,14 @@ goog.inherits(Blockly.FieldLabel, Blockly.Field);
 
 /**
  * Editable fields are saved by the XML renderer, non-editable fields are not.
+ * @export
  */
 Blockly.FieldLabel.prototype.EDITABLE = false;
 
 /**
  * Install this text on a block.
  * @param {!Blockly.Block} block The block containing this text.
+ * @export
  */
 Blockly.FieldLabel.prototype.init = function(block) {
   if (this.sourceBlock_) {
@@ -97,6 +99,7 @@ Blockly.FieldLabel.prototype.getBufferY = function() {
   return (this.size_.height - this.fontSize_) / 2;
 };
 
+/** @export */
 Blockly.FieldLabel.prototype.setText = function(text) {
   if (text === null || text === this.text_) {
     // No change if null.
@@ -138,6 +141,7 @@ Blockly.FieldLabel.prototype.dispose = function() {
  * Gets the group element for this field.
  * Used for measuring the size and for positioning.
  * @return {!Element} The group element.
+ * @export
  */
 Blockly.FieldLabel.prototype.getRootElement = function() {
   return /** @type {!Element} */ (this.textElement_);
@@ -147,6 +151,7 @@ Blockly.FieldLabel.prototype.getRootElement = function() {
  * Change the tooltip text for this field.
  * @param {string|!Element} newTip Text for tooltip or a parent element to
  *     link to for its tooltip.
+ * @export
  */
 Blockly.FieldLabel.prototype.setTooltip = function(newTip) {
   this.textElement_.tooltip = newTip;

@@ -109,6 +109,7 @@ Blockly.Flyout = function(blockSpaceEditor, opt_static) {
  * @type {object} config
  * @type {function} config.initialize
  * @type {boolean} config.addDefaultVar
+ * @export
  */
 Blockly.Flyout.configure = function (type, config) {
   Blockly.Flyout.config[type] = config;
@@ -495,8 +496,8 @@ Blockly.Flyout.prototype.show = function(xmlList) {
     var addDefaultVar = true;
     var config = Blockly.Flyout.config[firstBlock];
     if (config) {
-      addDefaultVar = config.addDefaultVar;
-      config.initialize(this, cursor);
+      addDefaultVar = config['addDefaultVar'];
+      config['initialize'](this, cursor);
     }
     this.layoutXmlToBlocks_(xmlList.slice(1), blocks, gaps, margin);
     Blockly.Variables.flyoutCategory(
@@ -562,7 +563,7 @@ Blockly.Flyout.prototype.show = function(xmlList) {
  * @param {{x: Number, y: Number}} cursor current drawing position in flyout
  * @param {String} buttonText text to display on button
  * @param {Function} onMouseDown callback for button press
- * @private
+ * @export
  */
 Blockly.Flyout.prototype.addButtonToFlyout_ = function(cursor, buttonText, onMouseDown) {
   var button = Blockly.createSvgElement('g', {'class': 'createFunction'},

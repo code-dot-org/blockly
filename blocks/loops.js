@@ -28,6 +28,7 @@ goog.provide('Blockly.Blocks.loops');
 goog.require('Blockly.Blocks');
 
 
+/** @export */
 Blockly.Blocks.controls_repeat = {
   // Repeat n times (internal number).
   init: function() {
@@ -46,6 +47,7 @@ Blockly.Blocks.controls_repeat = {
   }
 };
 
+/** @export */
 Blockly.Blocks.controls_repeat_ext = {
   // Repeat n times (external number).
   init: function() {
@@ -63,6 +65,7 @@ Blockly.Blocks.controls_repeat_ext = {
   }
 };
 
+/** @export */
 Blockly.Blocks.controls_whileUntil = {
   // Do while/until loop.
   init: function() {
@@ -91,6 +94,7 @@ Blockly.Blocks.controls_whileUntil = {
   }
 };
 
+/** @export */
 Blockly.Blocks.controls_for = {
   // For loop.
   init: function() {
@@ -142,6 +146,7 @@ Blockly.Blocks.controls_for = {
   }
 };
 
+/** @export */
 Blockly.Blocks.controls_forEach = {
   // For each loop.
   init: function() {
@@ -177,6 +182,7 @@ Blockly.Blocks.controls_forEach = {
   customContextMenu: Blockly.Blocks.controls_for.customContextMenu
 };
 
+/** @export */
 Blockly.Blocks.controls_flow_statements = {
   // Flow statements: continue, break.
   init: function() {

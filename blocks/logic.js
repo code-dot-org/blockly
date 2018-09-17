@@ -28,6 +28,7 @@ goog.provide('Blockly.Blocks.logic');
 goog.require('Blockly.Blocks');
 
 
+/** @export */
 Blockly.Blocks.controls_if = {
   // If/elseif/else condition.
   init: function() {
@@ -184,6 +185,7 @@ Blockly.Blocks.controls_if = {
   }
 };
 
+/** @export */
 Blockly.Blocks.controls_if_if = {
   // If condition.
   init: function() {
@@ -196,6 +198,7 @@ Blockly.Blocks.controls_if_if = {
   }
 };
 
+/** @export */
 Blockly.Blocks.controls_if_elseif = {
   // Else-If condition.
   init: function() {
@@ -209,6 +212,7 @@ Blockly.Blocks.controls_if_elseif = {
   }
 };
 
+/** @export */
 Blockly.Blocks.controls_if_else = {
   // Else condition.
   init: function() {
@@ -221,6 +225,7 @@ Blockly.Blocks.controls_if_else = {
   }
 };
 
+/** @export */
 Blockly.Blocks.logic_compare = {
   // Comparison operator.
   init: function() {
@@ -266,6 +271,7 @@ Blockly.Blocks.logic_compare = {
   }
 };
 
+/** @export */
 Blockly.Blocks.logic_operation = {
   // Logical operations: 'and', 'or'.
   init: function() {
@@ -294,6 +300,7 @@ Blockly.Blocks.logic_operation = {
 };
 
 
+/** @export */
 Blockly.Blocks.logic_negate = {
   // Negation.
   init: function() {
@@ -306,6 +313,7 @@ Blockly.Blocks.logic_negate = {
   }
 };
 
+/** @export */
 Blockly.Blocks.logic_boolean = {
   // Boolean data type: true and false.
   init: function() {
@@ -320,6 +328,7 @@ Blockly.Blocks.logic_boolean = {
   }
 };
 
+/** @export */
 Blockly.Blocks.logic_null = {
   // Null data type.
   init: function() {
@@ -332,6 +341,7 @@ Blockly.Blocks.logic_null = {
   }
 };
 
+/** @export */
 Blockly.Blocks.logic_ternary = {
   // Ternary operator.
   init: function() {

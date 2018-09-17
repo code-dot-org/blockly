@@ -29,6 +29,7 @@ goog.require('Blockly.Blocks');
 
 /**
  * Definition block for a custom functional block
+ * @export
  */
 Blockly.Blocks.functional_example = {
   shouldHideIfInMainBlockSpace: function () {

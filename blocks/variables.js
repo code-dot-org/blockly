@@ -29,6 +29,7 @@ goog.require('Blockly.Blocks');
 goog.require('Blockly.Variables');
 
 
+/** @export */
 Blockly.Blocks.variables_get = {
   // Variable getter.
   init: function() {
@@ -70,6 +71,7 @@ Blockly.Blocks.variables_get = {
   }
 };
 
+/** @export */
 Blockly.Blocks.variables_set = {
   // Variable setter.
   init: function() {
@@ -98,6 +100,7 @@ Blockly.Blocks.variables_set = {
   customContextMenu: Blockly.Blocks.variables_get.customContextMenu
 };
 
+/** @export */
 Blockly.Blocks.parameters_get = {
   // Variable getter.
   init: function() {

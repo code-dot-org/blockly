@@ -30,6 +30,7 @@ goog.require('Blockly.JavaScript');
 /**
  * Generates javascript for a functional example
  * with expected and actual code blocks
+ * @export
  */
 Blockly.JavaScript.functional_example = function() {
   var expectedValue = Blockly.JavaScript.statementToCode(this, 'EXPECTED', Blockly.JavaScript.ORDER_NONE) || 'null';

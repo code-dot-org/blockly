@@ -17,6 +17,7 @@ goog.inherits(Blockly.FieldIcon, Blockly.Field);
 
 /**
  * Editable fields are saved by the XML renderer, non-editable fields are not.
+ * @export
  */
 Blockly.FieldIcon.prototype.EDITABLE = false;
 

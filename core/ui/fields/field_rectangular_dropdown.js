@@ -66,6 +66,7 @@ Blockly.FieldRectangularDropdown.CHECKMARK_OVERHANG = 0; // Horizontal distance 
 Blockly.FieldRectangularDropdown.DOWN_ARROW_CHARACTER = '\u25BC'; // ▾
 Blockly.FieldRectangularDropdown.UP_ARROW_CHARACTER = '\u25B2';
 Blockly.FieldRectangularDropdown.prototype.CURSOR = 'default';
+/** @export */
 Blockly.FieldRectangularDropdown.prototype.EDITABLE = true;
 
 Blockly.FieldRectangularDropdown.prototype.getOptions = function() {
@@ -273,14 +274,14 @@ Blockly.FieldRectangularDropdown.prototype.positionWidgetDiv = function () {
   var menuPosition = this.calculateMenuPosition_(this.previewElement_, positionBelow);
 
   var windowSize = goog.dom.getViewportSize();
-  
+
   if(menuPosition.x + size.width > windowSize.width) {
   	menuPosition.x -= size.width - (size.width / numberOfColumns);
   }
   if(menuPosition.y + size.height > windowSize.height) {
-  	menuPosition.y -= size.height + (size.height / Math.ceil(this.menu_.getChildCount() / numberOfColumns)); 
+  	menuPosition.y -= size.height + (size.height / Math.ceil(this.menu_.getChildCount() / numberOfColumns));
   }
-  
+
   var scrollOffset = goog.style.getViewportPageOffset(document);
 
   Blockly.WidgetDiv.position(menuPosition.x, menuPosition.y, windowSize, scrollOffset);
@@ -308,6 +309,7 @@ Blockly.FieldRectangularDropdown.prototype.calculateMenuPosition_ = function (dr
 /**
  * Get the language-neutral value from this dropdown menu.
  * @return {string} Current text.
+ * @export
  */
 Blockly.FieldRectangularDropdown.prototype.getValue = function() {
   return this.value_;
@@ -316,6 +318,7 @@ Blockly.FieldRectangularDropdown.prototype.getValue = function() {
 /**
  * Set the language-neutral value for this dropdown menu.
  * @param {string} newValue New value to set.
+ * @export
  */
 Blockly.FieldRectangularDropdown.prototype.setValue = function(newValue) {
   this.value_ = newValue;
@@ -343,6 +346,7 @@ Blockly.FieldRectangularDropdown.prototype.getPreviewDataForValue_ = function(va
 /**
  * Install this field on a block
  *  * @param {!Blockly.Block} block The block containing this field.
+ * @export
  */
 Blockly.FieldRectangularDropdown.prototype.init = function(block) {
   if (this.sourceBlock_) {

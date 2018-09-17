@@ -92,6 +92,7 @@ Blockly.FieldAngleDropdown.prototype.showEditor_ = function() {
   return div;
 }
 
+/** @export */
 Blockly.FieldAngleDropdown.prototype.dispose = function() {
   if (this.angleHelper) {
     this.angleHelper.dispose();

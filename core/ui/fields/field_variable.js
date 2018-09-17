@@ -85,6 +85,7 @@ goog.inherits(Blockly.FieldVariable, Blockly.FieldDropdown);
  * Get the variable's name (use a variableDB to convert into a real name).
  * Unline a regular dropdown, variables are literal and have no neutral value.
  * @return {string} Current text.
+ * @export
  */
 Blockly.FieldVariable.prototype.getValue = function() {
   return this.getText();
@@ -93,6 +94,7 @@ Blockly.FieldVariable.prototype.getValue = function() {
 /**
  * Set the variable name.
  * @param {string} text New text.
+ * @export
  */
 Blockly.FieldVariable.prototype.setValue = function(text) {
   this.value_ = text;

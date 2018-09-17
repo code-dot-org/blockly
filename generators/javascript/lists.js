@@ -28,11 +28,13 @@ goog.provide('Blockly.JavaScript.lists');
 goog.require('Blockly.JavaScript');
 
 
+/** @export */
 Blockly.JavaScript.lists_create_empty = function() {
   // Create an empty list.
   return ['[]', Blockly.JavaScript.ORDER_ATOMIC];
 };
 
+/** @export */
 Blockly.JavaScript.lists_create_with = function() {
   // Create a list with any number of elements of any type.
   var code = new Array(this.itemCount_);
@@ -44,6 +46,7 @@ Blockly.JavaScript.lists_create_with = function() {
   return [code, Blockly.JavaScript.ORDER_ATOMIC];
 };
 
+/** @export */
 Blockly.JavaScript.lists_repeat = function() {
   // Create a list with one element repeated.
   if (!Blockly.JavaScript.definitions_['lists_repeat']) {
@@ -70,6 +73,7 @@ Blockly.JavaScript.lists_repeat = function() {
   return [code, Blockly.JavaScript.ORDER_FUNCTION_CALL];
 };
 
+/** @export */
 Blockly.JavaScript.lists_length = function() {
   // List length.
   var argument0 = Blockly.JavaScript.valueToCode(this, 'VALUE',
@@ -77,6 +81,7 @@ Blockly.JavaScript.lists_length = function() {
   return [argument0 + '.length', Blockly.JavaScript.ORDER_MEMBER];
 };
 
+/** @export */
 Blockly.JavaScript.lists_isEmpty = function() {
   // Is the list empty?
   var argument0 = Blockly.JavaScript.valueToCode(this, 'VALUE',
@@ -84,6 +89,7 @@ Blockly.JavaScript.lists_isEmpty = function() {
   return ['!' + argument0 + '.length', Blockly.JavaScript.ORDER_LOGICAL_NOT];
 };
 
+/** @export */
 Blockly.JavaScript.lists_indexOf = function() {
   // Find an item in the list.
   var operator = this.getTitleValue('END') == 'FIRST' ?
@@ -96,6 +102,7 @@ Blockly.JavaScript.lists_indexOf = function() {
   return [code, Blockly.JavaScript.ORDER_MEMBER];
 };
 
+/** @export */
 Blockly.JavaScript.lists_getIndex = function() {
   // Get element at index.
   // Note: Until January 2013 this block did not have MODE or WHERE inputs.
@@ -197,6 +204,7 @@ Blockly.JavaScript.lists_getIndex = function() {
   throw 'Unhandled combination (lists_getIndex).';
 };
 
+/** @export */
 Blockly.JavaScript.lists_setIndex = function() {
   // Set element at index.
   // Note: Until February 2013 this block did not have MODE or WHERE inputs.
@@ -275,6 +283,7 @@ Blockly.JavaScript.lists_setIndex = function() {
   throw 'Unhandled combination (lists_setIndex).';
 };
 
+/** @export */
 Blockly.JavaScript.lists_getSublist = function() {
   // Get sublist.
   var list = Blockly.JavaScript.valueToCode(this, 'LIST',

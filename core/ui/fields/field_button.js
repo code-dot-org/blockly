@@ -60,6 +60,7 @@ Blockly.FieldButton.prototype.CURSOR = 'pointer';
 
 /**
  * @return {string} Current value
+ * @export
  */
 Blockly.FieldButton.prototype.getValue = function() {
   return String(this.value_);
@@ -68,6 +69,7 @@ Blockly.FieldButton.prototype.getValue = function() {
 /**
  * Set the value
  * @param {string} value New value.
+ * @export
  */
 Blockly.FieldButton.prototype.setValue = function(value) {
   if (this.value_ !== value) {

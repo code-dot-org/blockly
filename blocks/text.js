@@ -28,6 +28,7 @@ goog.provide('Blockly.Blocks.text');
 goog.require('Blockly.Blocks');
 
 
+/** @export */
 Blockly.Blocks.text = {
   // Text value.
   init: function() {
@@ -43,6 +44,7 @@ Blockly.Blocks.text = {
   }
 };
 
+/** @export */
 Blockly.Blocks.text_join = {
   // Create a string made up of any number of elements of any type.
   init: function() {
@@ -139,6 +141,7 @@ Blockly.Blocks.text_join = {
   }
 };
 
+/** @export */
 Blockly.Blocks.text_create_join_container = {
   // Container.
   init: function() {
@@ -151,6 +154,7 @@ Blockly.Blocks.text_create_join_container = {
   }
 };
 
+/** @export */
 Blockly.Blocks.text_create_join_item = {
   // Add items.
   init: function() {
@@ -164,6 +168,7 @@ Blockly.Blocks.text_create_join_item = {
   }
 };
 
+/** @export */
 Blockly.Blocks.text_append = {
   // Append to a variable in place.
   init: function() {
@@ -191,6 +196,7 @@ Blockly.Blocks.text_append = {
   }
 };
 
+/** @export */
 Blockly.Blocks.text_length = {
   // String length.
   init: function() {
@@ -204,6 +210,7 @@ Blockly.Blocks.text_length = {
   }
 };
 
+/** @export */
 Blockly.Blocks.text_isEmpty = {
   // Is the string null?
   init: function() {
@@ -217,6 +224,7 @@ Blockly.Blocks.text_isEmpty = {
   }
 };
 
+/** @export */
 Blockly.Blocks.text_indexOf = {
   // Find a substring in the text.
   init: function() {
@@ -240,6 +248,7 @@ Blockly.Blocks.text_indexOf = {
   }
 };
 
+/** @export */
 Blockly.Blocks.text_charAt = {
   // Get a character from the string.
   init: function() {
@@ -309,6 +318,7 @@ Blockly.Blocks.text_charAt = {
   }
 };
 
+/** @export */
 Blockly.Blocks.text_getSubstring = {
   // Get substring.
   init: function() {
@@ -394,6 +404,7 @@ Blockly.Blocks.text_getSubstring = {
   }
 };
 
+/** @export */
 Blockly.Blocks.text_changeCase = {
   // Change capitalization.
   init: function() {
@@ -410,6 +421,7 @@ Blockly.Blocks.text_changeCase = {
   }
 };
 
+/** @export */
 Blockly.Blocks.text_trim = {
   // Trim spaces.
   init: function() {
@@ -426,6 +438,7 @@ Blockly.Blocks.text_trim = {
   }
 };
 
+/** @export */
 Blockly.Blocks.text_print = {
   // Print statement.
   init: function() {
@@ -440,6 +453,7 @@ Blockly.Blocks.text_print = {
   }
 };
 
+/** @export */
 Blockly.Blocks.text_prompt = {
   // Prompt function.
   init: function() {

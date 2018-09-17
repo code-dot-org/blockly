@@ -74,6 +74,7 @@ Blockly.FieldTextInput.prototype.dispose = function() {
  * Set the text in this field.
  * @param {?string} text New text.
  * @override
+ * @export
  */
 Blockly.FieldTextInput.prototype.setText = function(text) {
   if (text === null) {

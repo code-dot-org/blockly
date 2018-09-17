@@ -536,6 +536,7 @@ Blockly.BlockSpace.prototype.getTopBlocks = function(ordered, shareMainModal) {
   }
   return blocks;
 };
+goog.exportProperty(Blockly.BlockSpace.prototype, 'getTopBlocks', Blockly.BlockSpace.prototype.getTopBlocks);
 
 /**
  * Find all visible blocks in this blockSpace.  No particular order.

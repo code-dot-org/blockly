@@ -24,12 +24,15 @@
 'use strict';
 
 goog.provide('Blockly.JavaScript');
+goog.exportSymbol('Blockly.JavaScript', Blockly.JavaScript);
 
 goog.require('Blockly.Generator');
 goog.require('Blockly.CodeGenerator');
 
 
 Blockly.JavaScript = Blockly.Generator.get('JavaScript');
+goog.exportProperty(Blockly, 'JavaScript', Blockly.JavaScript);
+
 
 /**
  * List of illegal variable names.
@@ -66,44 +69,45 @@ Blockly.JavaScript.addReservedWords(
  * Order of operation ENUMs.
  * https://developer.mozilla.org/en/JavaScript/Reference/Operators/Operator_Precedence
  */
-Blockly.JavaScript.ORDER_ATOMIC = 0;         // 0 "" ...
-Blockly.JavaScript.ORDER_MEMBER = 1;         // . []
-Blockly.JavaScript.ORDER_NEW = 1;            // new
-Blockly.JavaScript.ORDER_FUNCTION_CALL = 2;  // ()
-Blockly.JavaScript.ORDER_INCREMENT = 3;      // ++
-Blockly.JavaScript.ORDER_DECREMENT = 3;      // --
-Blockly.JavaScript.ORDER_LOGICAL_NOT = 4;    // !
-Blockly.JavaScript.ORDER_BITWISE_NOT = 4;    // ~
-Blockly.JavaScript.ORDER_UNARY_PLUS = 4;     // +
-Blockly.JavaScript.ORDER_UNARY_NEGATION = 4; // -
-Blockly.JavaScript.ORDER_TYPEOF = 4;         // typeof
-Blockly.JavaScript.ORDER_VOID = 4;           // void
-Blockly.JavaScript.ORDER_DELETE = 4;         // delete
-Blockly.JavaScript.ORDER_MULTIPLICATION = 5; // *
-Blockly.JavaScript.ORDER_DIVISION = 5;       // /
-Blockly.JavaScript.ORDER_MODULUS = 5;        // %
-Blockly.JavaScript.ORDER_ADDITION = 6;       // +
-Blockly.JavaScript.ORDER_SUBTRACTION = 6;    // -
-Blockly.JavaScript.ORDER_BITWISE_SHIFT = 7;  // << >> >>>
-Blockly.JavaScript.ORDER_RELATIONAL = 8;     // < <= > >=
-Blockly.JavaScript.ORDER_IN = 8;             // in
-Blockly.JavaScript.ORDER_INSTANCEOF = 8;     // instanceof
-Blockly.JavaScript.ORDER_EQUALITY = 9;       // == != === !==
-Blockly.JavaScript.ORDER_BITWISE_AND = 10;   // &
-Blockly.JavaScript.ORDER_BITWISE_XOR = 11;   // ^
-Blockly.JavaScript.ORDER_BITWISE_OR = 12;    // |
-Blockly.JavaScript.ORDER_LOGICAL_AND = 13;   // &&
-Blockly.JavaScript.ORDER_LOGICAL_OR = 14;    // ||
-Blockly.JavaScript.ORDER_CONDITIONAL = 15;   // ?:
-Blockly.JavaScript.ORDER_ASSIGNMENT = 16;    // = += -= *= /= %= <<= >>= ...
-Blockly.JavaScript.ORDER_COMMA = 17;         // ,
-Blockly.JavaScript.ORDER_NONE = 99;          // (...)
+/** @export */ Blockly.JavaScript.ORDER_ATOMIC = 0;         // 0 "" ...
+/** @export */ Blockly.JavaScript.ORDER_MEMBER = 1;         // . []
+/** @export */ Blockly.JavaScript.ORDER_NEW = 1;            // new
+/** @export */ Blockly.JavaScript.ORDER_FUNCTION_CALL = 2;  // ()
+/** @export */ Blockly.JavaScript.ORDER_INCREMENT = 3;      // ++
+/** @export */ Blockly.JavaScript.ORDER_DECREMENT = 3;      // --
+/** @export */ Blockly.JavaScript.ORDER_LOGICAL_NOT = 4;    // !
+/** @export */ Blockly.JavaScript.ORDER_BITWISE_NOT = 4;    // ~
+/** @export */ Blockly.JavaScript.ORDER_UNARY_PLUS = 4;     // +
+/** @export */ Blockly.JavaScript.ORDER_UNARY_NEGATION = 4; // -
+/** @export */ Blockly.JavaScript.ORDER_TYPEOF = 4;         // typeof
+/** @export */ Blockly.JavaScript.ORDER_VOID = 4;           // void
+/** @export */ Blockly.JavaScript.ORDER_DELETE = 4;         // delete
+/** @export */ Blockly.JavaScript.ORDER_MULTIPLICATION = 5; // *
+/** @export */ Blockly.JavaScript.ORDER_DIVISION = 5;       // /
+/** @export */ Blockly.JavaScript.ORDER_MODULUS = 5;        // %
+/** @export */ Blockly.JavaScript.ORDER_ADDITION = 6;       // +
+/** @export */ Blockly.JavaScript.ORDER_SUBTRACTION = 6;    // -
+/** @export */ Blockly.JavaScript.ORDER_BITWISE_SHIFT = 7;  // << >> >>>
+/** @export */ Blockly.JavaScript.ORDER_RELATIONAL = 8;     // < <= > >=
+/** @export */ Blockly.JavaScript.ORDER_IN = 8;             // in
+/** @export */ Blockly.JavaScript.ORDER_INSTANCEOF = 8;     // instanceof
+/** @export */ Blockly.JavaScript.ORDER_EQUALITY = 9;       // == != === !==
+/** @export */ Blockly.JavaScript.ORDER_BITWISE_AND = 10;   // &
+/** @export */ Blockly.JavaScript.ORDER_BITWISE_XOR = 11;   // ^
+/** @export */ Blockly.JavaScript.ORDER_BITWISE_OR = 12;    // |
+/** @export */ Blockly.JavaScript.ORDER_LOGICAL_AND = 13;   // &&
+/** @export */ Blockly.JavaScript.ORDER_LOGICAL_OR = 14;    // ||
+/** @export */ Blockly.JavaScript.ORDER_CONDITIONAL = 15;   // ?:
+/** @export */ Blockly.JavaScript.ORDER_ASSIGNMENT = 16;    // = += -= *= /= %= <<= >>= ...
+/** @export */ Blockly.JavaScript.ORDER_COMMA = 17;         // ,
+/** @export */ Blockly.JavaScript.ORDER_NONE = 99;          // (...)
 
 /**
  * Arbitrary code to inject into locations that risk causing infinite loops.
  * Any instances of '%1' will be replaced by the block ID that failed.
  * E.g. '  checkTimeout(%1);\n'
  * @type ?string
+ * @export
  */
 Blockly.JavaScript.INFINITE_LOOP_TRAP = null;
 
@@ -111,6 +115,7 @@ Blockly.JavaScript.INFINITE_LOOP_TRAP = null;
  * Initialise the database of variable names.
  * @param {Array.<Blockly.Block>=} opt_blocks Optional blocks to query for
  *    variable definitions.
+ * @export
  */
 Blockly.JavaScript.init = function(opt_blocks) {
   // Create a dictionary of definitions to be printed before the code.
@@ -118,6 +123,7 @@ Blockly.JavaScript.init = function(opt_blocks) {
 
   if (Blockly.Variables) {
     if (!Blockly.JavaScript.variableDB_) {
+      /** @export */
       Blockly.JavaScript.variableDB_ =
           new Blockly.Names(Blockly.JavaScript.RESERVED_WORDS_);
     } else {
@@ -142,6 +148,7 @@ Blockly.JavaScript.init = function(opt_blocks) {
  * Prepend the generated code with the variable definitions.
  * @param {string} code Generated code.
  * @return {string} Completed code.
+ * @export
  */
 Blockly.JavaScript.finish = function(code) {
   // Convert the definitions dictionary into a list.
@@ -157,6 +164,7 @@ Blockly.JavaScript.finish = function(code) {
  * anything.  A trailing semicolon is needed to make this legal.
  * @param {string} line Line of generated code.
  * @return {string} Legal line of code.
+ * @export
  */
 Blockly.JavaScript.scrubNakedValue = function(line) {
   return line + ';\n';
@@ -181,6 +189,7 @@ Blockly.JavaScript.quote_ = function(string) {
  * Translate a Blockly entity name into a JavaScript variable name.
  * @param {string} name Blockly entity name.
  * @return {string} name to be used in JavaScript code.
+ * @export
  */
 Blockly.JavaScript.translateVarName = function(name) {
   var v = Blockly.JavaScript.variableDB_.getName(name,

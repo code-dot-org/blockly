@@ -77,6 +77,7 @@ Blockly.FunctionEditor = function(
 
   /** @type {BlockSpace} */
   this.modalBlockSpace = null;
+  goog.exportProperty(this, 'modalBlockSpace', this.modalBlockSpace);
 
   this.msgOverrides_ = opt_msgOverrides || {};
   if (opt_definitionBlockType) {
@@ -140,6 +141,7 @@ Blockly.FunctionEditor.prototype.defaultParameterBlockType = 'parameters_get';
 
 /**
  * @param {String} autoOpenFunction - name of function to auto-open
+ * @export
  */
 Blockly.FunctionEditor.prototype.autoOpenFunction = function(autoOpenFunction) {
   this.autoOpenWithLevelConfiguration({
@@ -151,7 +153,7 @@ Blockly.FunctionEditor.prototype.autoOpenFunction = function(autoOpenFunction) {
  * Auto-opens the function editor with given configuration parameters
  * @param {Object} configuration
  * @param {string} configuration.autoOpenFunction - function to open
- * @protected
+ * @export
  */
 Blockly.FunctionEditor.prototype.autoOpenWithLevelConfiguration = function(configuration) {
   if (configuration.autoOpenFunction) {
@@ -169,6 +171,7 @@ Blockly.FunctionEditor.prototype.openEditorForCallBlock_ = function(procedureBlo
 
 /**
  * @param {string} functionName name of function for which to open editor
+ * @export
  */
 Blockly.FunctionEditor.prototype.openEditorForFunction = function(procedureBlock, functionName) {
   procedureBlock.blockSpace.blockSpaceEditor.hideChaff();
@@ -176,6 +179,7 @@ Blockly.FunctionEditor.prototype.openEditorForFunction = function(procedureBlock
   this.openAndEditFunction(functionName);
 };
 
+/** @export */
 Blockly.FunctionEditor.prototype.openAndEditFunction = function(functionName) {
   var targetFunctionDefinitionBlock = Blockly.mainBlockSpace.findFunction(
       functionName);
@@ -250,6 +254,7 @@ Blockly.FunctionEditor.prototype.paramNameTypeFromXML_ = function(blockXML) {
   return infoObject;
 };
 
+/** @export */
 Blockly.FunctionEditor.prototype.openWithNewFunction = function() {
   this.ensureCreated_();
 
@@ -283,8 +288,9 @@ Blockly.FunctionEditor.prototype.addParamFromInputField_ = function(
   this.refreshParamsEverywhere();
 };
 
+Blockly.FunctionEditor.parameterCount_ = 0;
 Blockly.FunctionEditor.prototype.addParameter = function(newParameterName, newParameterType) {
-  this.orderedParamIDsToBlocks_.set(goog.events.getUniqueId('parameter'), this.newParameterBlock(newParameterName, newParameterType));
+  this.orderedParamIDsToBlocks_.set(Blockly.getUID('parameter'), this.newParameterBlock(newParameterName, newParameterType));
 };
 
 Blockly.FunctionEditor.prototype.getParameterBlockType = function(type) {
@@ -302,6 +308,7 @@ Blockly.FunctionEditor.prototype.newParameterBlock = function(newParameterName, 
   return param;
 };
 
+/** @export */
 Blockly.FunctionEditor.prototype.renameParameter = function(oldName, newName) {
   this.orderedParamIDsToBlocks_.forEach(function(block, paramID, linkedMap) {
     if (block.firstElementChild &&
@@ -344,6 +351,7 @@ Blockly.FunctionEditor.prototype.removeParameter = function(nameToRemove) {
   this.refreshParamsEverywhere();
 };
 
+/** @export */
 Blockly.FunctionEditor.prototype.refreshParamsEverywhere = function() {
   this.refreshParamsInFlyout_();
   this.refreshParamsOnFunction_();
@@ -401,6 +409,7 @@ Blockly.FunctionEditor.prototype.forEachParameterGetBlock = function(paramName, 
   });
 }
 
+/** @export */
 Blockly.FunctionEditor.prototype.show = function() {
   this.ensureCreated_();
   this.position_();
@@ -414,6 +423,7 @@ Blockly.FunctionEditor.prototype.show = function() {
 
 /**
  * Is the function editor currently open?
+ * @export
  */
 Blockly.FunctionEditor.prototype.isOpen = function() {
   return this.isCreated() && goog.style.isElementShown(this.container_);
@@ -429,10 +439,12 @@ Blockly.FunctionEditor.prototype.ensureCreated_ = function() {
   }
 };
 
+/** @export */
 Blockly.FunctionEditor.prototype.onClose = function() {
   this.hideIfOpen();
 };
 
+/** @export */
 Blockly.FunctionEditor.prototype.hideIfOpen = function() {
   if (!this.isOpen()) {
     return;

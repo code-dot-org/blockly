@@ -98,9 +98,6 @@ Blockly.BlockSvg.prototype.initChildren = function () {
   this.updateMovable();
 };
 
-
-Blockly.BlockSvg.DISABLED_COLOUR = '#808080';
-
 /**
  * Initialize the SVG representation with any block attributes which have
  * already been defined.
@@ -158,6 +155,12 @@ Blockly.BlockSvg.prototype.getRootElement = function() {
 // Create shortform that we can use locally for readability, while still having
 // these exposed externally via Blockly.BlockSvg.
 var BS = Blockly.BlockSvg;
+
+/**
+ * Color used for disabled blocks
+ * @const
+ */
+BS.DISABLED_COLOUR = '#808080';
 /**
  * Horizontal space between elements.
  * @const
@@ -405,7 +408,7 @@ BS.ROUNDED_TAB_PATH_UP_HIGHLIGHT_RTL =
  * @const
  */
 BS.TAB_PATHS_BY_SHAPE = {
-  standard: {
+  'standard': {
     TAB_PATH_DOWN: BS.TAB_PATH_DOWN,
     TAB_PATH_DOWN_HIGHLIGHT: BS.TAB_PATH_DOWN_HIGHLIGHT,
     TAB_PATH_DOWN_HIGHLIGHT_RTL: BS.TAB_PATH_DOWN_HIGHLIGHT_RTL,
@@ -413,7 +416,7 @@ BS.TAB_PATHS_BY_SHAPE = {
     TAB_PATH_UP_HIGHLIGHT: BS.TAB_PATH_UP_HIGHLIGHT,
     TAB_PATH_UP_HIGHLIGHT_RTL: BS.TAB_PATH_UP_HIGHLIGHT_RTL,
   },
-  angle: {
+  'angle': {
     TAB_PATH_DOWN: BS.ANGLE_TAB_PATH_DOWN,
     TAB_PATH_DOWN_HIGHLIGHT: '',
     TAB_PATH_DOWN_HIGHLIGHT_RTL: BS.ANGLE_TAB_PATH_DOWN_HIGHLIGHT_RTL,
@@ -421,7 +424,7 @@ BS.TAB_PATHS_BY_SHAPE = {
     TAB_PATH_UP_HIGHLIGHT: BS.ANGLE_TAB_PATH_UP_HIGHLIGHT,
     TAB_PATH_UP_HIGHLIGHT_RTL: '',
   },
-  square: {
+  'square': {
     TAB_PATH_DOWN: BS.SQUARE_TAB_PATH_DOWN,
     TAB_PATH_DOWN_HIGHLIGHT: BS.SQUARE_TAB_PATH_DOWN_HIGHLIGHT,
     TAB_PATH_DOWN_HIGHLIGHT_RTL: BS.SQUARE_TAB_PATH_DOWN_HIGHLIGHT_RTL,
@@ -429,7 +432,7 @@ BS.TAB_PATHS_BY_SHAPE = {
     TAB_PATH_UP_HIGHLIGHT: BS.SQUARE_TAB_PATH_UP_HIGHLIGHT,
     TAB_PATH_UP_HIGHLIGHT_RTL: BS.SQUARE_TAB_PATH_UP_HIGHLIGHT_RTL,
   },
-  rounded: {
+  'rounded': {
     TAB_PATH_DOWN: BS.ROUNDED_TAB_PATH_DOWN,
     TAB_PATH_DOWN_HIGHLIGHT: BS.ROUNDED_TAB_PATH_DOWN_HIGHLIGHT,
     TAB_PATH_DOWN_HIGHLIGHT_RTL: BS.ROUNDED_TAB_PATH_DOWN_HIGHLIGHT_RTL,
@@ -735,16 +738,16 @@ Blockly.BlockSvg.prototype.updateLimit = function (limit) {
   if (!this.limitGroup_) {
     this.limitGroup_ = Blockly.createSvgElement('g', {
       'class': 'blocklyLimit',
-      y: -3
+      'y': -3
     }, this.svgGroup_);
 
     this.limitRect_ = Blockly.createSvgElement('rect', {
-      height: BUBBLE_SIZE,
-      width: BUBBLE_SIZE,
-      x: -HALF_BUBBLE_SIZE,
-      y: -HALF_BUBBLE_SIZE,
-      rx: HALF_BUBBLE_SIZE,
-      ry: HALF_BUBBLE_SIZE
+      'height': BUBBLE_SIZE,
+      'width': BUBBLE_SIZE,
+      'x': -HALF_BUBBLE_SIZE,
+      'y': -HALF_BUBBLE_SIZE,
+      'rx': HALF_BUBBLE_SIZE,
+      'ry': HALF_BUBBLE_SIZE
     }, this.limitGroup_);
 
     this.limitText_ = Blockly.createSvgElement('text', {

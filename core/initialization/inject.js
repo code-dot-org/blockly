@@ -44,6 +44,10 @@ Blockly.inject = function(container, opt_options, opt_audioPlayer) {
   if (opt_options) {
     // TODO(scr): don't mix this in to global variables.
     goog.mixin(Blockly, Blockly.parseOptions_(opt_options));
+    goog.exportProperty(Blockly, 'useModalFunctionEditor', Blockly.useModalFunctionEditor);
+    goog.exportProperty(Blockly, 'useContractEditor', Blockly.useContractEditor);
+    goog.exportProperty(Blockly, 'showUnusedBlocks', Blockly.showUnusedBlocks);
+    goog.exportProperty(Blockly, 'disableVariableEditing', Blockly.disableVariableEditing);
   }
 
   // Closure can be trusted to create HTML widgets with the proper direction.
@@ -62,22 +66,55 @@ Blockly.inject = function(container, opt_options, opt_audioPlayer) {
    * @type {Blockly.BlockSpaceEditor}
    */
   Blockly.mainBlockSpaceEditor = new Blockly.BlockSpaceEditor(container);
+  goog.exportProperty(Blockly, 'mainBlockSpaceEditor', Blockly.mainBlockSpaceEditor);
+  goog.exportProperty(Blockly.mainBlockSpaceEditor, 'addChangeListener', Blockly.mainBlockSpaceEditor.addChangeListener);
+  goog.exportProperty(Blockly.mainBlockSpaceEditor, 'addUnusedBlocksHelpListener', Blockly.mainBlockSpaceEditor.addUnusedBlocksHelpListener);
+  goog.exportProperty(Blockly.mainBlockSpaceEditor, 'getToolboxWidth', Blockly.mainBlockSpaceEditor.getToolboxWidth);
+  goog.exportProperty(Blockly.mainBlockSpaceEditor, 'setEnableToolbox', Blockly.mainBlockSpaceEditor.setEnableToolbox);
+  goog.exportProperty(Blockly.mainBlockSpaceEditor, 'blockLimits', Blockly.mainBlockSpaceEditor.blockLimits);
+  goog.exportProperty(Blockly.mainBlockSpaceEditor, 'lockMovement', Blockly.mainBlockSpaceEditor.lockMovement);
+  goog.exportProperty(Blockly.mainBlockSpaceEditor, 'unlockMovement', Blockly.mainBlockSpaceEditor.unlockMovement);
+  goog.exportProperty(Blockly.mainBlockSpaceEditor.blockLimits, 'getLimit', Blockly.mainBlockSpaceEditor.blockLimits.getLimit);
 
   /**
    * @type {Blockly.BlockSpace}
    */
   Blockly.mainBlockSpace = Blockly.mainBlockSpaceEditor.blockSpace;
+  goog.exportProperty(Blockly, 'mainBlockSpace', Blockly.mainBlockSpace);
+  goog.exportProperty(Blockly.mainBlockSpace, 'blockSpaceEditor', Blockly.mainBlockSpace.blockSpaceEditor);
+  goog.exportProperty(Blockly.mainBlockSpace, 'clear', Blockly.mainBlockSpace.clear);
+  goog.exportProperty(Blockly.mainBlockSpace, 'dragMode', Blockly.mainBlockSpace.dragMode);
+  goog.exportProperty(Blockly.mainBlockSpace, 'findFunctionExamples', Blockly.mainBlockSpace.findFunctionExamples);
+  goog.exportProperty(Blockly.mainBlockSpace, 'getAllBlocks', Blockly.mainBlockSpace.getAllBlocks);
+  goog.exportProperty(Blockly.mainBlockSpace, 'getAllUsedBlocks', Blockly.mainBlockSpace.getAllUsedBlocks);
+  goog.exportProperty(Blockly.mainBlockSpace, 'getCanvas', Blockly.mainBlockSpace.getCanvas);
+  goog.exportProperty(Blockly.mainBlockSpace, 'getTopBlocks', Blockly.mainBlockSpace.getTopBlocks);
+  goog.exportProperty(Blockly.mainBlockSpace, 'getTopUsedBlocks', Blockly.mainBlockSpace.getTopUsedBlocks);
+  goog.exportProperty(Blockly.mainBlockSpace, 'highlightBlock', Blockly.mainBlockSpace.highlightBlock);
+  goog.exportProperty(Blockly.mainBlockSpace, 'isReadOnly', Blockly.mainBlockSpace.isReadOnly);
+  goog.exportProperty(Blockly.mainBlockSpace, 'traceOn', Blockly.mainBlockSpace.traceOn);
   Blockly.fireUiEvent(document, Blockly.BlockSpace.EVENTS.MAIN_BLOCK_SPACE_CREATED);
 
   if (Blockly.useModalFunctionEditor) {
     /** @type {Blockly.FunctionEditor} */
     Blockly.functionEditor = new Blockly.FunctionEditor();
+    goog.exportProperty(Blockly, 'functionEditor', Blockly.functionEditor);
+    goog.exportProperty(Blockly.functionEditor, 'autoOpenFunction', Blockly.functionEditor.autoOpenFunction);
+    goog.exportProperty(Blockly.functionEditor, 'hideIfOpen', Blockly.functionEditor.hideIfOpen);
   } else if (Blockly.useContractEditor) {
     Blockly.functionEditor = new Blockly.ContractEditor({
       disableExamples: opt_options && opt_options.disableExamples
     });
     /** @type {Blockly.ContractEditor} */
     Blockly.contractEditor = Blockly.functionEditor;
+    goog.exportProperty(Blockly, 'functionEditor', Blockly.functionEditor);
+    goog.exportProperty(Blockly, 'contractEditor', Blockly.contractEditor);
+    goog.exportProperty(Blockly.contractEditor, 'autoOpenWithLevelConfiguration', Blockly.contractEditor.autoOpenWithLevelConfiguration);
+    goog.exportProperty(Blockly.contractEditor, 'hideIfOpen', Blockly.contractEditor.hideIfOpen);
+    goog.exportProperty(Blockly.contractEditor, 'registerTestHandler', Blockly.contractEditor.registerTestHandler);
+    goog.exportProperty(Blockly.contractEditor, 'registerTestResetHandler', Blockly.contractEditor.registerTestResetHandler);
+    goog.exportProperty(Blockly.contractEditor, 'registerTestsFailedOnCloseHandler', Blockly.contractEditor.registerTestsFailedOnCloseHandler);
+    goog.exportProperty(Blockly.contractEditor, 'updateExampleResult', Blockly.contractEditor.updateExampleResult);
   }
 
   /**

@@ -48,6 +48,7 @@ Blockly.Input = function(type, name, block, connection, statementTrailingSpace) 
   this.sourceBlock_ = block;
   this.connection = connection;
   this.titleRow = [];
+  goog.exportProperty(this, 'titleRow', this.titleRow);
   this.align = Blockly.ALIGN_LEFT;
   this.inline_ = false;
   this.visible_ = true;
@@ -69,6 +70,7 @@ Blockly.Input = function(type, name, block, connection, statementTrailingSpace) 
  * @param {?string} opt_name Language-neutral identifier which may used to find
  *     this title again.  Should be unique to the host block.
  * @return {!Blockly.Input} The input being append to (to allow chaining).
+ * @export
  */
 Blockly.Input.prototype.appendTitle = function(title, opt_name) {
   // Empty string, Null or undefined generates no title, unless title is named.
@@ -106,6 +108,7 @@ Blockly.Input.prototype.appendTitle = function(title, opt_name) {
 /**
  * Gets whether this input is visible or not.
  * @return {boolean} True if visible.
+ * @export
  */
 Blockly.Input.prototype.isVisible = function() {
   return this.visible_;
@@ -115,6 +118,7 @@ Blockly.Input.prototype.isVisible = function() {
  * Sets whether this input is visible or not.
  * @param {boolean} visible True if visible.
  * @return {!Array.<!Blockly.Block>} List of blocks to render.
+ * @export
  */
 Blockly.Input.prototype.setVisible = function(visible) {
   var renderList = [];
@@ -150,6 +154,7 @@ Blockly.Input.prototype.setVisible = function(visible) {
  * @param {string|Array.<string>|null} check Compatible value type or
  *     list of value types.  Null if all types are compatible.
  * @return {!Blockly.Input} The input being modified (to allow chaining).
+ * @export
  */
 Blockly.Input.prototype.setStrictCheck = function(check) {
   if (!this.connection) {
@@ -164,6 +169,7 @@ Blockly.Input.prototype.setStrictCheck = function(check) {
  * @param {string|Array.<string>|null} check Compatible value type or
  *     list of value types.  Null if all types are compatible.
  * @return {!Blockly.Input} The input being modified (to allow chaining).
+ * @export
  */
 Blockly.Input.prototype.setCheck = function(check) {
   if (!this.connection) {
@@ -180,6 +186,7 @@ Blockly.Input.prototype.setCheck = function(check) {
  *        Blockly.BlockFieldHelper
  * @param {*} options for this helper
  * @return {!Blockly.Input} The input being modified (to allow chaining).
+ * @export
  */
 Blockly.Input.prototype.addFieldHelper = function(fieldHelper, options) {
   if (this.type !== Blockly.INPUT_VALUE) {
@@ -195,6 +202,7 @@ Blockly.Input.prototype.addFieldHelper = function(fieldHelper, options) {
  * @param {number} align One of Blockly.ALIGN_LEFT, ALIGN_CENTRE, ALIGN_RIGHT.
  *   In RTL mode directions are reversed, and ALIGN_RIGHT aligns to the left.
  * @return {!Blockly.Input} The input being modified (to allow chaining).
+ * @export
  */
 Blockly.Input.prototype.setAlign = function(align) {
   this.align = align;
@@ -206,6 +214,7 @@ Blockly.Input.prototype.setAlign = function(align) {
 
 /**
  * Initialize the titles on this input.
+ * @export
  */
 Blockly.Input.prototype.init = function() {
   for (var x = 0; x < this.titleRow.length; x++) {
@@ -215,6 +224,7 @@ Blockly.Input.prototype.init = function() {
 
 /**
  * Sever all links to this input.
+ * @export
  */
 Blockly.Input.prototype.dispose = function() {
   for (var i = 0, title; title = this.titleRow[i]; i++) {
@@ -232,6 +242,7 @@ Blockly.Input.prototype.dispose = function() {
  * (1) inputsInLine is true on the parent block
  * (2) inline_ is set on the input
  * Note, we don't allow inlining NEXT_STATEMENT inputs
+ * @export
  */
 Blockly.Input.prototype.setInline = function (inline) {
   if (inline === undefined) {
@@ -255,6 +266,7 @@ Blockly.Input.prototype.isInline = function () {
   return this.inline_ || this.sourceBlock_.inputsInline;
 };
 
+/** @export */
 Blockly.Input.prototype.setHSV = function (hue, saturation, value) {
   if (this.type !== Blockly.FUNCTIONAL_INPUT) {
     throw "setColor only for functional inputs";
@@ -264,6 +276,7 @@ Blockly.Input.prototype.setHSV = function (hue, saturation, value) {
   return this;
 };
 
+/** @export */
 Blockly.Input.prototype.getHexColour = function() {
   return Blockly.makeColour(this.colour_.hue, this.colour_.saturation,
     this.colour_.value);

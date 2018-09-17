@@ -39,6 +39,7 @@ Blockly.Procedures.NAME_TYPE = 'PROCEDURE';
 /** Flyout category type for functional variables, which are procedures under the covers */
 Blockly.Procedures.NAME_TYPE_FUNCTIONAL_VARIABLE = 'FUNCTIONAL_VARIABLE';
 
+/** @export */
 Blockly.Procedures.DEFINITION_BLOCK_TYPES = [
   'procedures_defnoreturn', 'procedures_defreturn', 'functional_definition'
 ];

@@ -241,6 +241,7 @@ Blockly.FieldDropdown.prototype.getOptions = function() {
 /**
  * Get the language-neutral value from this dropdown menu.
  * @return {string} Current text.
+ * @export
  */
 Blockly.FieldDropdown.prototype.getValue = function() {
   return this.value_;
@@ -249,6 +250,7 @@ Blockly.FieldDropdown.prototype.getValue = function() {
 /**
  * Set the language-neutral value for this dropdown menu.
  * @param {string} newValue New value to set.
+ * @export
  */
 Blockly.FieldDropdown.prototype.setValue = function(newValue) {
   if (this.alwaysCallChangeHandler_ && this.changeHandler_) {
@@ -298,6 +300,7 @@ Blockly.FieldDropdown.prototype.setConfig = function(configString) {
 /**
  * Set the text in this field.  Trigger a rerender of the source block.
  * @param {?string} text New text.
+ * @export
  */
 Blockly.FieldDropdown.prototype.setText = function(text) {
   if (this.sourceBlock_) {

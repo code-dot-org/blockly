@@ -59,6 +59,7 @@ Blockly.FieldCheckbox.prototype.CURSOR = 'default';
 /**
  * Return 'TRUE' if the checkbox is checked, 'FALSE' otherwise.
  * @return {string} Current state.
+ * @export
  */
 Blockly.FieldCheckbox.prototype.getValue = function() {
   return String(this.state_).toUpperCase();
@@ -67,6 +68,7 @@ Blockly.FieldCheckbox.prototype.getValue = function() {
 /**
  * Set the checkbox to be checked if strBool is 'TRUE', unchecks otherwise.
  * @param {string} strBool New state.
+ * @export
  */
 Blockly.FieldCheckbox.prototype.setValue = function(strBool) {
   var newState = (strBool == 'TRUE');

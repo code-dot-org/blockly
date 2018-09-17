@@ -26,6 +26,7 @@
 'use strict';
 
 goog.provide('Blockly.Xml');
+goog.exportSymbol('Blockly.Xml', Blockly.Xml);
 
 // TODO(scr): Fix circular dependencies
 // goog.require('Blockly.Block');
@@ -35,6 +36,7 @@ goog.provide('Blockly.Xml');
  * Encode a block tree as XML.
  * @param {!Object} blockSpace The SVG blockSpace.
  * @return {!Element} XML document.
+ * @export
  */
 Blockly.Xml.blockSpaceToDom = function(blockSpace) {
   var xml = Blockly.isMsie() ? document.createElementNS(null, 'xml') :
@@ -54,6 +56,7 @@ Blockly.Xml.blockSpaceToDom = function(blockSpace) {
  * @param {boolean} ignoreChildBlocks If true, will not encode any child
  *  statements or connected blocks.  Will still encode value blocks
  * @return {!Element} Tree of XML elements.
+ * @export
  */
 Blockly.Xml.blockToDom = function(block, ignoreChildBlocks) {
   var element = goog.dom.createDom('block');
@@ -173,6 +176,7 @@ Blockly.Xml.blockToDom = function(block, ignoreChildBlocks) {
  * Currently the text format is fairly ugly: all one line with no whitespace.
  * @param {!Element} dom A tree of XML elements.
  * @return {string} Text representation.
+ * @export
  */
 Blockly.Xml.domToText = function(dom) {
   var oSerializer = new XMLSerializer();
@@ -185,6 +189,7 @@ Blockly.Xml.domToText = function(dom) {
  * Converts a DOM structure into properly indented text.
  * @param {!Element} dom A tree of XML elements.
  * @return {string} Text representation.
+ * @export
  */
 Blockly.Xml.domToPrettyText = function(dom) {
   // This function is not guaranteed to be correct for all XML.
@@ -217,6 +222,7 @@ Blockly.Xml.domToPrettyText = function(dom) {
  * Throws an error if XML doesn't parse.
  * @param {string} text Text representation.
  * @return {!Element} A tree of XML elements.
+ * @export
  */
 Blockly.Xml.textToDom = function(text) {
   var oParser = new DOMParser();
@@ -234,6 +240,7 @@ Blockly.Xml.textToDom = function(text) {
  * Decode an XML DOM and create blocks on the blockSpace.
  * @param {!Blockly.BlockSpace} blockSpace The SVG blockSpace.
  * @param {!Element} xml XML DOM.
+ * @export
  */
 Blockly.Xml.domToBlockSpace = function(blockSpace, xml) {
   var metrics = blockSpace.getMetrics();
@@ -326,6 +333,7 @@ Blockly.Xml.domToBlockSpace = function(blockSpace, xml) {
  * @param {!Blockly.BlockSpace} blockSpace The blockSpace.
  * @param {!Element} xmlBlock XML block element.
  * @return {!Blockly.Block} The root block created.
+ * @export
  */
 Blockly.Xml.domToBlock = function(blockSpace, xmlBlock) {
   var prototypeName = xmlBlock.getAttribute('type');

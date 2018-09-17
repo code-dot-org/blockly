@@ -27,6 +27,7 @@ goog.provide('Blockly.JavaScript.functionalParameters');
 
 goog.require('Blockly.JavaScript');
 
+/** @export */
 Blockly.JavaScript.functional_parameters_get = function() {
   return Blockly.JavaScript.translateVarName(this.getTitleValue('VAR'));
 };

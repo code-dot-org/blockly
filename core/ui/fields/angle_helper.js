@@ -11,13 +11,13 @@ goog.require('goog.math.Vec2');
  * @param {string} direction - 'turnRight' or 'turnLeft' as set by
  * direction dropdown.
  * @param {object} opt_options
- * @param {String} opt_options.arcColour 
- * @param {number} opt_options.angle 
- * @param {number} opt_options.circleR 
- * @param {number} opt_options.height 
- * @param {number} opt_options.width 
- * @param {boolean} opt_options.dragging 
- * @param {number} opt_options.strokeWidth 
+ * @param {String} opt_options.arcColour
+ * @param {number} opt_options.angle
+ * @param {number} opt_options.circleR
+ * @param {number} opt_options.height
+ * @param {number} opt_options.width
+ * @param {boolean} opt_options.dragging
+ * @param {number} opt_options.strokeWidth
  * @param {number[]} opt_options.snapPoints
  * @param {function} opt_options.onUpdate
  */
@@ -98,10 +98,12 @@ Blockly.AngleHelper.prototype.setAngle = function(angle, skipSnap) {
   this.update_();
 };
 
+/** @export */
 Blockly.AngleHelper.prototype.getAngle = function() {
   return this.angle_;
 };
 
+/** @export */
 Blockly.AngleHelper.prototype.init = function(svgContainer) {
   this.svg_ = Blockly.createSvgElement('svg', {
     'xmlns': 'http://www.w3.org/2000/svg',
@@ -266,6 +268,7 @@ Blockly.AngleHelper.prototype.snap_ = function(val) {
   });
 };
 
+/** @export */
 Blockly.AngleHelper.prototype.dispose = function() {
   if (this.mouseDownWrapper_) {
     Blockly.unbindEvent_(this.mouseDownWrapper_);

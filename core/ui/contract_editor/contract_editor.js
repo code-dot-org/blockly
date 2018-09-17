@@ -685,7 +685,7 @@ Blockly.ContractEditor.prototype.isEditingVariable = function() {
  * @override
  */
 Blockly.ContractEditor.prototype.addParameter = function(newParameterName, opt_newParameterType) {
-  var newParameterID = goog.events.getUniqueId('parameter');
+  var newParameterID = Blockly.getUID('parameter');
   this.orderedParamIDsToBlocks_.set(newParameterID,
     this.newParameterBlock(newParameterName, opt_newParameterType));
   this.addDomainEditorForParamID_(newParameterID);

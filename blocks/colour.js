@@ -28,6 +28,7 @@ goog.provide('Blockly.Blocks.colour');
 goog.require('Blockly.Blocks');
 
 
+/** @export */
 Blockly.Blocks.colour_picker = {
   // Colour picker.
   init: function() {
@@ -39,6 +40,7 @@ Blockly.Blocks.colour_picker = {
   }
 };
 
+/** @export */
 Blockly.Blocks.colour_random = {
   // Random colour.
   init: function() {
@@ -50,6 +52,7 @@ Blockly.Blocks.colour_random = {
   }
 };
 
+/** @export */
 Blockly.Blocks.colour_rgb = {
   // Compose a colour from RGB components.
   init: function() {
@@ -72,6 +75,7 @@ Blockly.Blocks.colour_rgb = {
   }
 };
 
+/** @export */
 Blockly.Blocks.colour_blend = {
   // Blend two colours together.
   init: function() {

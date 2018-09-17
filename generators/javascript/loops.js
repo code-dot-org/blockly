@@ -27,7 +27,7 @@ goog.provide('Blockly.JavaScript.loops');
 
 goog.require('Blockly.JavaScript');
 
-
+/** @export */
 Blockly.JavaScript.controls_repeat = function() {
   // Repeat n times (internal number).
   var repeats = Number(this.getTitleValue('TIMES')) || 0;
@@ -45,6 +45,7 @@ Blockly.JavaScript.controls_repeat = function() {
   return code;
 };
 
+/** @export */
 Blockly.JavaScript.controls_repeat_ext = function() {
   // Repeat n times (external number).
   var repeats = Blockly.JavaScript.valueToCode(this, 'TIMES',
@@ -70,6 +71,7 @@ Blockly.JavaScript.controls_repeat_ext = function() {
   return code;
 };
 
+/** @export */
 Blockly.JavaScript.controls_whileUntil = function() {
   // Do while/until loop.
   var until = this.getTitleValue('MODE') == 'UNTIL';
@@ -87,6 +89,7 @@ Blockly.JavaScript.controls_whileUntil = function() {
   return 'while (' + argument0 + ') {\n' + branch + '}\n';
 };
 
+/** @export */
 Blockly.JavaScript.controls_for = function() {
   // For loop.
   var variable0 = Blockly.JavaScript.translateVarName(
@@ -161,6 +164,7 @@ Blockly.JavaScript.controls_for = function() {
   return code;
 };
 
+/** @export */
 Blockly.JavaScript.controls_forEach = function() {
   // For each loop.
   var variable0 = Blockly.JavaScript.translateVarName(
@@ -196,6 +200,7 @@ Blockly.JavaScript.controls_forEach = function() {
   return code;
 };
 
+/** @export */
 Blockly.JavaScript.controls_flow_statements = function() {
   // Flow statements: continue, break.
   switch (this.getTitleValue('FLOW')) {

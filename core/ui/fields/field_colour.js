@@ -63,6 +63,7 @@ Blockly.FieldColour.prototype.dispose = function() {
 /**
  * Return the current colour.
  * @return {string} Current colour in '#rrggbb' format.
+ * @export
  */
 Blockly.FieldColour.prototype.getValue = function() {
   return this.colour_;
@@ -71,6 +72,7 @@ Blockly.FieldColour.prototype.getValue = function() {
 /**
  * Set the colour.
  * @param {string} colour The new colour in '#rrggbb' format.
+ * @export
  */
 Blockly.FieldColour.prototype.setValue = function(colour) {
   this.colour_ = colour;
@@ -153,7 +155,7 @@ Blockly.FieldColour.prototype.positionWidgetDiv = function() {
   }
   xy.y += borderBBox.height - 1;
   if (Blockly.RTL) {
-    xy.x -= div.offsetWidth;
+    xy.x -= this.borderRect_.offsetWidth;
   }
 
   var windowSize = goog.dom.getViewportSize();

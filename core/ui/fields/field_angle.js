@@ -149,6 +149,7 @@ Blockly.FieldAngle.prototype.showEditor_ = function() {
 /**
  * Set the angle to match the mouse's position.
  * @param {!Event} e Mouse move event.
+ * @export
  */
 Blockly.FieldAngle.prototype.onMouseMove = function(e) {
   var bBox = this.gauge_.ownerSVGElement.getBoundingClientRect();
@@ -174,6 +175,7 @@ Blockly.FieldAngle.prototype.onMouseMove = function(e) {
 /**
  * Insert a degree symbol.
  * @param {?string} text New text.
+ * @export
  */
 Blockly.FieldAngle.prototype.setText = function(text) {
   Blockly.FieldAngle.superClass_.setText.call(this, text);

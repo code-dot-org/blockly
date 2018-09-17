@@ -28,12 +28,14 @@ goog.provide('Blockly.JavaScript.colour');
 goog.require('Blockly.JavaScript');
 
 
+/** @export */
 Blockly.JavaScript.colour_picker = function() {
   // Colour picker.
   var code = '\'' + this.getTitleValue('COLOUR') + '\'';
   return [code, Blockly.JavaScript.ORDER_ATOMIC];
 };
 
+/** @export */
 Blockly.JavaScript.colour_random = function() {
   // Generate a random colour.
   if (!Blockly.JavaScript.definitions_['colour_random']) {
@@ -51,6 +53,7 @@ Blockly.JavaScript.colour_random = function() {
   return [code, Blockly.JavaScript.ORDER_FUNCTION_CALL];
 };
 
+/** @export */
 Blockly.JavaScript.colour_rgb = function() {
   // Compose a colour from RGB components expressed as percentages.
   var red = Blockly.JavaScript.valueToCode(this, 'RED',
@@ -81,6 +84,7 @@ Blockly.JavaScript.colour_rgb = function() {
   return [code, Blockly.JavaScript.ORDER_FUNCTION_CALL];
 };
 
+/** @export */
 Blockly.JavaScript.colour_blend = function() {
   // Blend two colours together.
   var c1 = Blockly.JavaScript.valueToCode(this, 'COLOUR1',

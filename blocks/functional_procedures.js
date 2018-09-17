@@ -30,6 +30,7 @@ goog.require('Blockly.Blocks.procedures');
 
 /**
  * Definition block for a custom functional block
+ * @export
  */
 Blockly.Blocks.functional_definition = {
   shouldHideIfInMainBlockSpace: function () {
@@ -214,7 +215,7 @@ Blockly.Blocks.functional_definition = {
   },
   getVars: function() {
     return {
-      Default: this.parameterNames_,
+      'Default': this.parameterNames_,
     };
   },
   renameVar: function(oldName, newName) {
@@ -267,6 +268,7 @@ Blockly.Blocks.functional_definition = {
 
 /**
  * Caller block for a custom functional block
+ * @export
  */
 Blockly.Blocks.functional_call = {
   init: function() {
@@ -474,6 +476,7 @@ Blockly.Blocks.functional_call = {
 
 /**
  * Block to allow you to pass a functional block
+ * @export
  */
 Blockly.Blocks.functional_pass = {
   init: function() {
@@ -548,4 +551,5 @@ Blockly.Blocks.functional_pass = {
   }
 };
 
+/** @export */
 Blockly.Blocks.procedural_to_functional_call = Blockly.Blocks.procedures_callreturn;

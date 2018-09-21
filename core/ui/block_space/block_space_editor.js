@@ -745,7 +745,7 @@ Blockly.BlockSpaceEditor.prototype.onKeyDown_ = function(e) {
  * @private
  */
 Blockly.BlockSpaceEditor.prototype.onCutCopy_ = function(e) {
-  if (Blockly.selected) {
+  if (Blockly.selected && !window.getSelection().toString()) {
     e.clipboardData.setData('text/xml', Blockly.clipboard_);
     e.preventDefault();
 

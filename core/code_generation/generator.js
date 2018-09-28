@@ -197,11 +197,13 @@ Blockly.CodeGenerator.prototype.blockToCode = function(block, opt_showHidden) {
     return this.blockToCode(nextBlock, opt_showHidden);
   }
 
-  var func = this[block.type];
-  if (!func) {
-    return Blockly.Generator.prefixLines('Unknown block: ' + block.type + '\n', '// ');
+  var generatorFunc = this[block.type];
+  var code;
+  if (!generatorFunc) {
+    code = Blockly.Generator.prefixLines('Unknown block: ' + block.type + '\n', '// ');
+  } else {
+    code = generatorFunc.call(block);
   }
-  var code = func.call(block);
 
   if (code instanceof Array) {
     // Value blocks return tuples of code and operator order.

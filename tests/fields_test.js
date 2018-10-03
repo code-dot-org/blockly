@@ -76,3 +76,13 @@ function test_field_reposition_on_scroll() {
 
   goog.dom.removeNode(containerDiv);
 }
+
+function test_dropdown_options() {
+  var dropdown = new Blockly.FieldDropdown([['Foo 123', 'foo'], ['Bar 456', 'bar']]);
+
+  dropdown.setConfig('foo,abc,zzz');
+  assert(goog.array.equals(['Foo 123', 'foo', 'abc', 'abc', 'zzz', 'zzz'], goog.array.flatten(dropdown.getOptions())));
+
+  dropdown.setConfig('5-7,10');
+  assert(goog.array.equals(["5", "5", "6", "6", "7", "7", "10", "10"], goog.array.flatten(dropdown.getOptions())));
+}

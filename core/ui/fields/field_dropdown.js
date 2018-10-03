@@ -277,19 +277,33 @@ Blockly.FieldDropdown.prototype.setToFirstValue_ = function () {
 };
 
 /**
- * Sets dropdown options to a set of numbers defined by the configString
- * @param configString printer-range style string, e.g., "1-5,8,15"
+ * Sets dropdown options to a set of numbers defined by the configString.
+ * @param configString Option values to show. If the value is present in the
+ *   block definition, use the corresponding option. Otherwise add a new option
+ *   with the same value and display option.
  */
 Blockly.FieldDropdown.prototype.setConfig = function(configString) {
   this.config = configString; // Store for later block -> XML copying
 
-  var numberOptions = Blockly.printerRangeToNumbers(configString);
-  if (numberOptions.length === 0) {
-    return;
+  var options = Blockly.printerRangeToNumbers(configString);
+  if (options.length === 0) {
+    options = (configString || '').split(',');
+    if (options.length === 0) {
+      return;
+    }
   }
 
-  this.menuGenerator_ = goog.array.map(numberOptions, function(item) {
-    return [item.toString(), item.toString()];
+  var existingOptions = {};
+  goog.array.forEach(this.getOptions(), function (entry) {
+    existingOptions[entry[1]] = entry[0];
+  });
+
+  this.menuGenerator_ = goog.array.map(options, function (option) {
+    var existing = existingOptions[option];
+    if (existing) {
+      return [existing.toString(), option.toString()];
+    }
+    return [option.toString(), option.toString()];
   });
 
   this.setToFirstValue_();

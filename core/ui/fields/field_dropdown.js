@@ -285,9 +285,12 @@ Blockly.FieldDropdown.prototype.setToFirstValue_ = function () {
 Blockly.FieldDropdown.prototype.setConfig = function(configString) {
   this.config = configString; // Store for later block -> XML copying
 
-  var options = (configString || '').split(',');
+  var options = Blockly.printerRangeToNumbers(configString);
   if (options.length === 0) {
-    return;
+    options = (configString || '').split(',');
+    if (options.length === 0) {
+      return;
+    }
   }
 
   var existingOptions = {};

@@ -288,6 +288,7 @@ Blockly.FieldDropdown.prototype.setConfig = function(configString) {
   var options = Blockly.printerRangeToNumbers(configString);
   if (options.length === 0) {
     options = (configString || '').split(',');
+    options = goog.array.map(options, function (s) { return s.trim(); });
     if (options.length === 0) {
       return;
     }

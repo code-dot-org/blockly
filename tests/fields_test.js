@@ -83,6 +83,9 @@ function test_dropdown_options() {
   dropdown.setConfig('foo,abc,zzz');
   assert(goog.array.equals(['Foo 123', 'foo', 'abc', 'abc', 'zzz', 'zzz'], goog.array.flatten(dropdown.getOptions())));
 
+  dropdown.setConfig(' foo , abc');
+  assert(goog.array.equals(['Foo 123', 'foo', 'abc', 'abc'], goog.array.flatten(dropdown.getOptions())));
+
   dropdown.setConfig('5-7,10');
   assert(goog.array.equals(["5", "5", "6", "6", "7", "7", "10", "10"], goog.array.flatten(dropdown.getOptions())));
 }

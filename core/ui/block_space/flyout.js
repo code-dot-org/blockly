@@ -499,6 +499,10 @@ Blockly.Flyout.prototype.show = function(xmlList) {
 
     if (Blockly.topLevelProcedureAutopopulate) {
       this.layoutXmlToBlocks_(xmlList, blocks, gaps, margin);
+    } else {
+      if (Blockly.Flyout.config[firstBlock]) {
+        Blockly.Flyout.config[firstBlock].initialize(this, cursor);
+      }
     }
 
     if (Blockly.mainBlockSpace) {

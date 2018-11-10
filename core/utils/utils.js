@@ -165,7 +165,7 @@ if (window.navigator.pointerEnabled) {  // IE 11+ support
     mousemove: 'MSPointerMove',
     mouseup: 'MSPointerUp'
   };
-} else if ('ontouchstart' in document.documentElement || navigator.maxTouchPoints > 0) {
+} else if ('ontouchstart' in document.documentElement || navigator.maxTouchPoints > 0) { // https://www.chromestatus.com/feature/4764225348042752
   Blockly.bindEvent_.TOUCH_MAP = {
     mousedown: 'touchstart',
     mousemove: 'touchmove',

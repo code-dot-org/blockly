@@ -18,6 +18,45 @@
  */
 'use strict';
 
+var UNKNOWN_BLOCK = `<xml>
+    <block type="variables_set">
+        <title name="VAR">i</title>
+        <value name="VALUE">
+            <block type="text">
+                <title name="TEXT"></title>
+            </block>
+        </value>
+        <next>
+            <block type="NOT_VALID_TYPE">
+                <value name="VALUE">
+                    <block type="text">
+                        <title name="TEXT"></title>
+                    </block>
+                </value>
+                <next>
+                    <block type="variables_set">
+                        <title name="VAR">i</title>
+                        <value name="VALUE">
+                            <block type="text">
+                                <title name="TEXT"></title>
+                            </block>
+                        </value>
+                    </block>
+                </next>
+            </block>
+        </next>
+    </block>
+</xml>`;
+
+var UNKNOWN_BLOCK_AS_CODE =
+`var i;
+
+
+i = '';
+// Unknown block: NOT_VALID_TYPE
+i = '';
+`
+
 function test_get() {
   var language1 = Blockly.Generator.get('INTERCAL');
   var language2 = Blockly.Generator.get('INTERCAL');
@@ -30,4 +69,17 @@ function test_prefix() {
   assertEquals('Prefix a word.', '@Hello', Blockly.Generator.prefixLines('Hello', '@'));
   assertEquals('Prefix one line.', '12Hello\n', Blockly.Generator.prefixLines('Hello\n', '12'));
   assertEquals('Prefix two lines.', '***Hello\n***World\n', Blockly.Generator.prefixLines('Hello\nWorld\n', '***'));
+}
+
+function test_unknownBlock() {
+  var container = Blockly.Test.initializeBlockSpaceEditor();
+  var blockSpace = Blockly.mainBlockSpace;
+
+  Blockly.Xml.domToBlockSpace(blockSpace, Blockly.Xml.textToDom(UNKNOWN_BLOCK));
+
+  var generatedCode = Blockly.Generator.blockSpaceToCode('JavaScript');
+
+  assertEquals(generatedCode, UNKNOWN_BLOCK_AS_CODE);
+
+  goog.dom.removeNode(container);
 }

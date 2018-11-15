@@ -65,3 +65,17 @@ function test_allVariablesOtherCategory() {
 
   goog.dom.removeNode(container);
 }
+
+function test_cannotRenameVariablesToEmpty() {
+  var container = Blockly.Test.initializeBlockSpaceEditor();
+
+  var blockXML = '<xml><block type="variables_get"><title name="VAR">i</title></block></xml>';
+  Blockly.Xml.domToBlockSpace(Blockly.mainBlockSpace, Blockly.Xml.textToDom(blockXML));
+
+  Blockly.Variables.renameVariable("i", "z", Blockly.mainBlockSpace);
+  assertEquals("Variable renamed to 'z'", 'z', Blockly.Variables.allVariables()[0]);
+  Blockly.Variables.renameVariable("z", "", Blockly.mainBlockSpace);
+  assertEquals("Cannot rename var to empty", 'z', Blockly.Variables.allVariables()[0]);
+
+  goog.dom.removeNode(container);
+}

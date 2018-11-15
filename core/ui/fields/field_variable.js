@@ -153,10 +153,9 @@ Blockly.FieldVariable.prototype.dropdownChange = function(text) {
         Blockly.Msg.CONFIRM_CREATE_VARIABLE,
         '',
         function(newVar) {
-          this.setText(newVar);
-          // Since variables are case-insensitive, ensure that if the new variable
-          // matches with an existing variable, the new case prevails throughout.
-          Blockly.Variables.renameVariable(newVar, newVar, this.sourceBlock_.blockSpace);
+          if (newVar) {
+            this.setText(newVar);
+          }
         }.bind(this));
     return null;
   }

@@ -128,7 +128,7 @@ Blockly.Variables.getVars = function (opt_category) {
  * @param {Blockly.BlockSpace} blockSpace BlockSpace to rename child blocks of
  */
 Blockly.Variables.renameVariable = function(oldName, newName, blockSpace) {
-  if (newName === oldName) {
+  if (newName === oldName || !newName) {
     return;
   }
   var blocks = blockSpace.getAllBlocks({shareMainModal: false});

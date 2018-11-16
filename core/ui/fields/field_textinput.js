@@ -148,7 +148,10 @@ Blockly.FieldTextInput.prototype.showEditor_ = function() {
   var div = Blockly.WidgetDiv.DIV;
   // Create the input.
   var htmlInput = goog.dom.createDom('input', 'blocklyHtmlInput');
-  if (this.changeHandler_ === Blockly.FieldTextInput.numberValidator) {
+  if (
+    (this.changeHandler_ === Blockly.FieldTextInput.numberValidator) ||
+    (this.changeHandler_ && this.changeHandler_.validatorType === 'clampedNumberValidator'))
+  {
     htmlInput.setAttribute('type', 'number');
     htmlInput.setAttribute('step', 'any');
   } else if (this.changeHandler_ === Blockly.FieldTextInput.nonnegativeIntegerValidator) {
@@ -370,3 +373,30 @@ Blockly.FieldTextInput.nonnegativeIntegerValidator = function(text) {
   }
   return n;
 };
+
+/**
+ * Create a number validator that limits the number to a configured range.
+ * @param {?number} min
+ * @param {?number} max
+ * @returns {function(*=): string}
+ */
+Blockly.FieldTextInput.clampedNumberValidator = function(min, max) {
+  /**
+   * Ensure that only a number in the configured range may be entered.
+   * @param {string} text The user's text.
+   * @returns {?string} A string representing a valid number in the range, or null if invalid.
+   */
+  var validator = function clampedNumberValidator(text) {
+    var n = Blockly.FieldTextInput.numberValidator(text);
+    if (!isNaN(parseFloat(min))) {
+      n = Math.max(min, n);
+    }
+    if (!isNaN(parseFloat(max))) {
+      n = Math.min(max, n);
+    }
+    n = String(n);
+    return n;
+  };
+  validator.validatorType = 'clampedNumberValidator';
+  return validator;
+}

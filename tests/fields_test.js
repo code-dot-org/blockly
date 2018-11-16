@@ -89,3 +89,50 @@ function test_dropdown_options() {
   dropdown.setConfig('5-7,10');
   assert(goog.array.equals(["5", "5", "6", "6", "7", "7", "10", "10"], goog.array.flatten(dropdown.getOptions())));
 }
+
+function test_clampedNumberValidator() {
+  var withoutBounds = Blockly.FieldTextInput.clampedNumberValidator();
+  var withLowerBound = Blockly.FieldTextInput.clampedNumberValidator(0.5);
+  var withNegativeLowerBound = Blockly.FieldTextInput.clampedNumberValidator(-0.5);
+  var withUpperBound = Blockly.FieldTextInput.clampedNumberValidator(undefined, 4.5);
+  var withBothBounds = Blockly.FieldTextInput.clampedNumberValidator(0.5, 4.5);
+
+  [withoutBounds, withLowerBound, withNegativeLowerBound, withUpperBound, withBothBounds].forEach(function (validator) {
+    // All created validators have validatorType 'clampedNumberValidator' which allows us to customize the
+    // generated input type appropriately.
+    assert(validator.validatorType === 'clampedNumberValidator');
+    // Values in range are returned appropriately
+    assert(validator('3') === '3');
+  });
+
+  [withLowerBound, withBothBounds].forEach(function (validator) {
+    // Lower bound is inclusive
+    assert(validator('0.5') === '0.5');
+    // Given a value smaller than the lower bound, you get the lower bound
+    assert(validator('0.2') === '0.5');
+  });
+
+  [withoutBounds, withUpperBound].forEach(function (validator) {
+    // Without a lower bound, you get the value back
+    assert(validator('0.2') === '0.2');
+  });
+
+  [withUpperBound, withBothBounds].forEach(function (validator) {
+    // Upper bound is inclusive
+    assert(validator('4.5') === '4.5');
+    // Given a value larger than the upper bound, you get the upper bound
+    assert(validator('4.7') === '4.5');
+  });
+
+  [withoutBounds, withLowerBound].forEach(function (validator) {
+    // Without an upper bound, you get the value back
+    assert(validator('4.7') === '4.7');
+  });
+
+  // Given a non-number value and the lower bound is positive, you get the lower bound
+  assert(withLowerBound('abc') === '0.5');
+  // Given a non-number value and the lower bound is negative, you get zero
+  assert(withNegativeLowerBound('abc') === '0');
+  // Given a non-number value and the lower bound is not set, you get zero
+  assert(withUpperBound('abc') === '0');
+}

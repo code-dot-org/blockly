@@ -135,7 +135,7 @@ Blockly.FieldDropdown.prototype.showEditor_ = function(container) {
     this.sourceBlock_.getSaturation() * 100 + '%, ' +
     this.sourceBlock_.getValue() * 100 + '%' + ', 0.5)';
   menuDom.style.overflowY = "auto";
-  menuDom.style["max-height"] = "250px";
+  menuDom.style["max-height"] = "265px";
 
   this.positionWidgetDiv();
 

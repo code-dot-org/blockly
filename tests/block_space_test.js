@@ -72,6 +72,57 @@ function test_bumpNeighbours() {
   goog.dom.removeNode(container);
 }
 
+function test_noInfiniteBumpOnPaste() {
+  var container = Blockly.Test.initializeBlockSpaceEditor();
+
+  // This configuration is known to generate an infinite loop of blocks bumping each other
+  // after the changes in https://github.com/code-dot-org/blockly/pull/128
+  // See https://github.com/code-dot-org/dance-party/issues/62 as an example of this in
+  // the wild.
+  var blockXML = '<xml>' +
+    '<block type="controls_repeat">' +
+      '<statement name="DO">' +
+        '<block type="controls_if">' +
+          '<statement name="DO0">' +
+            '<block type="controls_whileUntil">' +
+              '<next>' +
+                '<block type="variables_set">' +
+                '</block>' +
+              '</next>' +
+            '</block>' +
+          '</statement>' +
+        '</block>' +
+      '</statement>' +
+    '</block>' +
+  '</xml>';
+  Blockly.Xml.domToBlockSpace(Blockly.mainBlockSpace, Blockly.Xml.textToDom(blockXML));
+
+  // Locate the while-block
+  var repeatBlock = Blockly.mainBlockSpace.getTopBlocks()[0];
+  var ifBlock = repeatBlock.getChildren()[0];
+  var originalWhileBlock = ifBlock.getChildren()[0];
+  assertEquals('controls_whileUntil', originalWhileBlock.type);
+
+  // Store the original while-block location
+  var originalLocation = originalWhileBlock.getRelativeToSurfaceXY();
+
+  // Copy and paste the while-block
+  Blockly.BlockSpaceEditor.copy_(originalWhileBlock);
+  var clipboardXml = Blockly.Xml.textToDom(Blockly.clipboard_);
+  Blockly.mainBlockSpace.paste(clipboardXml);
+  var newWhileBlock = Blockly.mainBlockSpace.getTopBlocks()[1];
+  assertEquals('controls_whileUntil', newWhileBlock.type);
+
+  // The copied block should not have moved
+  assertObjectEquals(originalLocation, originalWhileBlock.getRelativeToSurfaceXY());
+
+  // The newly-pasted block should have moved down
+  assertTrue(newWhileBlock.getRelativeToSurfaceXY().x > originalLocation.x);
+  assertTrue(newWhileBlock.getRelativeToSurfaceXY().y > originalLocation.y);
+
+  goog.dom.removeNode(container);
+}
+
 function test_scrollingCapturesMouseWheelEvents() {
   [true, false].forEach(function (scrollingEnabled) {
     var container = Blockly.Test.initializeBlockSpaceEditor({

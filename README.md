@@ -32,6 +32,9 @@ Major additions and changes in this fork:
 
 ## Installation
 
+1. Download and install JDK version 8 from [here](https://www.oracle.com/technetwork/es/java/javase/downloads/jdk8-downloads-2133151.html)
+2. run the following commands:
+
 ```
 cd blockly
 npm install

@@ -1817,7 +1817,6 @@ Blockly.Block.prototype.setIsUnused = function(isUnused) {
         this.isUserVisible() &&
         this.type !== 'functional_definition' &&
         Blockly.mainBlockSpace &&
-        Blockly.mainBlockSpace.isReadOnly() === false &&
         Blockly.mainBlockSpace.isTopBlock(this);
   }
   if (Blockly.showUnusedBlocks && isUnused !== this.svg_.isUnused()) {

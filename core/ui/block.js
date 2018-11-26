@@ -1355,17 +1355,17 @@ Blockly.Block.prototype.bumpNeighbours = function() {
       }
 
       var bumpOther = false;
-      // When bumping connections of opposite types, always bump the inferior block.
-      if (connection.type !== otherConnection.type) {
-        bumpOther = connection.isSuperior();
       // If one is connected and the other is unconnected, always bump the
       // unconnected block.
-      } else if (connection.targetConnection && !otherConnection.targetConnection) {
+      if (connection.targetConnection && !otherConnection.targetConnection) {
         bumpOther = true;
       } else if (!connection.targetConnection && otherConnection.targetConnection) {
         bumpOther = false;
-      // Otherwise bump the block that is lower on the screen.
+      } else if (connection.type !== otherConnection.type) {
+        // When bumping connections of opposite types, always bump the inferior block.
+        bumpOther = connection.isSuperior();
       } else {
+        // Otherwise bump the block that is lower on the screen.
         var rootY = rootBlock.getRelativeToSurfaceXY().y;
         var otherY = otherRootBlock.getRelativeToSurfaceXY().y;
         bumpOther = rootY < otherY;

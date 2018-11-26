@@ -34,13 +34,24 @@ goog.require('goog.ui.ColorPicker');
  * @param {string} colour The initial colour in '#rrggbb' format.
  * @param {Function} opt_changeHandler A function that is executed when a new
  *     option is selected.
+ * @param {Object} opt_options
+ * @param {Array} opt_options.colours A list of field colors.
+ * @param {Number} opt_options.columns Number of columns in the color picker.
  * @extends {Blockly.Field}
  * @constructor
  */
-Blockly.FieldColour = function(colour, opt_changeHandler) {
+Blockly.FieldColour = function(colour, opt_changeHandler, opt_options = {}) {
   Blockly.FieldColour.superClass_.constructor.call(this, '\u00A0\u00A0\u00A0');
 
   this.changeHandler_ = opt_changeHandler;
+
+  // Unfortunately, the code-dot-org repo violates encapsulation by modifying
+  // Blockly.FieldColour.COLOURS and Blockly.FieldColour.COLUMNS directly.
+  // Therefore, wait to read these values until we need to pass them to the
+  // ColorPicker, rather than using them as default values here.
+  this.colours_ = opt_options.colours;
+  this.columns_ = opt_options.columns;
+
   this.borderRect_.style.fillOpacity = 1;
   // Set the initial state.
   this.setValue(colour);
@@ -81,7 +92,7 @@ Blockly.FieldColour.prototype.setValue = function(colour) {
 };
 
 /**
- * An array of colour strings for the palette.
+ * Default array of colour strings for the palette.
  * See bottom of this page for the default:
  * http://docs.closure-library.googlecode.com/git/closure_goog_ui_colorpicker.js.source.html
  * @type {!Array.<string>}
@@ -89,7 +100,7 @@ Blockly.FieldColour.prototype.setValue = function(colour) {
 Blockly.FieldColour.COLOURS = goog.ui.ColorPicker.SIMPLE_GRID_COLORS;
 
 /**
- * Number of columns in the palette.
+ * Default number of columns in the palette.
  */
 Blockly.FieldColour.COLUMNS = 7;
 
@@ -102,8 +113,8 @@ Blockly.FieldColour.prototype.showEditor_ = function() {
   var div = Blockly.WidgetDiv.DIV;
   // Create the palette using Closure.
   var picker = new goog.ui.ColorPicker();
-  picker.setSize(Blockly.FieldColour.COLUMNS);
-  picker.setColors(Blockly.FieldColour.COLOURS);
+  picker.setSize(this.columns_ || Blockly.FieldColour.COLUMNS);
+  picker.setColors(this.colours_ || Blockly.FieldColour.COLOURS);
   picker.render(div);
   picker.setSelectedColor(this.getValue());
 

@@ -624,12 +624,13 @@ Blockly.getUID = function() {
 };
 
 /**
- * Is this event targeting a text input widget?
+ * Is this event targeting a text or phone input widget?
  * @param {!Event} e An event.
- * @return {boolean} True if text or textarea input.
+ * @return {boolean}
  */
 Blockly.isTargetInput = function (e) {
-  return e.target.type == 'textarea' || e.target.type == 'text';
+  return e.target.type == 'textarea' || e.target.type == 'text' ||
+    e.target.type == 'tel';
 };
 
 /**

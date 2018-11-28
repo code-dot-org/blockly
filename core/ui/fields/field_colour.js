@@ -163,8 +163,9 @@ Blockly.FieldColour.prototype.positionWidgetDiv = function() {
     xy.x += borderBBox.width;
   }
   xy.y += borderBBox.height - 1;
-  if (Blockly.RTL) {
-    xy.x -= div.offsetWidth;
+  var div = Blockly.WidgetDiv.DIV;
+  if (Blockly.RTL && div) {
+    xy.x -= div.offsetWidth
   }
 
   var windowSize = goog.dom.getViewportSize();

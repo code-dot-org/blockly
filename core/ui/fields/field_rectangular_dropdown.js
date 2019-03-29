@@ -29,14 +29,16 @@ goog.require('Blockly.ImageDimensionCache');
 
 /**
  * Class for a rectangular dropdown field.
- * @param {!Array.<string>} choices An array of choices for a dropdown list, each choice is a
- *                                  tuple of [image location, value]
+ * @param {(!Array.<string>|!Function)} menuGenerator An array of choices
+ *     for a dropdown list, where each choice is a tuple of [image location, value],
+ *     or a function which generates these options
  * @extends {Blockly.Field}
  * @constructor
  */
-Blockly.FieldRectangularDropdown = function(choices) {
-  this.choices_ = choices;
-  var firstTuple = this.choices_[0];
+Blockly.FieldRectangularDropdown = function(menuGenerator) {
+  this.menuGenerator_ = menuGenerator;
+  let choices = this.getOptions();
+  var firstTuple = choices[0];
   this.value_ = firstTuple[Blockly.FieldRectangularDropdown.TUPLE_VALUE_INDEX];
   var firstPreviewData = firstTuple[Blockly.FieldRectangularDropdown.TUPLE_PREVIEW_DATA_INDEX];
 
@@ -69,7 +71,10 @@ Blockly.FieldRectangularDropdown.prototype.CURSOR = 'default';
 Blockly.FieldRectangularDropdown.prototype.EDITABLE = true;
 
 Blockly.FieldRectangularDropdown.prototype.getOptions = function() {
-  return this.choices_;
+  if (goog.isFunction(this.menuGenerator_)) {
+    return this.menuGenerator_.call(this);
+  }
+  return /** @type {!Array.<!Array.<string>>} */ (this.menuGenerator_);
 };
 
 Blockly.FieldRectangularDropdown.prototype.buildDOMElements_ = function() {
@@ -159,7 +164,7 @@ Blockly.FieldRectangularDropdown.prototype.setArrowDirection_ = function(up) {
 
 Blockly.FieldRectangularDropdown.prototype.showMenu_ = function() {
   this.showWidgetDiv_();
-  this.menu_ = this.createMenuWithChoices_(this.choices_);
+  this.menu_ = this.createMenuWithChoices_(this.getOptions());
   goog.events.listen(this.menu_, goog.ui.Component.EventType.ACTION, this.generateMenuItemSelectedHandler_());
   this.addPositionAndShowMenu(this.menu_);
   this.pointArrowUp_();
@@ -331,7 +336,7 @@ Blockly.FieldRectangularDropdown.prototype.getCurrentPreviewData_ = function() {
 };
 
 Blockly.FieldRectangularDropdown.prototype.getPreviewDataForValue_ = function(value) {
-  var choices = this.choices_;
+  var choices = this.getOptions();
   for (var x = 0; x < choices.length; x++) {
     if (choices[x][Blockly.FieldRectangularDropdown.TUPLE_VALUE_INDEX] == value) {
       return choices[x][Blockly.FieldRectangularDropdown.TUPLE_PREVIEW_DATA_INDEX];

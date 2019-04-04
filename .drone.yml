@@ -1,0 +1,20 @@
+---
+kind: pipeline
+name: default
+
+steps:
+- name: build-and-test
+  image: circleci/node:6.13-browsers
+  pull: always
+  commands:
+   - npm install
+   - npm run test:coverage
+   - npm run report-coverage
+
+trigger:
+  branch:
+  - master
+  event:
+  - pull_request
+
+

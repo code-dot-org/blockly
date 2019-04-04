@@ -8,8 +8,6 @@ steps:
   pull: always
   commands:
    - npm install
-   - npm run test:coverage
-   - npm run report-coverage
 
 trigger:
   branch:

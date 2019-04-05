@@ -224,7 +224,7 @@ Blockly.FieldRectangularDropdown.prototype.generateMenuItemSelectedHandler_ = fu
     var menuItem = googMenuElement.target;
     if (menuItem) {
       var value = menuItem.getValue();
-      if (value !== null && value !== undefined) {
+      if (value) {
         fieldRectanglularDropdown.setValue(value);
       }
     }

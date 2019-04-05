@@ -38,12 +38,15 @@ goog.require('Blockly.ImageDimensionCache');
  * @constructor
  * @param width force the dropdown to use a given width
  * @param height force the dropdown to use a given height
+ * @param {[Object]} buttons An array of object representing the text and
+ *     actions associated with buttons to be displayed at the bottom of the
+ *     dropdown list
  */
-Blockly.FieldImageDropdown = function(menuGenerator, width, height, button) {
+Blockly.FieldImageDropdown = function(menuGenerator, width, height, buttons) {
   this.width_ = width;
   this.height_ = height;
   this.menuGenerator_ = menuGenerator;
-  Blockly.FieldImageDropdown.superClass_.constructor.call(this, menuGenerator, button);
+  Blockly.FieldImageDropdown.superClass_.constructor.call(this, menuGenerator, buttons);
   if (this.hasForcedDimensions_()) {
     this.updateDimensions_(this.width_, this.height_);
   }

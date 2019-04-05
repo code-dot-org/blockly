@@ -35,10 +35,10 @@ goog.require('Blockly.ImageDimensionCache');
  * @extends {Blockly.Field}
  * @constructor
  */
-Blockly.FieldRectangularDropdown = function(menuGenerator, button) {
+Blockly.FieldRectangularDropdown = function(menuGenerator, buttons) {
   this.menuGenerator_ = menuGenerator;
   let choices = this.getOptions();
-  this.button_ = button;
+  this.buttons_ = buttons;
   var firstTuple = choices[0];
   this.value_ = firstTuple[Blockly.FieldRectangularDropdown.TUPLE_VALUE_INDEX];
   var firstPreviewData = firstTuple[Blockly.FieldRectangularDropdown.TUPLE_PREVIEW_DATA_INDEX];
@@ -167,8 +167,10 @@ Blockly.FieldRectangularDropdown.prototype.showMenu_ = function() {
   this.showWidgetDiv_();
   this.menu_ = this.createMenuWithChoices_(this.getOptions());
   goog.events.listen(this.menu_, goog.ui.Component.EventType.ACTION, this.generateMenuItemSelectedHandler_());
-  if (this.button_){
-    this.addMenuButton_(this.button_);
+  if (this.buttons_){
+    for (let button of this.buttons_){
+      this.addMenuButton_(button);
+    }
   }
   this.addPositionAndShowMenu(this.menu_);
   this.pointArrowUp_();

@@ -39,11 +39,11 @@ goog.require('Blockly.ImageDimensionCache');
  * @param width force the dropdown to use a given width
  * @param height force the dropdown to use a given height
  */
-Blockly.FieldImageDropdown = function(menuGenerator, width, height) {
+Blockly.FieldImageDropdown = function(menuGenerator, width, height, button) {
   this.width_ = width;
   this.height_ = height;
   this.menuGenerator_ = menuGenerator;
-  Blockly.FieldImageDropdown.superClass_.constructor.call(this, menuGenerator);
+  Blockly.FieldImageDropdown.superClass_.constructor.call(this, menuGenerator, button);
   if (this.hasForcedDimensions_()) {
     this.updateDimensions_(this.width_, this.height_);
   }

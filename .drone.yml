@@ -4,7 +4,7 @@ name: default
 
 steps:
 - name: build-and-test
-  image: node/node
+  image: node:8.6.0
   pull: always
   commands:
    - npm install

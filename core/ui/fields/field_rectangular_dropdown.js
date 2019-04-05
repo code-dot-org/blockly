@@ -167,7 +167,9 @@ Blockly.FieldRectangularDropdown.prototype.showMenu_ = function() {
   this.showWidgetDiv_();
   this.menu_ = this.createMenuWithChoices_(this.getOptions());
   goog.events.listen(this.menu_, goog.ui.Component.EventType.ACTION, this.generateMenuItemSelectedHandler_());
-  this.addMenuButton_(this.button_);
+  if (this.button_){
+    this.addMenuButton_(this.button_);
+  }
   this.addPositionAndShowMenu(this.menu_);
   this.pointArrowUp_();
 };

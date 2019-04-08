@@ -7,6 +7,7 @@ steps:
   image: node:8.6.0
   pull: always
   commands:
+   - sudo chown -R circleci:circleci
    - npm install
    - npm run test:coverage
    - npm run report-coverage
@@ -16,5 +17,3 @@ trigger:
   - master
   event:
   - pull_request
-
-

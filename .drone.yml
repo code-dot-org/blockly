@@ -4,7 +4,7 @@ name: default
 
 steps:
 - name: build-and-test
-  image: node:8.6.0
+  image: circleci/node:6.13-browsers
   pull: always
   commands:
    - sudo chown -R circleci:circleci .

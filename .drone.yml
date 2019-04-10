@@ -9,7 +9,7 @@ steps:
     pull: true
     restore: true
 
-- name: build-and-test
+- name: build
   image: circleci/node:6.13-browsers
   pull: always
   commands:
@@ -26,7 +26,7 @@ steps:
     when:
       event: push   
 
-- name: build-and-test
+- name: test
   image: circleci/node:6.13-browsers
   pull: always
   commands:

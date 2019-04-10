@@ -3,12 +3,33 @@ kind: pipeline
 name: default
 
 steps:
+- name: restore-cache
+  image: plugins/s3-cache
+  settings:
+    pull: true
+    restore: true
+
 - name: build-and-test
   image: circleci/node:6.13-browsers
   pull: always
   commands:
    - sudo chown -R circleci:circleci .
    - npm install
+
+- name: save-cache
+  image: plugins/s3-cache
+  settings:
+    pull: true
+    rebuild: true
+    mount:
+      - node_modules
+    when:
+      event: push   
+
+- name: build-and-test
+  image: circleci/node:6.13-browsers
+  pull: always
+  commands:
    - npm run test:coverage
    - npm run report-coverage
 

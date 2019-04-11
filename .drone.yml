@@ -29,6 +29,9 @@ steps:
 - name: test
   image: circleci/node:6.13-browsers
   pull: always
+  environment:
+    CODECOV_TOKEN:
+      from_secret: CODECOV_TOKEN
   commands:
    - npm run test:coverage
    - npm run report-coverage

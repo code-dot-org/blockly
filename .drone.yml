@@ -41,3 +41,8 @@ trigger:
   - master
   event:
   - pull_request
+---
+kind: signature
+hmac: 6bce0d8194a8e9cfd42bd173f7cdf5969a54496e8aaa10b5532b6f6d765a2009
+
+...

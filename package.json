@@ -1,6 +1,6 @@
 {
   "name": "@code-dot-org/blockly",
-  "version": "3.4.3",
+  "version": "3.4.4",
   "description": "Code.org fork of google/blockly for use within the Code Studio learning environment.",
   "main": "dist/blockly.js",
   "repository": {

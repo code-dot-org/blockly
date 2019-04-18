@@ -852,7 +852,7 @@ Blockly.Block.prototype.duplicate_ = function() {
   // Move the duplicate next to the old block.
   var xy = this.getRelativeToSurfaceXY();
   // If this is a duplicate on drag, off-set the block by 1 pixel
-  let snapRadius = this.shoudlCopyOnDrag() ? 1 : Blockly.SNAP_RADIUS;
+  let snapRadius = this.shouldCopyOnDrag() ? 1 : Blockly.SNAP_RADIUS;
   if (Blockly.RTL) {
     xy.x -= snapRadius;
   } else {

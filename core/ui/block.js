@@ -717,6 +717,15 @@ Blockly.Block.prototype.onMouseDown_ = function(e) {
     return;
   } else {
     // Left-click (or middle click)
+    // If this is connected to the parent from which it should duplicate on drag,
+    // duplicate the block, pass the click event to the duplicated block, and
+    // return from this block's click event
+    if(this.copyOnDrag_ && this.getParent() && (this.getParent().type === this.copyOnDrag_)){
+      let dup = this.duplicate_();
+      dup.setParentForCopyOnDrag(null);
+      dup.onMouseDown_(e);
+      return;
+    }
     Blockly.removeAllRanges();
     this.setIsUnused(false);
     this.blockSpace.blockSpaceEditor.setCursor(Blockly.Css.Cursor.CLOSED);
@@ -843,12 +852,14 @@ Blockly.Block.prototype.duplicate_ = function() {
       /** @type {!Blockly.BlockSpace} */ (this.blockSpace), xmlBlock);
   // Move the duplicate next to the old block.
   var xy = this.getRelativeToSurfaceXY();
+  // If this is a duplicate on drag, off-set the block by 1 pixel
+  let snapRadius = this.copyOnDrag_ ? 1 : Blockly.SNAP_RADIUS;
   if (Blockly.RTL) {
-    xy.x -= Blockly.SNAP_RADIUS;
+    xy.x -= snapRadius;
   } else {
-    xy.x += Blockly.SNAP_RADIUS;
+    xy.x += snapRadius;
   }
-  xy.y += Blockly.SNAP_RADIUS * 2;
+  xy.y += snapRadius * 2;
   newBlock.moveBy(xy.x, xy.y);
   return newBlock;
 };
@@ -1864,6 +1875,22 @@ Blockly.Block.prototype.setHSV = function(
     }
     this.render();
   }
+};
+
+/**
+ * Set global variable indicating the parent block that indicates this block should
+ * be duplicated on drag.
+ * @param parent, the parent block indicating this block should duplicate on drag
+ */
+Blockly.Block.prototype.setParentForCopyOnDrag = function(parent){
+  this.copyOnDrag_ = parent;
+};
+
+/**
+ * Returns the type of parent block that indicates this block should duplicate on drag
+ */
+Blockly.Block.prototype.copyBlockOnDrag = function(){
+  return this.copyOnDrag_;
 };
 
 /**

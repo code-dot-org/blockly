@@ -395,3 +395,33 @@ function test_typedParams() {
 
   goog.dom.removeNode(containerDiv);
 }
+
+function test_shouldCopyOnDrag() {
+  let containerDiv = Blockly.Test.initializeBlockSpaceEditor();
+  let blockSpace = Blockly.mainBlockSpace;
+  Blockly.Xml.domToBlockSpace(blockSpace, Blockly.Xml.textToDom(
+    '<xml>' +
+      '<block type="parent">' +
+        '<value name="CLICK">' +
+          '<block type="child">' +
+          '</block>' +
+        '</value>' +
+      '</block>' +
+      '<block type="orphan"></block>' +
+    '</xml>'
+  ));
+  let blocks = blockSpace.getTopBlocks();
+  assertEquals(2, blocks.length);
+
+  let parentBlock = blockSpace.getTopBlocks()[0];
+  let childBlock = parentBlock.getChildren()[0];
+  let orphanBlock = blockSpace.getTopBlocks()[1];
+
+  childBlock.setParentForCopyOnDrag('parent');
+  orphanBlock.setParentForCopyOnDrag('parent');
+
+  assert(childBlock.shouldCopyOnDrag());
+  assertFalse(orphanBlock.shouldCopyOnDrag());
+
+  goog.dom.removeNode(containerDiv);
+}

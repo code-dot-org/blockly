@@ -717,10 +717,9 @@ Blockly.Block.prototype.onMouseDown_ = function(e) {
     return;
   } else {
     // Left-click (or middle click)
-    // If this is connected to the parent from which it should duplicate on drag,
-    // duplicate the block, pass the click event to the duplicated block, and
-    // return from this block's click event
-    if(this.copyOnDrag_ && this.getParent() && (this.getParent().type === this.copyOnDrag_)){
+    // If the block should duplicate on drag, duplicate the block, pass the click event
+    // to the duplicated block, and return from this block's click event
+    if(this.shouldCopyOnDrag()){
       let dup = this.duplicate_();
       dup.setParentForCopyOnDrag(null);
       dup.onMouseDown_(e);
@@ -853,7 +852,7 @@ Blockly.Block.prototype.duplicate_ = function() {
   // Move the duplicate next to the old block.
   var xy = this.getRelativeToSurfaceXY();
   // If this is a duplicate on drag, off-set the block by 1 pixel
-  let snapRadius = this.copyOnDrag_ ? 1 : Blockly.SNAP_RADIUS;
+  let snapRadius = this.shoudlCopyOnDrag() ? 1 : Blockly.SNAP_RADIUS;
   if (Blockly.RTL) {
     xy.x -= snapRadius;
   } else {
@@ -1887,10 +1886,11 @@ Blockly.Block.prototype.setParentForCopyOnDrag = function(parent){
 };
 
 /**
- * Returns the type of parent block that indicates this block should duplicate on drag
+ * Returns whether this block is connected to the parent from which it should duplicate on drag
  */
-Blockly.Block.prototype.copyBlockOnDrag = function(){
-  return this.copyOnDrag_;
+Blockly.Block.prototype.shouldCopyOnDrag = function(){
+  let parent = this.getParent();
+  return this.copyOnDrag_ && !!parent && (parent.type === this.copyOnDrag_);
 };
 
 /**

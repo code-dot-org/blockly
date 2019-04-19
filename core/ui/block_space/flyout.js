@@ -493,7 +493,10 @@ Blockly.Flyout.prototype.show = function(xmlList) {
     );
   } else if (firstBlock === 'Behavior' || Blockly.topLevelProcedureAutopopulate) {
     // Special category for behaviors.
-    if (Blockly.disableProcedureAutopopulate) {
+
+    // For behaviors, allow for a mix of static + dynamic blocks.
+    // Static blocks will appear first in the category
+    if (firstBlock === 'Behavior' || Blockly.disableProcedureAutopopulate) {
       this.layoutXmlToBlocks_(xmlList.slice(1), blocks, gaps, margin);
     }
 

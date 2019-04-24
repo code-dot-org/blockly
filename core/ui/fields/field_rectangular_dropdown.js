@@ -178,11 +178,14 @@ Blockly.FieldRectangularDropdown.prototype.showMenu_ = function() {
 
 Blockly.FieldRectangularDropdown.prototype.addMenuButton_ = function(buttonData){
   let button = new goog.ui.Button(buttonData.text);
-  goog.events.listen(button, goog.ui.Component.EventType.ACTION, buttonData.action);
+  this.menuButtonListenKey_ = goog.events.listen(button, goog.ui.Component.EventType.ACTION, buttonData.action);
   this.menu_.addItem(button);
 };
 
 Blockly.FieldRectangularDropdown.prototype.hideMenu_ = function() {
+  if (this.menuButtonListenKey_) {
+    goog.events.unlistenByKey(this.menuButtonListenKey_);
+  }
   this.pointArrowDown_();
 };
 
@@ -226,7 +229,7 @@ Blockly.FieldRectangularDropdown.prototype.generateMenuItemSelectedHandler_ = fu
     var menuItem = googMenuElement.target;
     if (menuItem) {
       var value = menuItem.getValue();
-      if (value) {
+      if (value !== null && value !== undefined) {
         fieldRectanglularDropdown.setValue(value);
       }
     }

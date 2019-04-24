@@ -1,4 +1,4 @@
-# Blockly (Code Studio fork)
+# Blockly (Code Studio fork) 
 
 [![npm version](https://img.shields.io/npm/v/@code-dot-org/blockly.svg)](https://www.npmjs.com/package/@code-dot-org/blockly)
 [![CircleCI](https://circleci.com/gh/code-dot-org/blockly.svg?style=shield)](https://circleci.com/gh/code-dot-org/blockly)

@@ -80,6 +80,8 @@ function test_field_reposition_on_scroll() {
 function test_dropdown_options() {
   var dropdown = new Blockly.FieldDropdown([['Foo 123', 'foo'], ['Bar 456', 'bar']]);
 
+  console.log("");
+
   dropdown.setConfig('foo,abc,zzz');
   assert(goog.array.equals(['Foo 123', 'foo', 'abc', 'abc', 'zzz', 'zzz'], goog.array.flatten(dropdown.getOptions())));
 
@@ -88,6 +90,32 @@ function test_dropdown_options() {
 
   dropdown.setConfig('5-7,10');
   assert(goog.array.equals(["5", "5", "6", "6", "7", "7", "10", "10"], goog.array.flatten(dropdown.getOptions())));
+}
+
+function test_image_dropdown_menu_button() {
+  // Set up blockspace and button with image dropdown
+  var blockSpace = Blockly.mainBlockSpace;
+  var imgDropdown = new Blockly.FieldImageDropdown([['Foo 123', 'foo'], ['Bar 456', 'bar']], 200, 200, [{text: "TestButton", action: function(){}}]);
+  var wrapperBlock = new Blockly.Block(blockSpace);
+  wrapperBlock.setFunctional(true);
+  wrapperBlock.initSvg();
+  imgDropdown.sourceBlock_ = wrapperBlock;
+
+  assertEquals(1, imgDropdown.buttons_.length);
+
+  // Generate menu
+  imgDropdown.showMenu_();
+
+  // Check menu has items 'Foo 123', 'Bar 456', and 'TestButton' button
+  let menu = imgDropdown.menu_;
+  assertEquals(3, menu.getItemCount());
+  // Buttons are added at the end of the menu
+  let button = menu.getItemAt(2);
+  assertEquals("TestButton", button.getContent());
+
+  // Elements stay remains in menu after menu is hidden
+  imgDropdown.hideMenu_();
+  assertEquals(3, imgDropdown.menu_.getItemCount());
 }
 
 function test_clampedNumberValidator() {

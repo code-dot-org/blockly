@@ -152,6 +152,23 @@ Blockly.Blocks.button_block = {
   },
 };
 
+Blockly.Blocks.dropdown_with_button_block = {
+  // Example block with a dropdown with buttons
+  init: function() {
+    this.setHSV(131, 0.64, 0.62);
+    this.appendDummyInput()
+      .appendTitle("here's a dropdown with buttons")
+      .appendTitle(
+        new Blockly.FieldImageDropdown(
+          [['Foo 123', 'foo'], ['Bar 456', 'bar']],
+          32,
+          32,
+          [{text: "TestButton", action: function(){console.log("Button Clicked")}}]
+        )
+      );
+  },
+};
+
 Blockly.Blocks.ocean_boiler_definition = Object.assign({},
   Blockly.Blocks.procedures_defnoreturn,
   {

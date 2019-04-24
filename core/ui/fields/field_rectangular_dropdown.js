@@ -35,9 +35,10 @@ goog.require('Blockly.ImageDimensionCache');
  * @extends {Blockly.Field}
  * @constructor
  */
-Blockly.FieldRectangularDropdown = function(menuGenerator) {
+Blockly.FieldRectangularDropdown = function(menuGenerator, buttons) {
   this.menuGenerator_ = menuGenerator;
   let choices = this.getOptions();
+  this.buttons_ = buttons;
   var firstTuple = choices[0];
   this.value_ = firstTuple[Blockly.FieldRectangularDropdown.TUPLE_VALUE_INDEX];
   var firstPreviewData = firstTuple[Blockly.FieldRectangularDropdown.TUPLE_PREVIEW_DATA_INDEX];
@@ -166,11 +167,25 @@ Blockly.FieldRectangularDropdown.prototype.showMenu_ = function() {
   this.showWidgetDiv_();
   this.menu_ = this.createMenuWithChoices_(this.getOptions());
   goog.events.listen(this.menu_, goog.ui.Component.EventType.ACTION, this.generateMenuItemSelectedHandler_());
+  if (this.buttons_){
+    for (let button of this.buttons_){
+      this.addMenuButton_(button);
+    }
+  }
   this.addPositionAndShowMenu(this.menu_);
   this.pointArrowUp_();
 };
 
+Blockly.FieldRectangularDropdown.prototype.addMenuButton_ = function(buttonData){
+  let button = new goog.ui.Button(buttonData.text);
+  this.menuButtonListenKey_ = goog.events.listen(button, goog.ui.Component.EventType.ACTION, buttonData.action);
+  this.menu_.addItem(button);
+};
+
 Blockly.FieldRectangularDropdown.prototype.hideMenu_ = function() {
+  if (this.menuButtonListenKey_) {
+    goog.events.unlistenByKey(this.menuButtonListenKey_);
+  }
   this.pointArrowDown_();
 };
 
@@ -214,7 +229,7 @@ Blockly.FieldRectangularDropdown.prototype.generateMenuItemSelectedHandler_ = fu
     var menuItem = googMenuElement.target;
     if (menuItem) {
       var value = menuItem.getValue();
-      if (value !== null) {
+      if (value !== null && value !== undefined) {
         fieldRectanglularDropdown.setValue(value);
       }
     }

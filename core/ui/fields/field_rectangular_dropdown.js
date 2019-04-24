@@ -332,10 +332,14 @@ Blockly.FieldRectangularDropdown.prototype.getValue = function() {
 
 /**
  * Set the language-neutral value for this dropdown menu.
+ * RectangularDropdown should only be set if the value exists, otherwise,
+ * keep the current value.
  * @param {string} newValue New value to set.
  */
 Blockly.FieldRectangularDropdown.prototype.setValue = function(newValue) {
-  this.value_ = newValue;
+  if (this.getPreviewDataForValue_(newValue)) {
+    this.value_ = newValue;
+  }
   this.refreshPreview_();
 };
 
@@ -354,7 +358,7 @@ Blockly.FieldRectangularDropdown.prototype.getPreviewDataForValue_ = function(va
       return choices[x][Blockly.FieldRectangularDropdown.TUPLE_PREVIEW_DATA_INDEX];
     }
   }
-  throw 'Preview data for given value "' + value + '" not found';
+  return null;
 };
 
 /**

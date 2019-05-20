@@ -39,6 +39,7 @@ goog.require('Blockly.FieldAngleDropdown');
 goog.require('Blockly.FieldAngleTextInput');
 goog.require('Blockly.FieldIcon');
 goog.require('Blockly.FieldImage');
+goog.require('Blockly.FieldImageLabel');
 goog.require('Blockly.FieldImageDropdown');
 goog.require('Blockly.FieldRectangularDropdown');
 goog.require('Blockly.FieldTextInput');

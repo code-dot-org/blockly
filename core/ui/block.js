@@ -1503,6 +1503,17 @@ Blockly.Block.prototype.setParent = function(newParent) {
   } else {
     this.blockSpace.addTopBlock(this);
   }
+
+  if(this.type === "gamelab_clickedSpritePointer"){
+    let siblings = this.parentBlock_.childBlocks_;
+    let currentBlock = this;
+    siblings.forEach(function(sibling){
+      if(sibling.type === "gamelab_allSpritesWithAnimation"){
+        let siblingImageSource = sibling.inputList[0].titleRow[0].previewElement_.getAttribute("xlink:href");
+        currentBlock.inputList[0].titleRow[1].setImage(siblingImageSource);
+      }
+    });
+  }
 };
 
 /**

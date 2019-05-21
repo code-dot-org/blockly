@@ -176,6 +176,14 @@ Blockly.FieldRectangularDropdown.prototype.showMenu_ = function() {
   this.pointArrowUp_();
 };
 
+/**
+ * Tracks a function to update when this field in updated
+ * @param handleUpdate - additional update step
+ */
+Blockly.FieldRectangularDropdown.prototype.setRelationalUpdate = function(handleUpdate){
+  this.relationalUpdate_ = handleUpdate;
+};
+
 Blockly.FieldRectangularDropdown.prototype.addMenuButton_ = function(buttonData){
   let button = new goog.ui.Button(buttonData.text);
   this.menuButtonListenKey_ = goog.events.listen(button, goog.ui.Component.EventType.ACTION, buttonData.action);
@@ -231,10 +239,14 @@ Blockly.FieldRectangularDropdown.prototype.generateMenuItemSelectedHandler_ = fu
       var value = menuItem.getValue();
       if (value !== null && value !== undefined) {
         fieldRectanglularDropdown.setValue(value);
+        // If there is an additional update function, call that function with the preview data
+        if(this.relationalUpdate_){
+          this.relationalUpdate_(this.getPreviewDataForValue_(value));
+        }
       }
     }
     Blockly.WidgetDiv.hideIfOwner(fieldRectanglularDropdown);
-  };
+  }.bind(this);
 };
 
 /**

@@ -1505,18 +1505,17 @@ Blockly.Block.prototype.setParent = function(newParent) {
   }
 
   if(this.blockToShadow_){
-    let currentBlockImage = this.inputList[0].titleRow[1];
-    let siblingToShadow = this.blockToShadow_;
-    let siblings = this.parentBlock_.childBlocks_;
+    let siblings = this.getRootBlock().childBlocks_;
     siblings.forEach(function(sibling){
-      if(siblingToShadow === sibling.type){
+      if(this.blockToShadow_ === sibling.type){
         let siblingSpritePreviewField = sibling.inputList[0].titleRow[0];
-        currentBlockImage.setText(siblingSpritePreviewField.previewElement_.getAttribute("xlink:href"));
-        siblingSpritePreviewField.setRelationalUpdate(function(imageSrc){
-          currentBlockImage.setText(imageSrc)
+        let blockToUpdate = this.inputList[0].titleRow[1];
+        blockToUpdate.setText(siblingSpritePreviewField.previewElement_.getAttribute("xlink:href"));
+        siblingSpritePreviewField.addRelationalUpdate(function(imageSrc){
+          blockToUpdate.setText(imageSrc)
         });
       }
-    });
+    }.bind(this));
   }
 };
 

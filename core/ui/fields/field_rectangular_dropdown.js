@@ -180,8 +180,11 @@ Blockly.FieldRectangularDropdown.prototype.showMenu_ = function() {
  * Tracks a function to update when this field in updated
  * @param handleUpdate - additional update step
  */
-Blockly.FieldRectangularDropdown.prototype.setRelationalUpdate = function(handleUpdate){
-  this.relationalUpdate_ = handleUpdate;
+Blockly.FieldRectangularDropdown.prototype.addRelationalUpdate = function(handleUpdate){
+  if (!this.relationalUpdate_) {
+    this.relationalUpdate_= [];
+  }
+  this.relationalUpdate_.push(handleUpdate);
 };
 
 Blockly.FieldRectangularDropdown.prototype.addMenuButton_ = function(buttonData){
@@ -241,7 +244,10 @@ Blockly.FieldRectangularDropdown.prototype.generateMenuItemSelectedHandler_ = fu
         fieldRectanglularDropdown.setValue(value);
         // If there is an additional update function, call that function with the preview data
         if(this.relationalUpdate_){
-          this.relationalUpdate_(this.getPreviewDataForValue_(value));
+          let updateValue = this.getPreviewDataForValue_(value);
+          this.relationalUpdate_.forEach(function(updateHandler){
+            updateHandler(updateValue);
+          });
         }
       }
     }

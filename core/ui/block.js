@@ -1504,11 +1504,12 @@ Blockly.Block.prototype.setParent = function(newParent) {
     this.blockSpace.addTopBlock(this);
   }
 
-  if(this.type === "gamelab_clickedSpritePointer"){
-    let siblings = this.parentBlock_.childBlocks_;
+  if(this.blockToShadow_){
     let currentBlockImage = this.inputList[0].titleRow[1];
+    let siblingToShadow = this.blockToShadow_;
+    let siblings = this.parentBlock_.childBlocks_;
     siblings.forEach(function(sibling){
-      if(sibling.type === "gamelab_allSpritesWithAnimation"){
+      if(siblingToShadow === sibling.type){
         let siblingSpritePreviewField = sibling.inputList[0].titleRow[0];
         currentBlockImage.setText(siblingSpritePreviewField.previewElement_.getAttribute("xlink:href"));
         siblingSpritePreviewField.setRelationalUpdate(function(imageSrc){
@@ -1905,6 +1906,10 @@ Blockly.Block.prototype.setParentForCopyOnDrag = function(parent){
 Blockly.Block.prototype.shouldCopyOnDrag = function(){
   let parent = this.getParent();
   return this.copyOnDrag_ && !!parent && (parent.type === this.copyOnDrag_);
+};
+
+Blockly.Block.prototype.setBlockToShadow = function(sibling){
+  this.blockToShadow_ = sibling;
 };
 
 /**

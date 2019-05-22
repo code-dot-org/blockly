@@ -1506,13 +1506,13 @@ Blockly.Block.prototype.setParent = function(newParent) {
 
   if(this.type === "gamelab_clickedSpritePointer"){
     let siblings = this.parentBlock_.childBlocks_;
-    let currentBlockImageLabel = this.inputList[0].titleRow[1];
+    let currentBlockImage = this.inputList[0].titleRow[1];
     siblings.forEach(function(sibling){
       if(sibling.type === "gamelab_allSpritesWithAnimation"){
         let siblingSpritePreviewField = sibling.inputList[0].titleRow[0];
-        currentBlockImageLabel.setImage(siblingSpritePreviewField.previewElement_.getAttribute("xlink:href"));
+        currentBlockImage.setText(siblingSpritePreviewField.previewElement_.getAttribute("xlink:href"));
         siblingSpritePreviewField.setRelationalUpdate(function(imageSrc){
-          currentBlockImageLabel.setImage(imageSrc)
+          currentBlockImage.setText(imageSrc)
         });
       }
     });

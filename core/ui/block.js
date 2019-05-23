@@ -1500,20 +1500,26 @@ Blockly.Block.prototype.setParent = function(newParent) {
     var newXY = this.getRelativeToSurfaceXY();
     // Move the connections to match the child's new position.
     this.moveConnections_(newXY.x - oldXY.x, newXY.y - oldXY.y);
+    this.shadowBlockValue_();
   } else {
     this.blockSpace.addTopBlock(this);
   }
+};
 
+Blockly.Block.prototype.shadowBlockValue_ = function() {
   if(this.blockToShadow_){
     let siblings = this.getRootBlock().childBlocks_;
     siblings.forEach(function(sibling){
+      // If this block is the type of block that this block is to shadow, copy the preview value
       if(this.blockToShadow_ === sibling.type){
+        // ToDo - Remove hard-coded values to indicate which input and title part to copy
         let siblingSpritePreviewField = sibling.inputList[0].titleRow[0];
-        let blockToUpdate = this.inputList[0].titleRow[1];
-        blockToUpdate.setText(siblingSpritePreviewField.previewElement_.getAttribute("xlink:href"));
-        siblingSpritePreviewField.addRelationalUpdate(function(imageSrc){
-          blockToUpdate.setText(imageSrc)
-        });
+        // ToDo - Remove hard-coded values to indicate which input and title part to update
+        let fieldToUpdate = this.inputList[0].titleRow[1];
+        // Set the value of the text
+        fieldToUpdate.setText(siblingSpritePreviewField.previewElement_.getAttribute("xlink:href"));
+        // Add this block to the list of blocks to update when the original field is updated
+        siblingSpritePreviewField.addRelationalUpdate(fieldToUpdate);
       }
     }.bind(this));
   }
@@ -2558,6 +2564,7 @@ Blockly.Block.prototype.render = function(selfOnly) {
   if (!this.svg_) {
     throw 'Uninitialized block cannot be rendered.  Call block.initSvg()';
   }
+  this.shadowBlockValue_();
   this.svg_.render(selfOnly);
 };
 

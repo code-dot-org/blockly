@@ -177,14 +177,14 @@ Blockly.FieldRectangularDropdown.prototype.showMenu_ = function() {
 };
 
 /**
- * Tracks a function to update when this field in updated
- * @param handleUpdate - additional update step
+ * Tracks a field_image block to update with the value of this dropdown
+ * @param fieldImage - additional field to update
  */
-Blockly.FieldRectangularDropdown.prototype.addRelationalUpdate = function(handleUpdate){
+Blockly.FieldRectangularDropdown.prototype.addRelationalUpdate = function(fieldImage){
   if (!this.relationalUpdate_) {
     this.relationalUpdate_= [];
   }
-  this.relationalUpdate_.push(handleUpdate);
+  this.relationalUpdate_.push(fieldImage);
 };
 
 Blockly.FieldRectangularDropdown.prototype.addMenuButton_ = function(buttonData){
@@ -242,11 +242,14 @@ Blockly.FieldRectangularDropdown.prototype.generateMenuItemSelectedHandler_ = fu
       var value = menuItem.getValue();
       if (value !== null && value !== undefined) {
         fieldRectanglularDropdown.setValue(value);
-        // If there is an additional update function, call that function with the preview data
+        // If there are additional field images to update, set the text with this preview data
         if(this.relationalUpdate_){
           let updateValue = this.getPreviewDataForValue_(value);
-          this.relationalUpdate_.forEach(function(updateHandler){
-            updateHandler(updateValue);
+          this.relationalUpdate_.forEach(function(updateFields){
+            if(!updateFields.isDestroyed_()){
+              updateFields.setText(updateValue);
+            }
+
           });
         }
       }

@@ -1510,12 +1510,16 @@ Blockly.Block.prototype.setParent = function(newParent) {
   }
 };
 
+/**
+ * Sets the value of this block to the value of the root child field specified.
+ * Adds a reference to this block in the root block to track when the value should be updated.
+ * @private
+ */
 Blockly.Block.prototype.shadowBlockValue_ = function() {
   if(this.blockToShadow_){
     let root = this.getRootBlock();
-    let siblings = this.getRootBlock().childBlocks_;
-    siblings.forEach(function(sibling){
-      // If this block is the type of block that this block is to shadow, copy the preview value
+    root.childBlocks_.forEach(function(sibling){
+      // Checks if the type of this childBlock matches the type this block is supposed to shadow
       if(this.blockToShadow_ === sibling.type){
         // ToDo - Remove hard-coded values to indicate which input and title part to copy
         let siblingSpritePreviewField = sibling.inputList[0].titleRow[0];

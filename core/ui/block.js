@@ -1487,6 +1487,10 @@ Blockly.Block.prototype.setParent = function(newParent) {
   if (newParent) {
     // Add this block to the new parent's child list.
     newParent.childBlocks_.push(this);
+    // If the new block has relational blocks to update, re-render the blocks
+    if (newParent.getRelationalUpdateBlocks()) {
+      this.blockSpace.render();
+    }
 
     // Account for the transform added by the relative position of the parent.
     var oldXY = this.getRelativeToSurfaceXY();
@@ -1508,6 +1512,7 @@ Blockly.Block.prototype.setParent = function(newParent) {
 
 Blockly.Block.prototype.shadowBlockValue_ = function() {
   if(this.blockToShadow_){
+    let root = this.getRootBlock();
     let siblings = this.getRootBlock().childBlocks_;
     siblings.forEach(function(sibling){
       // If this block is the type of block that this block is to shadow, copy the preview value
@@ -1519,10 +1524,27 @@ Blockly.Block.prototype.shadowBlockValue_ = function() {
         // Set the value of the text
         fieldToUpdate.setText(siblingSpritePreviewField.previewElement_.getAttribute("xlink:href"));
         // Add this block to the list of blocks to update when the original field is updated
-        siblingSpritePreviewField.addRelationalUpdate(fieldToUpdate);
+        root.addRelationalUpdate(fieldToUpdate);
       }
     }.bind(this));
   }
+};
+
+/**
+ * Tracks a field_image block to update with the value of this dropdown
+ * @param fieldImage - additional field to update
+ */
+Blockly.Block.prototype.addRelationalUpdate = function(fieldImage){
+  if (!this.relationalUpdate_) {
+    this.relationalUpdate_= [];
+  }
+  this.relationalUpdate_.push(fieldImage);
+};
+
+/** Returns list of field_images to update
+*/
+Blockly.Block.prototype.getRelationalUpdateBlocks = function(){
+  return this.relationalUpdate_;
 };
 
 /**

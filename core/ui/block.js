@@ -1913,8 +1913,12 @@ Blockly.Block.prototype.shouldCopyOnDrag = function(){
   return this.copyOnDrag_ && !!parent && (parent.type === this.copyOnDrag_);
 };
 
-Blockly.Block.prototype.setBlockToShadow = function(sibling){
-  this.blockToShadow_ = sibling;
+/**
+ * Sets the target block whose value this block should shadow
+ * @param target
+ */
+Blockly.Block.prototype.setBlockToShadow = function(target){
+  this.blockToShadow_ = target;
 };
 
 /**

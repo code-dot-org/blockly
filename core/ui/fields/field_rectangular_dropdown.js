@@ -232,7 +232,8 @@ Blockly.FieldRectangularDropdown.prototype.generateMenuItemSelectedHandler_ = fu
       if (value !== null && value !== undefined) {
         fieldRectanglularDropdown.setValue(value);
         // If there are additional field images to update in the root block, update them with this preview data
-        let relationBlocks = this.getRootBlock().getRelationalUpdateBlocks();
+        let root = this.sourceBlock_ ? this.sourceBlock_.getRootBlock() : null;
+        let relationBlocks = root ? root.getRelationalUpdateBlocks() : null;
         if(relationBlocks){
           let updateValue = this.getPreviewDataForValue_(value);
           relationBlocks.forEach(function(updateFields){

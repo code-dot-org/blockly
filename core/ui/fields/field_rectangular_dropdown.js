@@ -231,10 +231,21 @@ Blockly.FieldRectangularDropdown.prototype.generateMenuItemSelectedHandler_ = fu
       var value = menuItem.getValue();
       if (value !== null && value !== undefined) {
         fieldRectanglularDropdown.setValue(value);
+        // If there are additional field images to update in the root block, update them with this preview data
+        let root = this.sourceBlock_ ? this.sourceBlock_.getRootBlock() : null;
+        let relationBlocks = root ? root.getRelationalUpdateBlocks() : null;
+        if(relationBlocks){
+          let updateValue = this.getPreviewDataForValue_(value);
+          relationBlocks.forEach(function(updateFields){
+            if(!updateFields.isDestroyed_()){
+              updateFields.setText(updateValue);
+            }
+          });
+        }
       }
     }
     Blockly.WidgetDiv.hideIfOwner(fieldRectanglularDropdown);
-  };
+  }.bind(this);
 };
 
 /**

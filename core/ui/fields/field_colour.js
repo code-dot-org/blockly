@@ -88,6 +88,15 @@ Blockly.FieldColour.prototype.setValue = function(colour) {
   this.borderRect_.style.fill = colour;
   if (this.sourceBlock_ && this.sourceBlock_.rendered) {
     this.sourceBlock_.blockSpace.fireChangeEvent();
+
+    // If there are additional field images to update in the root block, update them with this preview data
+    if (this.sourceBlock_.getRelationalUpdateBlocks()) {
+      this.sourceBlock_.getDescendants().forEach(function (block) {
+        if (block.blockToShadow_) {
+          block.render(false);
+        }
+      });
+    }
   }
 };
 

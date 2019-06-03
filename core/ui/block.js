@@ -1488,8 +1488,8 @@ Blockly.Block.prototype.setParent = function(newParent) {
     // Add this block to the new parent's child list.
     newParent.childBlocks_.push(this);
     // If the new block has relational blocks to update, re-render the blocks
-    if (newParent.getRelationalUpdateBlocks()) {
-      this.blockSpace.render();
+    if (this.blockToShadow_) {
+      this.render(true);
     }
 
     // Account for the transform added by the relative position of the parent.
@@ -1518,19 +1518,11 @@ Blockly.Block.prototype.setParent = function(newParent) {
 Blockly.Block.prototype.shadowBlockValue_ = function() {
   if(this.blockToShadow_){
     let root = this.getRootBlock();
-    root.childBlocks_.forEach(function(sibling){
-      // Checks if the type of this childBlock matches the type this block is supposed to shadow
-      if(this.blockToShadow_ === sibling.type){
-        // ToDo - Remove hard-coded values to indicate which input and title part to copy
-        let siblingSpritePreviewField = sibling.inputList[0].titleRow[0];
-        // ToDo - Remove hard-coded values to indicate which input and title part to update
-        let fieldToUpdate = this.inputList[0].titleRow[1];
-        // Set the value of the text
-        fieldToUpdate.setText(siblingSpritePreviewField.previewElement_.getAttribute("xlink:href"));
-        // Add this block to the list of blocks to update when the original field is updated
-        root.addRelationalUpdate(fieldToUpdate);
-      }
-    }.bind(this));
+    if (this === root) {
+      return;
+    }
+    root.addRelationalUpdate(true);
+    this.setTitleValue(root.getTitleValue(this.blockToShadow_), this.blockToShadow_);
   }
 };
 
@@ -1540,9 +1532,8 @@ Blockly.Block.prototype.shadowBlockValue_ = function() {
  */
 Blockly.Block.prototype.addRelationalUpdate = function(fieldImage){
   if (!this.relationalUpdate_) {
-    this.relationalUpdate_= [];
+    this.relationalUpdate_= true;
   }
-  this.relationalUpdate_.push(fieldImage);
 };
 
 /** Returns list of field_images to update

@@ -1510,19 +1510,34 @@ Blockly.Block.prototype.setParent = function(newParent) {
   }
 };
 
+Blockly.Block.prototype.getReferencedValue_ = function() {
+  const firstTitle = this.getTitles()[0];
+  return firstTitle && firstTitle.getValue();
+};
+
 /**
  * Sets the value of this block to the value of the root child field specified.
  * Adds a reference to this block in the root block to track when the value should be updated.
  * @private
  */
 Blockly.Block.prototype.shadowBlockValue_ = function() {
-  if(this.blockToShadow_){
-    let root = this.getRootBlock();
+  if (this.blockToShadow_) {
+    const root = this.getRootBlock();
     if (this === root) {
       return;
     }
-    root.addRelationalUpdate(true);
-    this.setTitleValue(root.getTitleValue(this.blockToShadow_), this.blockToShadow_);
+    const inlineValue = root.getTitleValue(this.blockToShadow_);
+    if (inlineValue) {
+      root.addRelationalUpdate(true);
+      this.setTitleValue(inlineValue, this.blockToShadow_);
+    } else {
+      const blockValue = root.getInputTargetBlock(this.blockToShadow_);
+      if (blockValue && blockValue.getReferencedValue_()) {
+        blockValue.addRelationalUpdate(true);
+      } else {
+        // No block is connected, or socket with the given title doesn't exist.
+      }
+    }
   }
 };
 

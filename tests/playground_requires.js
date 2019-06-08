@@ -134,9 +134,8 @@ Blockly.Blocks.location_variables_set = createVariableSet(Blockly.BlockValueType
 Blockly.Blocks.parent = {
   init: function() {
     this.setHSV(131, 0.64, 0.62);
-    this.appendDummyInput()
-      .appendTitle('parent block')
-      .appendTitle(new Blockly.FieldColour('#ff0000'), 'COLOUR');
+    this.appendValueInput('COLOUR')
+      .appendTitle('parent block');
     this.appendValueInput('TARGET');
     this.setNextStatement(true);
     this.setInputsInline(true);

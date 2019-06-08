@@ -1512,7 +1512,7 @@ Blockly.Block.prototype.setParent = function(newParent) {
 
 Blockly.Block.prototype.getReferencedValue_ = function() {
   const firstTitle = this.getTitles()[0];
-  return firstTitle && firstTitle.getValue();
+  return firstTitle && !(firstTitle instanceof Blockly.FieldLabel) && firstTitle.getValue();
 };
 
 /**
@@ -1531,9 +1531,10 @@ Blockly.Block.prototype.shadowBlockValue_ = function() {
       root.addRelationalUpdate(true);
       this.setTitleValue(inlineValue, this.blockToShadow_);
     } else {
-      const blockValue = root.getInputTargetBlock(this.blockToShadow_);
-      if (blockValue && blockValue.getReferencedValue_()) {
-        blockValue.addRelationalUpdate(true);
+      const block = root.getInputTargetBlock(this.blockToShadow_);
+      if (block && block.getReferencedValue_()) {
+        block.addRelationalUpdate(true);
+        this.setTitleValue(block.getReferencedValue_(), this.blockToShadow_);
       } else {
         // No block is connected, or socket with the given title doesn't exist.
       }

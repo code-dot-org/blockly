@@ -7,7 +7,8 @@ module.exports = function(config) {
     files: [
       'node_modules/google-closure-library/closure/goog/base.js',
       'tests/test_dependency_map.js',
-      'tests/*.js',
+      'tests/test_requires_and_utils.js',
+      process.env.FILE || 'tests/*.js',
       'jsunitAdapter.js',
       'msg/js/en_us.js',
       { pattern: 'node_modules/google-closure-library/**/*.js', watched: false, included: false },
@@ -41,4 +42,4 @@ module.exports = function(config) {
       captureConsole: false,
     },
   })
-}
+};

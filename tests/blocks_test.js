@@ -450,3 +450,29 @@ function test_connectTwoBlocks() {
 
   goog.dom.removeNode(containerDiv);
 }
+
+function test_shouldShadow() {
+  let containerDiv = Blockly.Test.initializeBlockSpaceEditor();
+  let blockSpace = Blockly.mainBlockSpace;
+  Blockly.Xml.domToBlockSpace(blockSpace, Blockly.Xml.textToDom(`
+    <xml>
+      <block type="parent">
+        <value name="CLICK">
+          <block type="child"></block>
+        </value>
+        <next>
+          <block type="variables_set"></block>
+        </next>
+      </block>
+    </xml>
+  `));
+  let blocks = blockSpace.getTopBlocks();
+  assertEquals(1, blocks.length);
+
+  let parentBlock = blockSpace.getTopBlocks()[0];
+  let childBlock = parentBlock.getChildren()[0];
+
+  childBlock.setParentForCopyOnDrag('parent');
+
+  goog.dom.removeNode(containerDiv);
+}

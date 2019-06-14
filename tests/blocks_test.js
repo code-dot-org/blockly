@@ -423,6 +423,11 @@ function test_shouldCopyOnDrag() {
   assert(childBlock.shouldCopyOnDrag());
   assertFalse(orphanBlock.shouldCopyOnDrag());
 
+  // Should copy when pulled out of the parent block.
+  assertEquals(3, blockSpace.getAllBlocks().length);
+  Blockly.Test.simulateDrag(childBlock, {x: 100, y: 100});
+  assertEquals(4, blockSpace.getAllBlocks().length);
+
   goog.dom.removeNode(containerDiv);
 }
 

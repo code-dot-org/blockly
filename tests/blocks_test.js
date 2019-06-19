@@ -423,5 +423,30 @@ function test_shouldCopyOnDrag() {
   assert(childBlock.shouldCopyOnDrag());
   assertFalse(orphanBlock.shouldCopyOnDrag());
 
+  // Should copy when pulled out of the parent block.
+  assertEquals(3, blockSpace.getAllBlocks().length);
+  Blockly.Test.simulateDrag(childBlock, {x: 100, y: 100});
+  assertEquals(4, blockSpace.getAllBlocks().length);
+
+  goog.dom.removeNode(containerDiv);
+}
+
+function test_connectTwoBlocks() {
+  let containerDiv = Blockly.Test.initializeBlockSpaceEditor();
+  let blockSpace = Blockly.mainBlockSpace;
+  Blockly.Xml.domToBlockSpace(blockSpace, Blockly.Xml.textToDom(`
+    <xml>
+      <block type="variables_set"></block>
+      <block type="colour_picker"></block>
+    </xml>
+  `));
+
+  const target = blockSpace.getTopBlocks()[0];
+  const orphan = blockSpace.getTopBlocks()[1];
+
+  assertNull(orphan.getParent());
+  Blockly.Test.simulateDrag(orphan, target.getInput('VALUE').connection);
+  assertEquals(target, orphan.getParent());
+
   goog.dom.removeNode(containerDiv);
 }

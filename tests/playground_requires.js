@@ -131,6 +131,42 @@ Blockly.Blocks.behavior_variables_set = createVariableSet(Blockly.BlockValueType
 Blockly.Blocks.location_variables_get = createVariableGet(Blockly.BlockValueType.LOCATION);
 Blockly.Blocks.location_variables_set = createVariableSet(Blockly.BlockValueType.LOCATION);
 
+Blockly.Blocks.parent = {
+  init: function() {
+    var toggle = new Blockly.FieldIcon('－');
+    this.tray = true;
+    Blockly.bindEvent_(toggle.fieldGroup_, 'mousedown', this, () => {
+      if (this.tray) {
+        toggle.setText('＋');
+      } else {
+        toggle.setText('－');
+      }
+      this.tray = !this.tray;
+      this.render();
+    });
+
+    this.setHSV(131, 0.64, 0.62);
+    this.appendValueInput('COLOUR')
+      .appendTitle(toggle)
+      .appendTitle('parent block');
+    this.appendValueInput('TARGET');
+    this.setNextStatement(true);
+    this.setInputsInline(true);
+  }
+};
+
+Blockly.Blocks.child = {
+  init: function() {
+    this.setHSV(20, 0.64, 0.62);
+    this.setParentForCopyOnDrag('parent');
+    this.setBlockToShadow('colour_picker');
+    this.setOutput(true, Blockly.BlockValueType.STRING);
+    this.appendDummyInput()
+      .appendTitle('child')
+      .appendTitle(new Blockly.FieldColour('#ffcc00'), 'COLOUR');
+  }
+};
+
 Blockly.Blocks.button_block = {
   // Example block with button field
   init: function() {

@@ -90,7 +90,7 @@ Blockly.BlockSvg.prototype.initChildren = function () {
       this.svgGroup_);
   }
   if (this.block_.tray) {
-    this.svgPathLedge_ = Blockly.createSvgElement('path', {}, this.svgGroup_);
+    this.svgPathLedge_ = Blockly.createSvgElement('rect', {}, this.svgGroup_);
   }
   this.svgPathLight_ = Blockly.createSvgElement('path',
     {'class': 'blocklyPathLight'}, this.svgGroup_);
@@ -709,8 +709,8 @@ Blockly.BlockSvg.prototype.updateToColour_ = function(hexColour) {
   if (pattern) {
     this.svgPathFill_.setAttribute('fill', 'url(#' + pattern + ')');
   }
-  if (this.block_.tray) {
-    this.svgPathLedge_.setAttribute('stroke', goog.color.rgbArrayToHex(rgbDark));
+  if (this.svgPathLedge_) {
+    this.svgPathLedge_.setAttribute('fill', goog.color.rgbArrayToHex(rgbLight));
   }
 };
 
@@ -1162,8 +1162,6 @@ Blockly.BlockSvg.prototype.renderDraw_ = function(iconWidth, inputRows) {
     // the edge of the block by a pixel. So undersize all measurements by a pixel.
     highlight: [],
     highlightInline: [],
-    // For blocks with trays.
-    ledge: [],
     // current x/y location
     curX: iconWidth,
     curY: 0
@@ -1207,10 +1205,6 @@ Blockly.BlockSvg.prototype.renderDraw_ = function(iconWidth, inputRows) {
   this.svgPathDark_.setAttribute('d', pathString);
   pathString = renderInfo.highlight.join(' ') + '\n' + renderInfo.highlightInline.join(' ');
   this.svgPathLight_.setAttribute('d', pathString);
-  if (this.block_.tray) {
-    pathString = renderInfo.ledge.join(' ');
-    this.svgPathLedge_.setAttribute('d', pathString);
-  }
   if (Blockly.RTL) {
     // Mirror the block's path.
     this.svgPath_.setAttribute('transform', 'scale(-1 1)');
@@ -1302,6 +1296,9 @@ Blockly.BlockSvg.prototype.renderDrawRight_ = function(renderInfo, connectionsXY
   }
   if (this.block_.tray) {
     this.renderDrawTray_(renderInfo, inputRows.rightEdge + 108);
+    this.svgPathLedge_.style.display = 'block';
+  } else if (this.svgPathLedge_) {
+    this.svgPathLedge_.style.display = 'none';
   }
   if (!inputRows.length) {
     renderInfo.curY = BS.MIN_BLOCK_Y;
@@ -1320,7 +1317,10 @@ Blockly.BlockSvg.prototype.renderDrawTray_ = function (renderInfo, trayWidth, tr
     renderInfo.highlight.push('m 0', trayHeight);
   }
 
-  renderInfo.ledge.push('M 0', renderInfo.curY, 'h', renderInfo.curX);
+  this.svgPathLedge_.setAttribute('x', 6 - Blockly.RTL);
+  this.svgPathLedge_.setAttribute('y', renderInfo.curY + 4);
+  this.svgPathLedge_.setAttribute('width', renderInfo.curX - 11);
+  this.svgPathLedge_.setAttribute('height', trayHeight - 9);
   renderInfo.curY += trayHeight;
 };
 

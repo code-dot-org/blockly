@@ -89,6 +89,9 @@ Blockly.BlockSvg.prototype.initChildren = function () {
     this.svgPathFill_ = Blockly.createSvgElement('path', {'class': 'blocklyPath'},
       this.svgGroup_);
   }
+  if (this.block_.tray) {
+    this.svgPathLedge_ = Blockly.createSvgElement('path', {}, this.svgGroup_);
+  }
   this.svgPathLight_ = Blockly.createSvgElement('path',
     {'class': 'blocklyPathLight'}, this.svgGroup_);
   this.svgPath_.tooltip = this.block_;
@@ -561,6 +564,7 @@ Blockly.BlockSvg.prototype.dispose = function() {
   this.svgTypeHints_ = null;
   this.svgPathLight_ = null;
   this.svgPathDark_ = null;
+  this.svgPathLedge_ = null;
   // dispose of children
   this.removeUnusedFrame();
   // Break circular references.
@@ -704,6 +708,9 @@ Blockly.BlockSvg.prototype.updateToColour_ = function(hexColour) {
   var pattern = this.block_.getFillPattern();
   if (pattern) {
     this.svgPathFill_.setAttribute('fill', 'url(#' + pattern + ')');
+  }
+  if (this.block_.tray) {
+    this.svgPathLedge_.setAttribute('stroke', goog.color.rgbArrayToHex(rgbDark));
   }
 };
 
@@ -1155,6 +1162,8 @@ Blockly.BlockSvg.prototype.renderDraw_ = function(iconWidth, inputRows) {
     // the edge of the block by a pixel. So undersize all measurements by a pixel.
     highlight: [],
     highlightInline: [],
+    // For blocks with trays.
+    ledge: [],
     // current x/y location
     curX: iconWidth,
     curY: 0
@@ -1198,10 +1207,17 @@ Blockly.BlockSvg.prototype.renderDraw_ = function(iconWidth, inputRows) {
   this.svgPathDark_.setAttribute('d', pathString);
   pathString = renderInfo.highlight.join(' ') + '\n' + renderInfo.highlightInline.join(' ');
   this.svgPathLight_.setAttribute('d', pathString);
+  if (this.block_.tray) {
+    pathString = renderInfo.ledge.join(' ');
+    this.svgPathLedge_.setAttribute('d', pathString);
+  }
   if (Blockly.RTL) {
     // Mirror the block's path.
     this.svgPath_.setAttribute('transform', 'scale(-1 1)');
     this.svgPathLight_.setAttribute('transform', 'scale(-1 1)');
+    if (this.svgPathLedge_) {
+      this.svgPathLedge_.setAttribute('transform', 'scale(-1 1)');
+    }
     this.svgPathDark_.setAttribute('transform', 'translate(1,1) scale(-1 1)');
   }
 };
@@ -1284,6 +1300,9 @@ Blockly.BlockSvg.prototype.renderDrawRight_ = function(renderInfo, connectionsXY
     }
     renderInfo.curY += row.height;
   }
+  if (this.block_.tray) {
+    this.renderDrawTray_(renderInfo, inputRows.rightEdge + 108);
+  }
   if (!inputRows.length) {
     renderInfo.curY = BS.MIN_BLOCK_Y;
     renderInfo.core.push('V', renderInfo.curY);
@@ -1291,6 +1310,18 @@ Blockly.BlockSvg.prototype.renderDrawRight_ = function(renderInfo, connectionsXY
       renderInfo.highlight.push('V', renderInfo.curY - 1);
     }
   }
+};
+
+Blockly.BlockSvg.prototype.renderDrawTray_ = function (renderInfo, trayWidth, trayHeight = 50) {
+  renderInfo.core.push('v', trayHeight);
+  if (Blockly.RTL) {
+    renderInfo.highlight.push('v', trayHeight);
+  } else {
+    renderInfo.highlight.push('m 0', trayHeight);
+  }
+
+  renderInfo.ledge.push('M 0', renderInfo.curY, 'h', renderInfo.curX);
+  renderInfo.curY += trayHeight;
 };
 
 Blockly.BlockSvg.prototype.renderDrawRightCollapsed_ = function (renderInfo, row) {
@@ -1591,7 +1622,7 @@ Blockly.BlockSvg.prototype.renderDrawBottom_ = function(renderInfo, connectionsX
   }
 
   // Should the bottom-left corner be rounded or square?
-  if (this.squareBottomLeftCorner_) {
+  if (this.squareBottomLeftCorner_ || this.block_.tray) {
     renderInfo.core.push('H 0');
     if (!Blockly.RTL) {
       renderInfo.highlight.push('M', '1,' + renderInfo.curY);

@@ -129,7 +129,7 @@ function test_image_dropdown_menu_button() {
   imgDropdown.setValue('bar');
   assertEquals('bar', imgDropdown.getValue());
 
-  // Attempts to set dropdown to a missing values are ignored.
+  // Attempts to set dropdown to a missing value are ignored.
   imgDropdown.setValue('zzz');
   assertEquals('bar', imgDropdown.getValue());
 }

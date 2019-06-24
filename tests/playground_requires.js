@@ -160,7 +160,12 @@ Blockly.Blocks.dropdown_with_button_block = {
       .appendTitle("here's a dropdown with buttons")
       .appendTitle(
         new Blockly.FieldImageDropdown(
-          [['Foo 123', 'foo'], ['Bar 456', 'bar']],
+          [
+            ['assets/bear.png', 'Bear'],
+            ['assets/carrot.png', 'Carrot'],
+            ['assets/coin.png', 'Coin'],
+            ['assets/cupcake.png', 'Cupcake'],
+          ],
           32,
           32,
           [{text: "TestButton", action: function(){console.log("Button Clicked")}}]

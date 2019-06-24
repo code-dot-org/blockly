@@ -80,10 +80,17 @@ function test_field_reposition_on_scroll() {
 function test_dropdown_options() {
   var dropdown = new Blockly.FieldDropdown([['Foo 123', 'foo'], ['Bar 456', 'bar']]);
 
-  console.log("");
-
   dropdown.setConfig('foo,abc,zzz');
   assert(goog.array.equals(['Foo 123', 'foo', 'abc', 'abc', 'zzz', 'zzz'], goog.array.flatten(dropdown.getOptions())));
+  assertEquals('foo', dropdown.getValue());
+
+  // Can set different value.
+  dropdown.setValue('zzz');
+  assertEquals('zzz', dropdown.getValue());
+
+  // Can set a value not present in the options list.
+  dropdown.setValue('asdf');
+  assertEquals('asdf', dropdown.getValue());
 
   dropdown.setConfig(' foo , abc');
   assert(goog.array.equals(['Foo 123', 'foo', 'abc', 'abc'], goog.array.flatten(dropdown.getOptions())));
@@ -95,13 +102,14 @@ function test_dropdown_options() {
 function test_image_dropdown_menu_button() {
   // Set up blockspace and button with image dropdown
   var blockSpace = Blockly.mainBlockSpace;
-  var imgDropdown = new Blockly.FieldImageDropdown([['Foo 123', 'foo'], ['Bar 456', 'bar']], 200, 200, [{text: "TestButton", action: function(){}}]);
+  var imgDropdown = new Blockly.FieldImageDropdown([['#', 'foo'], ['#', 'bar']], 200, 200, [{text: "TestButton", action: function(){}}]);
   var wrapperBlock = new Blockly.Block(blockSpace);
   wrapperBlock.setFunctional(true);
   wrapperBlock.initSvg();
   imgDropdown.sourceBlock_ = wrapperBlock;
 
   assertEquals(1, imgDropdown.buttons_.length);
+  assertEquals('foo', imgDropdown.getValue());
 
   // Generate menu
   imgDropdown.showMenu_();
@@ -116,6 +124,14 @@ function test_image_dropdown_menu_button() {
   // Elements stay remains in menu after menu is hidden
   imgDropdown.hideMenu_();
   assertEquals(3, imgDropdown.menu_.getItemCount());
+
+  // Can set different value.
+  imgDropdown.setValue('bar');
+  assertEquals('bar', imgDropdown.getValue());
+
+  // Attempts to set dropdown to a missing value are ignored.
+  imgDropdown.setValue('zzz');
+  assertEquals('bar', imgDropdown.getValue());
 }
 
 function test_clampedNumberValidator() {

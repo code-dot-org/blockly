@@ -259,6 +259,14 @@ Blockly.Block.prototype.initSvg = function() {
   this.setCurrentlyHidden(this.currentlyHidden_);
   this.moveToFrontOfMainCanvas_();
   this.setIsUnused();
+  if (this.tray) {
+    this.miniFlyout = new Blockly.HorizontalFlyout(this.blockSpace.blockSpaceEditor);
+    this.miniFlyout.targetBlockSpace_ = this.blockSpace;
+    const dom = this.miniFlyout.createDom(true);
+    this.svg_.getRootElement().append(dom);
+    const x = Blockly.Xml.textToDom('<xml><block type="child"></block><block type="colour_rgb"></block></xml>');
+    this.miniFlyout.show(x.children);
+  }
 };
 
 /**
@@ -2596,6 +2604,9 @@ Blockly.Block.prototype.render = function(selfOnly) {
   }
   this.shadowBlockValue_();
   this.svg_.render(selfOnly);
+  if (this.tray) {
+    this.miniFlyout.position_();
+  }
 };
 
 /**

@@ -1295,10 +1295,17 @@ Blockly.BlockSvg.prototype.renderDrawRight_ = function(renderInfo, connectionsXY
     renderInfo.curY += row.height;
   }
   if (this.block_.tray) {
-    this.renderDrawTray_(renderInfo, inputRows.rightEdge + 108);
+    this.block_.miniFlyout.customMetrics = () => ({
+      absoluteTop: renderInfo.curY,
+      absoluteLeft: Blockly.RTL ? -renderInfo.curX : 5,
+      viewWidth: renderInfo.curX - 10
+    });
+    this.block_.miniFlyout.softShow();
+    this.renderDrawTray_(renderInfo, this.block_.miniFlyout.getHeight());
     this.svgPathLedge_.style.display = 'block';
   } else if (this.svgPathLedge_) {
     this.svgPathLedge_.style.display = 'none';
+    this.block_.miniFlyout.softHide();
   }
   if (!inputRows.length) {
     renderInfo.curY = BS.MIN_BLOCK_Y;
@@ -1309,7 +1316,7 @@ Blockly.BlockSvg.prototype.renderDrawRight_ = function(renderInfo, connectionsXY
   }
 };
 
-Blockly.BlockSvg.prototype.renderDrawTray_ = function (renderInfo, trayWidth, trayHeight = 50) {
+Blockly.BlockSvg.prototype.renderDrawTray_ = function (renderInfo, trayHeight = 50) {
   renderInfo.core.push('v', trayHeight);
   if (Blockly.RTL) {
     renderInfo.highlight.push('v', trayHeight);

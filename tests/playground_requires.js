@@ -147,7 +147,7 @@ Blockly.Blocks.parent = {
 
     this.initMiniFlyout(`
       <xml>
-        <block type="child"></block>
+        <block type="math_number"></block>
         <block type="colour_rgb"></block>
       </xml>
     `);
@@ -160,18 +160,6 @@ Blockly.Blocks.parent = {
     this.appendValueInput('TEXT');
     this.setNextStatement(true);
     this.setInputsInline(true);
-  }
-};
-
-Blockly.Blocks.child = {
-  init: function() {
-    this.setHSV(20, 0.64, 0.62);
-    this.setParentForCopyOnDrag('parent');
-    this.setBlockToShadow('colour_picker');
-    this.setOutput(true, Blockly.BlockValueType.STRING);
-    this.appendDummyInput()
-      .appendTitle('child')
-      .appendTitle(new Blockly.FieldColour('#ffcc00'), 'COLOUR');
   }
 };
 

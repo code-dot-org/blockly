@@ -1543,7 +1543,7 @@ Blockly.Block.prototype.shadowBlockValue_ = function() {
         // ToDo - Remove hard-coded values to indicate which input and title part to update
         let fieldToUpdate = this.inputList[0].titleRow[1];
         // Set the value of the text
-        fieldToUpdate.setValue(siblingSpritePreviewField.getValue());
+        fieldToUpdate.setText(siblingSpritePreviewField.previewElement_.getAttribute("xlink:href"));
         // Add this block to the list of blocks to update when the original field is updated
         root.addRelationalUpdate(fieldToUpdate);
       }

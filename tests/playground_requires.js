@@ -133,8 +133,8 @@ Blockly.Blocks.location_variables_set = createVariableSet(Blockly.BlockValueType
 
 Blockly.Blocks.parent = {
   init: function() {
-    var toggle = new Blockly.FieldIcon('－');
-    this.tray = true;
+    var toggle = new Blockly.FieldIcon('＋');
+    this.tray = false;
     Blockly.bindEvent_(toggle.fieldGroup_, 'mousedown', this, () => {
       if (this.tray) {
         toggle.setText('＋');
@@ -145,11 +145,19 @@ Blockly.Blocks.parent = {
       this.render();
     });
 
+    this.initMiniFlyout(`
+      <xml>
+        <block type="child"></block>
+        <block type="colour_rgb"></block>
+      </xml>
+    `);
+
     this.setHSV(131, 0.64, 0.62);
-    this.appendValueInput('COLOUR')
+    this.appendDummyInput()
       .appendTitle(toggle)
       .appendTitle('parent block');
-    this.appendValueInput('TARGET');
+    this.appendValueInput('COLOUR');
+    this.appendValueInput('TEXT');
     this.setNextStatement(true);
     this.setInputsInline(true);
   }

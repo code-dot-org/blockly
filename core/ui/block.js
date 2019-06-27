@@ -259,6 +259,23 @@ Blockly.Block.prototype.initSvg = function() {
   this.setCurrentlyHidden(this.currentlyHidden_);
   this.moveToFrontOfMainCanvas_();
   this.setIsUnused();
+
+  if (this.miniFlyoutBlocks) {
+    this.miniFlyout = new Blockly.HorizontalFlyout(this.blockSpace.blockSpaceEditor);
+    this.miniFlyout.targetBlockSpace_ = this.blockSpace;
+    const dom = this.miniFlyout.createDom(true);
+    this.svg_.getRootElement().append(dom);
+    this.miniFlyout.show(this.miniFlyoutBlocks);
+    this.miniFlyout.softHide();
+  }
+};
+
+/**
+ * Create a mini-flyout with the given set of blocks.
+ */
+Blockly.Block.prototype.initMiniFlyout = function(blockString) {
+  const root = Blockly.Xml.textToDom(blockString);
+  this.miniFlyoutBlocks = root.children;
 };
 
 /**
@@ -2596,6 +2613,9 @@ Blockly.Block.prototype.render = function(selfOnly) {
   }
   this.shadowBlockValue_();
   this.svg_.render(selfOnly);
+  if (this.miniFlyout) {
+    this.miniFlyout.position_();
+  }
 };
 
 /**

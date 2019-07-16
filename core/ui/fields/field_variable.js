@@ -33,23 +33,23 @@ goog.require('Blockly.Variables');
  * Class for a variable's dropdown field.
  * @param {!string} varname The default name for the variable.  If null,
  *     a unique variable name will be generated.
- * @param {?Function} opt_changeHandler A function that is executed when a new
+ * @param {object} options
+ * @param {?Function} options.changeHandler A function that is executed when a new
  *     option is selected.
- * @param {?Function} opt_createHandler A function that is executed after creation
- * @param {?string} opt_category Only show variables from this category
+ * @param {?Function} options.createHandler A function that is executed after creation
+ * @param {?string} options.category Only show variables from this category
+ * @param {?string} options.categoryName Display Name for category
  * @extends {Blockly.FieldDropdown}
  * @constructor
  */
-Blockly.FieldVariable = function(
-    varname,
-    opt_changeHandler,
-    opt_createHandler,
-    opt_category) {
-  this.category = opt_category || Blockly.Variables.DEFAULT_CATEGORY;
+Blockly.FieldVariable = function(varname, options) {
+  options = options || {};
+  this.category = options.category || Blockly.Variables.DEFAULT_CATEGORY;
+  this.categoryName = options.categoryName || Blockly.Msg.VARIABLE;
   var changeHandler;
-  if (opt_changeHandler === Blockly.FieldParameter.dropdownChange) {
-    changeHandler = opt_changeHandler;
-  } else if (opt_changeHandler) {
+  if (options.changeHandler === Blockly.FieldParameter.dropdownChange) {
+    changeHandler = options.changeHandler;
+  } else if (options.changeHandler) {
     // Wrap the user's change handler together with the variable rename handler.
     var thisObj = this;
     changeHandler = function(value) {
@@ -62,7 +62,7 @@ Blockly.FieldVariable = function(
       } else {
         newVal = retVal;  // Variable name entered.
       }
-      opt_changeHandler.call(thisObj, newVal);
+      options.changeHandler.call(thisObj, newVal);
       return retVal;
     };
   } else {
@@ -70,7 +70,7 @@ Blockly.FieldVariable = function(
   }
 
   Blockly.FieldVariable.superClass_.constructor.call(this,
-      opt_createHandler || Blockly.FieldVariable.dropdownCreate, changeHandler);
+      options.createHandler || Blockly.FieldVariable.dropdownCreate, changeHandler);
 
   if (varname) {
     this.setValue(varname);
@@ -113,8 +113,8 @@ Blockly.FieldVariable.dropdownCreate = function() {
     variableList.push(name);
   }
   variableList.sort(goog.string.caseInsensitiveCompare);
-  variableList.push(Blockly.Msg.RENAME_VARIABLE);
-  variableList.push(Blockly.Msg.NEW_VARIABLE);
+  variableList.push(Blockly.Msg.RENAME_ALL.replace('%1', name));
+  variableList.push(Blockly.Msg.RENAME_THIS.replace('%1', this.categoryName));
   // Variables are not language-specific, use the name as both the user-facing
   // text and the internal representation.
   var options = [];
@@ -135,7 +135,7 @@ Blockly.FieldVariable.dropdownCreate = function() {
  * @this {!Blockly.FieldVariable}
  */
 Blockly.FieldVariable.prototype.dropdownChange = function(text) {
-  if (text === Blockly.Msg.RENAME_VARIABLE) {
+  if (text === Blockly.Msg.RENAME_ALL.replace('%1', this.getText())) {
     var oldVar = this.getText();
     this.getParentEditor_().hideChaff();
     Blockly.FieldVariable.modalPromptName(
@@ -146,7 +146,7 @@ Blockly.FieldVariable.prototype.dropdownChange = function(text) {
           Blockly.Variables.renameVariable(oldVar, newVar, this.sourceBlock_.blockSpace);
         }.bind(this));
     return null;
-  } else if (text === Blockly.Msg.NEW_VARIABLE) {
+  } else if (text === Blockly.Msg.RENAME_THIS.replace('%1', this.categoryName)) {
     this.getParentEditor_().hideChaff();
     Blockly.FieldVariable.modalPromptName(
         Blockly.Msg.NEW_VARIABLE_TITLE,

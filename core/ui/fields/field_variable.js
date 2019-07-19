@@ -37,15 +37,18 @@ goog.require('Blockly.Variables');
  *     option is selected.
  * @param {?Function} opt_createHandler A function that is executed after creation
  * @param {?string} opt_category Only show variables from this category
+ * @param {?string} opt_categoryName Display Name for category
  * @extends {Blockly.FieldDropdown}
  * @constructor
  */
 Blockly.FieldVariable = function(
-    varname,
-    opt_changeHandler,
-    opt_createHandler,
-    opt_category) {
+  varname,
+  opt_changeHandler,
+  opt_createHandler,
+  opt_category,
+  opt_categoryName) {
   this.category = opt_category || Blockly.Variables.DEFAULT_CATEGORY;
+  this.categoryName = opt_categoryName || Blockly.Msg.VARIABLE;
   var changeHandler;
   if (opt_changeHandler === Blockly.FieldParameter.dropdownChange) {
     changeHandler = opt_changeHandler;
@@ -113,8 +116,8 @@ Blockly.FieldVariable.dropdownCreate = function() {
     variableList.push(name);
   }
   variableList.sort(goog.string.caseInsensitiveCompare);
-  variableList.push(Blockly.Msg.RENAME_VARIABLE);
-  variableList.push(Blockly.Msg.NEW_VARIABLE);
+  variableList.push(Blockly.Msg.RENAME_ALL.replace('%1', name));
+  variableList.push(Blockly.Msg.RENAME_THIS.replace('%1', this.categoryName));
   // Variables are not language-specific, use the name as both the user-facing
   // text and the internal representation.
   var options = [];
@@ -135,7 +138,7 @@ Blockly.FieldVariable.dropdownCreate = function() {
  * @this {!Blockly.FieldVariable}
  */
 Blockly.FieldVariable.prototype.dropdownChange = function(text) {
-  if (text === Blockly.Msg.RENAME_VARIABLE) {
+  if (text === Blockly.Msg.RENAME_ALL.replace('%1', this.getText())) {
     var oldVar = this.getText();
     this.getParentEditor_().hideChaff();
     Blockly.FieldVariable.modalPromptName(
@@ -146,7 +149,7 @@ Blockly.FieldVariable.prototype.dropdownChange = function(text) {
           Blockly.Variables.renameVariable(oldVar, newVar, this.sourceBlock_.blockSpace);
         }.bind(this));
     return null;
-  } else if (text === Blockly.Msg.NEW_VARIABLE) {
+  } else if (text === Blockly.Msg.RENAME_THIS.replace('%1', this.categoryName)) {
     this.getParentEditor_().hideChaff();
     Blockly.FieldVariable.modalPromptName(
         Blockly.Msg.NEW_VARIABLE_TITLE,

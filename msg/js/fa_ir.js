@@ -311,8 +311,10 @@ Blockly.Msg.PROCEDURES_IFRETURN_WARNING = "اخطار: این بلوک فقط د
 Blockly.Msg.PROCEDURES_MUTATORARG_TITLE = "نام ورودی:";
 Blockly.Msg.PROCEDURES_MUTATORCONTAINER_TITLE = "ورودی‌ها";
 Blockly.Msg.REMOVE_COMMENT = "حذف نظر";
+Blockly.Msg.RENAME_ALL = "Rename all %1";
 Blockly.Msg.RENAME_PARAMETER = "پارامتر را تغییر نام دهید...";
 Blockly.Msg.RENAME_PARAMETER_TITLE = "نام تمام پارامترهای '%1' را تغییر بده به:";
+Blockly.Msg.RENAME_THIS = "Rename this %1";
 Blockly.Msg.RENAME_VARIABLE = "تغییر نام متغیر...";
 Blockly.Msg.RENAME_VARIABLE_TITLE = "تغییر نام همهٔ متغیرهای «%1» به:";
 Blockly.Msg.TEXT_APPEND_APPENDTEXT = "الحاق متن";
@@ -377,6 +379,7 @@ Blockly.Msg.TEXT_TRIM_OPERATOR_LEFT = "تراشیدن فاصله‌ها از ط�
 Blockly.Msg.TEXT_TRIM_OPERATOR_RIGHT = "حذف فاصله‌های طرف چپ";
 Blockly.Msg.TEXT_TRIM_TOOLTIP = "یک کپی از متن که فاصله های هر دو طرف آن حذف شده را برمیگرداند.";
 Blockly.Msg.UNUSED_CODE = "کد استفاده نشده";
+Blockly.Msg.VARIABLE = "variable";
 Blockly.Msg.VARIABLES_DEFAULT_NAME = "مورد";
 Blockly.Msg.VARIABLES_GET_CREATE_SET = "ایجاد 'set %1'";
 Blockly.Msg.VARIABLES_GET_HELPURL = "http://code.google.com/p/blockly/wiki/Variables#Get";

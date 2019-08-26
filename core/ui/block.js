@@ -2281,10 +2281,15 @@ Blockly.Block.prototype.interpolateMsg = function(msg, var_args) {
       var tuple = arguments[digit];
       goog.asserts.assertArray(tuple,
           'Message symbol "%s" is out of range.', symbol);
-      this.appendValueInput(tuple[0])
-          .setCheck(tuple[1])
-          .setAlign(tuple[2])
-          .appendTitle(text);
+      if (tuple[0] && typeof tuple[0] === 'function') {
+        this.appendDummyInput().appendTitle(text);
+        tuple[0]();
+      } else {
+        this.appendValueInput(tuple[0])
+            .setCheck(tuple[1])
+            .setAlign(tuple[2])
+            .appendTitle(text);
+      }
       arguments[digit] = null;  // Inputs may not be reused.
     } else if (text) {
       // Trailing dummy input.

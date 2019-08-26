@@ -2356,12 +2356,16 @@ Blockly.Block.prototype.appendFunctionalInput = function(name) {
  * Interpolate a message string, creating titles and inputs.
  * @param {string} msg The message string to parse.  %1, %2, etc. are symbols
  *     for value inputs.
- * @param {!Array.<string|number>|number} var_args A series of tuples that
- *     each specify the value inputs to create.  Each tuple has three values:
- *     the input name, its check type, and its title's alignment.  The last
- *     parameter is not a tuple, but just an alignment for any trailing dummy
- *     input.  This last parameter is mandatory; there may be any number of
- *     tuples (though the number of tuples must match the symbols in msg).
+ * @param {!Array.<string|number>|number} var_args A series of tuples or
+ *     callbacks that each specify the value inputs to create.  If a callback
+ *     is provided, we defer rendering to that method. Otherwise, each tuple has
+ *     three values:
+ *       the input name
+ *       its check type
+ *       its title's alignment.
+ *     The last parameter is not a tuple, but just an alignment for any trailing
+ *     dummy input.  This last parameter is mandatory; there may be any number
+ *     of tuples (though the number of tuples must match the symbols in msg).
  */
 Blockly.Block.prototype.interpolateMsg = function(msg, var_args) {
   // Remove the msg from the start and the dummy alignment from the end of args.
@@ -2379,9 +2383,9 @@ Blockly.Block.prototype.interpolateMsg = function(msg, var_args) {
       var tuple = arguments[digit];
       goog.asserts.assertArray(tuple,
           'Message symbol "%s" is out of range.', symbol);
-      if (tuple[0] && typeof tuple[0] === 'function') {
+      if (tuple === 'function') {
         this.appendDummyInput().appendTitle(text);
-        tuple[0]();
+        tuple();
       } else {
         this.appendValueInput(tuple[0])
             .setCheck(tuple[1])

@@ -259,6 +259,23 @@ Blockly.Block.prototype.initSvg = function() {
   this.setCurrentlyHidden(this.currentlyHidden_);
   this.moveToFrontOfMainCanvas_();
   this.setIsUnused();
+
+  if (this.miniFlyoutBlocks) {
+    this.miniFlyout = new Blockly.HorizontalFlyout(this.blockSpace.blockSpaceEditor);
+    this.miniFlyout.targetBlockSpace_ = this.blockSpace;
+    const dom = this.miniFlyout.createDom(true);
+    this.svg_.getRootElement().append(dom);
+    this.miniFlyout.show(this.miniFlyoutBlocks);
+    this.miniFlyout.softHide();
+  }
+};
+
+/**
+ * Create a mini-flyout with the given set of blocks.
+ */
+Blockly.Block.prototype.initMiniFlyout = function(blockString) {
+  const root = Blockly.Xml.textToDom(blockString);
+  this.miniFlyoutBlocks = root.children;
 };
 
 /**
@@ -717,6 +734,14 @@ Blockly.Block.prototype.onMouseDown_ = function(e) {
     return;
   } else {
     // Left-click (or middle click)
+    // If the block should duplicate on drag, duplicate the block, pass the click event
+    // to the duplicated block, and return from this block's click event
+    if(this.shouldCopyOnDrag()){
+      let dup = this.duplicate_();
+      dup.setParentForCopyOnDrag(null);
+      dup.onMouseDown_(e);
+      return;
+    }
     Blockly.removeAllRanges();
     this.setIsUnused(false);
     this.blockSpace.blockSpaceEditor.setCursor(Blockly.Css.Cursor.CLOSED);
@@ -843,12 +868,14 @@ Blockly.Block.prototype.duplicate_ = function() {
       /** @type {!Blockly.BlockSpace} */ (this.blockSpace), xmlBlock);
   // Move the duplicate next to the old block.
   var xy = this.getRelativeToSurfaceXY();
+  // If this is a duplicate on drag, off-set the block by 1 pixel
+  let snapRadius = this.shouldCopyOnDrag() ? 1 : Blockly.SNAP_RADIUS;
   if (Blockly.RTL) {
-    xy.x -= Blockly.SNAP_RADIUS;
+    xy.x -= snapRadius;
   } else {
-    xy.x += Blockly.SNAP_RADIUS;
+    xy.x += snapRadius;
   }
-  xy.y += Blockly.SNAP_RADIUS * 2;
+  xy.y += snapRadius * 2;
   newBlock.moveBy(xy.x, xy.y);
   return newBlock;
 };
@@ -1477,6 +1504,10 @@ Blockly.Block.prototype.setParent = function(newParent) {
   if (newParent) {
     // Add this block to the new parent's child list.
     newParent.childBlocks_.push(this);
+    // If the new block has relational blocks to update, re-render the blocks
+    if (newParent.getRelationalUpdateBlocks()) {
+      this.blockSpace.render();
+    }
 
     // Account for the transform added by the relative position of the parent.
     var oldXY = this.getRelativeToSurfaceXY();
@@ -1490,9 +1521,51 @@ Blockly.Block.prototype.setParent = function(newParent) {
     var newXY = this.getRelativeToSurfaceXY();
     // Move the connections to match the child's new position.
     this.moveConnections_(newXY.x - oldXY.x, newXY.y - oldXY.y);
+    this.shadowBlockValue_();
   } else {
     this.blockSpace.addTopBlock(this);
   }
+};
+
+/**
+ * Sets the value of this block to the value of the root child field specified.
+ * Adds a reference to this block in the root block to track when the value should be updated.
+ * @private
+ */
+Blockly.Block.prototype.shadowBlockValue_ = function() {
+  if(this.blockToShadow_){
+    let root = this.getRootBlock();
+    root.childBlocks_.forEach(function(sibling){
+      // Checks if the type of this childBlock matches the type this block is supposed to shadow
+      if(this.blockToShadow_ === sibling.type){
+        // ToDo - Remove hard-coded values to indicate which input and title part to copy
+        let siblingSpritePreviewField = sibling.inputList[0].titleRow[0];
+        // ToDo - Remove hard-coded values to indicate which input and title part to update
+        let fieldToUpdate = this.inputList[0].titleRow[1];
+        // Set the value of the text
+        fieldToUpdate.setText(siblingSpritePreviewField.previewElement_.getAttribute("xlink:href"));
+        // Add this block to the list of blocks to update when the original field is updated
+        root.addRelationalUpdate(fieldToUpdate);
+      }
+    }.bind(this));
+  }
+};
+
+/**
+ * Tracks a field_image block to update with the value of this dropdown
+ * @param fieldImage - additional field to update
+ */
+Blockly.Block.prototype.addRelationalUpdate = function(fieldImage){
+  if (!this.relationalUpdate_) {
+    this.relationalUpdate_= [];
+  }
+  this.relationalUpdate_.push(fieldImage);
+};
+
+/** Returns list of field_images to update
+*/
+Blockly.Block.prototype.getRelationalUpdateBlocks = function(){
+  return this.relationalUpdate_;
 };
 
 /**
@@ -1864,6 +1937,31 @@ Blockly.Block.prototype.setHSV = function(
     }
     this.render();
   }
+};
+
+/**
+ * Set global variable indicating the parent block that indicates this block should
+ * be duplicated on drag.
+ * @param parent, the parent block indicating this block should duplicate on drag
+ */
+Blockly.Block.prototype.setParentForCopyOnDrag = function(parent){
+  this.copyOnDrag_ = parent;
+};
+
+/**
+ * Returns whether this block is connected to the parent from which it should duplicate on drag
+ */
+Blockly.Block.prototype.shouldCopyOnDrag = function(){
+  let parent = this.getParent();
+  return this.copyOnDrag_ && !!parent && (parent.type === this.copyOnDrag_);
+};
+
+/**
+ * Sets the target block whose value this block should shadow
+ * @param target
+ */
+Blockly.Block.prototype.setBlockToShadow = function(target){
+  this.blockToShadow_ = target;
 };
 
 /**
@@ -2521,7 +2619,11 @@ Blockly.Block.prototype.render = function(selfOnly) {
   if (!this.svg_) {
     throw 'Uninitialized block cannot be rendered.  Call block.initSvg()';
   }
+  this.shadowBlockValue_();
   this.svg_.render(selfOnly);
+  if (this.miniFlyout) {
+    this.miniFlyout.position_();
+  }
 };
 
 /**

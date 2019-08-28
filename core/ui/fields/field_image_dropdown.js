@@ -31,17 +31,22 @@ goog.require('Blockly.ImageDimensionCache');
  * Class for a rectangular image dropdown field.
  * By default, will auto-size SVG block preview and HTML dropdown previews to image dimensions,
  * specifying a width / height will make the images scale to auto-fill
- * @param {!Array.<string>} choices An array of choices for a dropdown list, each choice is a
- *                                  tuple of [image path, value]
+ * @param {(!Array.<string>|!Function)} menuGenerator An array of options
+ *     for a dropdown list, where each choice is a tuple of [image path, value],
+ *     or a function which generates these options
  * @extends {Blockly.FieldRectangularDropdown}
  * @constructor
  * @param width force the dropdown to use a given width
  * @param height force the dropdown to use a given height
+ * @param {[Object]} buttons An array of object representing the text and
+ *     actions associated with buttons to be displayed at the bottom of the
+ *     dropdown list
  */
-Blockly.FieldImageDropdown = function(choices, width, height) {
+Blockly.FieldImageDropdown = function(menuGenerator, width, height, buttons) {
   this.width_ = width;
   this.height_ = height;
-  Blockly.FieldImageDropdown.superClass_.constructor.call(this, choices);
+  this.menuGenerator_ = menuGenerator;
+  Blockly.FieldImageDropdown.superClass_.constructor.call(this, menuGenerator, buttons);
   if (this.hasForcedDimensions_()) {
     this.updateDimensions_(this.width_, this.height_);
   }

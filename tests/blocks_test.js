@@ -395,3 +395,58 @@ function test_typedParams() {
 
   goog.dom.removeNode(containerDiv);
 }
+
+function test_shouldCopyOnDrag() {
+  let containerDiv = Blockly.Test.initializeBlockSpaceEditor();
+  let blockSpace = Blockly.mainBlockSpace;
+  Blockly.Xml.domToBlockSpace(blockSpace, Blockly.Xml.textToDom(
+    '<xml>' +
+      '<block type="parent">' +
+        '<value name="CLICK">' +
+          '<block type="child">' +
+          '</block>' +
+        '</value>' +
+      '</block>' +
+      '<block type="orphan"></block>' +
+    '</xml>'
+  ));
+  let blocks = blockSpace.getTopBlocks();
+  assertEquals(2, blocks.length);
+
+  let parentBlock = blockSpace.getTopBlocks()[0];
+  let childBlock = parentBlock.getChildren()[0];
+  let orphanBlock = blockSpace.getTopBlocks()[1];
+
+  childBlock.setParentForCopyOnDrag('parent');
+  orphanBlock.setParentForCopyOnDrag('parent');
+
+  assert(childBlock.shouldCopyOnDrag());
+  assertFalse(orphanBlock.shouldCopyOnDrag());
+
+  // Should copy when pulled out of the parent block.
+  assertEquals(3, blockSpace.getAllBlocks().length);
+  Blockly.Test.simulateDrag(childBlock, {x: 100, y: 100});
+  assertEquals(4, blockSpace.getAllBlocks().length);
+
+  goog.dom.removeNode(containerDiv);
+}
+
+function test_connectTwoBlocks() {
+  let containerDiv = Blockly.Test.initializeBlockSpaceEditor();
+  let blockSpace = Blockly.mainBlockSpace;
+  Blockly.Xml.domToBlockSpace(blockSpace, Blockly.Xml.textToDom(`
+    <xml>
+      <block type="variables_set"></block>
+      <block type="colour_picker"></block>
+    </xml>
+  `));
+
+  const target = blockSpace.getTopBlocks()[0];
+  const orphan = blockSpace.getTopBlocks()[1];
+
+  assertNull(orphan.getParent());
+  Blockly.Test.simulateDrag(orphan, target.getInput('VALUE').connection);
+  assertEquals(target, orphan.getParent());
+
+  goog.dom.removeNode(containerDiv);
+}

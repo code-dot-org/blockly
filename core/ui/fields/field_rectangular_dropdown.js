@@ -29,14 +29,17 @@ goog.require('Blockly.ImageDimensionCache');
 
 /**
  * Class for a rectangular dropdown field.
- * @param {!Array.<string>} choices An array of choices for a dropdown list, each choice is a
- *                                  tuple of [image location, value]
+ * @param {(!Array.<string>|!Function)} menuGenerator An array of choices
+ *     for a dropdown list, where each choice is a tuple of [image location, value],
+ *     or a function which generates these options
  * @extends {Blockly.Field}
  * @constructor
  */
-Blockly.FieldRectangularDropdown = function(choices) {
-  this.choices_ = choices;
-  var firstTuple = this.choices_[0];
+Blockly.FieldRectangularDropdown = function(menuGenerator, buttons) {
+  this.menuGenerator_ = menuGenerator;
+  let choices = this.getOptions();
+  this.buttons_ = buttons;
+  var firstTuple = choices[0];
   this.value_ = firstTuple[Blockly.FieldRectangularDropdown.TUPLE_VALUE_INDEX];
   var firstPreviewData = firstTuple[Blockly.FieldRectangularDropdown.TUPLE_PREVIEW_DATA_INDEX];
 
@@ -69,7 +72,10 @@ Blockly.FieldRectangularDropdown.prototype.CURSOR = 'default';
 Blockly.FieldRectangularDropdown.prototype.EDITABLE = true;
 
 Blockly.FieldRectangularDropdown.prototype.getOptions = function() {
-  return this.choices_;
+  if (goog.isFunction(this.menuGenerator_)) {
+    return this.menuGenerator_.call(this);
+  }
+  return /** @type {!Array.<!Array.<string>>} */ (this.menuGenerator_);
 };
 
 Blockly.FieldRectangularDropdown.prototype.buildDOMElements_ = function() {
@@ -159,13 +165,27 @@ Blockly.FieldRectangularDropdown.prototype.setArrowDirection_ = function(up) {
 
 Blockly.FieldRectangularDropdown.prototype.showMenu_ = function() {
   this.showWidgetDiv_();
-  this.menu_ = this.createMenuWithChoices_(this.choices_);
+  this.menu_ = this.createMenuWithChoices_(this.getOptions());
   goog.events.listen(this.menu_, goog.ui.Component.EventType.ACTION, this.generateMenuItemSelectedHandler_());
+  if (this.buttons_){
+    for (let button of this.buttons_){
+      this.addMenuButton_(button);
+    }
+  }
   this.addPositionAndShowMenu(this.menu_);
   this.pointArrowUp_();
 };
 
+Blockly.FieldRectangularDropdown.prototype.addMenuButton_ = function(buttonData){
+  let button = new goog.ui.Button(buttonData.text);
+  this.menuButtonListenKey_ = goog.events.listen(button, goog.ui.Component.EventType.ACTION, buttonData.action);
+  this.menu_.addItem(button);
+};
+
 Blockly.FieldRectangularDropdown.prototype.hideMenu_ = function() {
+  if (this.menuButtonListenKey_) {
+    goog.events.unlistenByKey(this.menuButtonListenKey_);
+  }
   this.pointArrowDown_();
 };
 
@@ -209,12 +229,23 @@ Blockly.FieldRectangularDropdown.prototype.generateMenuItemSelectedHandler_ = fu
     var menuItem = googMenuElement.target;
     if (menuItem) {
       var value = menuItem.getValue();
-      if (value !== null) {
+      if (value !== null && value !== undefined) {
         fieldRectanglularDropdown.setValue(value);
+        // If there are additional field images to update in the root block, update them with this preview data
+        let root = this.sourceBlock_ ? this.sourceBlock_.getRootBlock() : null;
+        let relationBlocks = root ? root.getRelationalUpdateBlocks() : null;
+        if(relationBlocks){
+          let updateValue = this.getPreviewDataForValue_(value);
+          relationBlocks.forEach(function(updateFields){
+            if(!updateFields.isDestroyed_()){
+              updateFields.setText(updateValue);
+            }
+          });
+        }
       }
     }
     Blockly.WidgetDiv.hideIfOwner(fieldRectanglularDropdown);
-  };
+  }.bind(this);
 };
 
 /**
@@ -315,10 +346,14 @@ Blockly.FieldRectangularDropdown.prototype.getValue = function() {
 
 /**
  * Set the language-neutral value for this dropdown menu.
+ * RectangularDropdown should only be set if the value exists, otherwise,
+ * keep the current value.
  * @param {string} newValue New value to set.
  */
 Blockly.FieldRectangularDropdown.prototype.setValue = function(newValue) {
-  this.value_ = newValue;
+  if (this.getPreviewDataForValue_(newValue)) {
+    this.value_ = newValue;
+  }
   this.refreshPreview_();
 };
 
@@ -331,13 +366,13 @@ Blockly.FieldRectangularDropdown.prototype.getCurrentPreviewData_ = function() {
 };
 
 Blockly.FieldRectangularDropdown.prototype.getPreviewDataForValue_ = function(value) {
-  var choices = this.choices_;
+  var choices = this.getOptions();
   for (var x = 0; x < choices.length; x++) {
     if (choices[x][Blockly.FieldRectangularDropdown.TUPLE_VALUE_INDEX] == value) {
       return choices[x][Blockly.FieldRectangularDropdown.TUPLE_PREVIEW_DATA_INDEX];
     }
   }
-  throw 'Preview data for given value "' + value + '" not found';
+  return null;
 };
 
 /**

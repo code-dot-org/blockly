@@ -61,3 +61,20 @@ Blockly.Test.testWithReadOnlyBlockSpaceEditor = function (callback) {
   callback(blockSpaceEditor);
   goog.dom.removeNode(container);
 };
+
+/**
+ * Drag the given block to the target destination using mouse events.
+ * @param block {Blockly.Block}
+ * @param destination {Blockly.Connection|Object}
+ */
+Blockly.Test.simulateDrag = function (block, destination = {dx: 100, dy: 100}) {
+  let {dx, dy} = destination;
+  if (destination instanceof Blockly.Connection) {
+    dx = destination.x_ - block.outputConnection.x_;
+    dy = destination.y_ - block.outputConnection.y_;
+  }
+
+  block.getSvgRoot().dispatchEvent(new MouseEvent('mousedown'));
+  document.dispatchEvent(new MouseEvent('mousemove', {clientX: dx, clientY: dy}));
+  document.dispatchEvent(new MouseEvent('mouseup'));
+};

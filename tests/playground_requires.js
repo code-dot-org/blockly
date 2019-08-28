@@ -131,6 +131,38 @@ Blockly.Blocks.behavior_variables_set = createVariableSet(Blockly.BlockValueType
 Blockly.Blocks.location_variables_get = createVariableGet(Blockly.BlockValueType.LOCATION);
 Blockly.Blocks.location_variables_set = createVariableSet(Blockly.BlockValueType.LOCATION);
 
+Blockly.Blocks.parent = {
+  init: function() {
+    var toggle = new Blockly.FieldIcon('＋');
+    this.tray = false;
+    Blockly.bindEvent_(toggle.fieldGroup_, 'mousedown', this, () => {
+      if (this.tray) {
+        toggle.setText('＋');
+      } else {
+        toggle.setText('－');
+      }
+      this.tray = !this.tray;
+      this.render();
+    });
+
+    this.initMiniFlyout(`
+      <xml>
+        <block type="math_number"></block>
+        <block type="colour_rgb"></block>
+      </xml>
+    `);
+
+    this.setHSV(131, 0.64, 0.62);
+    this.appendDummyInput()
+      .appendTitle(toggle)
+      .appendTitle('parent block');
+    this.appendValueInput('COLOUR');
+    this.appendValueInput('TEXT');
+    this.setNextStatement(true);
+    this.setInputsInline(true);
+  }
+};
+
 Blockly.Blocks.button_block = {
   // Example block with button field
   init: function() {
@@ -149,6 +181,28 @@ Blockly.Blocks.button_block = {
           'VALUE',
         );
     this.setOutput(true, Blockly.BlockValueType.STRING);
+  },
+};
+
+Blockly.Blocks.dropdown_with_button_block = {
+  // Example block with a dropdown with buttons
+  init: function() {
+    this.setHSV(131, 0.64, 0.62);
+    this.appendDummyInput()
+      .appendTitle("here's a dropdown with buttons")
+      .appendTitle(
+        new Blockly.FieldImageDropdown(
+          [
+            ['assets/bear.png', 'Bear'],
+            ['assets/carrot.png', 'Carrot'],
+            ['assets/coin.png', 'Coin'],
+            ['assets/cupcake.png', 'Cupcake'],
+          ],
+          32,
+          32,
+          [{text: "TestButton", action: function(){console.log("Button Clicked")}}]
+        )
+      );
   },
 };
 

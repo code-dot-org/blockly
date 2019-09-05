@@ -1,3 +1,5 @@
+/* global Blockly */
+/* global goog */
 'use strict';
 
 goog.provide('Blockly.Playground');
@@ -160,6 +162,66 @@ Blockly.Blocks.parent = {
     this.appendValueInput('TEXT');
     this.setNextStatement(true);
     this.setInputsInline(true);
+  }
+};
+
+Blockly.Blocks.sprite_pointer = {
+  init: function() {
+    this.setParentForCopyOnDrag('relational_hat_block');
+    this.setBlockToShadow('image_dropdown');
+    this.appendDummyInput().appendTitle('clicked')
+        .appendTitle(new Blockly.FieldImage('', 32, 32), '');
+    this.setOutput(true, Blockly.BlockValueType.SPRITE);
+  }
+};
+
+Blockly.Blocks.relational_hat_block = {
+  init: function() {
+    var toggle = new Blockly.FieldIcon('＋');
+    this.tray = false;
+    Blockly.bindEvent_(toggle.fieldGroup_, 'mousedown', this, () => {
+      if (this.tray) {
+        toggle.setText('＋');
+      } else {
+        toggle.setText('－');
+      }
+      this.tray = !this.tray;
+      this.render();
+    });
+
+    this.initMiniFlyout(`
+      <xml>
+        <block type="sprite_pointer"></block>
+        <block type="sprite_pointer"></block>
+      </xml>
+    `);
+
+    this.setHSV(131, 0.64, 0.62);
+    this.appendDummyInput()
+      .appendTitle(toggle)
+      .appendTitle('relational hat block with two images');
+    this.appendValueInput('IMAGE');
+    this.appendValueInput('IMAGE2');
+    this.setNextStatement(true);
+    this.setInputsInline(true);
+  },
+};
+
+Blockly.Blocks.image_dropdown = {
+  init: function() {
+    this.appendDummyInput().appendTitle(
+    new Blockly.FieldImageDropdown(
+      [
+        ['assets/bear.png', 'Bear'],
+        ['assets/carrot.png', 'Carrot'],
+        ['assets/coin.png', 'Coin'],
+        ['assets/cupcake.png', 'Cupcake'],
+      ],
+      32,
+      32,
+      [{text: "TestButton", action: function(){console.log("Button Clicked")}}]
+    ));
+    this.setOutput(true, Blockly.BlockValueType.SPRITE);
   }
 };
 

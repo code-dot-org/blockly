@@ -446,7 +446,7 @@ Blockly.Flyout.prototype.show = function(xmlList) {
   this.blockSpace_.bindScrollOnWheelHandler(this.svgGroup_);
 
   // Create the blocks to be shown in this flyout.
-  var blocks = [];
+  this.blocks = [];
   var gaps = [];
   this.minFlyoutWidth_ = 0;
   var firstBlock = xmlList && xmlList[0];
@@ -454,8 +454,8 @@ Blockly.Flyout.prototype.show = function(xmlList) {
     // Special category for variables.
     // Allow for a mix of static + dynamic blocks. Static blocks will appear
     // first in the category
-    this.layoutXmlToBlocks_(xmlList.slice(1), blocks, gaps, margin);
-    Blockly.Variables.flyoutCategory(blocks, gaps, margin, this.blockSpace_,
+    this.layoutXmlToBlocks_(xmlList.slice(1), this.blocks, gaps, margin);
+    Blockly.Variables.flyoutCategory(this.blocks, gaps, margin, this.blockSpace_,
       Blockly.Variables.DEFAULT_CATEGORY, true /* addDefaultVar */);
   } else if (firstBlock === Blockly.Procedures.NAME_TYPE ||
     Blockly.topLevelProcedureAutopopulate) {
@@ -465,15 +465,15 @@ Blockly.Flyout.prototype.show = function(xmlList) {
     }
 
     if (Blockly.disableProcedureAutopopulate) {
-      this.layoutXmlToBlocks_(xmlList.slice(1), blocks, gaps, margin);
+      this.layoutXmlToBlocks_(xmlList.slice(1), this.blocks, gaps, margin);
     }
 
     if (Blockly.topLevelProcedureAutopopulate) {
-      this.layoutXmlToBlocks_(xmlList, blocks, gaps, margin);
+      this.layoutXmlToBlocks_(xmlList, this.blocks, gaps, margin);
     }
 
     if (Blockly.mainBlockSpace) {
-      Blockly.Procedures.flyoutCategory(blocks, gaps, margin,
+      Blockly.Procedures.flyoutCategory(this.blocks, gaps, margin,
         this.blockSpace_,
         function(procedureInfo) {
           return !procedureInfo.isFunctionalVariable &&
@@ -487,7 +487,7 @@ Blockly.Flyout.prototype.show = function(xmlList) {
       this.addButtonToFlyout_(cursor, Blockly.Msg.FUNCTIONAL_VARIABLE_CREATE,
         this.createFunctionalVariable_);
     }
-    Blockly.Procedures.flyoutCategory(blocks, gaps, margin,
+    Blockly.Procedures.flyoutCategory(this.blocks, gaps, margin,
       this.blockSpace_,
       function(procedureInfo) { return procedureInfo.isFunctionalVariable; }
     );
@@ -497,11 +497,11 @@ Blockly.Flyout.prototype.show = function(xmlList) {
     // For behaviors, allow for a mix of static + dynamic blocks.
     // Static blocks will appear first in the category
     if (firstBlock === 'Behavior' || Blockly.disableProcedureAutopopulate) {
-      this.layoutXmlToBlocks_(xmlList.slice(1), blocks, gaps, margin);
+      this.layoutXmlToBlocks_(xmlList.slice(1), this.blocks, gaps, margin);
     }
 
     if (Blockly.topLevelProcedureAutopopulate) {
-      this.layoutXmlToBlocks_(xmlList, blocks, gaps, margin);
+      this.layoutXmlToBlocks_(xmlList, this.blocks, gaps, margin);
     } else {
       if (Blockly.Flyout.config[firstBlock]) {
         Blockly.Flyout.config[firstBlock].initialize(this, cursor);
@@ -509,7 +509,7 @@ Blockly.Flyout.prototype.show = function(xmlList) {
     }
 
     if (Blockly.mainBlockSpace) {
-      Blockly.Procedures.flyoutCategory(blocks, gaps, margin,
+      Blockly.Procedures.flyoutCategory(this.blocks, gaps, margin,
         this.blockSpace_,
         function(procedureInfo) {
           return procedureInfo.type === 'behavior_definition';
@@ -526,15 +526,16 @@ Blockly.Flyout.prototype.show = function(xmlList) {
       addDefaultVar = config.addDefaultVar;
       config.initialize(this, cursor);
     }
-    this.layoutXmlToBlocks_(xmlList.slice(1), blocks, gaps, margin);
+    this.layoutXmlToBlocks_(xmlList.slice(1), this.blocks, gaps, margin);
     Blockly.Variables.flyoutCategory(
-      blocks, gaps, margin, this.blockSpace_, firstBlock, addDefaultVar);
+      this.blocks, gaps, margin, this.blockSpace_, firstBlock, addDefaultVar);
   } else {
-    this.layoutXmlToBlocks_(xmlList, blocks, gaps, margin);
+    this.layoutXmlToBlocks_(xmlList, this.blocks, gaps, margin);
   }
 
   // Lay out the blocks vertically.
-  for (var i = 0, block; block = blocks[i]; i++) {
+  for (var i = 0, block; block = this.blocks[i]; i++) {
+    block.parentBlock_ = this.parentBlock_;
     var allBlocks = block.getDescendants();
     for (var j = 0, child; child = allBlocks[j]; j++) {
       // Mark blocks as being inside a flyout.  This is used to detect and

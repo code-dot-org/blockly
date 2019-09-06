@@ -265,7 +265,9 @@ Blockly.Block.prototype.initSvg = function() {
     this.miniFlyout.targetBlockSpace_ = this.blockSpace;
     const dom = this.miniFlyout.createDom(true);
     this.svg_.getRootElement().append(dom);
+    this.miniFlyout.registerParent(this);
     this.miniFlyout.show(this.miniFlyoutBlocks);
+    this.miniFlyout.blocks.forEach(block => this.childBlocks_.push(block));
     this.miniFlyout.softHide();
   }
 };
@@ -2623,6 +2625,10 @@ Blockly.Block.prototype.render = function(selfOnly) {
   this.svg_.render(selfOnly);
   if (this.miniFlyout) {
     this.miniFlyout.position_();
+
+    // Revisit this when restructuring the data flow. This line may no longer
+    // be needed.
+    this.miniFlyout.blocks.forEach(block => block.render(true /*selfOnly*/));
   }
 };
 

@@ -136,3 +136,7 @@ Blockly.HorizontalFlyout.prototype.layoutBlock_ = function(block, cursor, gap,
  */
 Blockly.HorizontalFlyout.prototype.reflow = function() {
 };
+
+Blockly.HorizontalFlyout.prototype.registerParent = function(parentBlock) {
+  this.parentBlock_ = parentBlock;
+};

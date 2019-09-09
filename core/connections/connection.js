@@ -203,6 +203,11 @@ Blockly.Connection.prototype.connect = function(connectTo) {
   if (!this.sourceBlock_.isUserVisible()) {
     this.sourceBlock_.setUserVisible(false);
   }
+
+  var rootBlock = this.sourceBlock_.getRootBlock();
+  if (rootBlock && rootBlock.setRelationalUpdateBlock) {
+    rootBlock.setRelationalUpdateBlock(this.sourceBlock_);
+  }
 };
 
 /**

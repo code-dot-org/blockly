@@ -1523,51 +1523,79 @@ Blockly.Block.prototype.setParent = function(newParent) {
     var newXY = this.getRelativeToSurfaceXY();
     // Move the connections to match the child's new position.
     this.moveConnections_(newXY.x - oldXY.x, newXY.y - oldXY.y);
-    this.shadowBlockValue_();
   } else {
     this.blockSpace.addTopBlock(this);
   }
 };
 
-/**
- * Sets the value of this block to the value of the root child field specified.
- * Adds a reference to this block in the root block to track when the value should be updated.
- * @private
- */
-Blockly.Block.prototype.shadowBlockValue_ = function() {
-  if(this.blockToShadow_){
-    let root = this.getRootBlock();
-    root.childBlocks_.forEach(function(sibling){
-      // Checks if the type of this childBlock matches the type this block is supposed to shadow
-      if(this.blockToShadow_ === sibling.type){
-        // ToDo - Remove hard-coded values to indicate which input and title part to copy
-        let siblingSpritePreviewField = sibling.inputList[0].titleRow[0];
-        // ToDo - Remove hard-coded values to indicate which input and title part to update
-        let fieldToUpdate = this.inputList[0].titleRow[1];
-        // Set the value of the text
-        fieldToUpdate.setText(siblingSpritePreviewField.previewElement_.getAttribute("xlink:href"));
-        // Add this block to the list of blocks to update when the original field is updated
-        root.addRelationalUpdate(fieldToUpdate);
-      }
-    }.bind(this));
-  }
+Blockly.Block.prototype.setRelationalUpdateBlocks = function(){
+  this.getRelationalUpdateBlocks().forEach(block => {
+    this.setRelationalUpdateBlock(block);
+  });
 };
 
-/**
- * Tracks a field_image block to update with the value of this dropdown
- * @param fieldImage - additional field to update
- */
-Blockly.Block.prototype.addRelationalUpdate = function(fieldImage){
-  if (!this.relationalUpdate_) {
-    this.relationalUpdate_= [];
+Blockly.Block.prototype.getRelationalUpdateValue = function(type){
+  // let value;
+  if(!this.relationalConfig) {
+    return "";
   }
-  this.relationalUpdate_.push(fieldImage);
+  // catch error if inputList doesn't have 'type'
+  let inputName = this.relationalConfig[type];
+  let inputItem = this.inputList.filter(item => {
+    if(item.name == inputName) {
+      if (item.connection.targetConnection) {
+        return true;
+      }
+    }
+  });
+  // let rectangularDropdown = this.inputList[type].connection.targetConnection.sourceBlock_.inputList[0].titleRow[0];
+  if (inputItem.length !== 1) {
+    return '';
+  }
+
+  let dropdown = inputItem[0].connection.targetConnection.sourceBlock_.inputList[0].titleRow[0];
+
+  return dropdown.getPreviewDataForValue_(dropdown.getValue());
+  // this.childBlocks_.forEach(block => {
+  //   if (block/*block.isRelationalValueBlock*/) {
+  //     let rectangularDropdown = block.inputList[0].titleRow[0];
+  //     value = rectangularDropdown.getPreviewDataForValue_(rectangularDropdown.getValue());
+  //   }
+  // });
+  // return value;
+};
+
+Blockly.Block.prototype.setRelationalUpdateBlock = function(block) {
+  let updateValue;
+  // this.inputList.filter(item => {if(item.name == "IMAGE") {return item.connection.targetConnection.sourceBlock}})
+  if(!block.isRelationalBlock) {
+    return;
+  }
+  let blockField = block.inputList[0].titleRow[1];
+  if (!updateValue) {
+    updateValue = this.getRelationalUpdateValue(block.type);
+  }
+  if(!blockField.isDestroyed_()){
+    blockField.setText(updateValue);
+  }
 };
 
 /** Returns list of field_images to update
 */
 Blockly.Block.prototype.getRelationalUpdateBlocks = function(){
-  return this.relationalUpdate_;
+  var relationalUpdateBlocks = [];
+  this.recursivelyGetChildRelationalBlocks(relationalUpdateBlocks);
+  return relationalUpdateBlocks;
+};
+
+Blockly.Block.prototype.recursivelyGetChildRelationalBlocks = function(relationalBlocks){
+  if(this.isRelationalBlock) {
+    relationalBlocks.push(this);
+  }
+
+  if(this.childBlocks_) {
+    this.childBlocks_.forEach(block => block.recursivelyGetChildRelationalBlocks(relationalBlocks));
+  }
 };
 
 /**
@@ -2621,14 +2649,12 @@ Blockly.Block.prototype.render = function(selfOnly) {
   if (!this.svg_) {
     throw 'Uninitialized block cannot be rendered.  Call block.initSvg()';
   }
-  this.shadowBlockValue_();
   this.svg_.render(selfOnly);
+  if (this.isRelationalBlock) {
+    this.getRootBlock().setRelationalUpdateBlock(this);
+  }
   if (this.miniFlyout) {
     this.miniFlyout.position_();
-
-    // Revisit this when restructuring the data flow. This line may no longer
-    // be needed.
-    this.miniFlyout.blocks.forEach(block => block.render(true /*selfOnly*/));
   }
 };
 

@@ -20,6 +20,7 @@
 /**
  * @fileoverview Base class for a dropdown input field.
  */
+/* global goog, Blockly */
 'use strict';
 
 goog.provide('Blockly.FieldRectangularDropdown');
@@ -233,15 +234,9 @@ Blockly.FieldRectangularDropdown.prototype.generateMenuItemSelectedHandler_ = fu
         fieldRectanglularDropdown.setValue(value);
         // If there are additional field images to update in the root block, update them with this preview data
         let root = this.sourceBlock_ ? this.sourceBlock_.getRootBlock() : null;
-        let relationBlocks = root ? root.getRelationalUpdateBlocks() : null;
-        if(relationBlocks){
-          let updateValue = this.getPreviewDataForValue_(value);
-          relationBlocks.forEach(function(updateFields){
-            if(!updateFields.isDestroyed_()){
-              updateFields.setText(updateValue);
-            }
-          });
-        }
+        root && root.setRelationalUpdateBlocks
+          ? root.setRelationalUpdateBlocks(this.getPreviewDataForValue_(value))
+          : null;
       }
     }
     Blockly.WidgetDiv.hideIfOwner(fieldRectanglularDropdown);
@@ -304,14 +299,14 @@ Blockly.FieldRectangularDropdown.prototype.positionWidgetDiv = function () {
   var menuPosition = this.calculateMenuPosition_(this.previewElement_, positionBelow);
 
   var windowSize = goog.dom.getViewportSize();
-  
+
   if(menuPosition.x + size.width > windowSize.width) {
   	menuPosition.x -= size.width - (size.width / numberOfColumns);
   }
   if(menuPosition.y + size.height > windowSize.height) {
-  	menuPosition.y -= size.height + (size.height / Math.ceil(this.menu_.getChildCount() / numberOfColumns)); 
+  	menuPosition.y -= size.height + (size.height / Math.ceil(this.menu_.getChildCount() / numberOfColumns));
   }
-  
+
   var scrollOffset = goog.style.getViewportPageOffset(document);
 
   Blockly.WidgetDiv.position(menuPosition.x, menuPosition.y, windowSize, scrollOffset);

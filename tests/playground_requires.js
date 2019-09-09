@@ -165,11 +165,19 @@ Blockly.Blocks.parent = {
   }
 };
 
-Blockly.Blocks.sprite_pointer = {
+Blockly.Blocks.sprite_pointer_left = {
   init: function() {
-    this.setParentForCopyOnDrag('relational_hat_block');
-    this.setBlockToShadow('image_dropdown');
-    this.appendDummyInput().appendTitle('clicked')
+    this.isRelationalBlock = true;
+    this.appendDummyInput().appendTitle('left')
+        .appendTitle(new Blockly.FieldImage('', 32, 32), '');
+    this.setOutput(true, Blockly.BlockValueType.SPRITE);
+  }
+};
+
+Blockly.Blocks.sprite_pointer_right = {
+  init: function() {
+    this.isRelationalBlock = true;
+    this.appendDummyInput().appendTitle('right')
         .appendTitle(new Blockly.FieldImage('', 32, 32), '');
     this.setOutput(true, Blockly.BlockValueType.SPRITE);
   }
@@ -189,13 +197,8 @@ Blockly.Blocks.relational_hat_block = {
       this.render();
     });
 
-    this.initMiniFlyout(`
-      <xml>
-        <block type="sprite_pointer"></block>
-        <block type="sprite_pointer"></block>
-      </xml>
-    `);
 
+debugger;
     this.setHSV(131, 0.64, 0.62);
     this.appendDummyInput()
       .appendTitle(toggle)
@@ -204,11 +207,20 @@ Blockly.Blocks.relational_hat_block = {
     this.appendValueInput('IMAGE2');
     this.setNextStatement(true);
     this.setInputsInline(true);
+    this.relationalConfig = {'sprite_pointer_left':'IMAGE', 'sprite_pointer_right':'IMAGE2'};
+
+    this.initMiniFlyout(`
+      <xml>
+        <block type="sprite_pointer_left"></block>
+        <block type="sprite_pointer_right"></block>
+      </xml>
+    `);
   },
 };
 
 Blockly.Blocks.image_dropdown = {
   init: function() {
+    this.isRelationalValueBlock = true;
     this.appendDummyInput().appendTitle(
     new Blockly.FieldImageDropdown(
       [

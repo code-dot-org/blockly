@@ -537,9 +537,6 @@ Blockly.ContractEditor.prototype.layOutBlockSpaceItems_ = function () {
   this.definitionSectionView_.placeAndGetNewY(currentY, fullWidth);
 };
 
-Blockly.ContractEditor.prototype.createRangeArea_ = function() {
-};
-
 /**
  * @override
  */

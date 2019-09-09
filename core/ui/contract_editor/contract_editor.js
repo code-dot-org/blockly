@@ -537,55 +537,50 @@ Blockly.ContractEditor.prototype.layOutBlockSpaceItems_ = function () {
   this.definitionSectionView_.placeAndGetNewY(currentY, fullWidth);
 };
 
+Blockly.ContractEditor.prototype.createRangeArea_ = function() {
+};
+
 /**
  * @override
  */
 Blockly.ContractEditor.prototype.createContractDom_ = function() {
-  var rangeArea = goog.dom.createDom(
-    goog.dom.TagName.DIV,
-    {
+  var domainLabel = goog.dom.createDom(goog.dom.TagName.DIV, null,
+    goog.dom.createDom(goog.dom.TagName.SPAN, {
+      id: "domain-label"
+    }, Blockly.Msg.FUNCTIONAL_DOMAIN_LABEL),
+    goog.dom.createDom(goog.dom.TagName.SPAN, {
+      id: "domain-hint",
+      "class": "contract-type-hint"
+    }, "(the domain is the type of input)")
+  );
+
+  var rangeLabel =  goog.dom.createDom(goog.dom.TagName.DIV, null,
+    goog.dom.createDom(goog.dom.TagName.SPAN, {
+      id: "outputTypeTitle"
+    }, Blockly.Msg.FUNCTIONAL_RANGE_LABEL),
+    " ",
+    goog.dom.createDom(goog.dom.TagName.SPAN, {
+      id: "range-hint",
+      "class": "contract-type-hint"
+    }, "(the range is the type of output)")
+  );
+
+  var rangeArea = goog.dom.createDom(goog.dom.TagName.DIV, {
       id: "range-area",
       style: "margin: 0;"
     },
-    goog.dom.createDom(
-      goog.dom.TagName.DIV,
-      null,
-      goog.dom.createDom(
-        goog.dom.TagName.SPAN,
-        {
-          id: "outputTypeTitle"
-        },
-        Blockly.Msg.FUNCTIONAL_RANGE_LABEL
-      ),
-      " ",
-      goog.dom.createDom(
-        goog.dom.TagName.SPAN,
-        {
-          id: "range-hint",
-          class: "contract-type-hint"
-        },
-        "(the range is the type of output)"
-      )
-    ),
+    rangeLabel,
     goog.dom.createDom(goog.dom.TagName.SPAN, {
       id: "outputTypeDropdown"
     })
   );
 
-  var descriptionArea = goog.dom.createDom(
-    goog.dom.TagName.DIV,
-    {
+  var descriptionArea = goog.dom.createDom(goog.dom.TagName.DIV, {
       id: "description-area",
       style: "margin: 0px;"
     },
-    goog.dom.createDom(
-      goog.dom.TagName.DIV,
-      null,
-      Blockly.Msg.FUNCTIONAL_DESCRIPTION_LABEL
-    ),
-    goog.dom.createDom(
-      goog.dom.TagName.DIV,
-      null,
+    goog.dom.createDom(goog.dom.TagName.DIV, null, Blockly.Msg.FUNCTIONAL_DESCRIPTION_LABEL),
+    goog.dom.createDom(goog.dom.TagName.DIV, null,
       goog.dom.createDom(goog.dom.TagName.TEXTAREA, {
         id: "functionDescriptionText",
         rows: "2"
@@ -593,37 +588,10 @@ Blockly.ContractEditor.prototype.createContractDom_ = function() {
     )
   );
 
-  var domainLabel = goog.dom.createDom(
-    goog.dom.TagName.DIV,
-    null,
-    goog.dom.createDom(
-      goog.dom.TagName.SPAN,
-      {
-        id: "domain-label"
-      },
-      Blockly.Msg.FUNCTIONAL_DOMAIN_LABEL
-    ),
-    goog.dom.createDom(
-      goog.dom.TagName.SPAN,
-      {
-        id: "domain-hint",
-        class: "contract-type-hint"
-      },
-      "(the domain is the type of input)"
-    )
-  );
-
-  this.contractDiv_ = goog.dom.createDom(
-    goog.dom.TagName.DIV,
+  this.contractDiv_ = goog.dom.createDom(goog.dom.TagName.DIV,
     "blocklyToolboxDiv paramToolbox blocklyText contractEditor flyoutColorGray innerModalDiv",
-    goog.dom.createDom(
-      goog.dom.TagName.DIV,
-      null,
-      Blockly.Msg.FUNCTIONAL_NAME_LABEL
-    ),
-    goog.dom.createDom(
-      goog.dom.TagName.DIV,
-      null,
+    goog.dom.createDom(goog.dom.TagName.DIV, null, Blockly.Msg.FUNCTIONAL_NAME_LABEL),
+    goog.dom.createDom(goog.dom.TagName.DIV, null,
       goog.dom.createDom(goog.dom.TagName.INPUT, {
         id: "functionNameText",
         type: "text"
@@ -635,19 +603,15 @@ Blockly.ContractEditor.prototype.createContractDom_ = function() {
       style: "margin: 0;"
     }),
     goog.dom.createDom(goog.dom.TagName.DIV, {
-      class: "clear",
+      "class": "clear",
       style: "margin: 0;"
     }),
-    goog.dom.createDom(
-      goog.dom.TagName.BUTTON,
-      {
-        id: "paramAddButton",
-        class: "btn"
-      },
-      "Add Domain"
-    ),
+    goog.dom.createDom(goog.dom.TagName.BUTTON, {
+      id: "paramAddButton",
+      "class": "btn"
+    }, "Add Domain"),
     goog.dom.createDom(goog.dom.TagName.DIV, {
-      class: "clear",
+      "class": "clear",
       style: "margin: 0;"
     }),
     rangeArea,

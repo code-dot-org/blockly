@@ -949,47 +949,30 @@ Blockly.FunctionEditor.prototype.createParameterEditor_ = function() {
     var options = this.paramTypes.map(function(type) {
       return goog.dom.createDom(goog.dom.TagName.OPTION, null, type);
     });
-    paramTypeSelect = goog.dom.createDom(
-      goog.dom.TagName.SELECT,
-      {
-        id: "paramAddType",
-        style: "pointer-events: auto; margin: 0; width: 100px;"
-      },
-      options
-    );
+    paramTypeSelect = goog.dom.createDom(goog.dom.TagName.SELECT, {
+      id: "paramAddType",
+      style: "pointer-events: auto; margin: 0; width: 100px;"
+    }, options);
   }
+
+  var label = goog.dom.createDom(goog.dom.TagName.DIV, null, this.getMsg("FUNCTION_PARAMETERS_LABEL"));
+  var input = goog.dom.createDom(goog.dom.TagName.DIV, null,
+    goog.dom.createDom(goog.dom.TagName.INPUT, {
+      id: "paramAddText",
+      type: "text",
+      style: "width: 200px;"
+    }),
+    paramTypeSelect,
+    goog.dom.createDom(goog.dom.TagName.BUTTON, {
+      id: "paramAddButton",
+      "class": "btn no-mc"
+    }, this.getMsg("ADD_PARAMETER"))
+  );
 
   var editingArea = this.container_.querySelector("#paramEditingArea");
   goog.dom.removeChildren(editingArea);
-  goog.dom.appendChild(
-    editingArea,
-    goog.dom.createDom(
-      goog.dom.TagName.DIV,
-      null,
-      this.getMsg("FUNCTION_PARAMETERS_LABEL")
-    )
-  );
-  goog.dom.appendChild(
-    editingArea,
-    goog.dom.createDom(
-      goog.dom.TagName.DIV,
-      null,
-      goog.dom.createDom(goog.dom.TagName.INPUT, {
-        id: "paramAddText",
-        type: "text",
-        style: "width: 200px;"
-      }),
-      paramTypeSelect,
-      goog.dom.createDom(
-        goog.dom.TagName.BUTTON,
-        {
-          id: "paramAddButton",
-          "class": "btn no-mc"
-        },
-        this.getMsg("ADD_PARAMETER")
-      )
-    )
-  );
+  goog.dom.appendChild(editingArea, label);
+  goog.dom.appendChild(editingArea, input);
 };
 
 Blockly.FunctionEditor.prototype.createFrameClipDiv_ = function () {
@@ -1001,30 +984,17 @@ Blockly.FunctionEditor.prototype.createFrameClipDiv_ = function () {
 };
 
 Blockly.FunctionEditor.prototype.createContractDom_ = function() {
-  this.contractDiv_ = goog.dom.createDom(
-    goog.dom.TagName.DIV,
+  this.contractDiv_ = goog.dom.createDom(goog.dom.TagName.DIV,
     "blocklyToolboxDiv paramToolbox blocklyText flyoutColorGray innerModalDiv",
-    goog.dom.createDom(
-      goog.dom.TagName.DIV,
-      null,
-      this.getMsg("FUNCTION_NAME_LABEL")
-    ),
-    goog.dom.createDom(
-      goog.dom.TagName.DIV,
-      null,
+    goog.dom.createDom(goog.dom.TagName.DIV, null, this.getMsg("FUNCTION_NAME_LABEL")),
+    goog.dom.createDom(goog.dom.TagName.DIV, null,
       goog.dom.createDom(goog.dom.TagName.INPUT, {
         id: "functionNameText",
         type: "text"
       })
     ),
-    goog.dom.createDom(
-      goog.dom.TagName.DIV,
-      null,
-      this.getMsg("FUNCTION_DESCRIPTION_LABEL")
-    ),
-    goog.dom.createDom(
-      goog.dom.TagName.DIV,
-      null,
+    goog.dom.createDom(goog.dom.TagName.DIV, null, this.getMsg("FUNCTION_DESCRIPTION_LABEL")),
+    goog.dom.createDom(goog.dom.TagName.DIV, null,
       goog.dom.createDom(goog.dom.TagName.TEXTAREA, {
         id: "functionDescriptionText",
         rows: "2"
@@ -1035,15 +1005,13 @@ Blockly.FunctionEditor.prototype.createContractDom_ = function() {
       id: "paramEditingArea"
     })
   );
+
   if (Blockly.RTL) {
     this.contractDiv_.setAttribute("dir", "RTL");
   }
   this.contractDiv_.style.display = "block";
 
   this.frameClipDiv_ = this.createFrameClipDiv_();
-  this.frameClipDiv_.insertBefore(
-    this.contractDiv_,
-    this.frameClipDiv_.firstChild
-  );
+  this.frameClipDiv_.insertBefore(this.contractDiv_, this.frameClipDiv_.firstChild);
   this.container_.insertBefore(this.frameClipDiv_, this.container_.firstChild);
 };

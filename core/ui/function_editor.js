@@ -944,21 +944,52 @@ Blockly.FunctionEditor.prototype.createParameterEditor_ = function() {
     return;
   }
 
-  var paramTypeSelect = '';
+  var paramTypeSelect;
   if (this.paramTypes.length > 0) {
-    paramTypeSelect = this.paramTypes.map(function (type) {
-      return '<option>' + type + '</option>';
-    }).join('\n');
-    paramTypeSelect = '<select id="paramAddType" style="pointer-events: auto; margin: 0; width: 100px;">' + paramTypeSelect + '</select> ';
+    var options = this.paramTypes.map(function(type) {
+      return goog.dom.createDom(goog.dom.TagName.OPTION, null, type);
+    });
+    paramTypeSelect = goog.dom.createDom(
+      goog.dom.TagName.SELECT,
+      {
+        id: "paramAddType",
+        style: "pointer-events: auto; margin: 0; width: 100px;"
+      },
+      options
+    );
   }
 
-  this.container_.querySelector('#paramEditingArea').innerHTML =
-    '<div>' + this.getMsg('FUNCTION_PARAMETERS_LABEL') + '</div>'
-    + '<div>'
-    + '<input id="paramAddText" type="text" style="width: 200px;"/> '
-    + paramTypeSelect
-    + '<button id="paramAddButton" class="btn no-mc">' + this.getMsg('ADD_PARAMETER') + '</button>'
-    + '</div>';
+  var editingArea = this.container_.querySelector("#paramEditingArea");
+  goog.dom.removeChildren(editingArea);
+  goog.dom.appendChild(
+    editingArea,
+    goog.dom.createDom(
+      goog.dom.TagName.DIV,
+      null,
+      this.getMsg("FUNCTION_PARAMETERS_LABEL")
+    )
+  );
+  goog.dom.appendChild(
+    editingArea,
+    goog.dom.createDom(
+      goog.dom.TagName.DIV,
+      null,
+      goog.dom.createDom(goog.dom.TagName.INPUT, {
+        id: "paramAddText",
+        type: "text",
+        style: "width: 200px;"
+      }),
+      paramTypeSelect,
+      goog.dom.createDom(
+        goog.dom.TagName.BUTTON,
+        {
+          id: "paramAddButton",
+          "class": "btn no-mc"
+        },
+        this.getMsg("ADD_PARAMETER")
+      )
+    )
+  );
 };
 
 Blockly.FunctionEditor.prototype.createFrameClipDiv_ = function () {
@@ -970,19 +1001,49 @@ Blockly.FunctionEditor.prototype.createFrameClipDiv_ = function () {
 };
 
 Blockly.FunctionEditor.prototype.createContractDom_ = function() {
-  this.contractDiv_ = goog.dom.createDom('div',
-      'blocklyToolboxDiv paramToolbox blocklyText flyoutColorGray innerModalDiv');
+  this.contractDiv_ = goog.dom.createDom(
+    goog.dom.TagName.DIV,
+    "blocklyToolboxDiv paramToolbox blocklyText flyoutColorGray innerModalDiv",
+    goog.dom.createDom(
+      goog.dom.TagName.DIV,
+      null,
+      this.getMsg("FUNCTION_NAME_LABEL")
+    ),
+    goog.dom.createDom(
+      goog.dom.TagName.DIV,
+      null,
+      goog.dom.createDom(goog.dom.TagName.INPUT, {
+        id: "functionNameText",
+        type: "text"
+      })
+    ),
+    goog.dom.createDom(
+      goog.dom.TagName.DIV,
+      null,
+      this.getMsg("FUNCTION_DESCRIPTION_LABEL")
+    ),
+    goog.dom.createDom(
+      goog.dom.TagName.DIV,
+      null,
+      goog.dom.createDom(goog.dom.TagName.TEXTAREA, {
+        id: "functionDescriptionText",
+        rows: "2"
+      })
+    ),
+    goog.dom.createDom(goog.dom.TagName.DIV, {
+      style: "margin: 0;",
+      id: "paramEditingArea"
+    })
+  );
   if (Blockly.RTL) {
-    this.contractDiv_.setAttribute('dir', 'RTL');
+    this.contractDiv_.setAttribute("dir", "RTL");
   }
-  this.contractDiv_.innerHTML =
-      '<div>' + this.getMsg('FUNCTION_NAME_LABEL') + '</div>'
-      + '<div><input id="functionNameText" type="text"></div>'
-      + '<div>' + this.getMsg('FUNCTION_DESCRIPTION_LABEL') + '</div>'
-      + '<div><textarea id="functionDescriptionText" rows="2"></textarea></div>'
-      + '<div style="margin: 0;" id="paramEditingArea"></div>';
-  this.contractDiv_.style.display = 'block';
+  this.contractDiv_.style.display = "block";
+
   this.frameClipDiv_ = this.createFrameClipDiv_();
-  this.frameClipDiv_.insertBefore(this.contractDiv_, this.frameClipDiv_.firstChild);
+  this.frameClipDiv_.insertBefore(
+    this.contractDiv_,
+    this.frameClipDiv_.firstChild
+  );
   this.container_.insertBefore(this.frameClipDiv_, this.container_.firstChild);
 };

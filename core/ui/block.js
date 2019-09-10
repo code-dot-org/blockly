@@ -1528,16 +1528,27 @@ Blockly.Block.prototype.setParent = function(newParent) {
   }
 };
 
+// TODO: This should be called when a named sprite is attached to the hat block
+// and when a sprite block is removed from the hat block.
+/**
+ * Finds all reference blocks attached to 'this' (hat block) and updates them
+ * to use the current value.
+ */
 Blockly.Block.prototype.updateAllReferenceBlocks = function(){
   this.getAllReferenceBlocks().forEach(block => {
     this.setReferenceBlockValue(block);
   });
 };
 
+/**
+ * Finds the attached to 'this' (hat block) that is used to set the values for
+ * reference blocks of the provided type.
+ */
 Blockly.Block.prototype.getUpdatedReferenceValue = function(type){
   if(!this.referenceBlockConfig) {
     return '';
   }
+
   // TODO: catch error if inputList doesn't have 'type'
   let inputName = this.referenceBlockConfig[type];
   let inputItem = this.inputList.filter(item => {
@@ -1552,17 +1563,24 @@ Blockly.Block.prototype.getUpdatedReferenceValue = function(type){
     return '';
   }
 
+  // TODO: Refactor to make this cleaner
   let dropdown = inputItem[0].connection.targetConnection.sourceBlock_.inputList[0].titleRow[0];
   return dropdown.getPreviewDataForValue_(dropdown.getValue());
 };
 
+/**
+ * Sets the value of a single reference block.
+ */
 Blockly.Block.prototype.setReferenceBlockValue = function(block) {
   let updateValue;
   if(!block.isReferenceBlock) {
     return;
   }
+
+  // TODO: Refactor to remove hard coding
   let blockField = block.inputList[0].titleRow[1];
   if (!updateValue) {
+    // TODO: Refactor so we don't call getUpdatedReferenceValue on every call
     updateValue = this.getUpdatedReferenceValue(block.type);
   }
   if(!blockField.isDestroyed_()){
@@ -1570,14 +1588,20 @@ Blockly.Block.prototype.setReferenceBlockValue = function(block) {
   }
 };
 
-/** Returns list of reference blocks to update
-*/
+/**
+ * Finds all blocks that have 'this' (hat block) as their ancestor and returns
+ * only those that are reference blocks.
+ */
 Blockly.Block.prototype.getAllReferenceBlocks = function(){
   var allReferenceBlocks = [];
   this.recursivelyGetChildReferenceBlocks(allReferenceBlocks);
   return allReferenceBlocks;
 };
 
+/**
+ * Traverses the tree of descendents. All descendents that are reference blocks
+ * are added to allReferenceBlocks.
+ */
 Blockly.Block.prototype.recursivelyGetChildReferenceBlocks = function(allReferenceBlocks){
   if(this.isReferenceBlock) {
     allReferenceBlocks.push(this);
@@ -1617,7 +1641,7 @@ Blockly.Block.prototype.areBlockAndDescendantsDeletable = function() {
       return !child.areBlockAndDescendantsDeletable();
     });
   return this.isDeletable() && !deleteBlockedByChildren;
-}
+};
 
 /**
  * Get whether this block is deletable or not.

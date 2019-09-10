@@ -150,7 +150,7 @@ Blockly.Blocks.parent = {
     this.initMiniFlyout(`
       <xml>
         <block type="math_number"></block>
-        <block type="colour_rgb"></block>
+        <block type="block"></block>
       </xml>
     `);
 
@@ -167,7 +167,7 @@ Blockly.Blocks.parent = {
 
 Blockly.Blocks.sprite_pointer_left = {
   init: function() {
-    this.isRelationalBlock = true;
+    this.isReferenceBlock = true;
     this.appendDummyInput().appendTitle('left')
         .appendTitle(new Blockly.FieldImage('', 32, 32), '');
     this.setOutput(true, Blockly.BlockValueType.SPRITE);
@@ -176,14 +176,14 @@ Blockly.Blocks.sprite_pointer_left = {
 
 Blockly.Blocks.sprite_pointer_right = {
   init: function() {
-    this.isRelationalBlock = true;
+    this.isReferenceBlock = true;
     this.appendDummyInput().appendTitle('right')
         .appendTitle(new Blockly.FieldImage('', 32, 32), '');
     this.setOutput(true, Blockly.BlockValueType.SPRITE);
   }
 };
 
-Blockly.Blocks.relational_hat_block = {
+Blockly.Blocks.hat_block_with_reference_blocks = {
   init: function() {
     var toggle = new Blockly.FieldIcon('＋');
     this.tray = false;
@@ -197,17 +197,18 @@ Blockly.Blocks.relational_hat_block = {
       this.render();
     });
 
-
-debugger;
     this.setHSV(131, 0.64, 0.62);
     this.appendDummyInput()
       .appendTitle(toggle)
-      .appendTitle('relational hat block with two images');
+      .appendTitle('hat block with two images and two reference blocks');
     this.appendValueInput('IMAGE');
     this.appendValueInput('IMAGE2');
     this.setNextStatement(true);
     this.setInputsInline(true);
-    this.relationalConfig = {'sprite_pointer_left':'IMAGE', 'sprite_pointer_right':'IMAGE2'};
+    this.referenceBlockConfig = {
+      'sprite_pointer_left':'IMAGE',
+      'sprite_pointer_right':'IMAGE2'
+    };
 
     this.initMiniFlyout(`
       <xml>
@@ -220,7 +221,6 @@ debugger;
 
 Blockly.Blocks.image_dropdown = {
   init: function() {
-    this.isRelationalValueBlock = true;
     this.appendDummyInput().appendTitle(
     new Blockly.FieldImageDropdown(
       [

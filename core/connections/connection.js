@@ -205,8 +205,8 @@ Blockly.Connection.prototype.connect = function(connectTo) {
   }
 
   var rootBlock = this.sourceBlock_.getRootBlock();
-  if (rootBlock && rootBlock.setRelationalUpdateBlock) {
-    rootBlock.setRelationalUpdateBlock(this.sourceBlock_);
+  if (rootBlock && rootBlock.setReferenceBlockValue) {
+    rootBlock.setReferenceBlockValue(this.sourceBlock_);
   }
 };
 

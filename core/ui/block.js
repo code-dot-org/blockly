@@ -1506,8 +1506,8 @@ Blockly.Block.prototype.setParent = function(newParent) {
   if (newParent) {
     // Add this block to the new parent's child list.
     newParent.childBlocks_.push(this);
-    // If the new block has relational blocks to update, re-render the blocks
-    if (newParent.getRelationalUpdateBlocks()) {
+    // If the new block has reference blocks to update, re-render the blocks
+    if (newParent.getAllReferenceBlocks()) {
       this.blockSpace.render();
     }
 
@@ -1528,19 +1528,18 @@ Blockly.Block.prototype.setParent = function(newParent) {
   }
 };
 
-Blockly.Block.prototype.setRelationalUpdateBlocks = function(){
-  this.getRelationalUpdateBlocks().forEach(block => {
-    this.setRelationalUpdateBlock(block);
+Blockly.Block.prototype.updateAllReferenceBlocks = function(){
+  this.getAllReferenceBlocks().forEach(block => {
+    this.setReferenceBlockValue(block);
   });
 };
 
-Blockly.Block.prototype.getRelationalUpdateValue = function(type){
-  // let value;
-  if(!this.relationalConfig) {
-    return "";
+Blockly.Block.prototype.getUpdatedReferenceValue = function(type){
+  if(!this.referenceBlockConfig) {
+    return '';
   }
-  // catch error if inputList doesn't have 'type'
-  let inputName = this.relationalConfig[type];
+  // TODO: catch error if inputList doesn't have 'type'
+  let inputName = this.referenceBlockConfig[type];
   let inputItem = this.inputList.filter(item => {
     if(item.name == inputName) {
       if (item.connection.targetConnection) {
@@ -1548,53 +1547,44 @@ Blockly.Block.prototype.getRelationalUpdateValue = function(type){
       }
     }
   });
-  // let rectangularDropdown = this.inputList[type].connection.targetConnection.sourceBlock_.inputList[0].titleRow[0];
+
   if (inputItem.length !== 1) {
     return '';
   }
 
   let dropdown = inputItem[0].connection.targetConnection.sourceBlock_.inputList[0].titleRow[0];
-
   return dropdown.getPreviewDataForValue_(dropdown.getValue());
-  // this.childBlocks_.forEach(block => {
-  //   if (block/*block.isRelationalValueBlock*/) {
-  //     let rectangularDropdown = block.inputList[0].titleRow[0];
-  //     value = rectangularDropdown.getPreviewDataForValue_(rectangularDropdown.getValue());
-  //   }
-  // });
-  // return value;
 };
 
-Blockly.Block.prototype.setRelationalUpdateBlock = function(block) {
+Blockly.Block.prototype.setReferenceBlockValue = function(block) {
   let updateValue;
-  // this.inputList.filter(item => {if(item.name == "IMAGE") {return item.connection.targetConnection.sourceBlock}})
-  if(!block.isRelationalBlock) {
+  if(!block.isReferenceBlock) {
     return;
   }
   let blockField = block.inputList[0].titleRow[1];
   if (!updateValue) {
-    updateValue = this.getRelationalUpdateValue(block.type);
+    updateValue = this.getUpdatedReferenceValue(block.type);
   }
   if(!blockField.isDestroyed_()){
     blockField.setText(updateValue);
   }
 };
 
-/** Returns list of field_images to update
+/** Returns list of reference blocks to update
 */
-Blockly.Block.prototype.getRelationalUpdateBlocks = function(){
-  var relationalUpdateBlocks = [];
-  this.recursivelyGetChildRelationalBlocks(relationalUpdateBlocks);
-  return relationalUpdateBlocks;
+Blockly.Block.prototype.getAllReferenceBlocks = function(){
+  var allReferenceBlocks = [];
+  this.recursivelyGetChildReferenceBlocks(allReferenceBlocks);
+  return allReferenceBlocks;
 };
 
-Blockly.Block.prototype.recursivelyGetChildRelationalBlocks = function(relationalBlocks){
-  if(this.isRelationalBlock) {
-    relationalBlocks.push(this);
+Blockly.Block.prototype.recursivelyGetChildReferenceBlocks = function(allReferenceBlocks){
+  if(this.isReferenceBlock) {
+    allReferenceBlocks.push(this);
   }
 
   if(this.childBlocks_) {
-    this.childBlocks_.forEach(block => block.recursivelyGetChildRelationalBlocks(relationalBlocks));
+    this.childBlocks_.forEach(block => block.recursivelyGetChildReferenceBlocks(allReferenceBlocks));
   }
 };
 
@@ -2650,8 +2640,8 @@ Blockly.Block.prototype.render = function(selfOnly) {
     throw 'Uninitialized block cannot be rendered.  Call block.initSvg()';
   }
   this.svg_.render(selfOnly);
-  if (this.isRelationalBlock) {
-    this.getRootBlock().setRelationalUpdateBlock(this);
+  if (this.isReferenceBlock) {
+    this.getRootBlock().setReferenceBlockValue(this);
   }
   if (this.miniFlyout) {
     this.miniFlyout.position_();

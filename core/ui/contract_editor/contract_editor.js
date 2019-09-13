@@ -541,39 +541,94 @@ Blockly.ContractEditor.prototype.layOutBlockSpaceItems_ = function () {
  * @override
  */
 Blockly.ContractEditor.prototype.createContractDom_ = function() {
-  this.contractDiv_ = goog.dom.createDom('div',
-      'blocklyToolboxDiv paramToolbox blocklyText contractEditor flyoutColorGray innerModalDiv');
+  var domainLabel = goog.dom.createDom(goog.dom.TagName.DIV, null,
+    goog.dom.createDom(goog.dom.TagName.SPAN, {
+      id: "domain-label"
+    }, Blockly.Msg.FUNCTIONAL_DOMAIN_LABEL),
+    goog.dom.createDom(goog.dom.TagName.SPAN, {
+      id: "domain-hint",
+      "class": "contract-type-hint"
+    }, "(the domain is the type of input)")
+  );
+
+  var rangeLabel =  goog.dom.createDom(goog.dom.TagName.DIV, null,
+    goog.dom.createDom(goog.dom.TagName.SPAN, {
+      id: "outputTypeTitle"
+    }, Blockly.Msg.FUNCTIONAL_RANGE_LABEL),
+    " ",
+    goog.dom.createDom(goog.dom.TagName.SPAN, {
+      id: "range-hint",
+      "class": "contract-type-hint"
+    }, "(the range is the type of output)")
+  );
+
+  var rangeArea = goog.dom.createDom(goog.dom.TagName.DIV, {
+      id: "range-area",
+      style: "margin: 0;"
+    },
+    rangeLabel,
+    goog.dom.createDom(goog.dom.TagName.SPAN, {
+      id: "outputTypeDropdown"
+    })
+  );
+
+  var descriptionArea = goog.dom.createDom(goog.dom.TagName.DIV, {
+      id: "description-area",
+      style: "margin: 0px;"
+    },
+    goog.dom.createDom(goog.dom.TagName.DIV, null, Blockly.Msg.FUNCTIONAL_DESCRIPTION_LABEL),
+    goog.dom.createDom(goog.dom.TagName.DIV, null,
+      goog.dom.createDom(goog.dom.TagName.TEXTAREA, {
+        id: "functionDescriptionText",
+        rows: "2"
+      })
+    )
+  );
+
+  this.contractDiv_ = goog.dom.createDom(goog.dom.TagName.DIV,
+    "blocklyToolboxDiv paramToolbox blocklyText contractEditor flyoutColorGray innerModalDiv",
+    goog.dom.createDom(goog.dom.TagName.DIV, null, Blockly.Msg.FUNCTIONAL_NAME_LABEL),
+    goog.dom.createDom(goog.dom.TagName.DIV, null,
+      goog.dom.createDom(goog.dom.TagName.INPUT, {
+        id: "functionNameText",
+        type: "text"
+      })
+    ),
+    domainLabel,
+    goog.dom.createDom(goog.dom.TagName.DIV, {
+      id: "domain-area",
+      style: "margin: 0;"
+    }),
+    goog.dom.createDom(goog.dom.TagName.DIV, {
+      "class": "clear",
+      style: "margin: 0;"
+    }),
+    goog.dom.createDom(goog.dom.TagName.BUTTON, {
+      id: "paramAddButton",
+      "class": "btn"
+    }, "Add Domain"),
+    goog.dom.createDom(goog.dom.TagName.DIV, {
+      "class": "clear",
+      style: "margin: 0;"
+    }),
+    rangeArea,
+    descriptionArea
+  );
+
   if (Blockly.RTL) {
-    this.contractDiv_.setAttribute('dir', 'RTL');
+    this.contractDiv_.setAttribute("dir", "RTL");
   }
-  this.contractDiv_.innerHTML =
-          '<div>' + Blockly.Msg.FUNCTIONAL_NAME_LABEL + '</div>'
-        + '<div><input id="functionNameText" type="text"></div>'
-        + '<div><span id="domain-label">' + Blockly.Msg.FUNCTIONAL_DOMAIN_LABEL + '</span> <span class="contract-type-hint"  id="domain-hint">(the domain is the type of input)</span>' + '</div>'
-        + '<div id="domain-area" style="margin: 0;">'
-        + '</div>'
-        + '<div class="clear" style="margin: 0;"></div>'
-        + '<button id="paramAddButton" class="btn">' + 'Add Domain' + '</button>'
-        + '<div class="clear" style="margin: 0;"></div>'
-        + '<div id="range-area" style="margin: 0;">'
-          + '<div>'
-            +'<span id="outputTypeTitle">' + Blockly.Msg.FUNCTIONAL_RANGE_LABEL + '</span>'
-            +' '
-            +'<span class="contract-type-hint" id="range-hint">(the range is the type of output)</span>'
-          + '</div>'
-          + '<span id="outputTypeDropdown"></span>'
-        + '</div>'
-        + '<div id="description-area" style="margin: 0px;">'
-          + '<div>' + Blockly.Msg.FUNCTIONAL_DESCRIPTION_LABEL + '</div>'
-          + '<div><textarea id="functionDescriptionText" rows="2"></textarea></div>'
-        + '</div>';
+
   var metrics = this.modalBlockSpace.getMetrics();
-  this.contractDiv_.style.left = metrics.absoluteLeft + 'px';
-  this.contractDiv_.style.top = metrics.absoluteTop + 'px';
-  this.contractDiv_.style.width = metrics.viewWidth + 'px';
-  this.contractDiv_.style.display = 'block';
+  this.contractDiv_.style.left = metrics.absoluteLeft + "px";
+  this.contractDiv_.style.top = metrics.absoluteTop + "px";
+  this.contractDiv_.style.width = metrics.viewWidth + "px";
+  this.contractDiv_.style.display = "block";
   this.frameClipDiv_ = this.createFrameClipDiv_();
-  this.frameClipDiv_.insertBefore(this.contractDiv_, this.frameClipDiv_.firstChild);
+  this.frameClipDiv_.insertBefore(
+    this.contractDiv_,
+    this.frameClipDiv_.firstChild
+  );
   this.container_.insertBefore(this.frameClipDiv_, this.container_.firstChild);
   this.initializeAddButton_();
 };

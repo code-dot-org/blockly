@@ -182,7 +182,7 @@ Blockly.ContractEditor.prototype.create_ = function() {
   this.hiddenExampleBlocks_ = [];
   this.exampleAreaDiv = goog.dom.createDom('div', 'exampleAreaDiv innerModalDiv');
   this.addExampleButton = goog.dom.createDom('button', 'exampleAreaButton btn');
-  this.addExampleButton.innerHTML = "Add Example";
+  this.addExampleButton.textContent = "Add Example";
   Blockly.bindEvent_(this.addExampleButton, 'click', this, this.addNewExampleBlock_);
   goog.dom.append(this.exampleAreaDiv, this.addExampleButton);
   this.exampleAreaDiv.style.display = 'block';
@@ -190,12 +190,12 @@ Blockly.ContractEditor.prototype.create_ = function() {
   goog.dom.insertChildAt(this.frameClipDiv_, this.exampleAreaDiv, 0);
 
   this.callText = goog.dom.createDom('div', 'callResultText');
-  this.callText.innerHTML = "Call";
+  this.callText.textContent = "Call";
   Blockly.svgIgnoreMouseEvents(this.callText);
   goog.dom.appendChild(this.exampleAreaDiv, this.callText);
 
   this.resultText = goog.dom.createDom('div', 'callResultText');
-  this.resultText.innerHTML = "Result";
+  this.resultText.textContent = "Result";
   goog.dom.appendChild(this.exampleAreaDiv, this.resultText);
   Blockly.svgIgnoreMouseEvents(this.resultText);
 

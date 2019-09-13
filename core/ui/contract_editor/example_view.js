@@ -42,7 +42,7 @@ Blockly.ExampleView = function (dom, svg, contractEditor) {
   goog.dom.append(this.domParent_, this.resetExampleButton);
   this.resultText = goog.dom.createDom('div', 'example-result-text');
   Blockly.svgIgnoreMouseEvents(this.resultText);
-  this.resultText.innerHTML = NO_RESULT_TEXT;
+  this.resultText.textContent = NO_RESULT_TEXT;
   goog.dom.append(this.domParent_, this.resultText);
   this.refreshTestingUI(false);
 };
@@ -55,7 +55,7 @@ Blockly.ExampleView.prototype.initializeTestButton_ = function (buttonText,
   var newButton = goog.dom.createDom('button',
     'testButton launch blocklyLaunch exampleAreaButton');
   var testText = goog.dom.createDom('div');
-  testText.innerHTML = buttonText;
+  testText.textContent = buttonText;
   var runImage = goog.dom.createDom('img', iconClass);
   runImage.setAttribute('src', Blockly.assetUrl('media/1x1.gif'));
   goog.dom.append(newButton, runImage);
@@ -92,7 +92,7 @@ Blockly.ExampleView.prototype.reset = function () {
   // old result text
   if (goog.style.isElementShown(this.resetExampleButton)) {
     this.contractEditor_.resetExample(this.block_);
-    this.resultText.innerHTML = NO_RESULT_TEXT;
+    this.resultText.textContent = NO_RESULT_TEXT;
     this.refreshTestingUI(false);
   }
 };
@@ -101,7 +101,7 @@ Blockly.ExampleView.prototype.reset = function () {
  * @param {string} failure The failure text. If null, set to success text
  */
 Blockly.ExampleView.prototype.setResult = function (failure) {
-  this.resultText.innerHTML = failure || SUCCESS_TEXT;
+  this.resultText.textContent = failure || SUCCESS_TEXT;
   this.refreshTestingUI(false);
 };
 

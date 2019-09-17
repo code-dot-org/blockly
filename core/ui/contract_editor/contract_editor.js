@@ -545,6 +545,7 @@ Blockly.ContractEditor.prototype.createContractDom_ = function() {
     goog.dom.createDom(goog.dom.TagName.SPAN, {
       id: "domain-label"
     }, Blockly.Msg.FUNCTIONAL_DOMAIN_LABEL),
+    " ",
     goog.dom.createDom(goog.dom.TagName.SPAN, {
       id: "domain-hint",
       "class": "contract-type-hint"

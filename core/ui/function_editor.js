@@ -962,6 +962,7 @@ Blockly.FunctionEditor.prototype.createParameterEditor_ = function() {
       type: "text",
       style: "width: 200px;"
     }),
+    " ",
     paramTypeSelect,
     goog.dom.createDom(goog.dom.TagName.BUTTON, {
       id: "paramAddButton",

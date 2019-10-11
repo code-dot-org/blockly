@@ -24,8 +24,6 @@
 
 goog.provide('Blockly.AutoScroll');
 
-goog.require('goog.async.AnimationDelay');
-
 /**
  * @param {!Blockly.BlockSpace} blockSpace - blockspace to scroll
  * @param {!goog.math.Vec2} startPanVector - pan vector to begin with, pixels
@@ -46,19 +44,23 @@ Blockly.AutoScroll = function (blockSpace, startPanVector) {
   this.activePanVector_ = startPanVector;
 
   /**
+   * Timestamp of the previous rendered frame.
+   * @type {number}
+   * @private
+   */
+  this.lastTime_ = performance.now();
+
+  /**
    * ID of active window.startInterval callback key
    * @type {number}
    * @private
    */
-  this.animationDelay_ = new goog.async.AnimationDelay(
-    this.handleAnimationDelay_.bind(this), window);
-  this.lastTime_ = Date.now();
-  this.animationDelay_.start();
+  this.animationDelay_ = window.requestAnimationFrame(this.handleAnimationDelay_.bind(this));
 };
 
 Blockly.AutoScroll.prototype.stopAndDestroy = function () {
   this.activePanVector_ = null;
-  this.animationDelay_.dispose();
+  window.cancelAnimationFrame(this.animationDelay_);
   this.lastMouseX_ = null;
   this.lastMouseY_ = null;
 };
@@ -73,7 +75,7 @@ Blockly.AutoScroll.prototype.handleAnimationDelay_ = function (now) {
   var dt = now - this.lastTime_;
   this.lastTime_ = now;
   this.scrollTick_(dt);
-  this.animationDelay_.start();
+  this.animationDelay_ = window.requestAnimationFrame(this.handleAnimationDelay_.bind(this));
 };
 
 /**

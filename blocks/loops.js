@@ -97,10 +97,10 @@ Blockly.Blocks.controls_for = {
     this.setHelpUrl(Blockly.Msg.CONTROLS_FOR_HELPURL);
     this.setHSV(322, 0.90, 0.95);
     this.interpolateMsg(
-      blockly.Msg.CONTROLS_FOR_INPUT_COUNTER,
+      Blockly.Msg.CONTROLS_FOR_INPUT_COUNTER,
       () => {
         this.appendDummyInput().appendTitle(
-          new blockly.FieldVariable(null),
+          new Blockly.FieldVariable(null),
           'VAR'
         );
       },

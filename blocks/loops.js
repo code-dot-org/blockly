@@ -96,14 +96,19 @@ Blockly.Blocks.controls_for = {
   init: function() {
     this.setHelpUrl(Blockly.Msg.CONTROLS_FOR_HELPURL);
     this.setHSV(322, 0.90, 0.95);
-    this.appendDummyInput()
-        .appendTitle(Blockly.Msg.CONTROLS_FOR_INPUT_WITH)
-        .appendTitle(new Blockly.FieldVariable(null), 'VAR');
-    this.interpolateMsg(Blockly.Msg.CONTROLS_FOR_INPUT_FROM_TO_BY,
-                        ['FROM', 'Number', Blockly.ALIGN_RIGHT],
-                        ['TO', 'Number', Blockly.ALIGN_RIGHT],
-                        ['BY', 'Number', Blockly.ALIGN_RIGHT],
-                        Blockly.ALIGN_RIGHT);
+    this.interpolateMsg(
+      Blockly.Msg.CONTROLS_FOR_INPUT_COUNTER,
+      () => {
+        this.appendDummyInput().appendTitle(
+          new Blockly.FieldVariable(null),
+          'VAR'
+        );
+      },
+      ['FROM', 'Number', blockly.ALIGN_RIGHT],
+      ['TO', 'Number', blockly.ALIGN_RIGHT],
+      ['BY', 'Number', blockly.ALIGN_RIGHT],
+      blockly.ALIGN_RIGHT
+    );
     this.appendStatementInput('DO')
         .appendTitle(Blockly.Msg.CONTROLS_FOR_INPUT_DO);
     this.setPreviousStatement(true);

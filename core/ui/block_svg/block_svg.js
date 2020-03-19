@@ -761,8 +761,14 @@ Blockly.BlockSvg.prototype.updateLimit = function (limit) {
     this.limitText_.textContent = limit;
     Blockly.removeClass_(this.limitGroup_, 'overLimit');
   }
+  var textWidth;
+  try {
+    textWidth = this.limitText_.getBBox ? Math.ceil(this.limitText_.getBBox().width) : HALF_BUBBLE_SIZE;
+  } catch (e) {
+    // Firefox has trouble with hidden elements (Bug 528969).
+    textWidth = HALF_BUBBLE_SIZE;
+  }
 
-  var textWidth = this.limitText_.getBBox ? Math.ceil(this.limitText_.getBBox().width) : HALF_BUBBLE_SIZE;
   var rectWidth = Math.max(textWidth + HALF_BUBBLE_SIZE, BUBBLE_SIZE);
   this.limitRect_.setAttribute('width', rectWidth);
   this.limitText_.setAttribute('x', Math.round(rectWidth * 0.5) - HALF_BUBBLE_SIZE);

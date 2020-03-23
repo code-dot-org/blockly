@@ -131,7 +131,8 @@ Blockly.AngleHelper.prototype.init = function(svgContainer) {
 
   this.arc_ = Blockly.createSvgElement('path', {
     'stroke': this.arcColour_,
-    'fill': 'none',
+    'fill': this.arcColour_,
+    'fill-opacity': '0.3',
     'stroke-width': this.strokeWidth_,
   }, this.svg_);
 
@@ -293,7 +294,8 @@ Blockly.AngleHelper.describeArc = function(center, radius, startAngle, endAngle)
 
   var d = [
     'M', start.x.toFixed(2), start.y.toFixed(2),
-    'A', radius, radius, 0, largeArcFlag, sweepFlag, end.x.toFixed(2), end.y.toFixed(2)
+    'A', radius, radius, 0, largeArcFlag, sweepFlag, end.x.toFixed(2), end.y.toFixed(2),
+    'L', center.x, center.y
   ].join(' ');
 
   return d;

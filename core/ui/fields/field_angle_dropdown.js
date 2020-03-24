@@ -56,8 +56,8 @@ Blockly.FieldAngleDropdown.prototype.showEditor_ = function() {
 
   var menuDom = this.menu_.getElement();
   var menuSize = goog.style.getSize(menuDom);
-  var angleHelperHeight = menuSize.height;
-  var angleHelperWidth = Math.min(menuSize.height, 150);
+  var angleHelperHeight = Math.max(menuSize.height, 150);
+  var angleHelperWidth = 150;
 
   container.style.height = angleHelperHeight + 'px';
 

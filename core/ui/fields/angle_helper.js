@@ -26,7 +26,8 @@ Blockly.AngleHelper = function(direction, opt_options) {
 
   this.turnRight_ = direction === 'turnRight';
 
-  this.arcColour_ = opt_options.arcColour || '#949ca2';
+  this.lineColour_ = '#4d575f';
+  this.arcColour_ = opt_options.arcColour || this.lineColour_;
   this.angle_ = opt_options.angle || 0;
   this.circleR_ = opt_options.circleR || 10;
   this.height_ = opt_options.height || 150;
@@ -119,18 +120,7 @@ Blockly.AngleHelper.prototype.init = function(svgContainer) {
   this.mouseDownWrapper_ = Blockly.bindEvent_(this.svg_, 'mousedown', this, this.startDrag_);
 
   Blockly.createSvgElement('line', {
-    'stroke': '#4d575f',
-    'stroke-width': this.strokeWidth_,
-    'stroke-linecap': 'round',
-    'x1': this.center_.x - this.lineLength_.x,
-    'x2': this.center_.x,
-    'y1': this.center_.y,
-    'y2': this.center_.y
-  }, this.svg_);
-
-  Blockly.createSvgElement('line', {
-    'stroke': '#949ca2',
-    'stroke-dasharray': '6,6',
+    'stroke': this.lineColour_,
     'stroke-width': this.strokeWidth_,
     'stroke-linecap': 'round',
     'x1': this.center_.x,
@@ -141,7 +131,8 @@ Blockly.AngleHelper.prototype.init = function(svgContainer) {
 
   this.arc_ = Blockly.createSvgElement('path', {
     'stroke': this.arcColour_,
-    'fill': 'none',
+    'fill': this.arcColour_,
+    'fill-opacity': '0.3',
     'stroke-width': this.strokeWidth_,
   }, this.svg_);
 
@@ -150,10 +141,10 @@ Blockly.AngleHelper.prototype.init = function(svgContainer) {
     // define three marker sizes; 5px, 10px, and 15px at angles modulo
     // 15, 45, and 90 degrees, respectively.
     var markerSize = (angle % 90 == 0 ? 15 : angle % 45 == 0 ? 10 : 5);
-    var isOnPrimaryHalf = this.turnRight_ ? angle < 180 : angle > 180;
     Blockly.createSvgElement('line', {
       'stroke-linecap': 'round',
-      'stroke-opacity': isOnPrimaryHalf ? 1 : 0.3,
+      'stroke-opacity': '0.6',
+      'stroke': this.lineColour_,
       'x1': this.center_.x + this.lineLength_.x,
       'y1': this.center_.y,
       'x2': this.center_.x + this.lineLength_.x - markerSize,
@@ -164,7 +155,7 @@ Blockly.AngleHelper.prototype.init = function(svgContainer) {
   }
 
   this.variableLine_ = Blockly.createSvgElement('line', {
-    'stroke': '#4d575f',
+    'stroke': this.lineColour_,
     'stroke-width': this.strokeWidth_,
     'stroke-linecap': 'round',
     'x1': this.center_.x,
@@ -178,7 +169,7 @@ Blockly.AngleHelper.prototype.init = function(svgContainer) {
     'cy': this.circleCenter_.y,
     'fill': '#a69bc1',
     'r': this.circleR_,
-    'stroke': '#4d575f',
+    'stroke': this.lineColour_,
     'stroke-width': this.strokeWidth_,
     'style': 'cursor: move;',
   }, this.svg_);
@@ -302,7 +293,8 @@ Blockly.AngleHelper.describeArc = function(center, radius, startAngle, endAngle)
 
   var d = [
     'M', start.x.toFixed(2), start.y.toFixed(2),
-    'A', radius, radius, 0, largeArcFlag, sweepFlag, end.x.toFixed(2), end.y.toFixed(2)
+    'A', radius, radius, 0, largeArcFlag, sweepFlag, end.x.toFixed(2), end.y.toFixed(2),
+    'L', center.x, center.y
   ].join(' ');
 
   return d;

@@ -13,31 +13,27 @@ goog.require('goog.math.Vec2');
  * @param {object} opt_options
  * @param {String} opt_options.arcColour 
  * @param {number} opt_options.angle 
- * @param {number} opt_options.circleR 
  * @param {number} opt_options.height 
  * @param {number} opt_options.width 
- * @param {boolean} opt_options.dragging 
- * @param {number} opt_options.strokeWidth 
  * @param {number[]} opt_options.snapPoints
  * @param {function} opt_options.onUpdate
  */
 Blockly.AngleHelper = function(direction, opt_options) {
   opt_options = opt_options || {};
-
-  this.turnRight_ = direction === 'turnRight';
-
-  this.lineColour_ = '#4d575f';
   this.arcColour_ = opt_options.arcColour || this.lineColour_;
   this.angle_ = opt_options.angle || 0;
-  this.circleR_ = opt_options.circleR || 10;
   this.height_ = opt_options.height || 150;
   this.width_ = opt_options.width || 150;
-  this.dragging_ = opt_options.dragging || false;
-  this.strokeWidth_ = opt_options.strokeWidth || 3;
   this.snapPoints_ = opt_options.snapPoints && opt_options.snapPoints.map(function (point) {
     return Math.round(parseInt(point));
   });
-
+  this.onUpdate_ = opt_options.onUpdate;
+  
+  this.turnRight_ = direction === 'turnRight';
+  this.lineColour_ = '#4d575f';
+  this.circleR_ = 10;
+  this.dragging_ = false;
+  this.strokeWidth_ = 3;
   this.center_ = new goog.math.Vec2(this.width_ / 2, this.height_ / 2);
 
   var circumference = Math.min(this.height_, this.width_);
@@ -57,8 +53,6 @@ Blockly.AngleHelper = function(direction, opt_options) {
   this.variableLine_ = null;
 
   this.animationInterval_ = null;
-
-  this.onUpdate_ = opt_options.onUpdate;
 };
 
 /**

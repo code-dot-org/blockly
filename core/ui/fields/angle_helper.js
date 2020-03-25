@@ -196,8 +196,13 @@ Blockly.AngleHelper.prototype.update_ = function() {
   this.arc_.setAttribute('d', Blockly.AngleHelper.describeArc(this.center_, 20, arcStart, arcEnd));
 };
 
-Blockly.AngleHelper.prototype.startDrag_ = function() {
-  this.dragging_ = true;
+Blockly.AngleHelper.prototype.startDrag_ = function(e) {
+  var x = e.clientX - this.rect_.left;
+  var y = e.clientY - this.rect_.top;
+  var mouseLocation = new goog.math.Vec2(x, y);
+  if (goog.math.Vec2.distance(this.handleCenter_, mouseLocation) < this.handleR_) {
+    this.dragging_ = true;
+  }
 };
 
 Blockly.AngleHelper.prototype.updateDrag_ = function(e) {

@@ -51,6 +51,8 @@ Blockly.AngleHelper = function(direction, opt_options) {
   this.svg_ = null;
   this.rect_ = null;
   this.pickerLine_ = null;
+  this.baseLine_ = null;
+  this.ticks_ = null;
 
   this.animationInterval_ = null;
 };
@@ -113,7 +115,7 @@ Blockly.AngleHelper.prototype.init = function(svgContainer) {
   this.mouseUpWrapper_ = Blockly.bindEvent_(this.svg_, 'mouseup', this, this.stopDrag_);
   this.mouseDownWrapper_ = Blockly.bindEvent_(this.svg_, 'mousedown', this, this.startDrag_);
 
-  Blockly.createSvgElement('line', {
+  this.baseLine_ = Blockly.createSvgElement('line', {
     'stroke': this.lineColour_,
     'stroke-width': this.strokeWidth_,
     'stroke-linecap': 'round',
@@ -131,11 +133,12 @@ Blockly.AngleHelper.prototype.init = function(svgContainer) {
   }, this.svg_);
 
   // Draw markers every 15 degrees around the edge.
+  this.ticks_ = [];
   for (var angle = 15; angle < 360; angle += 15) {
     // define three marker sizes; 5px, 10px, and 15px at angles modulo
     // 15, 45, and 90 degrees, respectively.
     var markerSize = (angle % 90 == 0 ? 15 : angle % 45 == 0 ? 10 : 5);
-    Blockly.createSvgElement('line', {
+    this.ticks_.push(Blockly.createSvgElement('line', {
       'stroke-linecap': 'round',
       'stroke-opacity': '0.6',
       'stroke': this.lineColour_,
@@ -145,7 +148,7 @@ Blockly.AngleHelper.prototype.init = function(svgContainer) {
       'y2': this.center_.y,
       'class': 'blocklyAngleMarks',
       'transform': 'rotate(' + angle + ', ' + this.center_.x + ', ' + this.center_.y + ')'
-    }, this.svg_);
+    }, this.svg_));
   }
 
   this.pickerLine_ = Blockly.createSvgElement('line', {
@@ -261,6 +264,8 @@ Blockly.AngleHelper.prototype.dispose = function() {
   this.handle_ = null;
   this.svg_ = null;
   this.pickerLine_ = null;
+  this.baseLine_ = null;
+  this.ticks_ = null;
 };
 
 /**

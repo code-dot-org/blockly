@@ -155,6 +155,9 @@ Blockly.Xml.blockToDom = function(block, ignoreChildBlocks) {
     element.setAttribute('id', block.htmlId);
   }
 
+  // Add ID as an attribute
+  element.setAttribute('blockid', block.id);
+
   // Don't follow connections if we're ignoring child blocks
   if (block.nextConnection && !ignoreChildBlocks) {
     var nextBlock = block.nextConnection.targetBlock();

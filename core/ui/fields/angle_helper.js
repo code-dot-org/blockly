@@ -32,9 +32,11 @@ Blockly.AngleHelper = function(direction, opt_options) {
   this.turnRight_ = direction === 'turnRight';
   this.lineColour_ = '#4d575f';
   this.handleR_ = 10;
-  this.dragging_ = false;
+  this.draggingHandle_ = false;
+  this.draggingBaseline_ = false;
   this.strokeWidth_ = 3;
   this.center_ = new goog.math.Vec2(this.width_ / 2, this.height_ / 2);
+  this.baselineAngle_ = 0;
 
   this.radius_ = new goog.math.Vec2(Math.min(this.height_, this.width_) / 2 - this.handleR_ - this.strokeWidth_, 0);
 
@@ -179,6 +181,12 @@ Blockly.AngleHelper.prototype.init = function(svgContainer) {
  * onUpdate callback
  */
 Blockly.AngleHelper.prototype.update_ = function() {
+  this.baseLine_.setAttribute('transform', 'rotate(' + this.baselineAngle_ + ', ' + this.center_.x + ', ' + this.center_.y + ')');
+  for (var i = 0; i < this.ticks_.length; i++) {
+    var angle = (15 * i + this.baselineAngle_) % 360;
+    this.ticks_[i].setAttribute('transform', 'rotate(' + angle + ', ' + this.center_.x + ', ' + this.center_.y + ')');
+  }
+  
   this.handleCenter_ = goog.math.Vec2.rotateAroundPoint(
     this.center_.clone().add(this.radius_),
     this.center_,
@@ -201,35 +209,45 @@ Blockly.AngleHelper.prototype.startDrag_ = function(e) {
   var y = e.clientY - this.rect_.top;
   var mouseLocation = new goog.math.Vec2(x, y);
   if (goog.math.Vec2.distance(this.handleCenter_, mouseLocation) < this.handleR_) {
-    this.dragging_ = true;
+    this.draggingHandle_ = true;
+    return;
+  }
+  var angle = goog.math.angle(this.center_.x, this.center_.y, x, y);
+  var distanceFromCenter = goog.math.Vec2.distance(this.center_, mouseLocation);
+  if (Math.abs(this.baselineAngle_ - angle) < 10 && distanceFromCenter < (this.radius_.magnitude() + 10)) {
+    this.draggingBaseline_ = true;
   }
 };
 
 Blockly.AngleHelper.prototype.updateDrag_ = function(e) {
-  if (!this.dragging_) {
-    return;
-  }
-
   var x = e.clientX - this.rect_.left;
   var y = e.clientY - this.rect_.top;
   var angle = goog.math.angle(this.center_.x, this.center_.y, x, y);
 
-  if (!this.turnRight_) {
-    angle = goog.math.standardAngle(-angle);
+  if (this.draggingHandle_) {
+    if (!this.turnRight_) {
+      angle = goog.math.standardAngle(-angle);
+    }
+
+    this.setAngle(angle);
+
+    if (this.onUpdate_) {
+      this.onUpdate_();
+    }
   }
-
-  this.setAngle(angle);
-
-  if (this.onUpdate_) {
-    this.onUpdate_();
+  
+  if (this.draggingBaseline_) {
+    this.baselineAngle_ = angle;
+    this.update_();
   }
-
+  
   e.stopPropagation();
   e.preventDefault();
 };
 
 Blockly.AngleHelper.prototype.stopDrag_ = function() {
-  this.dragging_ = false;
+  this.draggingHandle_ = false;
+  this.draggingBaseline_ = false;
 };
 
 /**

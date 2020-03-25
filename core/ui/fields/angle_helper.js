@@ -31,26 +31,26 @@ Blockly.AngleHelper = function(direction, opt_options) {
   
   this.turnRight_ = direction === 'turnRight';
   this.lineColour_ = '#4d575f';
-  this.circleR_ = 10;
+  this.handleR_ = 10;
   this.dragging_ = false;
   this.strokeWidth_ = 3;
   this.center_ = new goog.math.Vec2(this.width_ / 2, this.height_ / 2);
 
   var circumference = Math.min(this.height_, this.width_);
-  this.lineLength_ = new goog.math.Vec2((circumference / 2) - this.circleR_ - this.strokeWidth_, 0);
+  this.lineLength_ = new goog.math.Vec2((circumference / 2) - this.handleR_ - this.strokeWidth_, 0);
 
-  this.circleCenter_ = this.center_.clone().add(this.lineLength_)
-  this.circleCenter_ = goog.math.Vec2.rotateAroundPoint(
-    this.circleCenter_,
+  this.handleCenter_ = this.center_.clone().add(this.lineLength_)
+  this.handleCenter_ = goog.math.Vec2.rotateAroundPoint(
+    this.handleCenter_,
     this.center_,
     goog.math.toRadians(this.turnRight_ ? this.angle_ : -this.angle_)
   );
 
   this.arc_ = null;
-  this.circle_ = null;
+  this.handle_ = null;
   this.svg_ = null;
   this.rect_ = null;
-  this.variableLine_ = null;
+  this.pickerLine_ = null;
 
   this.animationInterval_ = null;
 };
@@ -148,21 +148,21 @@ Blockly.AngleHelper.prototype.init = function(svgContainer) {
     }, this.svg_);
   }
 
-  this.variableLine_ = Blockly.createSvgElement('line', {
+  this.pickerLine_ = Blockly.createSvgElement('line', {
     'stroke': this.lineColour_,
     'stroke-width': this.strokeWidth_,
     'stroke-linecap': 'round',
     'x1': this.center_.x,
-    'x2': this.circleCenter_.x,
+    'x2': this.handleCenter_.x,
     'y1': this.center_.y,
-    'y2': this.circleCenter_.y
+    'y2': this.handleCenter_.y
   }, this.svg_);
 
-  this.circle_ = Blockly.createSvgElement('circle', {
-    'cx': this.circleCenter_.x,
-    'cy': this.circleCenter_.y,
+  this.handle_ = Blockly.createSvgElement('circle', {
+    'cx': this.handleCenter_.x,
+    'cy': this.handleCenter_.y,
     'fill': '#a69bc1',
-    'r': this.circleR_,
+    'r': this.handleR_,
     'stroke': this.lineColour_,
     'stroke-width': this.strokeWidth_,
     'style': 'cursor: move;',
@@ -177,17 +177,17 @@ Blockly.AngleHelper.prototype.init = function(svgContainer) {
  * onUpdate callback
  */
 Blockly.AngleHelper.prototype.update_ = function() {
-  this.circleCenter_ = goog.math.Vec2.rotateAroundPoint(
+  this.handleCenter_ = goog.math.Vec2.rotateAroundPoint(
     this.center_.clone().add(this.lineLength_),
     this.center_,
     goog.math.toRadians(this.turnRight_ ? this.angle_ : -this.angle_)
   );
 
-  this.variableLine_.setAttribute('x2', this.circleCenter_.x);
-  this.variableLine_.setAttribute('y2', this.circleCenter_.y);
+  this.pickerLine_.setAttribute('x2', this.handleCenter_.x);
+  this.pickerLine_.setAttribute('y2', this.handleCenter_.y);
 
-  this.circle_.setAttribute('cx', this.circleCenter_.x);
-  this.circle_.setAttribute('cy', this.circleCenter_.y);
+  this.handle_.setAttribute('cx', this.handleCenter_.x);
+  this.handle_.setAttribute('cy', this.handleCenter_.y);
 
   var arcStart = 0;
   var arcEnd = this.turnRight_ ? this.angle_ : -this.angle_;
@@ -258,9 +258,9 @@ Blockly.AngleHelper.prototype.dispose = function() {
   }
   goog.dom.removeNode(this.svg_);
   this.arc_ = null;
-  this.circle_ = null;
+  this.handle_ = null;
   this.svg_ = null;
-  this.variableLine_ = null;
+  this.pickerLine_ = null;
 };
 
 /**

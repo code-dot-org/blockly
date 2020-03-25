@@ -36,10 +36,9 @@ Blockly.AngleHelper = function(direction, opt_options) {
   this.strokeWidth_ = 3;
   this.center_ = new goog.math.Vec2(this.width_ / 2, this.height_ / 2);
 
-  var circumference = Math.min(this.height_, this.width_);
-  this.lineLength_ = new goog.math.Vec2((circumference / 2) - this.handleR_ - this.strokeWidth_, 0);
+  this.radius_ = new goog.math.Vec2(Math.min(this.height_, this.width_) / 2 - this.handleR_ - this.strokeWidth_, 0);
 
-  this.handleCenter_ = this.center_.clone().add(this.lineLength_)
+  this.handleCenter_ = this.center_.clone().add(this.radius_)
   this.handleCenter_ = goog.math.Vec2.rotateAroundPoint(
     this.handleCenter_,
     this.center_,
@@ -120,7 +119,7 @@ Blockly.AngleHelper.prototype.init = function(svgContainer) {
     'stroke-width': this.strokeWidth_,
     'stroke-linecap': 'round',
     'x1': this.center_.x,
-    'x2': this.center_.x + this.lineLength_.x,
+    'x2': this.center_.x + this.radius_.x,
     'y1': this.center_.y,
     'y2': this.center_.y,
   }, this.svg_);
@@ -142,9 +141,9 @@ Blockly.AngleHelper.prototype.init = function(svgContainer) {
       'stroke-linecap': 'round',
       'stroke-opacity': '0.6',
       'stroke': this.lineColour_,
-      'x1': this.center_.x + this.lineLength_.x,
+      'x1': this.center_.x + this.radius_.x,
       'y1': this.center_.y,
-      'x2': this.center_.x + this.lineLength_.x - markerSize,
+      'x2': this.center_.x + this.radius_.x - markerSize,
       'y2': this.center_.y,
       'class': 'blocklyAngleMarks',
       'transform': 'rotate(' + angle + ', ' + this.center_.x + ', ' + this.center_.y + ')'
@@ -181,7 +180,7 @@ Blockly.AngleHelper.prototype.init = function(svgContainer) {
  */
 Blockly.AngleHelper.prototype.update_ = function() {
   this.handleCenter_ = goog.math.Vec2.rotateAroundPoint(
-    this.center_.clone().add(this.lineLength_),
+    this.center_.clone().add(this.radius_),
     this.center_,
     goog.math.toRadians(this.turnRight_ ? this.angle_ : -this.angle_)
   );

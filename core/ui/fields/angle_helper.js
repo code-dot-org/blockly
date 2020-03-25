@@ -135,7 +135,7 @@ Blockly.AngleHelper.prototype.init = function(svgContainer) {
 
   // Draw markers every 15 degrees around the edge.
   this.ticks_ = [];
-  for (var angle = 15; angle < 360; angle += 15) {
+  for (var angle = 0; angle < 360; angle += 15) {
     // define three marker sizes; 5px, 10px, and 15px at angles modulo
     // 15, 45, and 90 degrees, respectively.
     var markerSize = (angle % 90 == 0 ? 15 : angle % 45 == 0 ? 10 : 5);
@@ -190,7 +190,7 @@ Blockly.AngleHelper.prototype.update_ = function() {
   this.handleCenter_ = goog.math.Vec2.rotateAroundPoint(
     this.center_.clone().add(this.radius_),
     this.center_,
-    goog.math.toRadians(this.turnRight_ ? this.angle_ : -this.angle_)
+    goog.math.toRadians(this.baselineAngle_ + (this.turnRight_ ? this.angle_ : -this.angle_))
   );
 
   this.pickerLine_.setAttribute('x2', this.handleCenter_.x);
@@ -199,8 +199,8 @@ Blockly.AngleHelper.prototype.update_ = function() {
   this.handle_.setAttribute('cx', this.handleCenter_.x);
   this.handle_.setAttribute('cy', this.handleCenter_.y);
 
-  var arcStart = 0;
-  var arcEnd = this.turnRight_ ? this.angle_ : -this.angle_;
+  var arcStart = this.baselineAngle_;
+  var arcEnd = this.baselineAngle_ + (this.turnRight_ ? this.angle_ : -this.angle_);
   this.arc_.setAttribute('d', Blockly.AngleHelper.describeArc(this.center_, 20, arcStart, arcEnd));
 };
 
@@ -225,6 +225,7 @@ Blockly.AngleHelper.prototype.updateDrag_ = function(e) {
   var angle = goog.math.angle(this.center_.x, this.center_.y, x, y);
 
   if (this.draggingHandle_) {
+    angle = goog.math.standardAngle(angle - this.baselineAngle_);
     if (!this.turnRight_) {
       angle = goog.math.standardAngle(-angle);
     }
@@ -288,6 +289,7 @@ Blockly.AngleHelper.prototype.dispose = function() {
   this.pickerLine_ = null;
   this.baseLine_ = null;
   this.ticks_ = null;
+  this.baselineAngle_ = 0;
 };
 
 /**

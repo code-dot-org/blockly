@@ -235,9 +235,7 @@ Blockly.AngleHelper.prototype.startDrag_ = function(e) {
     this.draggingHandle_ = true;
     return;
   }
-  var angle = goog.math.angle(this.center_.x, this.center_.y, x, y);
-  var distanceFromCenter = goog.math.Vec2.distance(this.center_, mouseLocation);
-  if (Math.abs(this.baselineAngle_ - angle) < 10 && distanceFromCenter < (this.radius_.magnitude() + 10)) {
+  if (goog.math.Vec2.distance(this.baselineHandleCenter_, mouseLocation) < this.baselineHandleR_) {
     this.draggingBaseline_ = true;
   }
 };

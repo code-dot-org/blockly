@@ -40,7 +40,7 @@ Blockly.AngleHelper = function(direction, opt_options) {
 
   this.radius_ = new goog.math.Vec2(Math.min(this.height_, this.width_) / 2 - this.handleR_ - this.strokeWidth_, 0);
 
-  this.handleCenter_ = this.center_.clone().add(this.radius_)
+  this.handleCenter_ = this.center_.clone().add(new goog.math.Vec2(this.radius_.x - this.handleR_, 0));
   this.handleCenter_ = goog.math.Vec2.rotateAroundPoint(
     this.handleCenter_,
     this.center_,
@@ -190,7 +190,7 @@ Blockly.AngleHelper.prototype.update_ = function() {
   }
   
   this.handleCenter_ = goog.math.Vec2.rotateAroundPoint(
-    this.center_.clone().add(this.radius_),
+    this.center_.clone().add(new goog.math.Vec2(this.radius_.x - this.handleR_, 0)),
     this.center_,
     goog.math.toRadians(this.baselineAngle_ + (this.turnRight_ ? this.angle_ : -this.angle_))
   );

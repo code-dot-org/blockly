@@ -201,11 +201,11 @@ Blockly.AngleHelper.prototype.update_ = function() {
 };
 
 Blockly.AngleHelper.prototype.startDrag_ = function() {
-  this.dragging_ = true;
+  this.picker_.isDragging = true;
 };
 
 Blockly.AngleHelper.prototype.updateDrag_ = function(e) {
-  if (!this.dragging_) {
+  if (!this.picker_.isDragging) {
     return;
   }
 
@@ -228,7 +228,7 @@ Blockly.AngleHelper.prototype.updateDrag_ = function(e) {
 };
 
 Blockly.AngleHelper.prototype.stopDrag_ = function() {
-  this.dragging_ = false;
+  this.picker_.isDragging = false;
 };
 
 /**

@@ -31,7 +31,7 @@ Blockly.AngleHelper = function(direction, opt_options) {
   
   this.turnRight_ = direction === 'turnRight';
   this.lineColour_ = '#4d575f';
-  this.handleR_ = 10;
+  this.handleR_ = 7.5;
   this.draggingHandle_ = false;
   this.draggingBaseline_ = false;
   this.strokeWidth_ = 3;
@@ -120,7 +120,9 @@ Blockly.AngleHelper.prototype.init = function(svgContainer) {
     'stroke': this.lineColour_,
     'stroke-width': this.strokeWidth_,
     'stroke-linecap': 'round',
-    'x1': this.center_.x,
+    'stroke-dasharray': '6 6',
+    'stroke-opacity': '0.5',
+    'x1': this.center_.x - this.radius_.x,
     'x2': this.center_.x + this.radius_.x,
     'y1': this.center_.y,
     'y2': this.center_.y,

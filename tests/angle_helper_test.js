@@ -63,3 +63,55 @@ function test_describeArc() {
     evaluate(test[0], test[1], test[2]);
   });
 }
+
+function test_picker_initial_location() {
+  var tests = [
+    [0, 87, 50],
+    [45, 76.16, 76.16],
+    [90, 50, 87],
+    [135, 23.83, 76.16],
+    [180, 13, 50],
+    [225, 23.83, 23.83],
+    [270, 50, 13],
+    [315, 76.16, 23.83]
+  ]
+  var assertWithin = function(val1, val2, threshold) {
+    assert(Math.abs(val1 - val2) < threshold);
+  }
+  tests.forEach(function (test) {
+    var angleHelper = new Blockly.AngleHelper('turnRight', {
+      angle: test[0],
+      width: 100,
+      height: 100
+    });
+    assertWithin(angleHelper.picker_.handleCenter.x, test[1], 0.01);
+    assertWithin(angleHelper.picker_.handleCenter.y, test[2], 0.01);
+  });
+}
+
+function test_picker_update_location() {
+  var angleHelper = new Blockly.AngleHelper('turnRight', {
+    angle: 0,
+    width: 100,
+    height: 100
+  });
+  angleHelper.init();
+  var tests = [
+    [0, 87, 50],
+    [45, 76.16, 76.16],
+    [90, 50, 87],
+    [135, 23.83, 76.16],
+    [180, 13, 50],
+    [225, 23.83, 23.83],
+    [270, 50, 13],
+    [315, 76.16, 23.83]
+  ]
+  var assertWithin = function(val1, val2, threshold) {
+    assert(Math.abs(val1 - val2) < threshold);
+  }
+  tests.forEach(function (test) {
+    angleHelper.setAngle(test[0]);
+    assertWithin(angleHelper.picker_.handleCenter.x, test[1], 0.01);
+    assertWithin(angleHelper.picker_.handleCenter.y, test[2], 0.01);
+  });
+}

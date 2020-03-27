@@ -355,6 +355,10 @@ Blockly.FieldRectangularDropdown.prototype.setValue = function(newValue) {
     this.value_ = newValue;
   }
   this.refreshPreview_();
+
+  if (this.sourceBlock_) {
+    this.sourceBlock_.blockSpace.fireChangeEvent();
+  }
 };
 
 Blockly.FieldRectangularDropdown.prototype.refreshPreview_ = function() {

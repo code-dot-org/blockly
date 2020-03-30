@@ -30,7 +30,7 @@ Blockly.AngleHelper = function(direction, options) {
     return Math.round(parseInt(point));
   });
   this.onUpdate_ = options.onUpdate;
-  this.enableBackgroundRotation_ = options.enableBackgroundRotation || true;
+  this.enableBackgroundRotation_ = options.enableBackgroundRotation || false;
 
   this.turnRight_ = direction === 'turnRight';
   
@@ -54,8 +54,12 @@ Blockly.AngleHelper = function(direction, options) {
   this.radius_ = new goog.math.Vec2(Math.min(this.height_, this.width_) / 2 - this.picker_.handleRadius - this.strokeWidth_, 0);
   this.center_ = new goog.math.Vec2(this.width_ / 2, this.height_ / 2);
 
-  this.picker_.handleCenter = this.center_.clone().add(
-    new goog.math.Vec2(this.radius_.x - this.picker_.handleRadius, 0));
+  if (this.enableBackgroundRotation_) {
+    this.picker_.handleCenter = this.center_.clone().add(
+      new goog.math.Vec2(this.radius_.x - this.picker_.handleRadius, 0));
+  } else {
+    this.picker_.handleCenter = this.center_.clone().add(this.radius_);
+  }
   this.picker_.handleCenter = goog.math.Vec2.rotateAroundPoint(
     this.picker_.handleCenter,
     this.center_,
@@ -213,8 +217,14 @@ Blockly.AngleHelper.prototype.update_ = function() {
     this.background_.ticks[i].setAttribute('transform', 'rotate(' + angle + ', ' + this.center_.x + ', ' + this.center_.y + ')');
   }
   
+  if (this.enableBackgroundRotation_) {
+    this.picker_.handleCenter = this.center_.clone().add(
+      new goog.math.Vec2(this.radius_.x - this.picker_.handleRadius, 0));
+  } else {
+    this.picker_.handleCenter = this.center_.clone().add(this.radius_);
+  }
   this.picker_.handleCenter = goog.math.Vec2.rotateAroundPoint(
-    this.center_.clone().add(this.radius_),
+    this.picker_.handleCenter,
     this.center_,
     goog.math.toRadians(this.background_.angle + (this.turnRight_ ? this.picker_.angle : -this.picker_.angle))
   );

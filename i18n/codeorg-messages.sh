@@ -16,6 +16,12 @@ for locale in $locales; do
   blockly_dest=$core_dir/msg/js/${js_locale}.js
   apps_dest=$apps_dir/lib/blockly/${js_locale}.js
 
+  # Ensure that destination directories exist. This is particularly useful (ie,
+  # required) for running the build with the distribution version of blockly,
+  # which does not include the msg directory.
+  mkdir -p $(dirname $blockly_dest)
+  mkdir -p $(dirname $apps_dest)
+
   echo "$src => $blockly_dest, $apps_dest"
   $core_dir/i18n/codeorg-json-to-js.pl $js_locale < $src > $blockly_dest
   $core_dir/i18n/codeorg-json-to-js.pl $js_locale < $src > $apps_dest

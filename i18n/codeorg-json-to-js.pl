@@ -16,5 +16,5 @@ while (<STDIN>) {
 }
 
 if (!$message_count) {
-  die "No strings for $js_locale";
+  print "No strings for $js_locale";
 }

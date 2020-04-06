@@ -102,7 +102,7 @@ Blockly.AngleHelper.prototype.setAngle = function(angle, skipSnap) {
 };
 
 Blockly.AngleHelper.prototype.getAngle = function() {
-  return this.picker_.angle;
+  return this.picker_ ? this.picker_.angle : 0;
 };
 
 Blockly.AngleHelper.prototype.init = function(svgContainer) {

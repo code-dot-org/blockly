@@ -123,14 +123,18 @@ Blockly.bindEvent_ = function(element, name, thisObject, func, useCapture) {
         }
       }
 
-      // Punt on multitouch events.
+      // For mousedown events, only process if one touch point occurs.
+      // This avoids us taking over input when two or more touch points
+      // occur simultaneously, for example allowing the user to do a pinch-zoom.
       var touchPoints = e.changedTouches || [e];
-      for (var i = 0; i < touchPoints.length; ++i) {
-        // Map the touch event's properties to the event.
-        e.clientX = touchPoints[i].clientX;
-        e.clientY = touchPoints[i].clientY;
+      if (name !== "mousedown" || touchPoints.length === 1) {
+        for (var i = 0; i < touchPoints.length; ++i) {
+          // Map the touch event's properties to the event.
+          e.clientX = touchPoints[i].clientX;
+          e.clientY = touchPoints[i].clientY;
 
-        func.apply(thisObject, arguments);
+          func.apply(thisObject, arguments);
+        }
       }
     };
     element.addEventListener(equivTouchEvent, wrapFunc, useCapture);

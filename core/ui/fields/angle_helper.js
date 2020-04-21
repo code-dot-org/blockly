@@ -41,8 +41,7 @@ Blockly.AngleHelper = function(direction, options) {
   };
   
   this.background_ = {
-    solidLine: null,
-    dashedLine: null,
+    line: null,
     ticks: []
   };
   
@@ -123,22 +122,13 @@ Blockly.AngleHelper.prototype.init = function(svgContainer) {
   this.mouseUpWrapper_ = Blockly.bindEvent_(this.svg_, 'mouseup', this, this.stopDrag_);
   this.mouseDownWrapper_ = Blockly.bindEvent_(this.svg_, 'mousedown', this, this.startDrag_);
 
-  this.background_.solidLine = Blockly.createSvgElement('line', {
+  this.background_.line = Blockly.createSvgElement('line', {
     'stroke': this.lineColour_,
     'stroke-width': this.strokeWidth_,
     'stroke-linecap': 'round',
-    'x1': this.center_.x,
-    'x2': this.center_.x - this.radius_.x,
-    'y1': this.center_.y,
-    'y2': this.center_.y,
-  }, this.svg_);
-  
-  this.background_.dashedLine = Blockly.createSvgElement('line', {
-    'stroke': '#949ca2',
-    'stroke-width': this.strokeWidth_,
-    'stroke-linecap': 'round',
-    'stroke-dasharray': '6,6',
-    'x1': this.center_.x,
+    'stroke-dasharray': '6 6',
+    'stroke-opacity': '0.5',
+    'x1': this.center_.x - this.radius_.x,
     'x2': this.center_.x + this.radius_.x,
     'y1': this.center_.y,
     'y2': this.center_.y,
@@ -146,19 +136,19 @@ Blockly.AngleHelper.prototype.init = function(svgContainer) {
 
   this.arc_ = Blockly.createSvgElement('path', {
     'stroke': this.arcColour_,
-    'fill': 'none',
+    'fill': this.arcColour_,
+    'fill-opacity': '0.3',
     'stroke-width': this.strokeWidth_,
   }, this.svg_);
 
   // Draw markers every 15 degrees around the edge.
-  for (var angle = 15; angle < 360; angle += 15) {
+  for (var angle = 0; angle < 360; angle += 15) {
     // define three marker sizes; 5px, 10px, and 15px at angles modulo
     // 15, 45, and 90 degrees, respectively.
     var markerSize = (angle % 90 == 0 ? 15 : angle % 45 == 0 ? 10 : 5);
-    var isOnPrimaryHalf = this.turnRight_ ? angle < 180 : angle > 180;
     this.background_.ticks.push(Blockly.createSvgElement('line', {
       'stroke-linecap': 'round',
-      'stroke-opacity': isOnPrimaryHalf ? 1 : 0.3,
+      'stroke-opacity': 0.3,
       'stroke': this.lineColour_,
       'x1': this.center_.x + this.radius_.x,
       'y1': this.center_.y,
@@ -308,7 +298,8 @@ Blockly.AngleHelper.describeArc = function(center, radius, startAngle, endAngle)
 
   var d = [
     'M', start.x.toFixed(2), start.y.toFixed(2),
-    'A', radius, radius, 0, largeArcFlag, sweepFlag, end.x.toFixed(2), end.y.toFixed(2)
+    'A', radius, radius, 0, largeArcFlag, sweepFlag, end.x.toFixed(2), end.y.toFixed(2),
+    'L', center.x, center.y
   ].join(' ');
 
   return d;

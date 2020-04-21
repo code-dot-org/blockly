@@ -97,6 +97,9 @@ Blockly.AngleHelper.prototype.animateAngleChange = function(targetAngle, animati
  * @param {boolean=false} skipSnap - should we ignore our snapping configuration?
  */
 Blockly.AngleHelper.prototype.setAngle = function(angle, skipSnap) {
+  if (!this.picker_) {
+    return;
+  }
   this.picker_.angle = skipSnap ? angle : this.snap_(angle);
   this.update_();
 };

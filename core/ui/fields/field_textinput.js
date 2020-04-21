@@ -133,7 +133,8 @@ Blockly.FieldTextInput.prototype.showAngleHelper_ = function() {
     arcColour: colour,
     height: Blockly.FieldTextInput.ANGLE_HELPER_SIZE,
     width: Blockly.FieldTextInput.ANGLE_HELPER_SIZE,
-    angle: parseInt(this.getValue())
+    angle: parseInt(this.getValue()),
+    enableBackgroundRotation: true
   });
 
   this.angleHelper.init(container);

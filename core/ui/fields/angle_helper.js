@@ -216,7 +216,7 @@ Blockly.AngleHelper.prototype.init = function(svgContainer) {
 Blockly.AngleHelper.prototype.update_ = function() {
   if (this.enableBackgroundRotation_) {
     this.background_.line.setAttribute('transform',
-    'rotate(' + this.background_.angle + ', ' + this.center_.x, + ', ' + this.center_.y + ')');
+    'rotate(' + this.background_.angle + ', ' + this.center_.x + ', ' + this.center_.y + ')');
     for (var i = 0; i < this.background_.ticks.length; i++) {
       var angle = (15 * i + this.background_.angle) % 360;
       this.background_.ticks[i].setAttribute('transform',
@@ -254,27 +254,35 @@ Blockly.AngleHelper.prototype.update_ = function() {
   this.arc_.setAttribute('d', Blockly.AngleHelper.describeArc(this.center_, 20, arcStart, arcEnd));
 };
 
-Blockly.AngleHelper.prototype.startDrag_ = function() {
-  this.picker_.isDragging = true;
+Blockly.AngleHelper.prototype.startDrag_ = function(e) {
+  var x = e.clientX - this.rect_.left;
+  var y = e.clientY - this.rect_.top;
+  var mouseLocation = new goog.math.Vec2(x, y);
+  if (this.enableBackgroundRotation_ &&
+    goog.math.Vec2.distance(this.background_.handleCenter, mouseLocation) < this.background_.handleRadius) {
+    this.background_.isDragging = true;
+  } else {
+    this.picker_.isDragging = true;
+  }
 };
 
 Blockly.AngleHelper.prototype.updateDrag_ = function(e) {
-  if (!this.picker_.isDragging) {
-    return;
-  }
-
   var x = e.clientX - this.rect_.left;
   var y = e.clientY - this.rect_.top;
   var angle = goog.math.angle(this.center_.x, this.center_.y, x, y);
-
-  if (!this.turnRight_) {
-    angle = goog.math.standardAngle(-angle);
+  if (this.picker_.isDragging) {
+    angle = goog.math.standardAngle(angle - this.background_.angle);
+    if (!this.turnRight_) {
+      angle = goog.math.standardAngle(-angle);
+    }
+    this.setAngle(angle);
+    if (this.onUpdate_) {
+      this.onUpdate_();
+    }
   }
-
-  this.setAngle(angle);
-
-  if (this.onUpdate_) {
-    this.onUpdate_();
+  if (this.background_.isDragging) {
+    this.background_.angle = angle;
+    this.update_();
   }
 
   e.stopPropagation();
@@ -283,6 +291,7 @@ Blockly.AngleHelper.prototype.updateDrag_ = function(e) {
 
 Blockly.AngleHelper.prototype.stopDrag_ = function() {
   this.picker_.isDragging = false;
+  this.background_.isDragging = false;
 };
 
 /**

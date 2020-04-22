@@ -44,6 +44,7 @@ Blockly.AngleHelper = function(direction, options) {
   
   this.background_ = {
     handleRadius: 5,
+    tickSpacing: 15,
     isDragging: false,
     angle: 0,
     handle: null,
@@ -167,11 +168,18 @@ Blockly.AngleHelper.prototype.init = function(svgContainer) {
     'stroke-width': this.strokeWidth_,
   }, this.svg_);
 
-  // Draw markers every 15 degrees around the edge.
-  for (var angle = 0; angle < 360; angle += 15) {
+  // Draw markers every this.background_.tickSpacing degrees around the edge.
+  for (var angle = 0; angle < 360; angle += this.background_.tickSpacing) {
     // define three marker sizes; 5px, 10px, and 15px at angles modulo
     // 15, 45, and 90 degrees, respectively.
-    var markerSize = (angle % 90 == 0 ? 15 : angle % 45 == 0 ? 10 : 5);
+    var markerSize;
+    if (angle % 90 == 0) {
+      markerSize = 15;
+    } else if (angle % 45 == 0) {
+      markerSize = 10;
+    } else {
+      markerSize = 5;
+    }
     this.background_.ticks.push(Blockly.createSvgElement('line', {
       'stroke-linecap': 'round',
       'stroke-opacity': 0.3,
@@ -218,7 +226,7 @@ Blockly.AngleHelper.prototype.update_ = function() {
     this.background_.line.setAttribute('transform',
     'rotate(' + this.background_.angle + ', ' + this.center_.x + ', ' + this.center_.y + ')');
     for (var i = 0; i < this.background_.ticks.length; i++) {
-      var angle = (15 * i + this.background_.angle) % 360;
+      var angle = (this.background_.tickSpacing * i + this.background_.angle) % 360;
       this.background_.ticks[i].setAttribute('transform',
       'rotate(' + angle + ', ' + this.center_.x + ', ' + this.center_.y + ')');
     }

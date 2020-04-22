@@ -77,7 +77,8 @@ Blockly.FieldAngleDropdown.prototype.showEditor_ = function() {
     arcColour: this.sourceBlock_.getHexColour(),
     height: angleHelperHeight,
     width: angleHelperWidth,
-    angle: parseInt(this.getValue())
+    angle: parseInt(this.getValue()),
+    enableBackgroundRotation: true
   });
 
   this.angleHelper.init(svgContainer);

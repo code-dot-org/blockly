@@ -101,6 +101,12 @@ Blockly.Flyout = function(blockSpaceEditor, opt_static) {
    * If disabled, clicks on blocks in flyout will be ignored.
    */
   this.enabled_ = true;
+  
+  /**
+    * Some flyouts have a button added to the top. If there's a button, this
+    * is an opaque background behind it that should match the width of the flyout.
+    */
+  this.flyoutButtonBackground_ = null;
 };
 
 /**
@@ -187,6 +193,7 @@ Blockly.Flyout.prototype.dispose = function() {
   }
   this.svgBackground_ = null;
   this.targetBlockSpace_ = null;
+  this.flyoutButtonBackground_ = null;
 };
 
 /**
@@ -593,29 +600,43 @@ Blockly.Flyout.prototype.show = function(xmlList) {
  * @private
  */
 Blockly.Flyout.prototype.addButtonToFlyout_ = function(cursor, buttonText, onMouseDown) {
-  var button = Blockly.createSvgElement('g', {'class': 'createFunction'},
+  var flyoutButtonArea = Blockly.createSvgElement('g', {'class': 'createFunction'},
     this.blockSpace_.svgGroup_);
   var padding = 5;
-  var r = Blockly.createSvgElement('rect', {
+  var background = Blockly.createSvgElement('rect', {
+    fill: '#ddd',
+    stroke: 'none',
+    height: 50,
+    x: -17,
+    y: -25
+  }, flyoutButtonArea);
+  var button = Blockly.createSvgElement('rect', {
     rx: 5,
     ry: 5,
     fill: 'orange',
     stroke: 'white'
-  }, button);
+  }, flyoutButtonArea);
   var text = Blockly.createSvgElement('text', {
     x: padding,
     y: padding,
     'class': 'blocklyText'
-  }, button);
+  }, flyoutButtonArea);
   text.textContent = buttonText;
   var bounds = text.getBoundingClientRect();
   this.minFlyoutWidth_ = bounds.width + 2 * padding;
-  r.setAttribute('width', bounds.width + 2 * padding);
-  r.setAttribute('height', bounds.height + 2 * padding);
-  r.setAttribute('y', -bounds.height + padding - 1);
-  button.setAttribute('transform', 'translate(17, 25)');
+  // Set minimum width for background, but will be updated to fit the full width of
+  // the flyout once the blocks fill the flyout
+  background.setAttribute('width', bounds.width + 2 * padding);
+  button.setAttribute('width', bounds.width + 2 * padding);
+  button.setAttribute('height', bounds.height + 2 * padding);
+  button.setAttribute('y', -bounds.height + padding - 1);
+  flyoutButtonArea.setAttribute('transform', 'translate(17, 25)');
+  // Clicking on the text or the button rectangle but not on
+  // the background rectangle should trigger the mouse handler
   Blockly.bindEvent_(button, 'mousedown', this, onMouseDown);
+  Blockly.bindEvent_(text, 'mousedown', this, onMouseDown);
   cursor.y += 40;
+  this.flyoutButtonBackground_ = background;
 };
 
 /**
@@ -649,6 +670,9 @@ Blockly.Flyout.prototype.reflow = function() {
             Blockly.RTL ? blockXY.x - blockHW.width : blockXY.x);
         block.flyoutRect_.setAttribute('y', blockXY.y);
       }
+    }
+    if (this.flyoutButtonBackground_) {
+      this.flyoutButtonBackground_.setAttribute('width', Math.max(0, flyoutWidth - 15));
     }
     // Record the width for .getMetrics_ and .position_.
     this.width_ = flyoutWidth;

@@ -103,9 +103,10 @@ Blockly.Flyout = function(blockSpaceEditor, opt_static) {
   this.enabled_ = true;
   
   /**
-    * Optional button that could be added to the top of the flyout.
+    * Some flyouts have a button added to the top. If there's a button, this
+    * is an opaque background behind it that should match the width of the flyout.
     */
-  this.flyoutButton_ = null;
+  this.flyoutButtonBackground_ = null;
 };
 
 /**
@@ -192,7 +193,7 @@ Blockly.Flyout.prototype.dispose = function() {
   }
   this.svgBackground_ = null;
   this.targetBlockSpace_ = null;
-  this.flyoutButton_ = null;
+  this.flyoutButtonBackground_ = null;
 };
 
 /**
@@ -635,7 +636,7 @@ Blockly.Flyout.prototype.addButtonToFlyout_ = function(cursor, buttonText, onMou
   Blockly.bindEvent_(button, 'mousedown', this, onMouseDown);
   Blockly.bindEvent_(text, 'mousedown', this, onMouseDown);
   cursor.y += 40;
-  this.flyoutButton_ = flyoutButtonArea;
+  this.flyoutButtonBackground_ = background;
 };
 
 /**
@@ -670,8 +671,8 @@ Blockly.Flyout.prototype.reflow = function() {
         block.flyoutRect_.setAttribute('y', blockXY.y);
       }
     }
-    if (this.flyoutButton_) {
-      this.flyoutButton_.children[0].setAttribute('width', Math.max(0, flyoutWidth - 15));
+    if (this.flyoutButtonBackground_) {
+      this.flyoutButtonBackground_.setAttribute('width', Math.max(0, flyoutWidth - 15));
     }
     // Record the width for .getMetrics_ and .position_.
     this.width_ = flyoutWidth;

@@ -1505,7 +1505,7 @@ Blockly.Block.prototype.setParent = function(newParent) {
     // Add this block to the new parent's child list.
     newParent.childBlocks_.push(this);
     // If the new block has relational blocks to update, re-render the blocks
-    if (newParent.getRelationalUpdateBlocks()) {
+    if (newParent.getShadowBlocks()) {
       this.blockSpace.render();
     }
 
@@ -1535,37 +1535,43 @@ Blockly.Block.prototype.setParent = function(newParent) {
 Blockly.Block.prototype.shadowBlockValue_ = function() {
   if(this.blockToShadow_){
     let root = this.getRootBlock();
-    root.childBlocks_.forEach(function(sibling){
-      // Checks if the type of this childBlock matches the type this block is supposed to shadow
-      if(this.blockToShadow_ === sibling.type){
-        // ToDo - Remove hard-coded values to indicate which input and title part to copy
-        let siblingSpritePreviewField = sibling.inputList[0].titleRow[0];
-        // ToDo - Remove hard-coded values to indicate which input and title part to update
-        let fieldToUpdate = this.inputList[0].titleRow[1];
-        // Set the value of the text
-        fieldToUpdate.setText(siblingSpritePreviewField.previewElement_.getAttribute("xlink:href"));
-        // Add this block to the list of blocks to update when the original field is updated
-        root.addRelationalUpdate(fieldToUpdate);
-      }
-    }.bind(this));
+    let sourceBlock = this.blockToShadow_(root);
+    if (sourceBlock && sourceBlock.type === "gamelab_allSpritesWithAnimation") {
+      // Only works with allSpritesWithAnimation blocks
+      let sourceField = sourceBlock.inputList[0].titleRow[0];
+      
+      // Only works with clicked/subject/object pointer blocks
+      let fieldToUpdate = this.inputList[0].titleRow[1];
+      
+      fieldToUpdate.setText(sourceField.previewElement_.getAttribute("xlink:href"));
+      
+      // Add this block to the list of blocks to update when the sprite dropdown field is changed.
+      sourceBlock.addShadowBlock(this);
+    }
   }
 };
 
 /**
- * Tracks a field_image block to update with the value of this dropdown
- * @param fieldImage - additional field to update
+ * Tracks a block to keep in sync with this block's value
+ * @param block - the block that should shadow this block's value
  */
-Blockly.Block.prototype.addRelationalUpdate = function(fieldImage){
-  if (!this.relationalUpdate_) {
-    this.relationalUpdate_= [];
+Blockly.Block.prototype.addShadowBlock = function(block){
+  if (!this.shadowBlocks_) {
+    this.shadowBlocks_= [];
   }
-  this.relationalUpdate_.push(fieldImage);
+  this.shadowBlocks_.push(block);
 };
 
-/** Returns list of field_images to update
+/** Sets the list of blocks to keep in sync with this block
 */
-Blockly.Block.prototype.getRelationalUpdateBlocks = function(){
-  return this.relationalUpdate_;
+Blockly.Block.prototype.setShadowBlocks = function(blocks) {
+  this.shadowBlocks_ = blocks;
+}
+
+/** Returns list of blocks that shadow this block
+*/
+Blockly.Block.prototype.getShadowBlocks = function(){
+  return this.shadowBlocks_ || [];
 };
 
 /**
@@ -1958,10 +1964,10 @@ Blockly.Block.prototype.shouldCopyOnDrag = function(){
 
 /**
  * Sets the target block whose value this block should shadow
- * @param target
+ * @param fn - A function that takes in a root block and returns the source block to shadow.
  */
-Blockly.Block.prototype.setBlockToShadow = function(target){
-  this.blockToShadow_ = target;
+Blockly.Block.prototype.setBlockToShadow = function(fn){
+  this.blockToShadow_ = fn;
 };
 
 /**

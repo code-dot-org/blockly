@@ -1559,7 +1559,10 @@ Blockly.Block.prototype.addShadowBlock = function(block){
   if (!this.shadowBlocks_) {
     this.shadowBlocks_= [];
   }
-  this.shadowBlocks_.push(block);
+  // First check to make sure the block isn't already in the list.
+  if (!this.shadowBlocks_.includes(block)) {
+    this.shadowBlocks_.push(block);
+  }
 };
 
 /** Sets the list of blocks to keep in sync with this block

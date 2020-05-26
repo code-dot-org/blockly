@@ -237,8 +237,8 @@ Blockly.FieldRectangularDropdown.prototype.generateMenuItemSelectedHandler_ = fu
           let shadowBlocks = this.sourceBlock_.getShadowBlocks();
           let updatedShadowBlocks = [];
           shadowBlocks.forEach(function (block) {
-            let field = block.inputList[0].titleRow[1];
-            if (block.getRootBlock() === root) {
+            let field = block.inputList[0] && block.inputList[0].titleRow[1];
+            if (field && block.getRootBlock() === root) {
               field.setText(sourceValue);
               updatedShadowBlocks.push(block);
             }

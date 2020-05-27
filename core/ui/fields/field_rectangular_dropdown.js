@@ -231,16 +231,19 @@ Blockly.FieldRectangularDropdown.prototype.generateMenuItemSelectedHandler_ = fu
       var value = menuItem.getValue();
       if (value !== null && value !== undefined) {
         fieldRectanglularDropdown.setValue(value);
-        // If there are additional field images to update in the root block, update them with this preview data
-        let root = this.sourceBlock_ ? this.sourceBlock_.getRootBlock() : null;
-        let relationBlocks = root ? root.getRelationalUpdateBlocks() : null;
-        if(relationBlocks){
-          let updateValue = this.getPreviewDataForValue_(value);
-          relationBlocks.forEach(function(updateFields){
-            if(!updateFields.isDestroyed_()){
-              updateFields.setText(updateValue);
+        if (this.sourceBlock_) {
+          let sourceValue = this.getPreviewDataForValue_(value);
+          let root = this.sourceBlock_.getRootBlock();
+          let shadowBlocks = this.sourceBlock_.getShadowBlocks();
+          let updatedShadowBlocks = [];
+          shadowBlocks.forEach(function (block) {
+            let field = block.inputList[0] && block.inputList[0].titleRow[1];
+            if (field && block.getRootBlock() === root) {
+              field.setText(sourceValue);
+              updatedShadowBlocks.push(block);
             }
-          });
+          })
+          this.sourceBlock_.setShadowBlocks(updatedShadowBlocks);
         }
       }
     }

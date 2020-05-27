@@ -1465,10 +1465,30 @@ Blockly.Block.prototype.getChildren = function() {
 };
 
 /**
+ * Traverses the block stack rooted at topBlock and returns a list of all
+ * the blocks in the stack that have blockToShadow_ set.
+ * @param {Blockly.Block} topBlock - root of the block stack to traverse
+ * @return {!Array.<!Blockly.Block>} Array of shadow blocks
+ */
+function getShadowBlocksInStack(topBlock, sourceBlock) {
+  var shadowBlocks = [];
+  var queue = [topBlock];
+  while (queue.length) {
+    var block = queue.shift()
+    if (block.blockToShadow_) {
+      shadowBlocks.push(block)
+    }
+    queue = queue.concat(block.childBlocks_);
+  }
+  return shadowBlocks;
+}
+
+/**
  * Set parent of this block to be a new block or null.
  * @param {Blockly.Block} newParent New parent block.
  */
 Blockly.Block.prototype.setParent = function(newParent) {
+  var oldParent = this.parentBlock_;
   if (this.parentBlock_) {
     // Remove this block from the old parent's child list.
     var children = this.parentBlock_.childBlocks_;
@@ -1521,9 +1541,46 @@ Blockly.Block.prototype.setParent = function(newParent) {
     var newXY = this.getRelativeToSurfaceXY();
     // Move the connections to match the child's new position.
     this.moveConnections_(newXY.x - oldXY.x, newXY.y - oldXY.y);
-    this.shadowBlockValue_();
   } else {
     this.blockSpace.addTopBlock(this);
+  }
+  if (newParent && newParent.miniFlyout && this.type === 'gamelab_allSpritesWithAnimation') {
+    // Add a sprite block to an event socket
+    var shadowBlocks = getShadowBlocksInStack(newParent);
+    let sourceBlock = this;
+    // We only care about shadow blocks that are shadowing this source block.
+    shadowBlocks = shadowBlocks.filter(function (block) {
+      return block.blockToShadow_(newParent) === this
+    }, this);
+    this.setShadowBlocks(shadowBlocks);
+    shadowBlocks.forEach(function (block) {
+      block.shadowBlockValue_();
+    })
+  } else if (newParent && newParent.getRootBlock().miniFlyout) {
+    // Add a block stack to an event stack
+    var shadowBlocks = getShadowBlocksInStack(this);
+    shadowBlocks.forEach(function (block) {
+      block.shadowBlockValue_();
+    })
+  }
+  if (oldParent && oldParent.miniFlyout && this.type === 'gamelab_allSpritesWithAnimation') {
+    // Remove a sprite block from an event socket
+    this.setShadowBlocks([]);
+    var shadowBlocks = getShadowBlocksInStack(oldParent);
+    let sourceBlock = this;
+    // We only care about shadow blocks that are shadowing this source block.
+    shadowBlocks = shadowBlocks.filter(function (block) {
+      return block.blockToShadow_(oldParent) === this
+    }, this);
+    shadowBlocks.forEach(function (block) {
+      block.shadowBlockValue_();
+    })
+  } else if (oldParent && oldParent.getRootBlock().miniFlyout) {
+    // Remove a block stack from an event stack
+    var shadowBlocks = getShadowBlocksInStack(this);
+    shadowBlocks.forEach(function (block) {
+      block.shadowBlockValue_();
+    })
   }
 };
 
@@ -1547,6 +1604,9 @@ Blockly.Block.prototype.shadowBlockValue_ = function() {
       
       // Add this block to the list of blocks to update when the sprite dropdown field is changed.
       sourceBlock.addShadowBlock(this);
+    } else {
+      let fieldToUpdate = this.inputList[0].titleRow[1];
+      fieldToUpdate.setText("");
     }
   }
 };
@@ -2628,7 +2688,6 @@ Blockly.Block.prototype.render = function(selfOnly) {
   if (!this.svg_) {
     throw 'Uninitialized block cannot be rendered.  Call block.initSvg()';
   }
-  this.shadowBlockValue_();
   this.svg_.render(selfOnly);
   if (this.miniFlyout) {
     this.miniFlyout.position_();

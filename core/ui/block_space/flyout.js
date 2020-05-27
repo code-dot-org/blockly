@@ -101,7 +101,7 @@ Blockly.Flyout = function(blockSpaceEditor, opt_static) {
    * If disabled, clicks on blocks in flyout will be ignored.
    */
   this.enabled_ = true;
-  
+
   /**
     * Some flyouts have a button added to the top. If there's a button, this
     * is an opaque background behind it that should match the width of the flyout.
@@ -146,7 +146,7 @@ Blockly.Flyout.prototype.onResizeWrapper_ = null;
  * @type {boolean} insideToolbox Whether this flyout is in a toolbox.
  * @return {!Element} The flyout's SVG group.
  */
-Blockly.Flyout.prototype.createDom = function(insideToolbox) {
+Blockly.Flyout.prototype.createDom = function(insideToolbox, clipWidth) {
   /*
   <g>
     <path class="blocklyFlyoutBackground"/>
@@ -156,7 +156,7 @@ Blockly.Flyout.prototype.createDom = function(insideToolbox) {
   this.svgGroup_ = Blockly.createSvgElement('g', {'class': 'svgFlyoutGroup'}, null);
   this.svgBackground_ = Blockly.createSvgElement('path',
       {'class': 'blocklyFlyoutBackground'}, this.svgGroup_);
-  this.svgGroup_.appendChild(this.blockSpace_.createDom());
+  this.svgGroup_.appendChild(this.blockSpace_.createDom(clipWidth));
 
   // Add a trashcan.
   if (!insideToolbox) {
@@ -346,7 +346,7 @@ Blockly.Flyout.prototype.position_ = function() {
 
   // Center the trashcan
   if (this.svgTrashcan_) {
-    var flyoutWidth = this.svgGroup_.getBoundingClientRect().width;
+    var flyoutWidth = this.width_;
     var trashcanWidth = 70;
     var trashcanX = Math.round(flyoutWidth / 2 - trashcanWidth / 2);
     this.svgTrashcan_.setAttribute('transform', 'translate(' + trashcanX + ', 20)');
@@ -592,6 +592,12 @@ Blockly.Flyout.prototype.show = function(xmlList) {
   this.blockSpace_.fireChangeEvent();
 };
 
+Blockly.Flyout.prototype.setMaxWidth_ = function(maxWidth) {
+  this.maxWidth_ = maxWidth;
+  this.reflow();
+  this.blockSpace_.resizeToolbox(maxWidth);
+};
+
 /**
  * Adds a rectangular SVG button to this flyout's blockSpace
  * @param {{x: Number, y: Number}} cursor current drawing position in flyout
@@ -653,6 +659,9 @@ Blockly.Flyout.prototype.reflow = function() {
   }
   flyoutWidth += margin + Blockly.BlockSvg.TAB_WIDTH + margin / 2 +
                  Blockly.Scrollbar.scrollbarThickness;
+
+  // set the max width based on the size of the available space for the workspace
+  flyoutWidth = this.maxWidth_ ? Math.min(flyoutWidth, this.maxWidth_) : flyoutWidth;
   if (this.width_ != flyoutWidth) {
     for (var x = 0, block; block = blocks[x]; x++) {
       var blockHW = block.getHeightWidth();
@@ -677,7 +686,7 @@ Blockly.Flyout.prototype.reflow = function() {
     // Record the width for .getMetrics_ and .position_.
     this.width_ = flyoutWidth;
     // Fire a resize event to update the flyout's scrollbar.
-    Blockly.fireUiEvent(window, 'resize');
+    // Blockly.fireUiEvent(window, 'resize');
   }
 };
 

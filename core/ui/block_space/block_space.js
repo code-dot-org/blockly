@@ -323,11 +323,17 @@ Blockly.BlockSpace.prototype.findFunctionExamples = function(functionName) {
   });
 };
 
+Blockly.BlockSpace.prototype.resizeToolbox = function(maxWidth) {
+  if (this.clipRect_ && this.clipRect_.width !== maxWidth) {
+    this.clipRect_.setAttribute('width', maxWidth)
+  }
+}
+
 /**
  * Create the trash can elements.
  * @return {!Element} The blockSpace's SVG group.
  */
-Blockly.BlockSpace.prototype.createDom = function() {
+Blockly.BlockSpace.prototype.createDom = function(clipWidth) {
   /*
   <g>
     [Trashcan may go here]
@@ -337,7 +343,17 @@ Blockly.BlockSpace.prototype.createDom = function() {
   */
   this.svgGroup_ = Blockly.createSvgElement('g', {'class': 'svgGroup'}, null);
   this.clippingGroup_ = Blockly.createSvgElement('g', {'class': 'svgClippingGroup'}, this.svgGroup_);
-  this.svgBlockCanvas_ = Blockly.createSvgElement('g', {'class': 'svgBlockCanvas'}, this.clippingGroup_);
+  let blockCanvasOptions = {'class': 'svgBlockCanvas'};
+  let height = 800 // clippingGroupHeight
+  if (clipWidth) {
+    debugger;
+    this.defs_ = Blockly.createSvgElement('defs', {}, this.clippingGroup_);
+    this.clipPath_ = Blockly.createSvgElement('clipPath', {'id': 'clipToolbox'}, this.defs_);
+    // At this point, we don't know the width and height. We will set those later.
+    this.clipRect_ = Blockly.createSvgElement('rect', {'x': '0', 'y': '0', 'height': height}, this.clipPath_);
+    blockCanvasOptions['clip-path'] = 'url(#clipToolbox)';
+  }
+  this.svgBlockCanvas_ = Blockly.createSvgElement('g', blockCanvasOptions, this.clippingGroup_);
   this.svgBubbleCanvas_ = Blockly.createSvgElement('g', {'class': 'svgBubbleCanvas'}, this.svgGroup_);
   this.svgDebugCanvas_ = Blockly.createSvgElement('g', {'class': 'svgDebugCanvas'}, this.svgGroup_);
 

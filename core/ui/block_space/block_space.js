@@ -323,12 +323,22 @@ Blockly.BlockSpace.prototype.findFunctionExamples = function(functionName) {
   });
 };
 
-Blockly.BlockSpace.prototype.resizeToolbox = function(maxWidth) {
-  if (this.clipRect_ && this.clipRect_.width !== maxWidth) {
-    this.clipRect_.setAttribute('width', maxWidth);
+/**
+ * Sets the visible width of the block space. Specifically, it sets the width of
+ * the clipping rectangle which hides sections of the SVG.
+ * @param {Number} width The width to set for the clipping rectangle.
+ */
+Blockly.BlockSpace.prototype.resizeWidth = function(width) {
+  if (this.clipRect_ && this.clipRect_.width !== width) {
+    this.clipRect_.setAttribute('width', width);
   }
 };
 
+/**
+ * Sets the visible height of the block space. Specifically, it sets the height
+ * of the clipping rectangle to ensure it displays the entire height of the
+ * block space.
+ */
 Blockly.BlockSpace.prototype.resizeHeight = function() {
   var height = this.getMetrics() && this.getMetrics().contentHeight;
   if (height) {
@@ -340,7 +350,7 @@ Blockly.BlockSpace.prototype.resizeHeight = function() {
  * Create the trash can elements.
  * @return {!Element} The blockSpace's SVG group.
  */
-Blockly.BlockSpace.prototype.createDom = function(clipWidth) {
+Blockly.BlockSpace.prototype.createDom = function(shouldClipWidth) {
   /*
   <g>
     [Trashcan may go here]
@@ -351,7 +361,7 @@ Blockly.BlockSpace.prototype.createDom = function(clipWidth) {
   this.svgGroup_ = Blockly.createSvgElement('g', {'class': 'svgGroup'}, null);
   this.clippingGroup_ = Blockly.createSvgElement('g', {'class': 'svgClippingGroup'}, this.svgGroup_);
   let blockCanvasOptions = {'class': 'svgBlockCanvas'};
-  if (clipWidth) {
+  if (shouldClipWidth) {
     this.defs_ = Blockly.createSvgElement('defs', {}, this.clippingGroup_);
     this.clipPath_ = Blockly.createSvgElement('clipPath', {'id': 'clipToolbox'}, this.defs_);
     // At this point, we don't know the width and height. We will set those later.

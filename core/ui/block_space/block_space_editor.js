@@ -357,7 +357,7 @@ Blockly.BlockSpaceEditor.prototype.addFlyout_ = function() {
    */
   this.flyout_ = new Blockly.Flyout(this, true);
   var flyout = this.flyout_;
-  var flyoutSvg = flyout.createDom(false /*insideToolbox*/, true /*clipWidth*/);
+  var flyoutSvg = flyout.createDom(false /*insideToolbox*/, true /*shouldClipWidth*/);
   flyout.init(this.blockSpace, true);
   flyout.autoClose = false;
   // Insert the flyout behind the blockSpace so that blocks appear on top.
@@ -629,7 +629,8 @@ Blockly.BlockSpaceEditor.prototype.svgResize = function() {
     svg.setAttribute('width', svgWidth + 'px');
     svg.cachedWidth_ = svgWidth;
     if (this.flyout_) {
-      this.flyout_.setMaxWidth_(svgWidth/2.5);
+      this.flyout_.setMaxWidth(svgWidth/2.5);
+      this.flyout_.blockSpace_.resizeHeight();
     }
   }
   if (svg.cachedHeight_ != svgHeight) {

@@ -146,7 +146,7 @@ Blockly.Flyout.prototype.onResizeWrapper_ = null;
  * @type {boolean} insideToolbox Whether this flyout is in a toolbox.
  * @return {!Element} The flyout's SVG group.
  */
-Blockly.Flyout.prototype.createDom = function(insideToolbox, clipWidth) {
+Blockly.Flyout.prototype.createDom = function(insideToolbox, shouldClipWidth) {
   /*
   <g>
     <path class="blocklyFlyoutBackground"/>
@@ -156,7 +156,7 @@ Blockly.Flyout.prototype.createDom = function(insideToolbox, clipWidth) {
   this.svgGroup_ = Blockly.createSvgElement('g', {'class': 'svgFlyoutGroup'}, null);
   this.svgBackground_ = Blockly.createSvgElement('path',
       {'class': 'blocklyFlyoutBackground'}, this.svgGroup_);
-  this.svgGroup_.appendChild(this.blockSpace_.createDom(clipWidth));
+  this.svgGroup_.appendChild(this.blockSpace_.createDom(shouldClipWidth));
 
   // Add a trashcan.
   if (!insideToolbox) {
@@ -593,10 +593,14 @@ Blockly.Flyout.prototype.show = function(xmlList) {
   this.blockSpace_.fireChangeEvent();
 };
 
-Blockly.Flyout.prototype.setMaxWidth_ = function(maxWidth) {
+/**
+ * Limits the sets the maximum width of the flyout and re-renders the flyout
+ * @param {Number} maxWidth The maximum allowed width of the flyout.
+ */
+Blockly.Flyout.prototype.setMaxWidth = function(maxWidth) {
   this.maxWidth_ = maxWidth;
   this.reflow();
-  this.blockSpace_.resizeToolbox(maxWidth);
+  this.blockSpace_.resizeWidth(maxWidth);
 };
 
 /**
@@ -688,8 +692,6 @@ Blockly.Flyout.prototype.reflow = function() {
     }
     // Record the width for .getMetrics_ and .position_.
     this.width_ = flyoutWidth;
-    // Fire a resize event to update the flyout's scrollbar.
-    // Blockly.fireUiEvent(window, 'resize');
   }
 };
 

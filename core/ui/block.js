@@ -1568,10 +1568,6 @@ Blockly.Block.prototype.setParent = function(newParent) {
     this.setShadowBlocks([]);
     var shadowBlocks = getShadowBlocksInStack(oldParent);
     let sourceBlock = this;
-    // We only care about shadow blocks that are shadowing this source block.
-    shadowBlocks = shadowBlocks.filter(function (block) {
-      return block.blockToShadow_(oldParent) === this
-    }, this);
     shadowBlocks.forEach(function (block) {
       block.shadowBlockValue_();
     })

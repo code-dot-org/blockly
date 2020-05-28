@@ -581,6 +581,7 @@ Blockly.Flyout.prototype.show = function(xmlList) {
   }
   this.width_ = 0;
   this.reflow();
+  this.blockSpace_.resizeHeight();
 
   this.filterForCapacity_();
   this.updateBlockLimitTotals_();
@@ -661,7 +662,9 @@ Blockly.Flyout.prototype.reflow = function() {
                  Blockly.Scrollbar.scrollbarThickness;
 
   // set the max width based on the size of the available space for the workspace
-  flyoutWidth = this.maxWidth_ ? Math.min(flyoutWidth, this.maxWidth_) : flyoutWidth;
+  if (this.maxWidth_) {
+    flyoutWidth = Math.min(flyoutWidth, this.maxWidth_);
+  }
   if (this.width_ != flyoutWidth) {
     for (var x = 0, block; block = blocks[x]; x++) {
       var blockHW = block.getHeightWidth();

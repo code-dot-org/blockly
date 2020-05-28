@@ -1547,7 +1547,6 @@ Blockly.Block.prototype.setParent = function(newParent) {
   if (newParent && newParent.miniFlyout && this.type === 'gamelab_allSpritesWithAnimation') {
     // Add a sprite block to an event socket
     var shadowBlocks = getShadowBlocksInStack(newParent);
-    let sourceBlock = this;
     // We only care about shadow blocks that are shadowing this source block.
     shadowBlocks = shadowBlocks.filter(function (block) {
       return block.blockToShadow_(newParent) === this
@@ -1567,7 +1566,6 @@ Blockly.Block.prototype.setParent = function(newParent) {
     // Remove a sprite block from an event socket
     this.setShadowBlocks([]);
     var shadowBlocks = getShadowBlocksInStack(oldParent);
-    let sourceBlock = this;
     shadowBlocks.forEach(function (block) {
       block.shadowBlockValue_();
     })

@@ -341,7 +341,7 @@ Blockly.BlockSpace.prototype.resizeWidth = function(width) {
  */
 Blockly.BlockSpace.prototype.resizeHeight = function() {
   var height = this.getMetrics() && this.getMetrics().contentHeight;
-  if (height) {
+  if (height && this.clipRect_) {
     this.clipRect_.setAttribute('height', height);
   }
 };

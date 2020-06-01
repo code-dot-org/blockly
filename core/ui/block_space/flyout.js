@@ -142,8 +142,19 @@ Blockly.Flyout.prototype.CORNER_RADIUS = 8;
 Blockly.Flyout.prototype.onResizeWrapper_ = null;
 
 /**
+ * Creates the flyout's DOM in the format needed for a non-category toolbox.
+ * Only needs to be called once.
+ * @return {!Element} The flyout's SVG group.
+ */
+Blockly.Flyout.prototype.createStaticToolboxDom = function() {
+  return this.createDom(false /*insideToolbox*/, true /*shouldClipWidth*/);
+};
+
+/**
  * Creates the flyout's DOM.  Only needs to be called once.
  * @type {boolean} insideToolbox Whether this flyout is in a toolbox.
+ * @type {boolean} shouldClipWidth Whether this flyout should clip blocks that
+ *                 go beyond a certain maximum width.
  * @return {!Element} The flyout's SVG group.
  */
 Blockly.Flyout.prototype.createDom = function(insideToolbox, shouldClipWidth) {

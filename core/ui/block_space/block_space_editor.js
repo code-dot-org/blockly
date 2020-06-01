@@ -357,7 +357,7 @@ Blockly.BlockSpaceEditor.prototype.addFlyout_ = function() {
    */
   this.flyout_ = new Blockly.Flyout(this, true);
   var flyout = this.flyout_;
-  var flyoutSvg = flyout.createDom(false /*insideToolbox*/, true /*shouldClipWidth*/);
+  var flyoutSvg = flyout.createStaticToolboxDom();
   flyout.init(this.blockSpace, true);
   flyout.autoClose = false;
   // Insert the flyout behind the blockSpace so that blocks appear on top.

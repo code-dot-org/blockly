@@ -1470,7 +1470,7 @@ Blockly.Block.prototype.getChildren = function() {
  * @param {Blockly.Block} topBlock - root of the block stack to traverse
  * @return {!Array.<!Blockly.Block>} Array of shadow blocks
  */
-function getShadowBlocksInStack(topBlock, sourceBlock) {
+function getShadowBlocksInStack(topBlock) {
   var shadowBlocks = [];
   var queue = [topBlock];
   while (queue.length) {

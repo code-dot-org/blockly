@@ -324,10 +324,33 @@ Blockly.BlockSpace.prototype.findFunctionExamples = function(functionName) {
 };
 
 /**
+ * Sets the visible width of the block space. Specifically, it sets the width of
+ * the clipping rectangle which hides sections of the SVG.
+ * @param {Number} width The width to set for the clipping rectangle.
+ */
+Blockly.BlockSpace.prototype.resizeWidth = function(width) {
+  if (this.clipRect_ && this.clipRect_.width !== width) {
+    this.clipRect_.setAttribute('width', width);
+  }
+};
+
+/**
+ * Sets the visible height of the block space. Specifically, it sets the height
+ * of the clipping rectangle to ensure it displays the entire height of the
+ * block space.
+ */
+Blockly.BlockSpace.prototype.resizeHeight = function() {
+  var height = this.getMetrics() && this.getMetrics().contentHeight;
+  if (height && this.clipRect_) {
+    this.clipRect_.setAttribute('height', height);
+  }
+};
+
+/**
  * Create the trash can elements.
  * @return {!Element} The blockSpace's SVG group.
  */
-Blockly.BlockSpace.prototype.createDom = function() {
+Blockly.BlockSpace.prototype.createDom = function(shouldClipWidth) {
   /*
   <g>
     [Trashcan may go here]
@@ -337,7 +360,15 @@ Blockly.BlockSpace.prototype.createDom = function() {
   */
   this.svgGroup_ = Blockly.createSvgElement('g', {'class': 'svgGroup'}, null);
   this.clippingGroup_ = Blockly.createSvgElement('g', {'class': 'svgClippingGroup'}, this.svgGroup_);
-  this.svgBlockCanvas_ = Blockly.createSvgElement('g', {'class': 'svgBlockCanvas'}, this.clippingGroup_);
+  let blockCanvasOptions = {'class': 'svgBlockCanvas'};
+  if (shouldClipWidth) {
+    this.defs_ = Blockly.createSvgElement('defs', {}, this.clippingGroup_);
+    this.clipPath_ = Blockly.createSvgElement('clipPath', {'id': 'clipToolbox'}, this.defs_);
+    // At this point, we don't know the width and height. We will set those later.
+    this.clipRect_ = Blockly.createSvgElement('rect', {'x': '0', 'y': '0'}, this.clipPath_);
+    blockCanvasOptions['clip-path'] = 'url(#clipToolbox)';
+  }
+  this.svgBlockCanvas_ = Blockly.createSvgElement('g', blockCanvasOptions, this.clippingGroup_);
   this.svgBubbleCanvas_ = Blockly.createSvgElement('g', {'class': 'svgBubbleCanvas'}, this.svgGroup_);
   this.svgDebugCanvas_ = Blockly.createSvgElement('g', {'class': 'svgDebugCanvas'}, this.svgGroup_);
 

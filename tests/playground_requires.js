@@ -171,7 +171,7 @@ Blockly.Blocks.button_block = {
     span.style.fill = 'blue';
     span.textContent = 'button';
     this.appendDummyInput()
-        .appendTitle("here's a button")
+        .appendTitle("here's a button on a really long block")
         .appendTitle(
           new Blockly.FieldButton(span, function () {
               return new Promise(resolve => resolve(prompt()));

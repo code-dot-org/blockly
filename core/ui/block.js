@@ -1524,10 +1524,6 @@ Blockly.Block.prototype.setParent = function(newParent) {
   if (newParent) {
     // Add this block to the new parent's child list.
     newParent.childBlocks_.push(this);
-    // If the new block has relational blocks to update, re-render the blocks
-    if (newParent.getShadowBlocks()) {
-      this.blockSpace.render();
-    }
 
     // Account for the transform added by the relative position of the parent.
     var oldXY = this.getRelativeToSurfaceXY();
@@ -1544,8 +1540,10 @@ Blockly.Block.prototype.setParent = function(newParent) {
   } else {
     this.blockSpace.addTopBlock(this);
   }
+  var shouldRerender = false;
   if (newParent && newParent.miniFlyout && this.type === 'gamelab_allSpritesWithAnimation') {
     // Add a sprite block to an event socket
+    shouldRerender = true;
     var shadowBlocks = getShadowBlocksInStack(newParent);
     // We only care about shadow blocks that are shadowing this source block.
     shadowBlocks = shadowBlocks.filter(function (block) {
@@ -1557,6 +1555,7 @@ Blockly.Block.prototype.setParent = function(newParent) {
     })
   } else if (newParent && newParent.getRootBlock().miniFlyout) {
     // Add a block stack to an event stack
+    shouldRerender = true;
     var shadowBlocks = getShadowBlocksInStack(this);
     shadowBlocks.forEach(function (block) {
       block.shadowBlockValue_();
@@ -1564,6 +1563,7 @@ Blockly.Block.prototype.setParent = function(newParent) {
   }
   if (oldParent && oldParent.miniFlyout && this.type === 'gamelab_allSpritesWithAnimation') {
     // Remove a sprite block from an event socket
+    shouldRerender = true;
     this.setShadowBlocks([]);
     var shadowBlocks = getShadowBlocksInStack(oldParent);
     shadowBlocks.forEach(function (block) {
@@ -1571,10 +1571,14 @@ Blockly.Block.prototype.setParent = function(newParent) {
     })
   } else if (oldParent && oldParent.getRootBlock().miniFlyout) {
     // Remove a block stack from an event stack
+    shouldRerender = true;
     var shadowBlocks = getShadowBlocksInStack(this);
     shadowBlocks.forEach(function (block) {
       block.shadowBlockValue_();
     })
+  }
+  if (shouldRerender) {
+    this.blockSpace.render();
   }
 };
 

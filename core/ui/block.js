@@ -1540,10 +1540,8 @@ Blockly.Block.prototype.setParent = function(newParent) {
   } else {
     this.blockSpace.addTopBlock(this);
   }
-  var shouldRerender = false;
   if (newParent && newParent.miniFlyout && this.type === 'gamelab_allSpritesWithAnimation') {
     // Add a sprite block to an event socket
-    shouldRerender = true;
     var shadowBlocks = getShadowBlocksInStack(newParent);
     // We only care about shadow blocks that are shadowing this source block.
     shadowBlocks = shadowBlocks.filter(function (block) {
@@ -1553,9 +1551,9 @@ Blockly.Block.prototype.setParent = function(newParent) {
     shadowBlocks.forEach(function (block) {
       block.shadowBlockValue_();
     })
+    this.blockSpace.render();
   } else if (newParent && newParent.getRootBlock().miniFlyout) {
     // Add a block stack to an event stack
-    shouldRerender = true;
     var shadowBlocks = getShadowBlocksInStack(this);
     shadowBlocks.forEach(function (block) {
       block.shadowBlockValue_();
@@ -1563,7 +1561,6 @@ Blockly.Block.prototype.setParent = function(newParent) {
   }
   if (oldParent && oldParent.miniFlyout && this.type === 'gamelab_allSpritesWithAnimation') {
     // Remove a sprite block from an event socket
-    shouldRerender = true;
     this.setShadowBlocks([]);
     var shadowBlocks = getShadowBlocksInStack(oldParent);
     shadowBlocks.forEach(function (block) {
@@ -1571,14 +1568,10 @@ Blockly.Block.prototype.setParent = function(newParent) {
     })
   } else if (oldParent && oldParent.getRootBlock().miniFlyout) {
     // Remove a block stack from an event stack
-    shouldRerender = true;
     var shadowBlocks = getShadowBlocksInStack(this);
     shadowBlocks.forEach(function (block) {
       block.shadowBlockValue_();
     })
-  }
-  if (shouldRerender) {
-    this.blockSpace.render();
   }
 };
 
@@ -1596,15 +1589,21 @@ Blockly.Block.prototype.shadowBlockValue_ = function() {
       let sourceField = sourceBlock.inputList[0].titleRow[0];
       
       // Only works with clicked/subject/object pointer blocks
-      let fieldToUpdate = this.inputList[0].titleRow[1];
+      let previewField = this.inputList[0].titleRow[1];
+      let textField = this.inputList[0].titleRow[0]
       
-      fieldToUpdate.setText(sourceField.previewElement_.getAttribute("xlink:href"));
+      previewField.setText(sourceField.previewElement_.getAttribute("xlink:href"));
+      previewField.updateDimensions_(32, 32);
+      textField.setText(this.shortString);
       
       // Add this block to the list of blocks to update when the sprite dropdown field is changed.
       sourceBlock.addShadowBlock(this);
     } else {
-      let fieldToUpdate = this.inputList[0].titleRow[1];
-      fieldToUpdate.setText("");
+      let previewField = this.inputList[0].titleRow[1];
+      let textField = this.inputList[0].titleRow[0]
+      previewField.setText("");
+      previewField.updateDimensions_(1, 1);
+      textField.setText(this.longString);
     }
   }
 };
@@ -2686,9 +2685,11 @@ Blockly.Block.prototype.render = function(selfOnly) {
   if (!this.svg_) {
     throw 'Uninitialized block cannot be rendered.  Call block.initSvg()';
   }
-  this.svg_.render(selfOnly);
-  if (this.miniFlyout) {
-    this.miniFlyout.position_();
+  if (this.blockSpace) {
+    this.svg_.render(selfOnly);
+    if (this.miniFlyout) {
+      this.miniFlyout.position_();
+    }
   }
 };
 

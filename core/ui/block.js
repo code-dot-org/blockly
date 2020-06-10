@@ -834,6 +834,10 @@ Blockly.Block.prototype.onMouseUp_ = function(e) {
 
   if (Blockly.selected) {
     Blockly.selected.setIsUnused();
+    var shadowBlocks = getShadowBlocksInStack(Blockly.selected);
+    shadowBlocks.forEach(function (block) {
+      block.shadowBlockValue_();
+    })
   }
 
   if (Blockly.highlightedConnection_) {
@@ -1583,6 +1587,9 @@ Blockly.Block.prototype.setParent = function(newParent) {
 Blockly.Block.prototype.shadowBlockValue_ = function() {
   if(this.blockToShadow_){
     let root = this.getRootBlock();
+    if (root.isCurrentlyBeingDragged()) {
+      return;
+    }
     let sourceBlock = this.blockToShadow_(root);
     if (sourceBlock && sourceBlock.type === "gamelab_allSpritesWithAnimation") {
       // Only works with allSpritesWithAnimation blocks
@@ -1602,7 +1609,7 @@ Blockly.Block.prototype.shadowBlockValue_ = function() {
       let previewField = this.inputList[0].titleRow[1];
       let textField = this.inputList[0].titleRow[0]
       previewField.setText("");
-      previewField.updateDimensions_(1, 1);
+      previewField.updateDimensions_(1, 32);
       textField.setText(this.longString);
     }
   }

@@ -703,6 +703,8 @@ Blockly.Flyout.prototype.reflow = function() {
     }
     // Record the width for .getMetrics_ and .position_.
     this.width_ = flyoutWidth;
+    // Fire a resize event to update the flyout's scrollbar.
+    Blockly.fireUiEvent(window, 'resize');
   }
 };
 

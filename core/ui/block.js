@@ -836,7 +836,8 @@ Blockly.Block.prototype.onMouseUp_ = function(e) {
     Blockly.selected.setIsUnused();
     var shadowBlocks = getShadowBlocksInStack(Blockly.selected);
     shadowBlocks.forEach(function (block) {
-      block.shadowBlockValue_();
+      let sourceBlock = block.blockToShadow_(block.getRootBlock());
+      block.shadowBlockValue_(sourceBlock);
     })
   }
 
@@ -1553,14 +1554,16 @@ Blockly.Block.prototype.setParent = function(newParent) {
     }, this);
     this.setShadowBlocks(shadowBlocks);
     shadowBlocks.forEach(function (block) {
-      block.shadowBlockValue_();
+      let sourceBlock = block.blockToShadow_(block.getRootBlock());
+      block.shadowBlockValue_(sourceBlock);
     })
     this.blockSpace.render();
   } else if (newParent && newParent.getRootBlock().miniFlyout) {
     // Add a block stack to an event stack
     var shadowBlocks = getShadowBlocksInStack(this);
     shadowBlocks.forEach(function (block) {
-      block.shadowBlockValue_();
+      let sourceBlock = block.blockToShadow_(block.getRootBlock());
+      block.shadowBlockValue_(sourceBlock);
     })
   }
   if (oldParent && oldParent.miniFlyout && this.type === 'gamelab_allSpritesWithAnimation') {
@@ -1568,29 +1571,32 @@ Blockly.Block.prototype.setParent = function(newParent) {
     this.setShadowBlocks([]);
     var shadowBlocks = getShadowBlocksInStack(oldParent);
     shadowBlocks.forEach(function (block) {
-      block.shadowBlockValue_();
+      let sourceBlock = block.blockToShadow_(block.getRootBlock());
+      block.shadowBlockValue_(sourceBlock);
     })
   } else if (oldParent && oldParent.getRootBlock().miniFlyout) {
     // Remove a block stack from an event stack
     var shadowBlocks = getShadowBlocksInStack(this);
     shadowBlocks.forEach(function (block) {
-      block.shadowBlockValue_();
+      let sourceBlock = block.blockToShadow_(block.getRootBlock());
+      block.shadowBlockValue_(sourceBlock);
     })
   }
 };
 
 /**
- * Sets the value of this block to the value of the root child field specified.
- * Adds a reference to this block in the root block to track when the value should be updated.
+ * Sets the value of this block to the value of the source block specified.
+ * Adds a reference to this block in the source block so the value can be updated when the
+ * source block's value changes
  * @private
+ * @param {Blockly.Block} sourceBlock - the block whose value to shadow
  */
-Blockly.Block.prototype.shadowBlockValue_ = function() {
+Blockly.Block.prototype.shadowBlockValue_ = function(sourceBlock) {
   if(this.blockToShadow_){
     let root = this.getRootBlock();
     if (root.isCurrentlyBeingDragged()) {
       return;
     }
-    let sourceBlock = this.blockToShadow_(root);
     if (sourceBlock && sourceBlock.type === "gamelab_allSpritesWithAnimation") {
       // Only works with allSpritesWithAnimation blocks
       let sourceField = sourceBlock.inputList[0].titleRow[0];

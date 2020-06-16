@@ -1548,7 +1548,7 @@ Blockly.Block.prototype.setParent = function(newParent) {
   if (newParent && newParent.miniFlyout && this.type === 'gamelab_allSpritesWithAnimation') {
     // Add a sprite block to an event socket
     let miniToolboxBlocks = newParent.miniFlyout.blockSpace_.topBlocks_;
-    let rootInputBlocks = newParent.getConnections_().filter(function(connection) {
+    let rootInputBlocks = newParent.getConnections_(true /* all */).filter(function(connection) {
       return connection.type === Blockly.INPUT_VALUE
     }).map(function(connection) {
       return connection.targetBlock()
@@ -1579,7 +1579,7 @@ Blockly.Block.prototype.setParent = function(newParent) {
   if (oldParent && oldParent.miniFlyout && this.type === 'gamelab_allSpritesWithAnimation') {
     // Remove a sprite block from an event socket
     let miniToolboxBlocks = oldParent.miniFlyout.blockSpace_.topBlocks_;
-    let rootInputBlocks = oldParent.getConnections_().filter(function(connection) {
+    let rootInputBlocks = oldParent.getConnections_(true /* all */).filter(function(connection) {
       return connection.type === Blockly.INPUT_VALUE
     }).map(function(connection) {
       return connection.targetBlock()

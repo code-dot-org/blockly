@@ -1547,6 +1547,16 @@ Blockly.Block.prototype.setParent = function(newParent) {
   }
   if (newParent && newParent.miniFlyout && this.type === 'gamelab_allSpritesWithAnimation') {
     // Add a sprite block to an event socket
+    let miniToolboxBlocks = newParent.miniFlyout.blockSpace_.topBlocks_;
+    let rootInputBlocks = newParent.getConnections_().filter(function(connection) {
+      return connection.type === Blockly.INPUT_VALUE
+    }).map(function(connection) {
+      return connection.targetBlock()
+    });
+    miniToolboxBlocks.forEach(function(block, index) {
+      block.shadowBlockValue_(rootInputBlocks[index]);
+    });
+
     var shadowBlocks = getShadowBlocksInStack(newParent);
     // We only care about shadow blocks that are shadowing this source block.
     shadowBlocks = shadowBlocks.filter(function (block) {
@@ -1568,6 +1578,16 @@ Blockly.Block.prototype.setParent = function(newParent) {
   }
   if (oldParent && oldParent.miniFlyout && this.type === 'gamelab_allSpritesWithAnimation') {
     // Remove a sprite block from an event socket
+    let miniToolboxBlocks = oldParent.miniFlyout.blockSpace_.topBlocks_;
+    let rootInputBlocks = oldParent.getConnections_().filter(function(connection) {
+      return connection.type === Blockly.INPUT_VALUE
+    }).map(function(connection) {
+      return connection.targetBlock()
+    });
+    miniToolboxBlocks.forEach(function(block, index) {
+      block.shadowBlockValue_(rootInputBlocks[index]);
+    });
+    
     this.setShadowBlocks([]);
     var shadowBlocks = getShadowBlocksInStack(oldParent);
     shadowBlocks.forEach(function (block) {

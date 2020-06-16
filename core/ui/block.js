@@ -1600,7 +1600,7 @@ Blockly.Block.prototype.shadowBlockValue_ = function() {
       let textField = this.inputList[0].titleRow[0]
       
       previewField.setText(sourceField.previewElement_.getAttribute("xlink:href"));
-      previewField.updateDimensions_(32, 32);
+      previewField.updateDimensions_(this.thumbnailSize, this.thumbnailSize);
       textField.setText(this.shortString);
       
       // Add this block to the list of blocks to update when the sprite dropdown field is changed.
@@ -1609,7 +1609,7 @@ Blockly.Block.prototype.shadowBlockValue_ = function() {
       let previewField = this.inputList[0].titleRow[1];
       let textField = this.inputList[0].titleRow[0]
       previewField.setText("");
-      previewField.updateDimensions_(1, 32);
+      previewField.updateDimensions_(1, this.thumbnailSize);
       textField.setText(this.longString);
     }
   }

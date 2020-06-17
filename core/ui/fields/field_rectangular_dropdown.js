@@ -234,16 +234,29 @@ Blockly.FieldRectangularDropdown.prototype.generateMenuItemSelectedHandler_ = fu
         if (this.sourceBlock_) {
           let sourceValue = this.getPreviewDataForValue_(value);
           let root = this.sourceBlock_.getRootBlock();
-          let shadowBlocks = this.sourceBlock_.getShadowBlocks();
-          let updatedShadowBlocks = [];
-          shadowBlocks.forEach(function (block) {
-            let field = block.inputList[0] && block.inputList[0].titleRow[1];
-            if (field && block.getRootBlock() === root) {
+          if (root.miniFlyout) {
+            let miniToolboxBlocks = root.miniFlyout.blockSpace_.topBlocks_;
+            let socketIndex = root.getConnections_().filter(function(connection) {
+              return connection.type === Blockly.INPUT_VALUE
+            }).map(function(connection) {
+              return connection.targetBlock()
+            }).indexOf(this.sourceBlock_);
+            if (socketIndex !== -1) {
+              let field = miniToolboxBlocks[socketIndex].inputList[0].titleRow[1];
               field.setText(sourceValue);
-              updatedShadowBlocks.push(block);
             }
-          })
-          this.sourceBlock_.setShadowBlocks(updatedShadowBlocks);
+            
+            let shadowBlocks = this.sourceBlock_.getShadowBlocks();
+            let updatedShadowBlocks = [];
+            shadowBlocks.forEach(function (block) {
+              let field = block.inputList[0] && block.inputList[0].titleRow[1];
+              if (field && block.getRootBlock() === root) {
+                field.setText(sourceValue);
+                updatedShadowBlocks.push(block);
+              }
+            })
+            this.sourceBlock_.setShadowBlocks(updatedShadowBlocks);  
+          }
         }
       }
     }

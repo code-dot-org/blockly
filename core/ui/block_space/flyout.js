@@ -833,6 +833,21 @@ Blockly.Flyout.prototype.createBlockFunc_ = function(originBlock) {
     var xyNew = Blockly.getSvgXY_(svgRootNew,
         block.blockSpace.blockSpaceEditor.svg_);
     block.moveBy(xyOld.x - xyNew.x, xyOld.y - xyNew.y);
+    
+    if (block.blockToShadow_) {
+      let src = "";
+      if (originBlock.inputList[0] && originBlock.inputList[0].titleRow[1]) {
+        src = originBlock.inputList[0].titleRow[1].src_;
+      }
+      if (src != "") {
+        block.inputList[0].titleRow[1].setText(originBlock.inputList[0].titleRow[1].src_);  
+        block.inputList[0].titleRow[1].updateDimensions_(block.thumbnailSize, block.thumbnailSize);
+      } else {
+        block.inputList[0].titleRow[0].setText(block.longString);
+        block.inputList[0].titleRow[1].updateDimensions_(1, block.thumbnailSize);
+      }
+    }
+    
     if (flyout.autoClose) {
       /**
        * We need to avoid destroying the currently dragged block

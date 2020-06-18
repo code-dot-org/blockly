@@ -128,6 +128,7 @@ Blockly.HorizontalFlyout.prototype.layoutBlock_ = function(block, cursor, gap,
     offset = -offset;
   }
   cursor.x += offset;
+  this.minFlyoutWidth_ = cursor.x + gap;
   this.height_ = cursor.y + blockHW.height + gap / 2;
 };
 

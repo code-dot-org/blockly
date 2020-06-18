@@ -1013,6 +1013,9 @@ Blockly.BlockSvg.prototype.renderCompute_ = function(iconWidth) {
     }
   }
 
+  if (this.block_.miniFlyout && this.block_.miniFlyout.width_) {
+    inputRows.rightEdge = Math.max(inputRows.rightEdge, this.block_.miniFlyout.minFlyoutWidth_)
+  }
   return inputRows;
 };
 

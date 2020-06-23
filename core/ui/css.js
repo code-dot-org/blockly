@@ -239,6 +239,8 @@ Blockly.Css.CONTENT = [
   '.blocklySelected>.blocklyPath {',
   '  stroke-width: 3px;',
   '  stroke: #fc3;',
+  '  fill: #fc3;',
+  '  fill-opacity: 0.8;',
   '}',
   '.blocklySelected>.blocklyPathLight {',
   '  display: none;',

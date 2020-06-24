@@ -1293,16 +1293,18 @@ Blockly.BlockSvg.prototype.renderDrawRight_ = function(renderInfo, connectionsXY
     }
     renderInfo.curY += row.height;
   }
-  if (this.block_.tray) {
-    this.block_.miniFlyout.customMetrics = () => ({
-      absoluteTop: renderInfo.curY - 4,
-      absoluteLeft: Blockly.RTL ? -renderInfo.curX : 5,
-      viewWidth: renderInfo.curX - 10
-    });
-    this.block_.miniFlyout.softShow();
-    this.renderDrawTray_(renderInfo, this.block_.miniFlyout.getHeight() + 7);
-  } else if (this.block_.miniFlyout) {
-    this.block_.miniFlyout.softHide();
+  if (this.block_.miniFlyout) {
+    if (this.block_.isMiniFlyoutOpen) {
+      this.block_.miniFlyout.customMetrics = () => ({
+        absoluteTop: renderInfo.curY - 4,
+        absoluteLeft: Blockly.RTL ? -renderInfo.curX : 5,
+        viewWidth: renderInfo.curX - 10
+      });
+      this.block_.miniFlyout.softShow();
+      this.renderDrawTray_(renderInfo, this.block_.miniFlyout.getHeight() + 7);
+    } else {
+      this.block_.miniFlyout.softHide();
+    }
   }
   if (!inputRows.length) {
     renderInfo.curY = BS.MIN_BLOCK_Y;

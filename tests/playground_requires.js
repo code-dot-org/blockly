@@ -134,14 +134,14 @@ Blockly.Blocks.location_variables_set = createVariableSet(Blockly.BlockValueType
 Blockly.Blocks.parent = {
   init: function() {
     var toggle = new Blockly.FieldIcon('＋');
-    this.tray = false;
+    this.isMiniFlyoutOpen = false;
     Blockly.bindEvent_(toggle.fieldGroup_, 'mousedown', this, () => {
-      if (this.tray) {
+      if (this.isMiniFlyoutOpen) {
         toggle.setText('＋');
       } else {
         toggle.setText('－');
       }
-      this.tray = !this.tray;
+      this.isMiniFlyoutOpen = !this.isMiniFlyoutOpen;
       this.render();
     });
 

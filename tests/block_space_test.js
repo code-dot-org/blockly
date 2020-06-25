@@ -386,17 +386,17 @@ function test_paste() {
 
 function test_locked_serialization() {
   var container = Blockly.Test.initializeBlockSpaceEditor();
-  var blockXML = `<xml>
-  <block type="text_print"></block>
-  <block type="text">
-    <title name="TEXT"></title>
-  </block>
-</xml>`;
+  var blockXML = '<xml>' +
+    '<block type="text_print"></block>' +
+    '<block type="text">' +
+      '<title name="TEXT"></title>' +
+    '</block>' +
+  '</xml>';
   Blockly.Xml.domToBlockSpace(
     Blockly.mainBlockSpace, Blockly.Xml.textToDom(blockXML));
 
   Blockly.mainBlockSpace.blockSpaceEditor.lockMovement();
-  var newBlockXml = Blockly.Xml.domToPrettyText(
+  var newBlockXml = Blockly.Xml.domToText(
     Blockly.Xml.blockSpaceToDom(Blockly.mainBlockSpace));
 
   assertEquals('Block Xml is not changed by locking movement',

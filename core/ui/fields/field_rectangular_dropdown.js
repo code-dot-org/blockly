@@ -37,7 +37,7 @@ goog.require('Blockly.ImageDimensionCache');
  */
 Blockly.FieldRectangularDropdown = function(menuGenerator, buttons) {
   this.menuGenerator_ = menuGenerator;
-  let choices = this.getOptions();
+  var choices = this.getOptions();
   this.buttons_ = buttons;
   var firstTuple = choices[0];
   this.value_ = firstTuple[Blockly.FieldRectangularDropdown.TUPLE_VALUE_INDEX];
@@ -177,7 +177,7 @@ Blockly.FieldRectangularDropdown.prototype.showMenu_ = function() {
 };
 
 Blockly.FieldRectangularDropdown.prototype.addMenuButton_ = function(buttonData){
-  let button = new goog.ui.Button(buttonData.text);
+  var button = new goog.ui.Button(buttonData.text);
   this.menuButtonListenKey_ = goog.events.listen(button, goog.ui.Component.EventType.ACTION, buttonData.action);
   this.menu_.addItem(button);
 };
@@ -232,24 +232,24 @@ Blockly.FieldRectangularDropdown.prototype.generateMenuItemSelectedHandler_ = fu
       if (value !== null && value !== undefined) {
         fieldRectanglularDropdown.setValue(value);
         if (this.sourceBlock_) {
-          let sourceValue = this.getPreviewDataForValue_(value);
-          let root = this.sourceBlock_.getRootBlock();
+          var sourceValue = this.getPreviewDataForValue_(value);
+          var root = this.sourceBlock_.getRootBlock();
           if (root.miniFlyout) {
-            let miniToolboxBlocks = root.miniFlyout.blockSpace_.topBlocks_;
-            let socketIndex = root.getConnections_().filter(function(connection) {
+            var miniToolboxBlocks = root.miniFlyout.blockSpace_.topBlocks_;
+            var socketIndex = root.getConnections_().filter(function(connection) {
               return connection.type === Blockly.INPUT_VALUE
             }).map(function(connection) {
               return connection.targetBlock()
             }).indexOf(this.sourceBlock_);
             if (socketIndex !== -1) {
-              let field = miniToolboxBlocks[socketIndex].inputList[0].titleRow[1];
+              var field = miniToolboxBlocks[socketIndex].inputList[0].titleRow[1];
               field.setText(sourceValue);
             }
             
-            let shadowBlocks = this.sourceBlock_.getShadowBlocks();
-            let updatedShadowBlocks = [];
+            var shadowBlocks = this.sourceBlock_.getShadowBlocks();
+            var updatedShadowBlocks = [];
             shadowBlocks.forEach(function (block) {
-              let field = block.inputList[0] && block.inputList[0].titleRow[1];
+              var field = block.inputList[0] && block.inputList[0].titleRow[1];
               if (field && block.getRootBlock() === root) {
                 field.setText(sourceValue);
                 updatedShadowBlocks.push(block);

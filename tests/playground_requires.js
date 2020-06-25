@@ -145,12 +145,12 @@ Blockly.Blocks.parent = {
       this.render();
     }, this));
 
-    this.initMiniFlyout(`
-      <xml>
-        <block type="math_number"></block>
-        <block type="colour_rgb"></block>
-      </xml>
-    `);
+    this.initMiniFlyout(
+      '<xml>' +
+        '<block type="math_number"></block>' +
+        '<block type="colour_rgb"></block>' +
+      '</xml>'
+    );
 
     this.setHSV(131, 0.64, 0.62);
     this.appendDummyInput()
@@ -178,9 +178,9 @@ Blockly.Blocks.button_block = {
                 resolve(prompt());
               });
             },
-            this.getHexColour(),
+            this.getHexColour()
           ),
-          'VALUE',
+          'VALUE'
         );
     this.setOutput(true, Blockly.BlockValueType.STRING);
   },
@@ -207,18 +207,4 @@ Blockly.Blocks.dropdown_with_button_block = {
       );
   },
 };
-
-Blockly.Blocks.ocean_boiler_definition = Object.assign({},
-  Blockly.Blocks.procedures_defnoreturn,
-  {
-    init: function() {
-      Blockly.Blocks.procedures_defnoreturn.init.bind(this)();
-      this.appendDummyInput()
-          .appendTitle(new Blockly.FieldLabel('this is a different definition block'));
-      this.setInputsInline(false);
-      this.setHSV(20, 0.5, 0.5);
-    },
-  }
-);
-Blockly.Procedures.DEFINITION_BLOCK_TYPES.push('ocean_boiler_definition');
 

@@ -115,10 +115,10 @@ function test_image_dropdown_menu_button() {
   imgDropdown.showMenu_();
 
   // Check menu has items 'Foo 123', 'Bar 456', and 'TestButton' button
-  let menu = imgDropdown.menu_;
+  var menu = imgDropdown.menu_;
   assertEquals(3, menu.getItemCount());
   // Buttons are added at the end of the menu
-  let button = menu.getItemAt(2);
+  var button = menu.getItemAt(2);
   assertEquals("TestButton", button.getContent());
 
   // Elements stay remains in menu after menu is hidden

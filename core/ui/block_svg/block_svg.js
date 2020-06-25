@@ -1301,7 +1301,7 @@ Blockly.BlockSvg.prototype.renderDrawRight_ = function(renderInfo, connectionsXY
           absoluteLeft: Blockly.RTL ? -renderInfo.curX : 5,
           viewWidth: renderInfo.curX - 10
         };
-      }
+      };
       this.block_.miniFlyout.softShow();
       this.renderDrawTray_(renderInfo, this.block_.miniFlyout.getHeight() + 7);
     } else {

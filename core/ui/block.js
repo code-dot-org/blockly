@@ -263,7 +263,7 @@ Blockly.Block.prototype.initSvg = function() {
   if (this.miniFlyoutBlocks) {
     this.miniFlyout = new Blockly.HorizontalFlyout(this.blockSpace.blockSpaceEditor);
     this.miniFlyout.targetBlockSpace_ = this.blockSpace;
-    const dom = this.miniFlyout.createDom(true);
+    var dom = this.miniFlyout.createDom(true);
     this.svg_.getRootElement().append(dom);
     this.miniFlyout.show(this.miniFlyoutBlocks);
     this.miniFlyout.softHide();
@@ -274,7 +274,7 @@ Blockly.Block.prototype.initSvg = function() {
  * Create a mini-flyout with the given set of blocks.
  */
 Blockly.Block.prototype.initMiniFlyout = function(blockString) {
-  const root = Blockly.Xml.textToDom(blockString);
+  var root = Blockly.Xml.textToDom(blockString);
   // Use childNodes, not children, for IE compatibility
   var childNodes = root.childNodes;
   var blockList = [];

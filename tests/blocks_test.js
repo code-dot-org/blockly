@@ -441,8 +441,8 @@ function test_connectTwoBlocks() {
     </xml>
   `));
 
-  const target = blockSpace.getTopBlocks()[0];
-  const orphan = blockSpace.getTopBlocks()[1];
+  var target = blockSpace.getTopBlocks()[0];
+  var orphan = blockSpace.getTopBlocks()[1];
 
   assertNull(orphan.getParent());
   Blockly.Test.simulateDrag(orphan, target.getInput('VALUE').connection);

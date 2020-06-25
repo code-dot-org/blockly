@@ -178,9 +178,9 @@ Blockly.Blocks.button_block = {
                 resolve(prompt())
               });
             },
-            this.getHexColour(),
+            this.getHexColour()
           ),
-          'VALUE',
+          'VALUE'
         );
     this.setOutput(true, Blockly.BlockValueType.STRING);
   },

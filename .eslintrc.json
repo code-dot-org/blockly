@@ -1,0 +1,27 @@
+{
+  "parser": "babel-eslint",
+  "parserOptions": {
+    "sourceType": "module",
+    "ecmaFeatures": {
+      "jsx": true,
+      "modules": true,
+      "ecmaVersion": 6,
+      "experimentalObjectRestSpread": true
+    }
+  },
+  "plugins": [
+    "es5"
+  ],
+  "extends": [
+    "plugin:es5/no-es2015"
+  ],
+  "env": {
+    "browser": true
+  },
+  "rules": {
+  },
+  "globals": {
+    "Blockly": true,
+    "goog": true
+  }
+}

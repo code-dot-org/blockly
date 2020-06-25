@@ -275,7 +275,16 @@ Blockly.Block.prototype.initSvg = function() {
  */
 Blockly.Block.prototype.initMiniFlyout = function(blockString) {
   const root = Blockly.Xml.textToDom(blockString);
-  this.miniFlyoutBlocks = root.children;
+  // Use childNodes, not children, for IE compatibility
+  var childNodes = root.childNodes;
+  var blockList = [];
+  for (var i = 0; i < childNodes.length; i++) {
+    var node = childNodes[i];
+    if (node.nodeName === 'block') {
+      blockList.push(node)
+    }
+  }
+  this.miniFlyoutBlocks = blockList;
 };
 
 /**

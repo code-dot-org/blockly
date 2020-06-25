@@ -98,16 +98,16 @@ Blockly.Blocks.controls_for = {
     this.setHSV(322, 0.90, 0.95);
     this.interpolateMsg(
       Blockly.Msg.CONTROLS_FOR_INPUT_COUNTER,
-      () => {
+      goog.bind(function () {
         this.appendDummyInput().appendTitle(
           new Blockly.FieldVariable(null),
           'VAR'
         );
-      },
-      ['FROM', 'Number', blockly.ALIGN_RIGHT],
-      ['TO', 'Number', blockly.ALIGN_RIGHT],
-      ['BY', 'Number', blockly.ALIGN_RIGHT],
-      blockly.ALIGN_RIGHT
+      }, this),
+      ['FROM', 'Number', Blockly.Msg.ALIGN_RIGHT],
+      ['TO', 'Number', Blockly.Msg.ALIGN_RIGHT],
+      ['BY', 'Number', Blockly.Msg.ALIGN_RIGHT],
+      Blockly.Msg.ALIGN_RIGHT
     );
     this.appendStatementInput('DO')
         .appendTitle(Blockly.Msg.CONTROLS_FOR_INPUT_DO);

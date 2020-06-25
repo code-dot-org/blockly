@@ -135,7 +135,7 @@ Blockly.Blocks.parent = {
   init: function() {
     var toggle = new Blockly.FieldIcon('＋');
     this.isMiniFlyoutOpen = false;
-    Blockly.bindEvent_(toggle.fieldGroup_, 'mousedown', this, () => {
+    Blockly.bindEvent_(toggle.fieldGroup_, 'mousedown', this, goog.bind(function () {
       if (this.isMiniFlyoutOpen) {
         toggle.setText('＋');
       } else {
@@ -143,7 +143,7 @@ Blockly.Blocks.parent = {
       }
       this.isMiniFlyoutOpen = !this.isMiniFlyoutOpen;
       this.render();
-    });
+    }, this));
 
     this.initMiniFlyout(`
       <xml>
@@ -174,7 +174,9 @@ Blockly.Blocks.button_block = {
         .appendTitle("here's a button on a really long block")
         .appendTitle(
           new Blockly.FieldButton(span, function () {
-              return new Promise(resolve => resolve(prompt()));
+              return new Promise(function(resolve) {
+                resolve(prompt());
+              });
             },
             this.getHexColour(),
           ),

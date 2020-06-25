@@ -18,44 +18,43 @@
  */
 'use strict';
 
-var UNKNOWN_BLOCK = `<xml>
-    <block type="variables_set">
-        <title name="VAR">i</title>
-        <value name="VALUE">
-            <block type="text">
-                <title name="TEXT"></title>
-            </block>
-        </value>
-        <next>
-            <block type="NOT_VALID_TYPE">
-                <value name="VALUE">
-                    <block type="text">
-                        <title name="TEXT"></title>
-                    </block>
-                </value>
-                <next>
-                    <block type="variables_set">
-                        <title name="VAR">i</title>
-                        <value name="VALUE">
-                            <block type="text">
-                                <title name="TEXT"></title>
-                            </block>
-                        </value>
-                    </block>
-                </next>
-            </block>
-        </next>
-    </block>
-</xml>`;
+var UNKNOWN_BLOCK = '<xml>' +
+    '<block type="variables_set">' +
+        '<title name="VAR">i</title>' +
+        '<value name="VALUE">' +
+            '<block type="text">' +
+                '<title name="TEXT"></title>' +
+            '</block>' +
+        '</value>' +
+        '<next>' +
+            '<block type="NOT_VALID_TYPE">' +
+                '<value name="VALUE">' +
+                    '<block type="text">' +
+                        '<title name="TEXT"></title>' +
+                    '</block>' +
+                '</value>' +
+                '<next>' +
+                    '<block type="variables_set">' +
+                        '<title name="VAR">i</title>' +
+                        '<value name="VALUE">' +
+                            '<block type="text">' +
+                                '<title name="TEXT"></title>' +
+                            '</block>' +
+                        '</value>' +
+                    '</block>' +
+                '</next>' +
+            '</block>' +
+        '</next>' +
+    '</block>' +
+'</xml>';
 
 var UNKNOWN_BLOCK_AS_CODE =
-`var i;
-
-
-i = '';
+'var i;' + 
+'' +
+'' +
+"i = '';" +
 // Unknown block: NOT_VALID_TYPE
-i = '';
-`
+"i = '';";
 
 function test_get() {
   var language1 = Blockly.Generator.get('INTERCAL');

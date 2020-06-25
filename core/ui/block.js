@@ -263,7 +263,7 @@ Blockly.Block.prototype.initSvg = function() {
   if (this.miniFlyoutBlocks) {
     this.miniFlyout = new Blockly.HorizontalFlyout(this.blockSpace.blockSpaceEditor);
     this.miniFlyout.targetBlockSpace_ = this.blockSpace;
-    const dom = this.miniFlyout.createDom(true);
+    var dom = this.miniFlyout.createDom(true);
     this.svg_.getRootElement().append(dom);
     this.miniFlyout.show(this.miniFlyoutBlocks);
     this.miniFlyout.softHide();
@@ -274,7 +274,7 @@ Blockly.Block.prototype.initSvg = function() {
  * Create a mini-flyout with the given set of blocks.
  */
 Blockly.Block.prototype.initMiniFlyout = function(blockString) {
-  const root = Blockly.Xml.textToDom(blockString);
+  var root = Blockly.Xml.textToDom(blockString);
   this.miniFlyoutBlocks = root.children;
 };
 
@@ -737,7 +737,7 @@ Blockly.Block.prototype.onMouseDown_ = function(e) {
     // If the block should duplicate on drag, duplicate the block, pass the click event
     // to the duplicated block, and return from this block's click event
     if(this.shouldCopyOnDrag()){
-      let dup = this.duplicate_();
+      var dup = this.duplicate_();
       dup.setParentForCopyOnDrag(null);
       dup.onMouseDown_(e);
       return;
@@ -836,7 +836,7 @@ Blockly.Block.prototype.onMouseUp_ = function(e) {
     Blockly.selected.setIsUnused();
     var shadowBlocks = getShadowBlocksInStack(Blockly.selected);
     shadowBlocks.forEach(function (block) {
-      let sourceBlock = block.blockToShadow_(block.getRootBlock());
+      var sourceBlock = block.blockToShadow_(block.getRootBlock());
       block.shadowBlockValue_(sourceBlock);
     })
   }
@@ -874,7 +874,7 @@ Blockly.Block.prototype.duplicate_ = function() {
   // Move the duplicate next to the old block.
   var xy = this.getRelativeToSurfaceXY();
   // If this is a duplicate on drag, off-set the block by 1 pixel
-  let snapRadius = this.shouldCopyOnDrag() ? 1 : Blockly.SNAP_RADIUS;
+  var snapRadius = this.shouldCopyOnDrag() ? 1 : Blockly.SNAP_RADIUS;
   if (Blockly.RTL) {
     xy.x -= snapRadius;
   } else {
@@ -1548,8 +1548,8 @@ Blockly.Block.prototype.setParent = function(newParent) {
   if (newParent && newParent.miniFlyout && this.type === 'gamelab_allSpritesWithAnimation') {
     // Add a sprite block to an event socket
     if (newParent.isMiniFlyoutOpen) {
-      let miniToolboxBlocks = newParent.miniFlyout.blockSpace_.topBlocks_;
-      let rootInputBlocks = newParent.getConnections_(true /* all */).filter(function(connection) {
+      var miniToolboxBlocks = newParent.miniFlyout.blockSpace_.topBlocks_;
+      var rootInputBlocks = newParent.getConnections_(true /* all */).filter(function(connection) {
         return connection.type === Blockly.INPUT_VALUE
       }).map(function(connection) {
         return connection.targetBlock()
@@ -1566,7 +1566,7 @@ Blockly.Block.prototype.setParent = function(newParent) {
     }, this);
     this.setShadowBlocks(shadowBlocks);
     shadowBlocks.forEach(function (block) {
-      let sourceBlock = block.blockToShadow_(block.getRootBlock());
+      var sourceBlock = block.blockToShadow_(block.getRootBlock());
       block.shadowBlockValue_(sourceBlock);
     })
     this.blockSpace.render();
@@ -1574,15 +1574,15 @@ Blockly.Block.prototype.setParent = function(newParent) {
     // Add a block stack to an event stack
     var shadowBlocks = getShadowBlocksInStack(this);
     shadowBlocks.forEach(function (block) {
-      let sourceBlock = block.blockToShadow_(block.getRootBlock());
+      var sourceBlock = block.blockToShadow_(block.getRootBlock());
       block.shadowBlockValue_(sourceBlock);
     })
   }
   if (oldParent && oldParent.miniFlyout && this.type === 'gamelab_allSpritesWithAnimation') {
     // Remove a sprite block from an event socket
     if (oldParent.isMiniFlyoutOpen) {
-      let miniToolboxBlocks = oldParent.miniFlyout.blockSpace_.topBlocks_;
-      let rootInputBlocks = oldParent.getConnections_(true /* all */).filter(function(connection) {
+      var miniToolboxBlocks = oldParent.miniFlyout.blockSpace_.topBlocks_;
+      var rootInputBlocks = oldParent.getConnections_(true /* all */).filter(function(connection) {
         return connection.type === Blockly.INPUT_VALUE
       }).map(function(connection) {
         return connection.targetBlock()
@@ -1595,14 +1595,14 @@ Blockly.Block.prototype.setParent = function(newParent) {
     this.setShadowBlocks([]);
     var shadowBlocks = getShadowBlocksInStack(oldParent);
     shadowBlocks.forEach(function (block) {
-      let sourceBlock = block.blockToShadow_(block.getRootBlock());
+      var sourceBlock = block.blockToShadow_(block.getRootBlock());
       block.shadowBlockValue_(sourceBlock);
     })
   } else if (oldParent && oldParent.getRootBlock().miniFlyout) {
     // Remove a block stack from an event stack
     var shadowBlocks = getShadowBlocksInStack(this);
     shadowBlocks.forEach(function (block) {
-      let sourceBlock = block.blockToShadow_(block.getRootBlock());
+      var sourceBlock = block.blockToShadow_(block.getRootBlock());
       block.shadowBlockValue_(sourceBlock);
     })
   }
@@ -1617,17 +1617,17 @@ Blockly.Block.prototype.setParent = function(newParent) {
  */
 Blockly.Block.prototype.shadowBlockValue_ = function(sourceBlock) {
   if(this.blockToShadow_){
-    let root = this.getRootBlock();
+    var root = this.getRootBlock();
     if (root.isCurrentlyBeingDragged()) {
       return;
     }
     if (sourceBlock && sourceBlock.type === "gamelab_allSpritesWithAnimation") {
       // Only works with allSpritesWithAnimation blocks
-      let sourceField = sourceBlock.inputList[0].titleRow[0];
+      var sourceField = sourceBlock.inputList[0].titleRow[0];
       
       // Only works with clicked/subject/object pointer blocks
-      let previewField = this.inputList[0].titleRow[1];
-      let textField = this.inputList[0].titleRow[0]
+      var previewField = this.inputList[0].titleRow[1];
+      var textField = this.inputList[0].titleRow[0]
       
       previewField.setText(sourceField.previewElement_.getAttribute("xlink:href"));
       previewField.updateDimensions_(this.thumbnailSize, this.thumbnailSize);
@@ -1636,8 +1636,8 @@ Blockly.Block.prototype.shadowBlockValue_ = function(sourceBlock) {
       // Add this block to the list of blocks to update when the sprite dropdown field is changed.
       sourceBlock.addShadowBlock(this);
     } else {
-      let previewField = this.inputList[0].titleRow[1];
-      let textField = this.inputList[0].titleRow[0]
+      var previewField = this.inputList[0].titleRow[1];
+      var textField = this.inputList[0].titleRow[0]
       previewField.setText("");
       previewField.updateDimensions_(1, this.thumbnailSize);
       textField.setText(this.longString);
@@ -1654,7 +1654,7 @@ Blockly.Block.prototype.addShadowBlock = function(block){
     this.shadowBlocks_= [];
   }
   // First check to make sure the block isn't already in the list.
-  if (!this.shadowBlocks_.includes(block)) {
+  if (this.shadowBlocks_.indexOf(block) === -1) {
     this.shadowBlocks_.push(block);
   }
 };
@@ -2055,7 +2055,7 @@ Blockly.Block.prototype.setParentForCopyOnDrag = function(parent){
  * Returns whether this block is connected to the parent from which it should duplicate on drag
  */
 Blockly.Block.prototype.shouldCopyOnDrag = function(){
-  let parent = this.getParent();
+  var parent = this.getParent();
   return this.copyOnDrag_ && !!parent && (parent.type === this.copyOnDrag_);
 };
 

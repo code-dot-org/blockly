@@ -40,7 +40,8 @@ goog.require('goog.ui.ColorPicker');
  * @extends {Blockly.Field}
  * @constructor
  */
-Blockly.FieldColour = function(colour, opt_changeHandler, opt_options = {}) {
+Blockly.FieldColour = function(colour, opt_changeHandler, opt_options) {
+  opt_options = opt_options || {};
   Blockly.FieldColour.superClass_.constructor.call(this, '\u00A0\u00A0\u00A0');
 
   this.changeHandler_ = opt_changeHandler;

@@ -835,7 +835,7 @@ Blockly.Flyout.prototype.createBlockFunc_ = function(originBlock) {
     block.moveBy(xyOld.x - xyNew.x, xyOld.y - xyNew.y);
     
     if (block.blockToShadow_) {
-      let src = "";
+      var src = "";
       if (originBlock.inputList[0] && originBlock.inputList[0].titleRow[1]) {
         src = originBlock.inputList[0].titleRow[1].src_;
       }

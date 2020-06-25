@@ -360,7 +360,7 @@ Blockly.BlockSpace.prototype.createDom = function(shouldClipWidth) {
   */
   this.svgGroup_ = Blockly.createSvgElement('g', {'class': 'svgGroup'}, null);
   this.clippingGroup_ = Blockly.createSvgElement('g', {'class': 'svgClippingGroup'}, this.svgGroup_);
-  let blockCanvasOptions = {'class': 'svgBlockCanvas'};
+  var blockCanvasOptions = {'class': 'svgBlockCanvas'};
   if (shouldClipWidth) {
     this.defs_ = Blockly.createSvgElement('defs', {}, this.clippingGroup_);
     this.clipPath_ = Blockly.createSvgElement('clipPath', {'id': 'clipToolbox'}, this.defs_);

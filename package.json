@@ -19,6 +19,7 @@
   "scripts": {
     "build": "webpack-cli",
     "build:dev": "DEV=1 webpack-cli",
+    "lint": "eslint --ext .js blocks core generators tests",
     "preversion": "npm run test",
     "version": "npm run build",
     "postversion": "git push && git push --tags && npm publish",
@@ -29,6 +30,8 @@
   },
   "devDependencies": {
     "codecov": "^3.0.4",
+    "eslint": "^6.1.0",
+    "eslint-plugin-es5": "^1.4.1",
     "google-closure-compiler": "~20180610.0.2",
     "google-closure-library": "~20170124.0.0",
     "karma": "^2.0.4",

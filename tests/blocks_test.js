@@ -397,8 +397,8 @@ function test_typedParams() {
 }
 
 function test_shouldCopyOnDrag() {
-  let containerDiv = Blockly.Test.initializeBlockSpaceEditor();
-  let blockSpace = Blockly.mainBlockSpace;
+  var containerDiv = Blockly.Test.initializeBlockSpaceEditor();
+  var blockSpace = Blockly.mainBlockSpace;
   Blockly.Xml.domToBlockSpace(blockSpace, Blockly.Xml.textToDom(
     '<xml>' +
       '<block type="parent">' +
@@ -410,12 +410,12 @@ function test_shouldCopyOnDrag() {
       '<block type="orphan"></block>' +
     '</xml>'
   ));
-  let blocks = blockSpace.getTopBlocks();
+  var blocks = blockSpace.getTopBlocks();
   assertEquals(2, blocks.length);
 
-  let parentBlock = blockSpace.getTopBlocks()[0];
-  let childBlock = parentBlock.getChildren()[0];
-  let orphanBlock = blockSpace.getTopBlocks()[1];
+  var parentBlock = blockSpace.getTopBlocks()[0];
+  var childBlock = parentBlock.getChildren()[0];
+  var orphanBlock = blockSpace.getTopBlocks()[1];
 
   childBlock.setParentForCopyOnDrag('parent');
   orphanBlock.setParentForCopyOnDrag('parent');
@@ -432,17 +432,17 @@ function test_shouldCopyOnDrag() {
 }
 
 function test_connectTwoBlocks() {
-  let containerDiv = Blockly.Test.initializeBlockSpaceEditor();
-  let blockSpace = Blockly.mainBlockSpace;
-  Blockly.Xml.domToBlockSpace(blockSpace, Blockly.Xml.textToDom(`
-    <xml>
-      <block type="variables_set"></block>
-      <block type="colour_picker"></block>
-    </xml>
-  `));
+  var containerDiv = Blockly.Test.initializeBlockSpaceEditor();
+  var blockSpace = Blockly.mainBlockSpace;
+  Blockly.Xml.domToBlockSpace(blockSpace, Blockly.Xml.textToDom(
+    '<xml>' +
+      '<block type="variables_set"></block>' +
+      '<block type="colour_picker"></block>' +
+    '</xml>'
+  ));
 
-  const target = blockSpace.getTopBlocks()[0];
-  const orphan = blockSpace.getTopBlocks()[1];
+  var target = blockSpace.getTopBlocks()[0];
+  var orphan = blockSpace.getTopBlocks()[1];
 
   assertNull(orphan.getParent());
   Blockly.Test.simulateDrag(orphan, target.getInput('VALUE').connection);

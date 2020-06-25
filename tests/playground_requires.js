@@ -135,7 +135,7 @@ Blockly.Blocks.parent = {
   init: function() {
     var toggle = new Blockly.FieldIcon('＋');
     this.isMiniFlyoutOpen = false;
-    Blockly.bindEvent_(toggle.fieldGroup_, 'mousedown', this, () => {
+    Blockly.bindEvent_(toggle.fieldGroup_, 'mousedown', this, goog.bind(function() {
       if (this.isMiniFlyoutOpen) {
         toggle.setText('＋');
       } else {
@@ -143,14 +143,14 @@ Blockly.Blocks.parent = {
       }
       this.isMiniFlyoutOpen = !this.isMiniFlyoutOpen;
       this.render();
-    });
+    }, this));
 
-    this.initMiniFlyout(`
-      <xml>
-        <block type="math_number"></block>
-        <block type="colour_rgb"></block>
-      </xml>
-    `);
+    this.initMiniFlyout(
+      '<xml>' +
+        '<block type="math_number"></block>' +
+        '<block type="colour_rgb"></block>' +
+      '</xml>'
+    );
 
     this.setHSV(131, 0.64, 0.62);
     this.appendDummyInput()
@@ -174,11 +174,13 @@ Blockly.Blocks.button_block = {
         .appendTitle("here's a button on a really long block")
         .appendTitle(
           new Blockly.FieldButton(span, function () {
-              return new Promise(resolve => resolve(prompt()));
+              return new Promise(function(resolve) {
+                resolve(prompt())
+              });
             },
-            this.getHexColour(),
+            this.getHexColour()
           ),
-          'VALUE',
+          'VALUE'
         );
     this.setOutput(true, Blockly.BlockValueType.STRING);
   },
@@ -205,18 +207,4 @@ Blockly.Blocks.dropdown_with_button_block = {
       );
   },
 };
-
-Blockly.Blocks.ocean_boiler_definition = Object.assign({},
-  Blockly.Blocks.procedures_defnoreturn,
-  {
-    init: function() {
-      Blockly.Blocks.procedures_defnoreturn.init.bind(this)();
-      this.appendDummyInput()
-          .appendTitle(new Blockly.FieldLabel('this is a different definition block'));
-      this.setInputsInline(false);
-      this.setHSV(20, 0.5, 0.5);
-    },
-  }
-);
-Blockly.Procedures.DEFINITION_BLOCK_TYPES.push('ocean_boiler_definition');
 

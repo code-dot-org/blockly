@@ -1,0 +1,20 @@
+{
+  "parserOptions": {
+    "ecmaVersion": 5
+  },
+  "plugins": [
+    "es5"
+  ],
+  "extends": [
+    "plugin:es5/no-es2015"
+  ],
+  "env": {
+    "browser": true
+  },
+  "rules": {
+  },
+  "globals": {
+    "Blockly": true,
+    "goog": true
+  }
+}

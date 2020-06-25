@@ -67,8 +67,9 @@ Blockly.Test.testWithReadOnlyBlockSpaceEditor = function (callback) {
  * @param block {Blockly.Block}
  * @param destination {Blockly.Connection|Object}
  */
-Blockly.Test.simulateDrag = function (block, destination = {dx: 100, dy: 100}) {
-  let {dx, dy} = destination;
+Blockly.Test.simulateDrag = function (block, destination) {
+  var dx = destination.dx || 100;
+  var dy = destination.dy || 100;
   if (destination instanceof Blockly.Connection) {
     dx = destination.x_ - block.outputConnection.x_;
     dy = destination.y_ - block.outputConnection.y_;

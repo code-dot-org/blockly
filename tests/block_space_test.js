@@ -396,7 +396,7 @@ function test_locked_serialization() {
     Blockly.mainBlockSpace, Blockly.Xml.textToDom(blockXML));
 
   Blockly.mainBlockSpace.blockSpaceEditor.lockMovement();
-  var newBlockXml = Blockly.Xml.domToPrettyText(
+  var newBlockXml = Blockly.Xml.domToText(
     Blockly.Xml.blockSpaceToDom(Blockly.mainBlockSpace));
 
   assertEquals('Block Xml is not changed by locking movement',

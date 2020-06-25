@@ -50,11 +50,12 @@ var UNKNOWN_BLOCK = '<xml>' +
 
 var UNKNOWN_BLOCK_AS_CODE =
 'var i;' + 
-'' +
-'' +
-"i = '';" +
-// Unknown block: NOT_VALID_TYPE
-"i = '';";
+'\n' +
+'\n' +
+"\ni = '';" +
+'\n// Unknown block: NOT_VALID_TYPE' +
+"\ni = '';" + 
+'\n';
 
 function test_get() {
   var language1 = Blockly.Generator.get('INTERCAL');

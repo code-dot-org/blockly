@@ -264,7 +264,7 @@ Blockly.Block.prototype.initSvg = function() {
     this.miniFlyout = new Blockly.HorizontalFlyout(this.blockSpace.blockSpaceEditor);
     this.miniFlyout.targetBlockSpace_ = this.blockSpace;
     var dom = this.miniFlyout.createDom(true);
-    this.svg_.getRootElement().append(dom);
+    this.svg_.getRootElement().appendChild(dom);
     this.miniFlyout.show(this.miniFlyoutBlocks);
     this.miniFlyout.softHide();
   }

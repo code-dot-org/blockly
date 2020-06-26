@@ -264,7 +264,7 @@ Blockly.Block.prototype.initSvg = function() {
     this.miniFlyout = new Blockly.HorizontalFlyout(this.blockSpace.blockSpaceEditor);
     this.miniFlyout.targetBlockSpace_ = this.blockSpace;
     var dom = this.miniFlyout.createDom(true);
-    this.svg_.getRootElement().append(dom);
+    this.svg_.getRootElement().appendChild(dom);
     this.miniFlyout.show(this.miniFlyoutBlocks);
     this.miniFlyout.softHide();
   }
@@ -275,7 +275,16 @@ Blockly.Block.prototype.initSvg = function() {
  */
 Blockly.Block.prototype.initMiniFlyout = function(blockString) {
   var root = Blockly.Xml.textToDom(blockString);
-  this.miniFlyoutBlocks = root.children;
+  // Use childNodes, not children, for IE compatibility
+  var childNodes = root.childNodes;
+  var blockList = [];
+  for (var i = 0; i < childNodes.length; i++) {
+    var node = childNodes[i];
+    if (node.nodeName === 'block') {
+      blockList.push(node)
+    }
+  }
+  this.miniFlyoutBlocks = blockList;
 };
 
 /**

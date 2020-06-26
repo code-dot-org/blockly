@@ -306,6 +306,8 @@ Blockly.BlockSpaceEditor.prototype.createDom_ = function(container) {
     // Add a handler that allows the workspace to bump blocks back into their
     // working area.
     this.addChangeListener(this.bumpBlocksIfNotDragging);
+  } else {
+    Blockly.addClass_(svg, 'readOnlyBlockSpace');
   }
 
   /**

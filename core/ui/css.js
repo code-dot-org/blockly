@@ -174,7 +174,7 @@ Blockly.Css.CONTENT = [
   '#%CONTAINER_ID% .userHidden {',
   '  display: none;',
   '}',
-  '#%CONTAINER_ID% .hiddenFlyout, #blocklyDragCanvas .hiddenFlyout {',
+  '#%CONTAINER_ID% .hiddenFlyout, #blocklyDragCanvas .hiddenFlyout, .readOnlyBlockSpace .hiddenFlyout {',
   '  display: none !important;',
   '}',
   '#%CONTAINER_ID%.edit .userHidden {',

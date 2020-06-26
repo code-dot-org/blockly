@@ -814,9 +814,14 @@ Blockly.Flyout.prototype.createBlockFunc_ = function(originBlock) {
       // Beyond capacity.
       return;
     }
+    var targetBlockSpace = flyout.targetBlockSpace_;
+    if (targetBlockSpace.isReadOnly()) {
+      // Don't create a block in a read only context
+      return;
+    }
+
     // Create the new block by cloning the block in the flyout (via XML).
     var xml = Blockly.Xml.blockToDom(originBlock);
-    var targetBlockSpace = flyout.targetBlockSpace_;
     Blockly.Block.startDragging();
     var block = Blockly.Xml.domToBlock(targetBlockSpace, xml);
     // Place it in the same spot as the flyout copy.
@@ -840,11 +845,9 @@ Blockly.Flyout.prototype.createBlockFunc_ = function(originBlock) {
         src = originBlock.inputList[0].titleRow[1].src_;
       }
       if (src != "") {
+        block.inputList[0].titleRow[0].setText(block.shortString);
         block.inputList[0].titleRow[1].setText(originBlock.inputList[0].titleRow[1].src_);  
         block.inputList[0].titleRow[1].updateDimensions_(block.thumbnailSize, block.thumbnailSize);
-      } else {
-        block.inputList[0].titleRow[0].setText(block.longString);
-        block.inputList[0].titleRow[1].updateDimensions_(1, block.thumbnailSize);
       }
     }
     

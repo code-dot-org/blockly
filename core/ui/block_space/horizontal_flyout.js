@@ -71,7 +71,9 @@ Blockly.HorizontalFlyout.prototype.position_ = function() {
   if (!this.isVisible()) {
     return;
   }
-  var metrics = this.customMetrics ? this.customMetrics() : this.targetBlockSpace_.getMetrics();
+  var metrics = this.customMetrics
+    ? this.customMetrics()
+    : this.targetBlockSpace_.getMetrics();
   if (!metrics) {
     // Hidden components will return null.
     return;
@@ -80,13 +82,27 @@ Blockly.HorizontalFlyout.prototype.position_ = function() {
   var edgeWidth = Math.max(0, metrics.viewWidth - this.CORNER_RADIUS * 2);
   var path = ['M 0,0'];
   path.push('v', edgeHeight);
-  path.push('a', this.CORNER_RADIUS, this.CORNER_RADIUS, 0, 0, 0,
-      this.CORNER_RADIUS,
-      this.CORNER_RADIUS);
+  path.push(
+    'a',
+    this.CORNER_RADIUS,
+    this.CORNER_RADIUS,
+    0,
+    0,
+    0,
+    this.CORNER_RADIUS,
+    this.CORNER_RADIUS
+  );
   path.push('h', edgeWidth);
-  path.push('a', this.CORNER_RADIUS, this.CORNER_RADIUS, 0, 0, 0,
-      this.CORNER_RADIUS,
-      -this.CORNER_RADIUS);
+  path.push(
+    'a',
+    this.CORNER_RADIUS,
+    this.CORNER_RADIUS,
+    0,
+    0,
+    0,
+    this.CORNER_RADIUS,
+    -this.CORNER_RADIUS
+  );
   path.push('v', -edgeHeight);
   path.push('z');
   this.svgBackground_.setAttribute('d', path.join(' '));
@@ -101,11 +117,12 @@ Blockly.HorizontalFlyout.prototype.position_ = function() {
     this.scrollbar_.resize();
   }
 
-  this.svgBackground_.style.pointerEvents =
-    this.scrollbar_ ? 'initial' : 'none';
+  this.svgBackground_.style.pointerEvents = this.scrollbar_
+    ? 'initial'
+    : 'none';
 };
 
-Blockly.HorizontalFlyout.prototype.getYPosition = function () {
+Blockly.HorizontalFlyout.prototype.getYPosition = function() {
   return this.customYOffset || 0;
 };
 
@@ -113,11 +130,17 @@ Blockly.HorizontalFlyout.prototype.getYPosition = function () {
  * Arrange the given block in the flyout, and update cursorX/cursorY.
  * @private
  */
-Blockly.HorizontalFlyout.prototype.layoutBlock_ = function(block, cursor, gap,
-    initialX) {
+Blockly.HorizontalFlyout.prototype.layoutBlock_ = function(
+  block,
+  cursor,
+  gap,
+  initialX
+) {
   var blockHW = block.getHeightWidth();
-  if ((Blockly.RTL && cursor.x - blockHW.width < 0)
-      || (!Blockly.RTL && cursor.x + blockHW.width > this.width_)) {
+  if (
+    (Blockly.RTL && cursor.x - blockHW.width < 0) ||
+    (!Blockly.RTL && cursor.x + blockHW.width > this.width_)
+  ) {
     this.flyoutRows++;
     cursor.y += blockHW.height + gap / 2;
     cursor.x = initialX;
@@ -135,5 +158,4 @@ Blockly.HorizontalFlyout.prototype.layoutBlock_ = function(block, cursor, gap,
 /**
  * Blocks in HorizontalFlyouts don't get reflowed from their initial position.
  */
-Blockly.HorizontalFlyout.prototype.reflow = function() {
-};
+Blockly.HorizontalFlyout.prototype.reflow = function() {};

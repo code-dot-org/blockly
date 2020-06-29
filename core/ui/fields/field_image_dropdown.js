@@ -46,7 +46,11 @@ Blockly.FieldImageDropdown = function(menuGenerator, width, height, buttons) {
   this.width_ = width;
   this.height_ = height;
   this.menuGenerator_ = menuGenerator;
-  Blockly.FieldImageDropdown.superClass_.constructor.call(this, menuGenerator, buttons);
+  Blockly.FieldImageDropdown.superClass_.constructor.call(
+    this,
+    menuGenerator,
+    buttons
+  );
   if (this.hasForcedDimensions_()) {
     this.updateDimensions_(this.width_, this.height_);
   }
@@ -57,16 +61,29 @@ Blockly.FieldImageDropdown.prototype.hasForcedDimensions_ = function() {
   return !!this.width_;
 };
 
-Blockly.FieldImageDropdown.prototype.addPreviewElementTo_ = function(parentElement) {
-  this.previewElement_ = Blockly.createSvgElement('image',
-    {'height': Blockly.FieldImage.IMAGE_LOADING_HEIGHT + 'px',
-      'width': Blockly.FieldImage.IMAGE_LOADING_WIDTH + 'px',
-      'y': Blockly.FieldImage.IMAGE_OFFSET_Y,
-      'preserveAspectRatio': 'xMidYMid slice'}, parentElement);
+Blockly.FieldImageDropdown.prototype.addPreviewElementTo_ = function(
+  parentElement
+) {
+  this.previewElement_ = Blockly.createSvgElement(
+    'image',
+    {
+      height: Blockly.FieldImage.IMAGE_LOADING_HEIGHT + 'px',
+      width: Blockly.FieldImage.IMAGE_LOADING_WIDTH + 'px',
+      y: Blockly.FieldImage.IMAGE_OFFSET_Y,
+      preserveAspectRatio: 'xMidYMid slice'
+    },
+    parentElement
+  );
 };
 
-Blockly.FieldImageDropdown.prototype.updatePreviewData_ = function(previewData) {
-  this.previewElement_.setAttributeNS('http://www.w3.org/1999/xlink', 'xlink:href', previewData);
+Blockly.FieldImageDropdown.prototype.updatePreviewData_ = function(
+  previewData
+) {
+  this.previewElement_.setAttributeNS(
+    'http://www.w3.org/1999/xlink',
+    'xlink:href',
+    previewData
+  );
   if (this.hasForcedDimensions_()) {
     return;
   }
@@ -74,9 +91,15 @@ Blockly.FieldImageDropdown.prototype.updatePreviewData_ = function(previewData) 
   this.getUpdatedDimensions_(previewData);
 };
 
-Blockly.FieldImageDropdown.prototype.createDropdownPreviewElement_ = function(imagePath) {
+Blockly.FieldImageDropdown.prototype.createDropdownPreviewElement_ = function(
+  imagePath
+) {
   if (this.hasForcedDimensions_()) {
-    return this.createAutoSizedDropdownPreviewElement_(imagePath, this.width_, this.height_);
+    return this.createAutoSizedDropdownPreviewElement_(
+      imagePath,
+      this.width_,
+      this.height_
+    );
   }
   return this.createImageDropdownPreviewElement_(imagePath);
 };
@@ -90,12 +113,16 @@ Blockly.FieldImageDropdown.prototype.createDropdownPreviewElement_ = function(im
  * @returns {HTMLElement} div with image in the background, centered and filling the background
  * @private
  */
-Blockly.FieldImageDropdown.prototype.createAutoSizedDropdownPreviewElement_ = function(imagePath, width, height) {
+Blockly.FieldImageDropdown.prototype.createAutoSizedDropdownPreviewElement_ = function(
+  imagePath,
+  width,
+  height
+) {
   var dropdownPreviewElement = document.createElement('div');
-  dropdownPreviewElement.style.backgroundImage = "url('" + imagePath +  "')";
-  dropdownPreviewElement.style.backgroundSize = "contain";
-  dropdownPreviewElement.style.backgroundRepeat = "no-repeat";
-  dropdownPreviewElement.style.backgroundPosition = "50% 50%";
+  dropdownPreviewElement.style.backgroundImage = "url('" + imagePath + "')";
+  dropdownPreviewElement.style.backgroundSize = 'contain';
+  dropdownPreviewElement.style.backgroundRepeat = 'no-repeat';
+  dropdownPreviewElement.style.backgroundPosition = '50% 50%';
   dropdownPreviewElement.style.width = width + 'px';
   dropdownPreviewElement.style.height = height + 'px';
   return dropdownPreviewElement;
@@ -107,7 +134,9 @@ Blockly.FieldImageDropdown.prototype.createAutoSizedDropdownPreviewElement_ = fu
  * @returns {HTMLElement}
  * @private
  */
-Blockly.FieldImageDropdown.prototype.createImageDropdownPreviewElement_ = function(imagePath) {
+Blockly.FieldImageDropdown.prototype.createImageDropdownPreviewElement_ = function(
+  imagePath
+) {
   var dropdownPreviewElement = document.createElement('img');
   dropdownPreviewElement.setAttribute('src', imagePath);
   return dropdownPreviewElement;
@@ -116,13 +145,19 @@ Blockly.FieldImageDropdown.prototype.createImageDropdownPreviewElement_ = functi
 Blockly.FieldImageDropdown.prototype.getUpdatedDimensions_ = function(src) {
   // Update the preview dimensions now (if cached) or use a default + update later (if not yet loaded)
   var self = this;
-  var dimensions = Blockly.ImageDimensionCache.getCachedDimensionsOrDefaultAndUpdate(src, function(width, height) {
-    self.updateDimensions_(width, height);
-  });
+  var dimensions = Blockly.ImageDimensionCache.getCachedDimensionsOrDefaultAndUpdate(
+    src,
+    function(width, height) {
+      self.updateDimensions_(width, height);
+    }
+  );
   this.updateDimensions_(dimensions.width, dimensions.height);
 };
 
-Blockly.FieldImageDropdown.prototype.updatePreviewDimensions_ = function(previewWidth, previewHeight) {
+Blockly.FieldImageDropdown.prototype.updatePreviewDimensions_ = function(
+  previewWidth,
+  previewHeight
+) {
   this.previewElement_.setAttribute('width', previewWidth + 'px');
   this.previewElement_.setAttribute('height', previewHeight + 'px');
 };

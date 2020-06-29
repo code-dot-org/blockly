@@ -32,7 +32,6 @@ goog.require('Blockly.Names');
 goog.require('Blockly.BlockSpace');
 goog.require('goog.events');
 
-
 /** Flyout category to separate procedure names from variables and generated functions. */
 Blockly.Procedures.NAME_TYPE = 'PROCEDURE';
 
@@ -40,10 +39,13 @@ Blockly.Procedures.NAME_TYPE = 'PROCEDURE';
 Blockly.Procedures.NAME_TYPE_FUNCTIONAL_VARIABLE = 'FUNCTIONAL_VARIABLE';
 
 Blockly.Procedures.DEFINITION_BLOCK_TYPES = [
-  'procedures_defnoreturn', 'procedures_defreturn', 'functional_definition'
+  'procedures_defnoreturn',
+  'procedures_defreturn',
+  'functional_definition'
 ];
 
-Blockly.Procedures.PROCEDURAL_TO_FUNCTIONAL_CALL_TYPE = 'procedural_to_functional_call';
+Blockly.Procedures.PROCEDURAL_TO_FUNCTIONAL_CALL_TYPE =
+  'procedural_to_functional_call';
 
 /**
  * Find all user-created procedure definitions.
@@ -68,7 +70,8 @@ Blockly.Procedures.allProcedures = function() {
         if (Blockly.editBlocks === 'start_blocks') {
           // Make extra procedural calls available for functional definitions in edit mode
           var proceduralCallProcedureInfo = goog.object.clone(procedureInfo);
-          proceduralCallProcedureInfo.callType = Blockly.Procedures.PROCEDURAL_TO_FUNCTIONAL_CALL_TYPE;
+          proceduralCallProcedureInfo.callType =
+            Blockly.Procedures.PROCEDURAL_TO_FUNCTIONAL_CALL_TYPE;
           proceduresFunctional.push(proceduralCallProcedureInfo);
         }
         break;
@@ -87,7 +90,12 @@ Blockly.Procedures.allProcedures = function() {
   proceduresReturn.sort(Blockly.Procedures.procedureInfoSort_);
   proceduresFunctional.sort(Blockly.Procedures.procedureInfoSort_);
   proceduresOther.sort(Blockly.Procedures.procedureInfoSort_);
-  return goog.array.concat(proceduresNoReturn, proceduresReturn, proceduresFunctional, proceduresOther);
+  return goog.array.concat(
+    proceduresNoReturn,
+    proceduresReturn,
+    proceduresFunctional,
+    proceduresOther
+  );
 };
 
 /**
@@ -144,10 +152,16 @@ Blockly.Procedures.findLegalName = function(name, block) {
  * @return {boolean} True if the name is legal.
  */
 Blockly.Procedures.isLegalName = function(name, blockSpace, opt_exclude) {
-  var blockExistsWithName = blockSpace.getAllBlocks()
-    .filter(function(block){ return block !== opt_exclude })
+  var blockExistsWithName = blockSpace
+    .getAllBlocks()
+    .filter(function(block) {
+      return block !== opt_exclude;
+    })
     .some(function(block) {
-      return block.getProcedureInfo && Blockly.Names.equals(block.getProcedureInfo().name, name)
+      return (
+        block.getProcedureInfo &&
+        Blockly.Names.equals(block.getProcedureInfo().name, name)
+      );
     });
   return !blockExistsWithName;
 };
@@ -166,8 +180,9 @@ Blockly.Procedures.rename = function(text) {
   // Ensure two identically-named procedures don't exist.
   text = Blockly.Procedures.findLegalName(text, this.sourceBlock_);
   // Rename any callers.
-  var blocks = this.sourceBlock_.blockSpace.getAllBlocks().concat(
-    this.sourceBlock_.blockSpace.blockSpaceEditor.getAllFlyoutBlocks());
+  var blocks = this.sourceBlock_.blockSpace
+    .getAllBlocks()
+    .concat(this.sourceBlock_.blockSpace.blockSpaceEditor.getAllFlyoutBlocks());
   for (var x = 0; x < blocks.length; x++) {
     var func = blocks[x].renameProcedure;
     if (func) {
@@ -189,10 +204,18 @@ Blockly.Procedures.rename = function(text) {
  *  of procedureInfo. Returning "true" means calls of this procedure definition
  *  will be included in the category.
  */
-Blockly.Procedures.flyoutCategory = function(blocks, gaps, margin, blockSpace, opt_procedureInfoFilter) {
-  if (!Blockly.functionEditor &&
-      !Blockly.disableProcedureAutopopulate &&
-      !Blockly.topLevelProcedureAutopopulate) {
+Blockly.Procedures.flyoutCategory = function(
+  blocks,
+  gaps,
+  margin,
+  blockSpace,
+  opt_procedureInfoFilter
+) {
+  if (
+    !Blockly.functionEditor &&
+    !Blockly.disableProcedureAutopopulate &&
+    !Blockly.topLevelProcedureAutopopulate
+  ) {
     if (Blockly.Blocks.procedures_defnoreturn) {
       var block = new Blockly.Block(blockSpace, 'procedures_defnoreturn');
       block.initSvg();
@@ -219,30 +242,53 @@ Blockly.Procedures.flyoutCategory = function(blocks, gaps, margin, blockSpace, o
 
   // Add available procedure call blocks
   Blockly.Procedures.allProcedures().forEach(function(procedureDefinitionInfo) {
-    if (opt_procedureInfoFilter && !opt_procedureInfoFilter(procedureDefinitionInfo)) {
+    if (
+      opt_procedureInfoFilter &&
+      !opt_procedureInfoFilter(procedureDefinitionInfo)
+    ) {
       return;
     }
-    var newCallBlock = Blockly.Procedures.createCallerBlock(blockSpace, procedureDefinitionInfo);
+    var newCallBlock = Blockly.Procedures.createCallerBlock(
+      blockSpace,
+      procedureDefinitionInfo
+    );
     blocks.push(newCallBlock);
     gaps.push(margin * 2);
 
-    if (!!Blockly.editBlocks) {
+    if (Blockly.editBlocks) {
       // Generate function passing blocks if we're level editing
-      var newPassBlock = Blockly.Procedures.createFunctionPassingBlock(blockSpace,
-        procedureDefinitionInfo);
+      var newPassBlock = Blockly.Procedures.createFunctionPassingBlock(
+        blockSpace,
+        procedureDefinitionInfo
+      );
       blocks.push(newPassBlock);
       gaps.push(margin * 2);
     }
   });
 };
 
-Blockly.Procedures.createCallerFromDefinition = function(blockSpace, definitionBlock) {
-  return Blockly.Procedures.createCallerBlock(blockSpace, definitionBlock.getProcedureInfo());
+Blockly.Procedures.createCallerFromDefinition = function(
+  blockSpace,
+  definitionBlock
+) {
+  return Blockly.Procedures.createCallerBlock(
+    blockSpace,
+    definitionBlock.getProcedureInfo()
+  );
 };
 
-Blockly.Procedures.createCallerBlock = function(blockSpace, procedureDefinitionInfo) {
-  var title = procedureDefinitionInfo.callType === 'gamelab_behavior_get' ? 'VAR' : 'NAME';
-  var newCallBlock = new Blockly.Block(blockSpace, procedureDefinitionInfo.callType);
+Blockly.Procedures.createCallerBlock = function(
+  blockSpace,
+  procedureDefinitionInfo
+) {
+  var title =
+    procedureDefinitionInfo.callType === 'gamelab_behavior_get'
+      ? 'VAR'
+      : 'NAME';
+  var newCallBlock = new Blockly.Block(
+    blockSpace,
+    procedureDefinitionInfo.callType
+  );
   newCallBlock.setTitleValue(procedureDefinitionInfo.name, title);
   var tempIds = [];
   for (var t = 0; t < procedureDefinitionInfo.parameterNames.length; t++) {
@@ -251,12 +297,16 @@ Blockly.Procedures.createCallerBlock = function(blockSpace, procedureDefinitionI
   newCallBlock.setProcedureParameters(
     procedureDefinitionInfo.parameterNames,
     tempIds,
-    procedureDefinitionInfo.parameterTypes);
+    procedureDefinitionInfo.parameterTypes
+  );
   newCallBlock.initSvg();
   return newCallBlock;
 };
 
-Blockly.Procedures.createFunctionPassingBlock = function (blockSpace, procedureDefinitionInfo) {
+Blockly.Procedures.createFunctionPassingBlock = function(
+  blockSpace,
+  procedureDefinitionInfo
+) {
   var block = new Blockly.Block(blockSpace, 'functional_pass');
   block.setTitleValue(procedureDefinitionInfo.name, 'NAME');
   block.initSvg();
@@ -296,8 +346,13 @@ Blockly.Procedures.disposeCallers = function(name, blockSpace) {
  * @param {!Array.<string>} paramIds Array of unique parameter IDs.
  * @param {?Array.<string>} opt_typeNames Array of types for parameters
  */
-Blockly.Procedures.mutateCallers = function(name, blockSpace,
-                                            paramNames, paramIds, opt_typeNames) {
+Blockly.Procedures.mutateCallers = function(
+  name,
+  blockSpace,
+  paramNames,
+  paramIds,
+  opt_typeNames
+) {
   Blockly.Procedures.getCallers(name, blockSpace).forEach(function(caller) {
     caller.setProcedureParameters(paramNames, paramIds, opt_typeNames);
   }, this);
@@ -311,6 +366,9 @@ Blockly.Procedures.mutateCallers = function(name, blockSpace,
  */
 Blockly.Procedures.getDefinition = function(name, blockSpace) {
   return goog.array.find(blockSpace.getAllBlocks(), function(block) {
-    return block.getProcedureInfo && Blockly.Names.equals(block.getProcedureInfo().name, name);
+    return (
+      block.getProcedureInfo &&
+      Blockly.Names.equals(block.getProcedureInfo().name, name)
+    );
   });
 };

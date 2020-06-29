@@ -30,7 +30,6 @@ goog.provide('Blockly.WidgetDiv');
 goog.require('Blockly.Css');
 goog.require('goog.dom');
 
-
 /**
  * The HTML container.  Set once by inject.js's Blockly.createDom_.
  * @type Element
@@ -40,7 +39,7 @@ Blockly.WidgetDiv.DIV = null;
 /**
  * The object currently using this container.
  * @private
- * @type Object 
+ * @type Object
  */
 Blockly.WidgetDiv.owner_ = null;
 
@@ -108,8 +107,12 @@ Blockly.WidgetDiv.isOwner = function(owner) {
  * @param {!goog.math.Size} widowSize Height/width of window.
  * @param {!goog.math.Coordinate} scrollOffset X/y of window scrollbars.
  */
-Blockly.WidgetDiv.position = function(anchorX, anchorY, windowSize,
-                                      scrollOffset) {
+Blockly.WidgetDiv.position = function(
+  anchorX,
+  anchorY,
+  windowSize,
+  scrollOffset
+) {
   // Don't let the widget go above the top edge of the window.
   if (anchorY < scrollOffset.y) {
     anchorY = scrollOffset.y;
@@ -128,4 +131,3 @@ Blockly.WidgetDiv.position = function(anchorX, anchorY, windowSize,
   Blockly.WidgetDiv.DIV.style.left = anchorX + 'px';
   Blockly.WidgetDiv.DIV.style.top = anchorY + 'px';
 };
-

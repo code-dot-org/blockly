@@ -67,7 +67,10 @@ Blockly.inject = function(container, opt_options, opt_audioPlayer) {
    * @type {Blockly.BlockSpace}
    */
   Blockly.mainBlockSpace = Blockly.mainBlockSpaceEditor.blockSpace;
-  Blockly.fireUiEvent(document, Blockly.BlockSpace.EVENTS.MAIN_BLOCK_SPACE_CREATED);
+  Blockly.fireUiEvent(
+    document,
+    Blockly.BlockSpace.EVENTS.MAIN_BLOCK_SPACE_CREATED
+  );
 
   if (Blockly.useModalFunctionEditor) {
     /** @type {Blockly.FunctionEditor} */
@@ -93,7 +96,11 @@ Blockly.inject = function(container, opt_options, opt_audioPlayer) {
  * @private
  */
 Blockly.parseOptions_ = function(options) {
-  var hasCategories, hasTrashcan, hasCollapse, grayOutUndeletableBlocks, tree,
+  var hasCategories,
+    hasTrashcan,
+    hasCollapse,
+    grayOutUndeletableBlocks,
+    tree,
     hasScrollbars;
 
   var readOnly = !!options['readOnly'];
@@ -140,9 +147,12 @@ Blockly.parseOptions_ = function(options) {
     options['hasVerticalScrollbars'] = true;
     options['hasHorizontalScrollbars'] = true;
   }
-  var topLevelProcedureAutopopulate = options['topLevelProcedureAutopopulate'] || false;
+  var topLevelProcedureAutopopulate =
+    options['topLevelProcedureAutopopulate'] || false;
   if (topLevelProcedureAutopopulate && hasCategories) {
-    console.warn("Don't use topLevelProcedureAutopopulate with a categorized toolbox");
+    console.warn(
+      "Don't use topLevelProcedureAutopopulate with a categorized toolbox"
+    );
     topLevelProcedureAutopopulate = false;
   }
   return {
@@ -151,9 +161,11 @@ Blockly.parseOptions_ = function(options) {
     readOnly: readOnly,
     showUnusedBlocks: showUnusedBlocks,
     maxBlocks: options['maxBlocks'] || Infinity,
-    assetUrl: options['assetUrl'] || function(path) {
-      return './' + path;
-    },
+    assetUrl:
+      options['assetUrl'] ||
+      function(path) {
+        return './' + path;
+      },
     hasCategories: hasCategories,
     hasHorizontalScrollbars: options['hasHorizontalScrollbars'],
     hasVerticalScrollbars: options['hasVerticalScrollbars'],
@@ -164,7 +176,8 @@ Blockly.parseOptions_ = function(options) {
     disableIfElseEditing: options['disableIfElseEditing'] || false,
     disableParamEditing: options['disableParamEditing'] || false,
     disableVariableEditing: options['disableVariableEditing'] || false,
-    disableProcedureAutopopulate: options['disableProcedureAutopopulate'] || false,
+    disableProcedureAutopopulate:
+      options['disableProcedureAutopopulate'] || false,
     topLevelProcedureAutopopulate: topLevelProcedureAutopopulate,
     useModalFunctionEditor: options['useModalFunctionEditor'] || false,
     useContractEditor: options['useContractEditor'] || false,

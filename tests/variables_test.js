@@ -2,20 +2,23 @@
 
 function setUp() {
   Blockly.Blocks.string_variables_set = {
-    init: function () {
+    init: function() {
       this.appendValueInput('VALUE')
-          .setStrictCheck(Blockly.BlockValueType.STRING)
-          .appendTitle(new Blockly.FieldVariable(Blockly.Msg.VARIABLES_SET_ITEM), 'VAR')
+        .setStrictCheck(Blockly.BlockValueType.STRING)
+        .appendTitle(
+          new Blockly.FieldVariable(Blockly.Msg.VARIABLES_SET_ITEM),
+          'VAR'
+        );
       this.setPreviousStatement(true);
       this.setNextStatement(true);
     },
-    getVars: function () {
+    getVars: function() {
       return {
-        String: [this.getTitleValue('VAR')],
+        String: [this.getTitleValue('VAR')]
       };
-    },
+    }
   };
-  Blockly.valueTypeTabShapeMap = {'String': 'square'};
+  Blockly.valueTypeTabShapeMap = {String: 'square'};
 }
 
 function tearDown() {
@@ -25,11 +28,15 @@ function tearDown() {
 function test_allVariables() {
   var container = Blockly.Test.initializeBlockSpaceEditor();
 
-  var blockXML = '<xml><block type="variables_get"><title name="VAR">i</title></block></xml>';
-  Blockly.Xml.domToBlockSpace(Blockly.mainBlockSpace, Blockly.Xml.textToDom(blockXML));
+  var blockXML =
+    '<xml><block type="variables_get"><title name="VAR">i</title></block></xml>';
+  Blockly.Xml.domToBlockSpace(
+    Blockly.mainBlockSpace,
+    Blockly.Xml.textToDom(blockXML)
+  );
   var variables = Blockly.Variables.allVariables();
 
-  assertEquals("One variable used", 1, variables.length);
+  assertEquals('One variable used', 1, variables.length);
   assertEquals("Variable named 'i'", 'i', variables[0]);
 
   goog.dom.removeNode(container);
@@ -38,14 +45,21 @@ function test_allVariables() {
 function test_allVariablesCategorized() {
   var container = Blockly.Test.initializeBlockSpaceEditor();
 
-  var blockXML = '<xml>' +
+  var blockXML =
+    '<xml>' +
     '<block type="variables_set"><title name="VAR">i</title></block>' +
     '<block type="string_variables_set"><title name="VAR">j</title></block>' +
-  '</xml>';
-  Blockly.Xml.domToBlockSpace(Blockly.mainBlockSpace, Blockly.Xml.textToDom(blockXML));
-  var variables = Blockly.Variables.allVariables(null, Blockly.Variables.DEFAULT_CATEGORY);
+    '</xml>';
+  Blockly.Xml.domToBlockSpace(
+    Blockly.mainBlockSpace,
+    Blockly.Xml.textToDom(blockXML)
+  );
+  var variables = Blockly.Variables.allVariables(
+    null,
+    Blockly.Variables.DEFAULT_CATEGORY
+  );
 
-  assertEquals("One variable used", 1, variables.length);
+  assertEquals('One variable used', 1, variables.length);
   assertEquals("Variable named 'i'", 'i', variables[0]);
 
   goog.dom.removeNode(container);
@@ -53,14 +67,18 @@ function test_allVariablesCategorized() {
 
 function test_allVariablesOtherCategory() {
   var container = Blockly.Test.initializeBlockSpaceEditor();
-  var blockXML = '<xml>' +
+  var blockXML =
+    '<xml>' +
     '<block type="variables_set"><title name="VAR">i</title></block>' +
     '<block type="string_variables_set"><title name="VAR">j</title></block>' +
-  '</xml>';
-  Blockly.Xml.domToBlockSpace(Blockly.mainBlockSpace, Blockly.Xml.textToDom(blockXML));
+    '</xml>';
+  Blockly.Xml.domToBlockSpace(
+    Blockly.mainBlockSpace,
+    Blockly.Xml.textToDom(blockXML)
+  );
   var variables = Blockly.Variables.allVariables(null, 'String');
 
-  assertEquals("One variable used", 1, variables.length);
+  assertEquals('One variable used', 1, variables.length);
   assertEquals("Variable named 'j'", 'j', variables[0]);
 
   goog.dom.removeNode(container);
@@ -69,13 +87,25 @@ function test_allVariablesOtherCategory() {
 function test_cannotRenameVariablesToEmpty() {
   var container = Blockly.Test.initializeBlockSpaceEditor();
 
-  var blockXML = '<xml><block type="variables_get"><title name="VAR">i</title></block></xml>';
-  Blockly.Xml.domToBlockSpace(Blockly.mainBlockSpace, Blockly.Xml.textToDom(blockXML));
+  var blockXML =
+    '<xml><block type="variables_get"><title name="VAR">i</title></block></xml>';
+  Blockly.Xml.domToBlockSpace(
+    Blockly.mainBlockSpace,
+    Blockly.Xml.textToDom(blockXML)
+  );
 
-  Blockly.Variables.renameVariable("i", "z", Blockly.mainBlockSpace);
-  assertEquals("Variable renamed to 'z'", 'z', Blockly.Variables.allVariables()[0]);
-  Blockly.Variables.renameVariable("z", "", Blockly.mainBlockSpace);
-  assertEquals("Cannot rename var to empty", 'z', Blockly.Variables.allVariables()[0]);
+  Blockly.Variables.renameVariable('i', 'z', Blockly.mainBlockSpace);
+  assertEquals(
+    "Variable renamed to 'z'",
+    'z',
+    Blockly.Variables.allVariables()[0]
+  );
+  Blockly.Variables.renameVariable('z', '', Blockly.mainBlockSpace);
+  assertEquals(
+    'Cannot rename var to empty',
+    'z',
+    Blockly.Variables.allVariables()[0]
+  );
 
   goog.dom.removeNode(container);
 }

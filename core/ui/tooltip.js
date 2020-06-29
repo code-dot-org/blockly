@@ -30,7 +30,6 @@
 
 goog.provide('Blockly.Tooltip');
 
-
 /**
  * Is a tooltip currently showing?
  */
@@ -132,18 +131,27 @@ Blockly.Tooltip.createDom = function() {
     <text class="blocklyTooltipText"></text>
   </g>
   */
-  var svgGroup = /** @type {!SVGGElement} */ (
-      Blockly.createSvgElement('g', {'class': 'blocklyHidden'}, null));
+  var svgGroup = /** @type {!SVGGElement} */ (Blockly.createSvgElement(
+    'g',
+    {class: 'blocklyHidden'},
+    null
+  ));
   Blockly.Tooltip.svgGroup_ = svgGroup;
-  Blockly.Tooltip.svgShadow_ = /** @type {!SVGRectElement} */ (
-      Blockly.createSvgElement(
-          'rect', {'class': 'blocklyTooltipShadow', 'x': 2, 'y': 2}, svgGroup));
-  Blockly.Tooltip.svgBackground_ = /** @type {!SVGRectElement} */ (
-      Blockly.createSvgElement(
-          'rect', {'class': 'blocklyTooltipBackground'}, svgGroup));
-  Blockly.Tooltip.svgText_ = /** @type {!SVGTextElement} */ (
-      Blockly.createSvgElement(
-          'text', {'class': 'blocklyTooltipText'}, svgGroup));
+  Blockly.Tooltip.svgShadow_ = /** @type {!SVGRectElement} */ (Blockly.createSvgElement(
+    'rect',
+    {class: 'blocklyTooltipShadow', x: 2, y: 2},
+    svgGroup
+  ));
+  Blockly.Tooltip.svgBackground_ = /** @type {!SVGRectElement} */ (Blockly.createSvgElement(
+    'rect',
+    {class: 'blocklyTooltipBackground'},
+    svgGroup
+  ));
+  Blockly.Tooltip.svgText_ = /** @type {!SVGTextElement} */ (Blockly.createSvgElement(
+    'text',
+    {class: 'blocklyTooltipText'},
+    svgGroup
+  ));
   return svgGroup;
 };
 
@@ -190,10 +198,10 @@ Blockly.Tooltip.onMouseOut_ = function(e) {
   // event and kill it if a mouseOver is received immediately.
   // This way the task only fully executes if mousing into the void.
   Blockly.Tooltip.mouseOutPid_ = window.setTimeout(function() {
-        Blockly.Tooltip.element_ = null;
-        Blockly.Tooltip.poisonedElement_ = null;
-        Blockly.Tooltip.hide();
-      }, 1);
+    Blockly.Tooltip.element_ = null;
+    Blockly.Tooltip.poisonedElement_ = null;
+    Blockly.Tooltip.hide();
+  }, 1);
   window.clearTimeout(Blockly.Tooltip.showPid_);
 };
 
@@ -229,8 +237,10 @@ Blockly.Tooltip.onMouseMove_ = function(e) {
     window.clearTimeout(Blockly.Tooltip.showPid_);
     // Maybe this time the mouse will stay put.  Schedule showing of tooltip.
     Blockly.Tooltip.lastXY_ = Blockly.mouseToSvg(e);
-    Blockly.Tooltip.showPid_ =
-        window.setTimeout(Blockly.Tooltip.show_, Blockly.Tooltip.HOVER_MS);
+    Blockly.Tooltip.showPid_ = window.setTimeout(
+      Blockly.Tooltip.show_,
+      Blockly.Tooltip.HOVER_MS
+    );
   }
 };
 
@@ -257,8 +267,7 @@ Blockly.Tooltip.show_ = function() {
     return;
   }
   // Erase all existing text.
-  goog.dom.removeChildren(
-      /** @type {!Element} */ (Blockly.Tooltip.svgText_));
+  goog.dom.removeChildren(/** @type {!Element} */ (Blockly.Tooltip.svgText_));
   // Create new text, line by line.
   var tip = Blockly.Tooltip.element_.tooltip;
   if (goog.isFunction(tip)) {
@@ -266,8 +275,11 @@ Blockly.Tooltip.show_ = function() {
   }
   var lines = tip.split('\n');
   for (var i = 0; i < lines.length; i++) {
-    var tspanElement = Blockly.createSvgElement('tspan',
-        {'dy': '1em', 'x': Blockly.Tooltip.MARGINS}, Blockly.Tooltip.svgText_);
+    var tspanElement = Blockly.createSvgElement(
+      'tspan',
+      {dy: '1em', x: Blockly.Tooltip.MARGINS},
+      Blockly.Tooltip.svgText_
+    );
     var textNode = document.createTextNode(lines[i]);
     tspanElement.appendChild(textNode);
   }
@@ -275,17 +287,19 @@ Blockly.Tooltip.show_ = function() {
   Blockly.Tooltip.visible = true;
   Blockly.Tooltip.svgGroup_.style.display = 'block';
   // Resize the background and shadow to fit.
-  if (navigator.userAgent.indexOf("MSIE") >= 0 || navigator.userAgent.indexOf("Trident") >= 0) {
-      Blockly.Tooltip.svgText_.style.display = "inline";   /* reqd for IE */
-      var bBox = {
-          x: Blockly.Tooltip.svgText_.getBBox().x,
-          y: Blockly.Tooltip.svgText_.getBBox().y,
-          width: Blockly.Tooltip.svgText_.scrollWidth,
-          height: Blockly.Tooltip.svgText_.scrollHeight
-      };
-  }
-  else {
-      var bBox = Blockly.Tooltip.svgText_.getBBox();
+  if (
+    navigator.userAgent.indexOf('MSIE') >= 0 ||
+    navigator.userAgent.indexOf('Trident') >= 0
+  ) {
+    Blockly.Tooltip.svgText_.style.display = 'inline'; /* reqd for IE */
+    var bBox = {
+      x: Blockly.Tooltip.svgText_.getBBox().x,
+      y: Blockly.Tooltip.svgText_.getBBox().y,
+      width: Blockly.Tooltip.svgText_.scrollWidth,
+      height: Blockly.Tooltip.svgText_.scrollHeight
+    };
+  } else {
+    var bBox = Blockly.Tooltip.svgText_.getBBox();
   }
   var width = 2 * Blockly.Tooltip.MARGINS + bBox.width;
   var height = bBox.height;
@@ -297,8 +311,11 @@ Blockly.Tooltip.show_ = function() {
     // Right-align the paragraph.
     // This cannot be done until the tooltip is rendered on screen.
     var maxWidth = bBox.width;
-    for (var x = 0, textElement;
-         textElement = Blockly.Tooltip.svgText_.childNodes[x]; x++) {
+    for (
+      var x = 0, textElement;
+      (textElement = Blockly.Tooltip.svgText_.childNodes[x]);
+      x++
+    ) {
       textElement.setAttribute('text-anchor', 'end');
       textElement.setAttribute('x', maxWidth + Blockly.Tooltip.MARGINS);
     }
@@ -327,6 +344,8 @@ Blockly.Tooltip.show_ = function() {
       anchorX = svgSize.width - bBox.width - 2 * Blockly.Tooltip.MARGINS;
     }
   }
-  Blockly.Tooltip.svgGroup_.setAttribute('transform',
-      'translate(' + anchorX + ',' + anchorY + ')');
+  Blockly.Tooltip.svgGroup_.setAttribute(
+    'transform',
+    'translate(' + anchorX + ',' + anchorY + ')'
+  );
 };

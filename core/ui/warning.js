@@ -28,7 +28,6 @@ goog.provide('Blockly.Warning');
 goog.require('Blockly.Bubble');
 goog.require('Blockly.Icon');
 
-
 /**
  * Class for a warning.
  * @param {!Blockly.Block} block The block associated with this warning.
@@ -57,15 +56,25 @@ Blockly.Warning.prototype.createIcon_ = function() {
   <path class="blocklyIconShield" d="..."/>
   <text class="blocklyIconMark" x="8" y="13">!</text>
   */
-  var iconShield = Blockly.createSvgElement('path',
-      {'class': 'blocklyIconShield',
-       'd': 'M 2,15 Q -1,15 0.5,12 L 6.5,1.7 Q 8,-1 9.5,1.7 L 15.5,12 ' +
-       'Q 17,15 14,15 z'},
-      this.iconGroup_);
-  this.iconMark_ = Blockly.createSvgElement('text',
-      {'class': 'blocklyIconMark',
-       'x': Blockly.Icon.RADIUS,
-       'y': 2 * Blockly.Icon.RADIUS - 3}, this.iconGroup_);
+  var iconShield = Blockly.createSvgElement(
+    'path',
+    {
+      class: 'blocklyIconShield',
+      d:
+        'M 2,15 Q -1,15 0.5,12 L 6.5,1.7 Q 8,-1 9.5,1.7 L 15.5,12 ' +
+        'Q 17,15 14,15 z'
+    },
+    this.iconGroup_
+  );
+  this.iconMark_ = Blockly.createSvgElement(
+    'text',
+    {
+      class: 'blocklyIconMark',
+      x: Blockly.Icon.RADIUS,
+      y: 2 * Blockly.Icon.RADIUS - 3
+    },
+    this.iconGroup_
+  );
   this.iconMark_.appendChild(document.createTextNode('!'));
 };
 
@@ -76,14 +85,18 @@ Blockly.Warning.prototype.createIcon_ = function() {
  * @private
  */
 Blockly.Warning.prototype.textToDom_ = function(text) {
-  var paragraph = /** @type {!SVGTextElement} */ (
-      Blockly.createSvgElement(
-          'text', {'class': 'blocklyText', 'y': Blockly.Bubble.BORDER_WIDTH},
-          null));
+  var paragraph = /** @type {!SVGTextElement} */ (Blockly.createSvgElement(
+    'text',
+    {class: 'blocklyText', y: Blockly.Bubble.BORDER_WIDTH},
+    null
+  ));
   var lines = text.split('\n');
   for (var i = 0; i < lines.length; i++) {
-    var tspanElement = Blockly.createSvgElement('tspan',
-        {'dy': '1em', 'x': Blockly.Bubble.BORDER_WIDTH}, paragraph);
+    var tspanElement = Blockly.createSvgElement(
+      'tspan',
+      {dy: '1em', x: Blockly.Bubble.BORDER_WIDTH},
+      paragraph
+    );
     var textNode = document.createTextNode(lines[i]);
     tspanElement.appendChild(textNode);
   }
@@ -103,26 +116,37 @@ Blockly.Warning.prototype.setVisible = function(visible) {
     // Create the bubble.
     var paragraph = this.textToDom_(this.text_);
     this.bubble_ = new Blockly.Bubble(
-        /** @type {!Blockly.BlockSpace} */ (this.block_.blockSpace),
-        paragraph, this.block_.svg_.svgGroup_,
-        this.iconX_, this.iconY_, null, null);
+      /** @type {!Blockly.BlockSpace} */ (this.block_.blockSpace),
+      paragraph,
+      this.block_.svg_.svgGroup_,
+      this.iconX_,
+      this.iconY_,
+      null,
+      null
+    );
     if (Blockly.RTL) {
       // Right-align the paragraph.
       // This cannot be done until the bubble is rendered on screen.
-        if (navigator.userAgent.indexOf("MSIE") >= 0 || navigator.userAgent.indexOf("Trident") >= 0) {
-            paragraph.style.display = "inline";   /* reqd for IE */
-            var bBox = {
-                x: paragraph.getBBox().x,
-                y: paragraph.getBBox().y,
-                width: paragraph.scrollWidth,
-                height: paragraph.scrollHeight
-            };
-            var maxWidth = bBox.width;
-        }
-        else {
-            var maxWidth = paragraph.getBBox().width;
-        }
-      for (var x = 0, textElement; textElement = paragraph.childNodes[x]; x++) {
+      if (
+        navigator.userAgent.indexOf('MSIE') >= 0 ||
+        navigator.userAgent.indexOf('Trident') >= 0
+      ) {
+        paragraph.style.display = 'inline'; /* reqd for IE */
+        var bBox = {
+          x: paragraph.getBBox().x,
+          y: paragraph.getBBox().y,
+          width: paragraph.scrollWidth,
+          height: paragraph.scrollHeight
+        };
+        var maxWidth = bBox.width;
+      } else {
+        var maxWidth = paragraph.getBBox().width;
+      }
+      for (
+        var x = 0, textElement;
+        (textElement = paragraph.childNodes[x]);
+        x++
+      ) {
         textElement.setAttribute('text-anchor', 'end');
         textElement.setAttribute('x', maxWidth + Blockly.Bubble.BORDER_WIDTH);
       }

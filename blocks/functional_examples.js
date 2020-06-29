@@ -31,25 +31,25 @@ goog.require('Blockly.Blocks');
  * Definition block for a custom functional block
  */
 Blockly.Blocks.functional_example = {
-  shouldHideIfInMainBlockSpace: function () {
+  shouldHideIfInMainBlockSpace: function() {
     return true;
   },
-  isCopyable: function () {
+  isCopyable: function() {
     return false;
   },
   init: function() {
-    this.setHSV(0.0, 0.0, .49);
-    this.setFunctional(true, { headerHeight: 0, rowBuffer: 3 });
+    this.setHSV(0.0, 0.0, 0.49);
+    this.setFunctional(true, {headerHeight: 0, rowBuffer: 3});
     this.setFunctionalOutput(false);
     // TODO(bjordan): maybe add a bit of space here for a handle? TOP_HANDLE input type?
     this.appendFunctionalInput('ACTUAL').setAlign(Blockly.ALIGN_CENTRE);
-    this.appendFunctionalInput('EXPECTED').setAlign(Blockly.ALIGN_CENTRE).setInline(true);
+    this.appendFunctionalInput('EXPECTED')
+      .setAlign(Blockly.ALIGN_CENTRE)
+      .setInline(true);
     this.setTooltip(Blockly.Msg.EXAMPLE_DESCRIPTION);
   },
-  mutationToDom: function() {
-  },
-  domToMutation: function(xmlElement) {
-  },
+  mutationToDom: function() {},
+  domToMutation: function(xmlElement) {},
   updateOutputType: function(outputType) {
     this.outputType_ = outputType;
     this.changeFunctionalOutput(this.outputType_);
@@ -58,7 +58,7 @@ Blockly.Blocks.functional_example = {
    * Updates the functional examples' usage types
    * @param {Blockly.BlockValueType} newType
    */
-  updateInputsToType: function (newType) {
+  updateInputsToType: function(newType) {
     this.updateInputType_(this.getInput('EXPECTED'), newType);
     this.updateInputType_(this.getInput('ACTUAL'), newType);
     this.render();
@@ -68,7 +68,7 @@ Blockly.Blocks.functional_example = {
    * @param {Blockly.Input} input
    * @param {Blockly.BlockValueType} newType
    */
-  updateInputType_: function (input, newType) {
+  updateInputType_: function(input, newType) {
     input.setHSV.apply(input, Blockly.FunctionalTypeColors[newType]);
     input.setCheck(newType);
   }

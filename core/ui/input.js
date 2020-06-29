@@ -30,7 +30,6 @@ goog.provide('Blockly.Input');
 goog.require('Blockly.Connection');
 goog.require('Blockly.FieldLabel');
 
-
 /**
  * Class for an input with an optional title.
  * @param {number} type The type of the input.
@@ -42,7 +41,13 @@ goog.require('Blockly.FieldLabel');
  *     this input.
  * @constructor
  */
-Blockly.Input = function(type, name, block, connection, statementTrailingSpace) {
+Blockly.Input = function(
+  type,
+  name,
+  block,
+  connection,
+  statementTrailingSpace
+) {
   this.type = type;
   this.name = name;
   this.sourceBlock_ = block;
@@ -124,7 +129,7 @@ Blockly.Input.prototype.setVisible = function(visible) {
   this.visible_ = visible;
 
   var display = visible ? 'block' : 'none';
-  for (var y = 0, title; title = this.titleRow[y]; y++) {
+  for (var y = 0, title; (title = this.titleRow[y]); y++) {
     title.setVisible(visible);
   }
   if (this.connection) {
@@ -217,7 +222,7 @@ Blockly.Input.prototype.init = function() {
  * Sever all links to this input.
  */
 Blockly.Input.prototype.dispose = function() {
-  for (var i = 0, title; title = this.titleRow[i]; i++) {
+  for (var i = 0, title; (title = this.titleRow[i]); i++) {
     title.dispose();
   }
   if (this.connection) {
@@ -233,7 +238,7 @@ Blockly.Input.prototype.dispose = function() {
  * (2) inline_ is set on the input
  * Note, we don't allow inlining NEXT_STATEMENT inputs
  */
-Blockly.Input.prototype.setInline = function (inline) {
+Blockly.Input.prototype.setInline = function(inline) {
   if (inline === undefined) {
     inline = true;
   }
@@ -248,25 +253,28 @@ Blockly.Input.prototype.setInline = function (inline) {
  * Is this input inlined? Can be marked on the input itself, or on the source
  * block
  */
-Blockly.Input.prototype.isInline = function () {
+Blockly.Input.prototype.isInline = function() {
   if (this.type === Blockly.NEXT_STATEMENT) {
     return false;
   }
   return this.inline_ || this.sourceBlock_.inputsInline;
 };
 
-Blockly.Input.prototype.setHSV = function (hue, saturation, value) {
+Blockly.Input.prototype.setHSV = function(hue, saturation, value) {
   if (this.type !== Blockly.FUNCTIONAL_INPUT) {
-    throw "setColor only for functional inputs";
+    throw 'setColor only for functional inputs';
   }
-  this.colour_ = { hue: hue, saturation: saturation, value: value };
+  this.colour_ = {hue: hue, saturation: saturation, value: value};
 
   return this;
 };
 
 Blockly.Input.prototype.getHexColour = function() {
-  return Blockly.makeColour(this.colour_.hue, this.colour_.saturation,
-    this.colour_.value);
+  return Blockly.makeColour(
+    this.colour_.hue,
+    this.colour_.saturation,
+    this.colour_.value
+  );
 };
 
 /**
@@ -276,7 +284,7 @@ Blockly.Input.prototype.getStatementTrailingSpace = function() {
   return this.statementTrailingSpace_;
 };
 
-Blockly.Input.prototype.matchesBlock = function (block) {
+Blockly.Input.prototype.matchesBlock = function(block) {
   if (block.getColour() !== this.colour_.hue) {
     return false;
   }

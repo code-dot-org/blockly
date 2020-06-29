@@ -19,7 +19,7 @@
   "scripts": {
     "build": "webpack-cli",
     "build:dev": "DEV=1 webpack-cli",
-    "lint": "eslint --ext .js .",
+    "lint": "eslint --fix --ext .js .",
     "preversion": "npm run test",
     "version": "npm run build",
     "postversion": "git push && git push --tags && npm publish",

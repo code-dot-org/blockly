@@ -32,7 +32,6 @@ goog.require('Blockly.Msg');
 goog.require('goog.asserts');
 goog.require('goog.userAgent');
 
-
 /**
  * Class for an editable text field.
  * @param {string} text The initial content of the field.
@@ -96,7 +95,9 @@ Blockly.FieldTextInput.prototype.shouldShowAngleHelper_ = function() {
 };
 
 Blockly.FieldTextInput.prototype.getAngleHelperDirection_ = function() {
-  var options = this.getFieldHelperOptions_(Blockly.BlockFieldHelper.ANGLE_HELPER);
+  var options = this.getFieldHelperOptions_(
+    Blockly.BlockFieldHelper.ANGLE_HELPER
+  );
 
   // direction can be set by specifying either direction or directionTitleName,
   // but not both
@@ -121,11 +122,13 @@ Blockly.FieldTextInput.prototype.showAngleHelper_ = function() {
   container.style.width = Blockly.FieldTextInput.ANGLE_HELPER_SIZE + 'px';
   div.appendChild(container);
 
-  var options = this.getFieldHelperOptions_(Blockly.BlockFieldHelper.ANGLE_HELPER);
+  var options = this.getFieldHelperOptions_(
+    Blockly.BlockFieldHelper.ANGLE_HELPER
+  );
   var dir = this.getAngleHelperDirection_();
   var colour = options.block.getHexColour();
   this.angleHelper = new Blockly.AngleHelper(dir, {
-    onUpdate: function () {
+    onUpdate: function() {
       var value = this.angleHelper.getAngle().toString();
       this.setText(value);
       Blockly.FieldTextInput.htmlInput_.value = value;
@@ -150,12 +153,15 @@ Blockly.FieldTextInput.prototype.showEditor_ = function() {
   // Create the input.
   var htmlInput = goog.dom.createDom('input', 'blocklyHtmlInput');
   if (
-    (this.changeHandler_ === Blockly.FieldTextInput.numberValidator) ||
-    (this.changeHandler_ && this.changeHandler_.validatorType === 'clampedNumberValidator'))
-  {
+    this.changeHandler_ === Blockly.FieldTextInput.numberValidator ||
+    (this.changeHandler_ &&
+      this.changeHandler_.validatorType === 'clampedNumberValidator')
+  ) {
     htmlInput.setAttribute('type', 'number');
     htmlInput.setAttribute('step', 'any');
-  } else if (this.changeHandler_ === Blockly.FieldTextInput.nonnegativeIntegerValidator) {
+  } else if (
+    this.changeHandler_ === Blockly.FieldTextInput.nonnegativeIntegerValidator
+  ) {
     htmlInput.setAttribute('type', 'number');
     // Trigger the numeric keyboard on iOS.
     htmlInput.setAttribute('pattern', '\\d*');
@@ -176,20 +182,35 @@ Blockly.FieldTextInput.prototype.showEditor_ = function() {
   }
 
   // Bind to keydown -- prevent Delete from removing the block in iOS.
-  htmlInput.onKeyUpWrapper_ =
-      Blockly.bindEvent_(htmlInput, 'keydown', this, function(e) {
-        e.stopPropagation();
-      });
+  htmlInput.onKeyUpWrapper_ = Blockly.bindEvent_(
+    htmlInput,
+    'keydown',
+    this,
+    function(e) {
+      e.stopPropagation();
+    }
+  );
   // Bind to keyup -- trap Enter and Esc; resize after every keystroke.
-  htmlInput.onKeyUpWrapper_ =
-      Blockly.bindEvent_(htmlInput, 'keyup', this, this.onHtmlInputChange_);
+  htmlInput.onKeyUpWrapper_ = Blockly.bindEvent_(
+    htmlInput,
+    'keyup',
+    this,
+    this.onHtmlInputChange_
+  );
   // Bind to keyPress -- repeatedly resize when holding down a key.
-  htmlInput.onKeyPressWrapper_ =
-      Blockly.bindEvent_(htmlInput, 'keypress', this, this.onHtmlInputChange_);
+  htmlInput.onKeyPressWrapper_ = Blockly.bindEvent_(
+    htmlInput,
+    'keypress',
+    this,
+    this.onHtmlInputChange_
+  );
   var blockSpaceSvg = this.sourceBlock_.blockSpace.getCanvas();
-  htmlInput.onBlockSpaceChangeWrapper_ =
-      Blockly.bindEvent_(blockSpaceSvg, 'blocklyBlockSpaceChange', this,
-      this.resizeEditor_);
+  htmlInput.onBlockSpaceChangeWrapper_ = Blockly.bindEvent_(
+    blockSpaceSvg,
+    'blocklyBlockSpaceChange',
+    this,
+    this.resizeEditor_
+  );
 
   if (this.shouldShowAngleHelper_()) {
     this.showAngleHelper_();
@@ -258,17 +279,19 @@ Blockly.FieldTextInput.prototype.validate_ = function() {
  */
 Blockly.FieldTextInput.prototype.resizeEditor_ = function() {
   var div = Blockly.WidgetDiv.DIV;
-  if (navigator.userAgent.indexOf("MSIE") >= 0 || navigator.userAgent.indexOf("Trident") >= 0) {
-      this.fieldGroup_.style.display = "inline";   /* reqd for IE */
-      var bBox = {
-          x: this.fieldGroup_.getBBox().x,
-          y: this.fieldGroup_.getBBox().y,
-          width: this.fieldGroup_.scrollWidth,
-          height: this.fieldGroup_.scrollHeight
-      };
-  }
-  else {
-      var bBox = this.fieldGroup_.getBBox();
+  if (
+    navigator.userAgent.indexOf('MSIE') >= 0 ||
+    navigator.userAgent.indexOf('Trident') >= 0
+  ) {
+    this.fieldGroup_.style.display = 'inline'; /* reqd for IE */
+    var bBox = {
+      x: this.fieldGroup_.getBBox().x,
+      y: this.fieldGroup_.getBBox().y,
+      width: this.fieldGroup_.scrollWidth,
+      height: this.fieldGroup_.scrollHeight
+    };
+  } else {
+    var bBox = this.fieldGroup_.getBBox();
   }
   div.style.width = bBox.width + 'px';
   this.positionWidgetDiv();
@@ -278,22 +301,27 @@ Blockly.FieldTextInput.prototype.resizeEditor_ = function() {
  * @override
  */
 Blockly.FieldTextInput.prototype.positionWidgetDiv = function() {
-  var xy = Blockly.getAbsoluteXY_(/** @type {!Element} */ (this.borderRect_), this.getRootSVGElement_());
+  var xy = Blockly.getAbsoluteXY_(
+    /** @type {!Element} */ (this.borderRect_),
+    this.getRootSVGElement_()
+  );
   // In RTL mode block titles and LTR input titles the left edge moves,
   // whereas the right edge is fixed.  Reposition the editor.
   if (Blockly.RTL) {
-      if (navigator.userAgent.indexOf("MSIE") >= 0 || navigator.userAgent.indexOf("Trident") >= 0) {
-          this.borderRect_.style.display = "inline";   /* reqd for IE */
-          var borderBBox = {
-              x: this.borderRect_.getBBox().x,
-              y: this.borderRect_.getBBox().y,
-              width: this.borderRect_.scrollWidth,
-              height: this.borderRect_.scrollHeight
-          };
-      }
-      else {
-          var borderBBox = this.borderRect_.getBBox();
-      }
+    if (
+      navigator.userAgent.indexOf('MSIE') >= 0 ||
+      navigator.userAgent.indexOf('Trident') >= 0
+    ) {
+      this.borderRect_.style.display = 'inline'; /* reqd for IE */
+      var borderBBox = {
+        x: this.borderRect_.getBBox().x,
+        y: this.borderRect_.getBBox().y,
+        width: this.borderRect_.scrollWidth,
+        height: this.borderRect_.scrollHeight
+      };
+    } else {
+      var borderBBox = this.borderRect_.getBBox();
+    }
     xy.x += borderBBox.width;
     xy.x -= Blockly.WidgetDiv.DIV.offsetWidth;
   }
@@ -314,7 +342,9 @@ Blockly.FieldTextInput.prototype.positionWidgetDiv = function() {
  * @override
  */
 Blockly.FieldTextInput.prototype.generateWidgetDisposeHandler_ = function() {
-  var superWidgetDisposeHandler_ = Blockly.FieldRectangularDropdown.superClass_.generateWidgetDisposeHandler_.call(this);
+  var superWidgetDisposeHandler_ = Blockly.FieldRectangularDropdown.superClass_.generateWidgetDisposeHandler_.call(
+    this
+  );
   return function() {
     superWidgetDisposeHandler_();
     var htmlInput = Blockly.FieldTextInput.htmlInput_;
@@ -352,10 +382,10 @@ Blockly.FieldTextInput.prototype.isKeyboardInputField_ = function() {
  *   Returns 0 for null or empty string.
  */
 Blockly.FieldTextInput.numberValidator = function(text) {
-  text = text || "";
+  text = text || '';
   // TODO: Handle cases like 'ten', '1.203,14', etc.
   // 'O' is sometimes mistaken for '0' by inexperienced users.
-  text = text.replace(/O/ig, '0');
+  text = text.replace(/O/gi, '0');
   // Strip out thousands separators.
   text = text.replace(/,/g, '');
   var n = parseFloat(text || 0);
@@ -400,4 +430,4 @@ Blockly.FieldTextInput.clampedNumberValidator = function(min, max) {
   };
   validator.validatorType = 'clampedNumberValidator';
   return validator;
-}
+};

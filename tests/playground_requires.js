@@ -40,19 +40,23 @@ goog.require('goog.ui.Dialog.ButtonSet');
 /**
  * @param {DialogOptions} dialogOptions
  */
-Blockly.Playground.customSimpleDialog = function (dialogOptions) {
+Blockly.Playground.customSimpleDialog = function(dialogOptions) {
   var dialog = new goog.ui.Dialog();
   dialog.setTitle(dialogOptions.headerText);
   dialog.setContent(dialogOptions.bodyText);
   var buttons = new goog.ui.Dialog.ButtonSet();
-  buttons.set(goog.ui.Dialog.DefaultButtonKeys.CANCEL,
-      dialogOptions.cancelText,
-      false,
-      true);
-  buttons.set(goog.ui.Dialog.DefaultButtonKeys.OK,
-      dialogOptions.confirmText,
-      true);
-  goog.events.listen(dialog, goog.ui.Dialog.EventType.SELECT, function (e) {
+  buttons.set(
+    goog.ui.Dialog.DefaultButtonKeys.CANCEL,
+    dialogOptions.cancelText,
+    false,
+    true
+  );
+  buttons.set(
+    goog.ui.Dialog.DefaultButtonKeys.OK,
+    dialogOptions.confirmText,
+    true
+  );
+  goog.events.listen(dialog, goog.ui.Dialog.EventType.SELECT, function(e) {
     switch (e.key) {
       case goog.ui.Dialog.DefaultButtonKeys.CANCEL:
         if (dialogOptions.onCancel) {
@@ -80,13 +84,17 @@ function createVariableGet(type) {
       this.setHelpUrl(Blockly.Msg.VARIABLES_GET_HELPURL);
       this.appendDummyInput()
         .appendTitle(Blockly.Msg.VARIABLES_GET_TITLE)
-        .appendTitle(Blockly.disableVariableEditing ? fieldLabel
-          : new Blockly.FieldParameter(Blockly.Msg.VARIABLES_GET_ITEM), 'VAR')
+        .appendTitle(
+          Blockly.disableVariableEditing
+            ? fieldLabel
+            : new Blockly.FieldParameter(Blockly.Msg.VARIABLES_GET_ITEM),
+          'VAR'
+        )
         .appendTitle(Blockly.Msg.VARIABLES_GET_TAIL);
       this.setStrictOutput(true, type);
       this.setTooltip(Blockly.Msg.VARIABLES_GET_TOOLTIP);
     }
-  }
+  };
 }
 
 function createVariableSet(type) {
@@ -101,8 +109,12 @@ function createVariableSet(type) {
       this.appendValueInput('VALUE')
         .setStrictCheck(type)
         .appendTitle(Blockly.Msg.VARIABLES_SET_TITLE)
-        .appendTitle(Blockly.disableVariableEditing ? fieldLabel
-          : new Blockly.FieldVariable(Blockly.Msg.VARIABLES_SET_ITEM), 'VAR')
+        .appendTitle(
+          Blockly.disableVariableEditing
+            ? fieldLabel
+            : new Blockly.FieldVariable(Blockly.Msg.VARIABLES_SET_ITEM),
+          'VAR'
+        )
         .appendTitle(Blockly.Msg.VARIABLES_SET_TAIL);
       this.setPreviousStatement(true);
       this.setNextStatement(true);
@@ -117,39 +129,56 @@ function createVariableSet(type) {
       }
     },
     contextMenuMsg_: Blockly.Msg.VARIABLES_SET_CREATE_GET,
-      contextMenuType_: 'variables_get',
+    contextMenuType_: 'variables_get',
     customContextMenu: Blockly.Blocks.variables_get.customContextMenu
-  }
+  };
 }
 
-Blockly.Blocks.sprite_variables_get = createVariableGet(Blockly.BlockValueType.SPRITE);
-Blockly.Blocks.sprite_variables_set = createVariableSet(Blockly.BlockValueType.SPRITE);
+Blockly.Blocks.sprite_variables_get = createVariableGet(
+  Blockly.BlockValueType.SPRITE
+);
+Blockly.Blocks.sprite_variables_set = createVariableSet(
+  Blockly.BlockValueType.SPRITE
+);
 
-Blockly.Blocks.behavior_variables_get = createVariableGet(Blockly.BlockValueType.BEHAVIOR);
-Blockly.Blocks.behavior_variables_set = createVariableSet(Blockly.BlockValueType.BEHAVIOR);
+Blockly.Blocks.behavior_variables_get = createVariableGet(
+  Blockly.BlockValueType.BEHAVIOR
+);
+Blockly.Blocks.behavior_variables_set = createVariableSet(
+  Blockly.BlockValueType.BEHAVIOR
+);
 
-Blockly.Blocks.location_variables_get = createVariableGet(Blockly.BlockValueType.LOCATION);
-Blockly.Blocks.location_variables_set = createVariableSet(Blockly.BlockValueType.LOCATION);
+Blockly.Blocks.location_variables_get = createVariableGet(
+  Blockly.BlockValueType.LOCATION
+);
+Blockly.Blocks.location_variables_set = createVariableSet(
+  Blockly.BlockValueType.LOCATION
+);
 
 Blockly.Blocks.parent = {
   init: function() {
     var toggle = new Blockly.FieldIcon('＋');
     this.isMiniFlyoutOpen = false;
-    Blockly.bindEvent_(toggle.fieldGroup_, 'mousedown', this, goog.bind(function() {
-      if (this.isMiniFlyoutOpen) {
-        toggle.setText('＋');
-      } else {
-        toggle.setText('－');
-      }
-      this.isMiniFlyoutOpen = !this.isMiniFlyoutOpen;
-      this.render();
-    }, this));
+    Blockly.bindEvent_(
+      toggle.fieldGroup_,
+      'mousedown',
+      this,
+      goog.bind(function() {
+        if (this.isMiniFlyoutOpen) {
+          toggle.setText('＋');
+        } else {
+          toggle.setText('－');
+        }
+        this.isMiniFlyoutOpen = !this.isMiniFlyoutOpen;
+        this.render();
+      }, this)
+    );
 
     this.initMiniFlyout(
       '<xml>' +
         '<block type="math_number"></block>' +
         '<block type="colour_rgb"></block>' +
-      '</xml>'
+        '</xml>'
     );
 
     this.setHSV(131, 0.64, 0.62);
@@ -167,23 +196,25 @@ Blockly.Blocks.button_block = {
   // Example block with button field
   init: function() {
     this.setHSV(131, 0.64, 0.62);
-    var span = document.createElementNS("http://www.w3.org/2000/svg", 'tspan');
+    var span = document.createElementNS('http://www.w3.org/2000/svg', 'tspan');
     span.style.fill = 'blue';
     span.textContent = 'button';
     this.appendDummyInput()
-        .appendTitle("here's a button on a really long block")
-        .appendTitle(
-          new Blockly.FieldButton(span, function () {
-              return new Promise(function(resolve) {
-                resolve(prompt())
-              });
-            },
-            this.getHexColour()
-          ),
-          'VALUE'
-        );
+      .appendTitle("here's a button on a really long block")
+      .appendTitle(
+        new Blockly.FieldButton(
+          span,
+          function() {
+            return new Promise(function(resolve) {
+              resolve(prompt());
+            });
+          },
+          this.getHexColour()
+        ),
+        'VALUE'
+      );
     this.setOutput(true, Blockly.BlockValueType.STRING);
-  },
+  }
 };
 
 Blockly.Blocks.dropdown_with_button_block = {
@@ -198,13 +229,19 @@ Blockly.Blocks.dropdown_with_button_block = {
             ['assets/bear.png', 'Bear'],
             ['assets/carrot.png', 'Carrot'],
             ['assets/coin.png', 'Coin'],
-            ['assets/cupcake.png', 'Cupcake'],
+            ['assets/cupcake.png', 'Cupcake']
           ],
           32,
           32,
-          [{text: "TestButton", action: function(){console.log("Button Clicked")}}]
+          [
+            {
+              text: 'TestButton',
+              action: function() {
+                console.log('Button Clicked');
+              }
+            }
+          ]
         )
       );
-  },
+  }
 };
-

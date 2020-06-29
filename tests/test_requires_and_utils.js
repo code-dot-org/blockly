@@ -37,20 +37,25 @@ goog.require('Blockly.JavaScript.variables');
 /**
  * @returns {Element}
  */
-Blockly.Test.initializeBlockSpaceEditor = function (opt_options) {
+Blockly.Test.initializeBlockSpaceEditor = function(opt_options) {
   var container = document.createElement('div');
   document.body.appendChild(container);
   container.style.width = 500 + 'px';
   container.style.height = 500 + 'px';
-  Blockly.assetUrl = function(){return ''};
+  Blockly.assetUrl = function() {
+    return '';
+  };
   Blockly.Css.inject(container);
   Blockly.hasVerticalScrollbars = true;
-  Blockly.mainBlockSpaceEditor = new Blockly.BlockSpaceEditor(container, opt_options);
+  Blockly.mainBlockSpaceEditor = new Blockly.BlockSpaceEditor(
+    container,
+    opt_options
+  );
   Blockly.mainBlockSpace = Blockly.mainBlockSpaceEditor.blockSpace;
   return container;
 };
 
-Blockly.Test.testWithReadOnlyBlockSpaceEditor = function (callback) {
+Blockly.Test.testWithReadOnlyBlockSpaceEditor = function(callback) {
   var container = document.createElement('div');
   document.body.appendChild(container);
   container.style.width = 500 + 'px';
@@ -67,7 +72,7 @@ Blockly.Test.testWithReadOnlyBlockSpaceEditor = function (callback) {
  * @param block {Blockly.Block}
  * @param destination {Blockly.Connection|Object}
  */
-Blockly.Test.simulateDrag = function (block, destination) {
+Blockly.Test.simulateDrag = function(block, destination) {
   var dx = destination.dx || 100;
   var dy = destination.dy || 100;
   if (destination instanceof Blockly.Connection) {
@@ -76,6 +81,8 @@ Blockly.Test.simulateDrag = function (block, destination) {
   }
 
   block.getSvgRoot().dispatchEvent(new MouseEvent('mousedown'));
-  document.dispatchEvent(new MouseEvent('mousemove', {clientX: dx, clientY: dy}));
+  document.dispatchEvent(
+    new MouseEvent('mousemove', {clientX: dx, clientY: dy})
+  );
   document.dispatchEvent(new MouseEvent('mouseup'));
 };

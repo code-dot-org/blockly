@@ -106,7 +106,7 @@ Blockly.Connection.Shapes = {
 /**
  * Is this connection currently connected to another connection.
  */
-Blockly.Connection.prototype.isConnected = function () {
+Blockly.Connection.prototype.isConnected = function() {
   return this.targetConnection !== null;
 };
 
@@ -134,9 +134,11 @@ Blockly.Connection.prototype.dispose = function() {
  * @return {boolean} True if connection faces down or right.
  */
 Blockly.Connection.prototype.isSuperior = function() {
-  return this.type === Blockly.INPUT_VALUE ||
+  return (
+    this.type === Blockly.INPUT_VALUE ||
     this.type === Blockly.NEXT_STATEMENT ||
-    this.type === Blockly.FUNCTIONAL_INPUT;
+    this.type === Blockly.FUNCTIONAL_INPUT
+  );
 };
 
 /**
@@ -187,8 +189,10 @@ Blockly.Connection.prototype.connect = function(connectTo) {
     childBlock.getSvgRenderer().updateDisabled();
   }
   if (parentBlock.rendered && childBlock.rendered) {
-    if (this.type == Blockly.NEXT_STATEMENT ||
-        this.type == Blockly.PREVIOUS_STATEMENT) {
+    if (
+      this.type == Blockly.NEXT_STATEMENT ||
+      this.type == Blockly.PREVIOUS_STATEMENT
+    ) {
       // Child block may need to square off its corners if it is in a stack.
       // Rendering a child will render its parent.
       childBlock.render();
@@ -210,7 +214,7 @@ Blockly.Connection.prototype.connect = function(connectTo) {
  * existingConnection. This consists of detaching the orphan, and then depending
  * on its type, potentially trying to reattach it elsewhere.
  */
-Blockly.Connection.prototype.handleOrphan_ = function (existingConnection) {
+Blockly.Connection.prototype.handleOrphan_ = function(existingConnection) {
   var orphanBlock = existingConnection.targetBlock();
   orphanBlock.setParent(null);
   orphanBlock.setUserVisible(true);
@@ -224,8 +228,9 @@ Blockly.Connection.prototype.handleOrphan_ = function (existingConnection) {
     // block.  Since this block may be a row, walk down to the end.
     var newBlock = this.sourceBlock_;
     var connection;
-    while (connection = Blockly.Connection.singleConnection_(newBlock,
-      orphanBlock)) {
+    while (
+      (connection = Blockly.Connection.singleConnection_(newBlock, orphanBlock))
+    ) {
       // '=' is intentional in line above.
       if (connection.targetBlock()) {
         newBlock = connection.targetBlock();
@@ -242,8 +247,10 @@ Blockly.Connection.prototype.handleOrphan_ = function (existingConnection) {
         orphanBlock.outputConnection.bumpAwayFrom_(existingConnection);
       }, Blockly.BUMP_DELAY);
     }
-  } else if (this.type === Blockly.FUNCTIONAL_INPUT
-      || this.type === Blockly.FUNCTIONAL_OUTPUT) {
+  } else if (
+    this.type === Blockly.FUNCTIONAL_INPUT ||
+    this.type === Blockly.FUNCTIONAL_OUTPUT
+  ) {
     if (!orphanBlock.previousConnection) {
       throw 'Orphan block does not have a previous connection.';
     }
@@ -280,7 +287,7 @@ Blockly.Connection.prototype.handleOrphan_ = function (existingConnection) {
       }, Blockly.BUMP_DELAY);
     }
   }
-}
+};
 
 /**
  * Does the given block have one and only one connection point that will accept
@@ -295,10 +302,13 @@ Blockly.Connection.singleConnection_ = function(block, orphanBlock) {
   var connection = false;
   for (var x = 0; x < block.inputList.length; x++) {
     var thisConnection = block.inputList[x].connection;
-    if (thisConnection && thisConnection.type == Blockly.INPUT_VALUE &&
-        orphanBlock.outputConnection.checkAllowedConnectionType_(thisConnection)) {
+    if (
+      thisConnection &&
+      thisConnection.type == Blockly.INPUT_VALUE &&
+      orphanBlock.outputConnection.checkAllowedConnectionType_(thisConnection)
+    ) {
       if (connection) {
-        return null;  // More than one connection.
+        return null; // More than one connection.
       }
       connection = thisConnection;
     }
@@ -383,8 +393,8 @@ Blockly.Connection.prototype.bumpAwayFrom_ = function(staticConnection) {
   }
   // Raise it to the top for extra visibility.
   rootBlock.getSvgRoot().parentNode.appendChild(rootBlock.getSvgRoot());
-  var dx = (staticConnection.x_ + Blockly.SNAP_RADIUS) - this.x_;
-  var dy = (staticConnection.y_ + Blockly.SNAP_RADIUS * 2) - this.y_;
+  var dx = staticConnection.x_ + Blockly.SNAP_RADIUS - this.x_;
+  var dy = staticConnection.y_ + Blockly.SNAP_RADIUS * 2 - this.y_;
   if (reverse) {
     // When reversing a bump due to an uneditable block, bump up.
     dy = -dy;
@@ -440,11 +450,11 @@ Blockly.Connection.prototype.colorForType = function(checks) {
     case 'Colour':
       return [196, 1.0, 0.79];
     case 'Sprite':
-      return [355, 0.70, 0.70];
+      return [355, 0.7, 0.7];
     case 'Behavior':
-      return [136, 0.84, 0.80];
+      return [136, 0.84, 0.8];
     case 'Location':
-      return [52, 0.70, 0.92];
+      return [52, 0.7, 0.92];
     default:
       return;
   }
@@ -456,9 +466,8 @@ Blockly.Connection.prototype.colorForType = function(checks) {
 Blockly.Connection.prototype.getPathInfo = function() {
   var steps;
   if (this.type === Blockly.INPUT_VALUE || this.type === Blockly.OUTPUT_VALUE) {
-    var path = Blockly.BlockSvg
-      .TAB_PATHS_BY_SHAPE[this.getTabShape()]
-      .TAB_PATH_DOWN;
+    var path =
+      Blockly.BlockSvg.TAB_PATHS_BY_SHAPE[this.getTabShape()].TAB_PATH_DOWN;
     steps = 'm 0,0 ' + path + ' v 5';
   } else {
     var moveWidth = 5 + Blockly.BlockSvg.NOTCH_PATH_WIDTH;
@@ -484,11 +493,15 @@ Blockly.Connection.prototype.getPathInfo = function() {
  */
 Blockly.Connection.prototype.highlight = function() {
   var pathInfo = this.getPathInfo();
-  Blockly.Connection.highlightedPath_ = Blockly.createSvgElement('path',
-      {'class': 'blocklyHighlightedConnectionPath',
-       'd': pathInfo.steps,
-       transform: pathInfo.transform},
-      this.sourceBlock_.getSvgRoot());
+  Blockly.Connection.highlightedPath_ = Blockly.createSvgElement(
+    'path',
+    {
+      class: 'blocklyHighlightedConnectionPath',
+      d: pathInfo.steps,
+      transform: pathInfo.transform
+    },
+    this.sourceBlock_.getSvgRoot()
+  );
 };
 
 /**
@@ -502,13 +515,16 @@ Blockly.Connection.prototype.unhighlight = function() {
 /**
  *
  */
-Blockly.Connection.prototype.getNotchPaths = function () {
+Blockly.Connection.prototype.getNotchPaths = function() {
   if (Blockly.Connection.NOTCH_PATHS_OVERRIDE) {
     return Blockly.Connection.NOTCH_PATHS_OVERRIDE;
   }
 
-  var constraints = this && this.check_ || [];
-  if (constraints.length === 1 && constraints[0] === Blockly.BlockValueType.FUNCTION) {
+  var constraints = (this && this.check_) || [];
+  if (
+    constraints.length === 1 &&
+    constraints[0] === Blockly.BlockValueType.FUNCTION
+  ) {
     return SQUARE_NOTCH_PATHS;
   }
   return ROUNDED_NOTCH_PATHS;
@@ -517,7 +533,7 @@ Blockly.Connection.prototype.getNotchPaths = function () {
 /**
  * Return the tab shape for this input or output connection
  */
-Blockly.Connection.prototype.getTabShape = function () {
+Blockly.Connection.prototype.getTabShape = function() {
   if (this.type !== Blockly.INPUT_VALUE && this.type !== Blockly.OUTPUT_VALUE) {
     return null;
   }
@@ -528,10 +544,10 @@ Blockly.Connection.prototype.getTabShape = function () {
   if (!type) {
     throw 'strict connections require a type';
   }
-  return Blockly.valueTypeTabShapeMap[type] ||
-    Blockly.Connection.Shapes.STANDARD;
+  return (
+    Blockly.valueTypeTabShapeMap[type] || Blockly.Connection.Shapes.STANDARD
+  );
 };
-
 
 /**
  * Move the blocks on either side of this connection right next to each other.
@@ -547,8 +563,12 @@ Blockly.Connection.prototype.tighten_ = function() {
       throw 'block is not rendered.';
     }
     var xy = Blockly.getRelativeXY(svgRoot);
-    block.getSvgRoot().setAttribute('transform',
-        'translate(' + (xy.x - dx) + ', ' + (xy.y - dy) + ')');
+    block
+      .getSvgRoot()
+      .setAttribute(
+        'transform',
+        'translate(' + (xy.x - dx) + ', ' + (xy.y - dy) + ')'
+      );
     block.moveConnections_(-dx, -dy);
   }
 };
@@ -622,9 +642,11 @@ Blockly.Connection.prototype.closest = function(maxLimit, dx, dy) {
       return true;
     }
 
-    if (connection.type === Blockly.OUTPUT_VALUE ||
-        connection.type === Blockly.FUNCTIONAL_OUTPUT ||
-        connection.type === Blockly.PREVIOUS_STATEMENT) {
+    if (
+      connection.type === Blockly.OUTPUT_VALUE ||
+      connection.type === Blockly.FUNCTIONAL_OUTPUT ||
+      connection.type === Blockly.PREVIOUS_STATEMENT
+    ) {
       // Don't offer to connect an already connected left (male) value plug to
       // an available right (female) value plug.  Don't offer to connect the
       // bottom of a statement block to one that's already connected.
@@ -639,8 +661,10 @@ Blockly.Connection.prototype.closest = function(maxLimit, dx, dy) {
     }
 
     // Don't offer to connect if the target can't disconnect from parent
-    if (connection.targetConnection &&
-        !connection.targetBlock().canDisconnectFromParent()) {
+    if (
+      connection.targetConnection &&
+      !connection.targetBlock().canDisconnectFromParent()
+    ) {
       return true;
     }
 
@@ -689,14 +713,21 @@ Blockly.Connection.prototype.closest = function(maxLimit, dx, dy) {
  * @return {boolean} True if the connections share a type.
  * @private
  */
-Blockly.Connection.prototype.checkAllowedConnectionType_ = function(otherConnection) {
-  if (!this.strictCheck() && !otherConnection.strictCheck() &&
-    (this.acceptsAnyType() || otherConnection.acceptsAnyType())) {
+Blockly.Connection.prototype.checkAllowedConnectionType_ = function(
+  otherConnection
+) {
+  if (
+    !this.strictCheck() &&
+    !otherConnection.strictCheck() &&
+    (this.acceptsAnyType() || otherConnection.acceptsAnyType())
+  ) {
     // One or both sides are promiscuous enough that anything will fit.
     return true;
   }
-  if ((this.strictCheck() && otherConnection.acceptsAnyType()) ||
-    (this.acceptsAnyType() && otherConnection.strictCheck())) {
+  if (
+    (this.strictCheck() && otherConnection.acceptsAnyType()) ||
+    (this.acceptsAnyType() && otherConnection.strictCheck())
+  ) {
     // One side is stict but the other doesn't specify a type
     return false;
   }
@@ -716,7 +747,7 @@ Blockly.Connection.prototype.checkAllowedConnectionType_ = function(otherConnect
  */
 Blockly.Connection.prototype.strictCheck = function() {
   return this.strictType_;
-}
+};
 
 /**
  * Returns whether this connection is compatible with any/every type
@@ -743,7 +774,7 @@ Blockly.Connection.prototype.acceptsType = function(type) {
  */
 Blockly.Connection.prototype.setStrictCheck = function(check) {
   return this.setCheck(check, true);
-}
+};
 
 /**
  * Change a connection's compatibility.
@@ -768,7 +799,10 @@ Blockly.Connection.prototype.setCheck = function(check, opt_strict) {
     }
 
     // The new value type may not be compatible with the existing connection.
-    if (this.targetConnection && !this.checkAllowedConnectionType_(this.targetConnection)) {
+    if (
+      this.targetConnection &&
+      !this.checkAllowedConnectionType_(this.targetConnection)
+    ) {
       if (this.isSuperior()) {
         this.targetBlock().setParent(null);
       } else {
@@ -781,7 +815,10 @@ Blockly.Connection.prototype.setCheck = function(check, opt_strict) {
     // If the setting an output check, and the block has no color, make the
     // block the default color for the given output type.
     if (this.type === Blockly.OUTPUT_VALUE && !this.sourceBlock_.getColour()) {
-      this.sourceBlock_.setHSV.apply(this.sourceBlock_, this.colorForType(check));
+      this.sourceBlock_.setHSV.apply(
+        this.sourceBlock_,
+        this.colorForType(check)
+      );
     }
   } else {
     this.check_ = null;
@@ -798,25 +835,25 @@ Blockly.Connection.prototype.setCheck = function(check, opt_strict) {
  * @return {!Blockly.Connection} The connection being modified
  *     (to allow chaining).
  */
-Blockly.Connection.prototype.addFieldHelper = function (fieldHelper, options) {
+Blockly.Connection.prototype.addFieldHelper = function(fieldHelper, options) {
   this.fieldHelpers_[fieldHelper] = options;
 
   return this;
-}
+};
 
 /**
  * Retrieve the options for the specified field helper if it has been enabled
  * @param {string} fieldHelper the field helper to retrieve. One of
  *        Blockly.BlockFieldHelper
  */
-Blockly.Connection.prototype.getFieldHelperOptions = function (fieldHelper) {
+Blockly.Connection.prototype.getFieldHelperOptions = function(fieldHelper) {
   return this.fieldHelpers_ && this.fieldHelpers_[fieldHelper];
-}
+};
 
 /**
  * @returns {?Array.<Blockly.BlockValueType>}
  */
-Blockly.Connection.prototype.getCheck = function () {
+Blockly.Connection.prototype.getCheck = function() {
   return this.check_;
 };
 
@@ -835,18 +872,20 @@ Blockly.Connection.prototype.neighbours_ = function(maxLimit) {
 
   // Construct a new connection DB, with matching and opposing connections.
   var db = [];
-  var a = 0, b = 0, connection;
+  var a = 0,
+    b = 0,
+    connection;
   while (a < db1.length || b < db2.length) {
     if (!db2[b] || (db1[a] && db1[a].y_ < db2[b].y_)) {
       connection = db1[a];
       if (connection !== this) {
-        db.push(connection)
+        db.push(connection);
       }
       a++;
     } else {
       connection = db2[b];
       if (connection !== this) {
-        db.push(connection)
+        db.push(connection);
       }
       b++;
     }
@@ -987,8 +1026,7 @@ Blockly.Connection.prototype.unhideAll = function() {
  * connections in an area may be looked up quickly using a binary search.
  * @constructor
  */
-Blockly.ConnectionDB = function() {
-};
+Blockly.ConnectionDB = function() {};
 
 Blockly.ConnectionDB.prototype = new Array();
 /**
@@ -1064,8 +1102,7 @@ Blockly.ConnectionDB.prototype.removeConnection_ = function(connection) {
       return;
     }
     pointerMax++;
-  } while (pointerMax < this.length &&
-           this[pointerMax].y_ == connection.y_);
+  } while (pointerMax < this.length && this[pointerMax].y_ == connection.y_);
   throw 'Unable to find connection in connectionDB.';
 };
 

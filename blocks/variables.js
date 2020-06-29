@@ -28,7 +28,6 @@ goog.provide('Blockly.Blocks.variables');
 goog.require('Blockly.Blocks');
 goog.require('Blockly.Variables');
 
-
 Blockly.Blocks.variables_get = {
   // Variable getter.
   init: function() {
@@ -38,10 +37,14 @@ Blockly.Blocks.variables_get = {
     this.setHelpUrl(Blockly.Msg.VARIABLES_GET_HELPURL);
     this.setHSV(312, 0.32, 0.62);
     this.appendDummyInput()
-        .appendTitle(Blockly.Msg.VARIABLES_GET_TITLE)
-        .appendTitle(Blockly.disableVariableEditing ? fieldLabel
-            : new Blockly.FieldVariable(Blockly.Msg.VARIABLES_GET_ITEM), 'VAR')
-        .appendTitle(Blockly.Msg.VARIABLES_GET_TAIL);
+      .appendTitle(Blockly.Msg.VARIABLES_GET_TITLE)
+      .appendTitle(
+        Blockly.disableVariableEditing
+          ? fieldLabel
+          : new Blockly.FieldVariable(Blockly.Msg.VARIABLES_GET_ITEM),
+        'VAR'
+      )
+      .appendTitle(Blockly.Msg.VARIABLES_GET_TAIL);
     this.setOutput(true);
     this.setTooltip(Blockly.Msg.VARIABLES_GET_TOOLTIP);
   },
@@ -79,10 +82,14 @@ Blockly.Blocks.variables_set = {
     this.setHelpUrl(Blockly.Msg.VARIABLES_SET_HELPURL);
     this.setHSV(312, 0.32, 0.62);
     this.appendValueInput('VALUE')
-        .appendTitle(Blockly.Msg.VARIABLES_SET_TITLE)
-        .appendTitle(Blockly.disableVariableEditing ? fieldLabel
-          : new Blockly.FieldVariable(Blockly.Msg.VARIABLES_SET_ITEM), 'VAR')
-        .appendTitle(Blockly.Msg.VARIABLES_SET_TAIL);
+      .appendTitle(Blockly.Msg.VARIABLES_SET_TITLE)
+      .appendTitle(
+        Blockly.disableVariableEditing
+          ? fieldLabel
+          : new Blockly.FieldVariable(Blockly.Msg.VARIABLES_SET_ITEM),
+        'VAR'
+      )
+      .appendTitle(Blockly.Msg.VARIABLES_SET_TAIL);
     this.setPreviousStatement(true);
     this.setNextStatement(true);
     this.setTooltip(Blockly.Msg.VARIABLES_SET_TOOLTIP);
@@ -105,12 +112,16 @@ Blockly.Blocks.parameters_get = {
     // Must be marked EDITABLE so that cloned blocks share the same var name
     fieldLabel.EDITABLE = true;
     this.setHelpUrl(Blockly.Msg.VARIABLES_GET_HELPURL);
-    this.setHSV(7, 0.80, 0.95);
+    this.setHSV(7, 0.8, 0.95);
     this.appendDummyInput()
-        .appendTitle(Blockly.Msg.VARIABLES_GET_TITLE)
-        .appendTitle(Blockly.disableVariableEditing ? fieldLabel
-            : new Blockly.FieldParameter(Blockly.Msg.VARIABLES_GET_ITEM), 'VAR')
-        .appendTitle(Blockly.Msg.VARIABLES_GET_TAIL);
+      .appendTitle(Blockly.Msg.VARIABLES_GET_TITLE)
+      .appendTitle(
+        Blockly.disableVariableEditing
+          ? fieldLabel
+          : new Blockly.FieldParameter(Blockly.Msg.VARIABLES_GET_ITEM),
+        'VAR'
+      )
+      .appendTitle(Blockly.Msg.VARIABLES_GET_TAIL);
     this.setOutput(true);
     this.setTooltip(Blockly.Msg.VARIABLES_GET_TOOLTIP);
   },

@@ -27,7 +27,6 @@ goog.provide('Blockly.FieldAngle');
 
 goog.require('Blockly.FieldTextInput');
 
-
 /**
  * Class for an editable angle field.
  * @param {string} text The initial content of the field.
@@ -58,8 +57,7 @@ Blockly.FieldAngle = function(text, opt_changeHandler) {
   this.symbol_ = Blockly.createSvgElement('tspan', {}, null);
   this.symbol_.appendChild(document.createTextNode('\u00B0'));
 
-  Blockly.FieldAngle.superClass_.constructor.call(this,
-      text, changeHandler);
+  Blockly.FieldAngle.superClass_.constructor.call(this, text, changeHandler);
 };
 goog.inherits(Blockly.FieldAngle, Blockly.FieldTextInput);
 
@@ -108,41 +106,77 @@ Blockly.FieldAngle.prototype.showEditor_ = function() {
     return;
   }
   // Build the SVG DOM.
-  var svg = Blockly.createSvgElement('svg', {
-    'xmlns': 'http://www.w3.org/2000/svg',
-    'xmlns:html': 'http://www.w3.org/1999/xhtml',
-    'xmlns:xlink': 'http://www.w3.org/1999/xlink',
-    'version': '1.1',
-    'height': (Blockly.FieldAngle.HALF * 2) + 'px',
-    'width': (Blockly.FieldAngle.HALF * 2) + 'px'
-  }, div);
-  var circle = Blockly.createSvgElement('circle', {
-    'cx': Blockly.FieldAngle.HALF, 'cy': Blockly.FieldAngle.HALF,
-    'r': Blockly.FieldAngle.RADIUS,
-    'class': 'blocklyAngleCircle'
-  }, svg);
-  this.gauge_ =
-      Blockly.createSvgElement('path', {'class': 'blocklyAngleGuage'}, svg);
+  var svg = Blockly.createSvgElement(
+    'svg',
+    {
+      xmlns: 'http://www.w3.org/2000/svg',
+      'xmlns:html': 'http://www.w3.org/1999/xhtml',
+      'xmlns:xlink': 'http://www.w3.org/1999/xlink',
+      version: '1.1',
+      height: Blockly.FieldAngle.HALF * 2 + 'px',
+      width: Blockly.FieldAngle.HALF * 2 + 'px'
+    },
+    div
+  );
+  var circle = Blockly.createSvgElement(
+    'circle',
+    {
+      cx: Blockly.FieldAngle.HALF,
+      cy: Blockly.FieldAngle.HALF,
+      r: Blockly.FieldAngle.RADIUS,
+      class: 'blocklyAngleCircle'
+    },
+    svg
+  );
+  this.gauge_ = Blockly.createSvgElement(
+    'path',
+    {class: 'blocklyAngleGuage'},
+    svg
+  );
   // Draw markers around the edge.
   for (var a = 0; a < 360; a += 15) {
-    Blockly.createSvgElement('line', {
-      'x1': Blockly.FieldAngle.HALF + Blockly.FieldAngle.RADIUS,
-      'y1': Blockly.FieldAngle.HALF,
-      'x2': Blockly.FieldAngle.HALF + Blockly.FieldAngle.RADIUS -
+    Blockly.createSvgElement(
+      'line',
+      {
+        x1: Blockly.FieldAngle.HALF + Blockly.FieldAngle.RADIUS,
+        y1: Blockly.FieldAngle.HALF,
+        x2:
+          Blockly.FieldAngle.HALF +
+          Blockly.FieldAngle.RADIUS -
           (a % 45 == 0 ? 10 : 5),
-      'y2': Blockly.FieldAngle.HALF,
-      'class': 'blocklyAngleMarks',
-      'transform': 'rotate(' + a + ', ' +
-          Blockly.FieldAngle.HALF + ', ' + Blockly.FieldAngle.HALF + ')'
-    }, svg);
+        y2: Blockly.FieldAngle.HALF,
+        class: 'blocklyAngleMarks',
+        transform:
+          'rotate(' +
+          a +
+          ', ' +
+          Blockly.FieldAngle.HALF +
+          ', ' +
+          Blockly.FieldAngle.HALF +
+          ')'
+      },
+      svg
+    );
   }
   svg.style.marginLeft = '-35px';
-  this.clickWrapper_ =
-      Blockly.bindEvent_(svg, 'click', this, Blockly.WidgetDiv.hide);
-  this.moveWrapper1_ =
-      Blockly.bindEvent_(circle, 'mousemove', this, this.onMouseMove);
-  this.moveWrapper2_ =
-      Blockly.bindEvent_(this.gauge_, 'mousemove', this, this.onMouseMove);
+  this.clickWrapper_ = Blockly.bindEvent_(
+    svg,
+    'click',
+    this,
+    Blockly.WidgetDiv.hide
+  );
+  this.moveWrapper1_ = Blockly.bindEvent_(
+    circle,
+    'mousemove',
+    this,
+    this.onMouseMove
+  );
+  this.moveWrapper2_ = Blockly.bindEvent_(
+    this.gauge_,
+    'mousemove',
+    this,
+    this.onMouseMove
+  );
   this.updateGraph();
 };
 
@@ -159,7 +193,7 @@ Blockly.FieldAngle.prototype.onMouseMove = function(e) {
     // This shouldn't happen, but let's not let this error propogate further.
     return;
   }
-  angle = angle / Math.PI * 180;
+  angle = (angle / Math.PI) * 180;
   // 0: East, 90: North, 180: West, 270: South.
   if (dx < 0) {
     angle += 180;
@@ -195,21 +229,40 @@ Blockly.FieldAngle.prototype.setText = function(text) {
  */
 Blockly.FieldAngle.prototype.updateGraph = function() {
   if (this.gauge_) {
-    var angleRadians = Number(this.getText()) / 180 * Math.PI;
+    var angleRadians = (Number(this.getText()) / 180) * Math.PI;
     if (isNaN(angleRadians)) {
-      this.gauge_.setAttribute('d',
-          'M ' + Blockly.FieldAngle.HALF + ', ' + Blockly.FieldAngle.HALF);
+      this.gauge_.setAttribute(
+        'd',
+        'M ' + Blockly.FieldAngle.HALF + ', ' + Blockly.FieldAngle.HALF
+      );
     } else {
-      var x = Blockly.FieldAngle.HALF + Math.cos(angleRadians) *
-          Blockly.FieldAngle.RADIUS;
-      var y = Blockly.FieldAngle.HALF + Math.sin(angleRadians) *
-          -Blockly.FieldAngle.RADIUS;
-      var largeFlag = (angleRadians > Math.PI) ? 1 : 0;
-      this.gauge_.setAttribute('d',
-          'M ' + Blockly.FieldAngle.HALF + ', ' + Blockly.FieldAngle.HALF +
-          ' h ' + Blockly.FieldAngle.RADIUS +
-          ' A ' + Blockly.FieldAngle.RADIUS + ',' + Blockly.FieldAngle.RADIUS +
-          ' 0 ' + largeFlag + ' 0 ' + x + ',' + y + ' z');
+      var x =
+        Blockly.FieldAngle.HALF +
+        Math.cos(angleRadians) * Blockly.FieldAngle.RADIUS;
+      var y =
+        Blockly.FieldAngle.HALF +
+        Math.sin(angleRadians) * -Blockly.FieldAngle.RADIUS;
+      var largeFlag = angleRadians > Math.PI ? 1 : 0;
+      this.gauge_.setAttribute(
+        'd',
+        'M ' +
+          Blockly.FieldAngle.HALF +
+          ', ' +
+          Blockly.FieldAngle.HALF +
+          ' h ' +
+          Blockly.FieldAngle.RADIUS +
+          ' A ' +
+          Blockly.FieldAngle.RADIUS +
+          ',' +
+          Blockly.FieldAngle.RADIUS +
+          ' 0 ' +
+          largeFlag +
+          ' 0 ' +
+          x +
+          ',' +
+          y +
+          ' z'
+      );
     }
   }
 };
@@ -227,6 +280,6 @@ Blockly.FieldAngle.angleValidator = function(text) {
       n += 360;
     }
     n = String(n);
-   }
+  }
   return n;
 };

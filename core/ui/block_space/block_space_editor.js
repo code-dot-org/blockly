@@ -82,7 +82,8 @@ Blockly.BlockSpaceEditor = function(container, opt_options) {
   /**
    * @type {Blockly.BlockSpace}
    */
-  this.blockSpace = new Blockly.BlockSpace(this,
+  this.blockSpace = new Blockly.BlockSpace(
+    this,
     goog.bind(this.getBlockSpaceMetrics_, this),
     goog.bind(this.setBlockSpaceMetrics_, this),
     container
@@ -147,20 +148,28 @@ Blockly.BlockSpaceEditor.prototype.populateSVGEffects_ = function(container) {
   if (goog.dom.getElement('blocklySvgDefsGlobal')) {
     return;
   }
-  var svg = Blockly.createSvgElement('svg', {
-    id: 'blocklyFilters',
-    width: 0,
-    height: 0,
-    style: 'display: block'
-  }, container);
+  var svg = Blockly.createSvgElement(
+    'svg',
+    {
+      id: 'blocklyFilters',
+      width: 0,
+      height: 0,
+      style: 'display: block'
+    },
+    container
+  );
   /*
    <defs>
    ... filters go here ...
    </defs>
    */
-  var defs = Blockly.createSvgElement('defs', {
-    id: 'blocklySvgDefsGlobal'
-  }, svg);
+  var defs = Blockly.createSvgElement(
+    'defs',
+    {
+      id: 'blocklySvgDefsGlobal'
+    },
+    svg
+  );
   var filter, feSpecularLighting, feMerge, pattern;
   /*
    <filter id="blocklyEmboss">
@@ -176,21 +185,47 @@ Blockly.BlockSpaceEditor.prototype.populateSVGEffects_ = function(container) {
    k1="0" k2="1" k3="1" k4="0"/>
    </filter>
    */
-  filter = Blockly.createSvgElement('filter', {'id': 'blocklyEmboss'}, defs);
-  Blockly.createSvgElement('feGaussianBlur',
-      {'in': 'SourceAlpha', 'stdDeviation': 1, 'result': 'blur'}, filter);
-  feSpecularLighting = Blockly.createSvgElement('feSpecularLighting',
-      {'in': 'blur', 'surfaceScale': 1, 'specularConstant': 0.5,
-        'specularExponent': 10, 'lighting-color': 'white', 'result': 'specOut'},
-      filter);
-  Blockly.createSvgElement('fePointLight',
-      {'x': -5000, 'y': -10000, 'z': 20000}, feSpecularLighting);
-  Blockly.createSvgElement('feComposite',
-      {'in': 'specOut', 'in2': 'SourceAlpha', 'operator': 'in',
-        'result': 'specOut'}, filter);
-  Blockly.createSvgElement('feComposite',
-      {'in': 'SourceGraphic', 'in2': 'specOut', 'operator': 'arithmetic',
-        'k1': 0, 'k2': 1, 'k3': 1, 'k4': 0}, filter);
+  filter = Blockly.createSvgElement('filter', {id: 'blocklyEmboss'}, defs);
+  Blockly.createSvgElement(
+    'feGaussianBlur',
+    {in: 'SourceAlpha', stdDeviation: 1, result: 'blur'},
+    filter
+  );
+  feSpecularLighting = Blockly.createSvgElement(
+    'feSpecularLighting',
+    {
+      in: 'blur',
+      surfaceScale: 1,
+      specularConstant: 0.5,
+      specularExponent: 10,
+      'lighting-color': 'white',
+      result: 'specOut'
+    },
+    filter
+  );
+  Blockly.createSvgElement(
+    'fePointLight',
+    {x: -5000, y: -10000, z: 20000},
+    feSpecularLighting
+  );
+  Blockly.createSvgElement(
+    'feComposite',
+    {in: 'specOut', in2: 'SourceAlpha', operator: 'in', result: 'specOut'},
+    filter
+  );
+  Blockly.createSvgElement(
+    'feComposite',
+    {
+      in: 'SourceGraphic',
+      in2: 'specOut',
+      operator: 'arithmetic',
+      k1: 0,
+      k2: 1,
+      k3: 1,
+      k4: 0
+    },
+    filter
+  );
   /*
    <filter id="blocklyTrashcanShadowFilter">
    <feGaussianBlur in="SourceAlpha" stdDeviation="2" result="blur"/>
@@ -201,23 +236,35 @@ Blockly.BlockSpaceEditor.prototype.populateSVGEffects_ = function(container) {
    </feMerge>
    </filter>
    */
-  filter = Blockly.createSvgElement('filter',
-      {'id': 'blocklyTrashcanShadowFilter', 'height': '150%', 'y': '-20%'}, defs);
-  Blockly.createSvgElement('feGaussianBlur',
-      {'in': 'SourceAlpha', 'stdDeviation': 2, 'result': 'blur'}, filter);
-  Blockly.createSvgElement('feOffset',
-      {'in': 'blur', 'dx': 1, 'dy': 1, 'result': 'offsetBlur'}, filter);
+  filter = Blockly.createSvgElement(
+    'filter',
+    {id: 'blocklyTrashcanShadowFilter', height: '150%', y: '-20%'},
+    defs
+  );
+  Blockly.createSvgElement(
+    'feGaussianBlur',
+    {in: 'SourceAlpha', stdDeviation: 2, result: 'blur'},
+    filter
+  );
+  Blockly.createSvgElement(
+    'feOffset',
+    {in: 'blur', dx: 1, dy: 1, result: 'offsetBlur'},
+    filter
+  );
   feMerge = Blockly.createSvgElement('feMerge', {}, filter);
-  Blockly.createSvgElement('feMergeNode', {'in': 'offsetBlur'}, feMerge);
-  Blockly.createSvgElement('feMergeNode', {'in': 'SourceGraphic'}, feMerge);
+  Blockly.createSvgElement('feMergeNode', {in: 'offsetBlur'}, feMerge);
+  Blockly.createSvgElement('feMergeNode', {in: 'SourceGraphic'}, feMerge);
   /*
    <filter id="blocklyShadowFilter">
    <feGaussianBlur stdDeviation="2"/>
    </filter>
    */
-  filter = Blockly.createSvgElement('filter',
-      {'id': 'blocklyShadowFilter'}, defs);
-  Blockly.createSvgElement('feGaussianBlur', {'stdDeviation': 2}, filter);
+  filter = Blockly.createSvgElement(
+    'filter',
+    {id: 'blocklyShadowFilter'},
+    defs
+  );
+  Blockly.createSvgElement('feGaussianBlur', {stdDeviation: 2}, filter);
   /*
    <pattern id="blocklyDisabledPattern" patternUnits="userSpaceOnUse"
    width="10" height="10">
@@ -225,25 +272,46 @@ Blockly.BlockSpaceEditor.prototype.populateSVGEffects_ = function(container) {
    <path d="M 0 0 L 10 10 M 10 0 L 0 10" stroke="#cc0" />
    </pattern>
    */
-  pattern = Blockly.createSvgElement('pattern',
-      {'id': 'blocklyDisabledPattern', 'patternUnits': 'userSpaceOnUse',
-        'width': 10, 'height': 10}, defs);
-  Blockly.createSvgElement('rect',
-      {'width': 10, 'height': 10, 'fill': '#aaa'}, pattern);
-  Blockly.createSvgElement('path',
-      {'d': 'M 0 0 L 10 10 M 10 0 L 0 10', 'stroke': '#cc0'}, pattern);
+  pattern = Blockly.createSvgElement(
+    'pattern',
+    {
+      id: 'blocklyDisabledPattern',
+      patternUnits: 'userSpaceOnUse',
+      width: 10,
+      height: 10
+    },
+    defs
+  );
+  Blockly.createSvgElement(
+    'rect',
+    {width: 10, height: 10, fill: '#aaa'},
+    pattern
+  );
+  Blockly.createSvgElement(
+    'path',
+    {d: 'M 0 0 L 10 10 M 10 0 L 0 10', stroke: '#cc0'},
+    pattern
+  );
   /*
    <filter id="blocklyTypeHintFilter">
      <feConvolveMatrix order="5,5" kernelMatrix="0 0 ... 0.5 1">
    </filter>
    */
-  filter = Blockly.createSvgElement('filter', {
-    id: 'blocklyTypeHintFilter'
-  }, defs);
-  Blockly.createSvgElement('feConvolveMatrix', {
-    order: '5,5',
-    kernelMatrix: '0 0 0 0 0 0 0 0 0.5 1 0.5 1 1 1 1 0 0 0 0 0 0 0 0 0.5 1'
-  }, filter);
+  filter = Blockly.createSvgElement(
+    'filter',
+    {
+      id: 'blocklyTypeHintFilter'
+    },
+    defs
+  );
+  Blockly.createSvgElement(
+    'feConvolveMatrix',
+    {
+      order: '5,5',
+      kernelMatrix: '0 0 0 0 0 0 0 0 0.5 1 0.5 1 1 1 1 0 0 0 0 0 0 0 0 0.5 1'
+    },
+    filter
+  );
 };
 
 /**
@@ -258,7 +326,7 @@ Blockly.BlockSpaceEditor.prototype.createDom_ = function(container) {
   container.setAttribute('dir', 'LTR');
 
   this.populateSVGEffects_(container);
-  
+
   var classes = ['blocklySvg'];
   if (this.inline_) {
     classes.push('inline');
@@ -278,18 +346,24 @@ Blockly.BlockSpaceEditor.prototype.createDom_ = function(container) {
    ...
    </svg>
    */
-  var svg = Blockly.createSvgElement('svg', {
-    'xmlns': 'http://www.w3.org/2000/svg',
-    'xmlns:html': 'http://www.w3.org/1999/xhtml',
-    'xmlns:xlink': 'http://www.w3.org/1999/xlink',
-    'version': '1.1',
-    'class': classes.join(' ')
-  }, null);
+  var svg = Blockly.createSvgElement(
+    'svg',
+    {
+      xmlns: 'http://www.w3.org/2000/svg',
+      'xmlns:html': 'http://www.w3.org/1999/xhtml',
+      'xmlns:xlink': 'http://www.w3.org/1999/xlink',
+      version: '1.1',
+      class: classes.join(' ')
+    },
+    null
+  );
   this.svg_ = svg;
 
   container.appendChild(svg);
-  goog.events.listen(svg, 'selectstart', function() { return false; });
-  this.defs_ = Blockly.createSvgElement('defs', { id: 'blocklySvgDefs'}, svg);
+  goog.events.listen(svg, 'selectstart', function() {
+    return false;
+  });
+  this.defs_ = Blockly.createSvgElement('defs', {id: 'blocklySvgDefs'}, svg);
   this.blockSpace.maxBlocks = Blockly.maxBlocks;
 
   // If we're going to have a toolbox, create a rect which is the same
@@ -299,9 +373,11 @@ Blockly.BlockSpaceEditor.prototype.createDom_ = function(container) {
   // appears over the blocks, meaning that blocks dragged to it would appear
   // underneath it, if it had a background color, which wouldn't look as good.
   if (!this.hideTrashRect_ && !this.isReadOnly() && Blockly.hasCategories) {
-    this.svgBackground_ = Blockly.createSvgElement('rect',
-      {'id': 'toolboxRect', 'class': 'blocklyToolboxBackground'},
-      this.svg_);
+    this.svgBackground_ = Blockly.createSvgElement(
+      'rect',
+      {id: 'toolboxRect', class: 'blocklyToolboxBackground'},
+      this.svg_
+    );
   }
 
   svg.appendChild(this.blockSpace.createDom());
@@ -319,7 +395,7 @@ Blockly.BlockSpaceEditor.prototype.createDom_ = function(container) {
   /**
    * When disabled, we wont allow you to drag blocks into blockSpace
    */
-  this.setEnableToolbox = function (enabled) {
+  this.setEnableToolbox = function(enabled) {
     if (!this.isReadOnly()) {
       if (this.flyout_) {
         this.flyout_.setEnabled(enabled);
@@ -423,16 +499,16 @@ Blockly.BlockSpaceEditor.prototype.bumpBlocksIntoBlockSpace = function() {
     // Calculate bounds of view, including bump padding
     var blockSpaceInnerTop = Blockly.BlockSpaceEditor.BUMP_PADDING_TOP;
     var blockSpaceInnerLeft = Blockly.BlockSpaceEditor.BUMP_PADDING_LEFT;
-    var blockSpaceInnerBottom = blockSpaceSize.height
-      - Blockly.BlockSpaceEditor.BUMP_PADDING_BOTTOM;
-    var blockSpaceInnerRight = blockSpaceSize.width
-      - Blockly.BlockSpaceEditor.BUMP_PADDING_RIGHT;
+    var blockSpaceInnerBottom =
+      blockSpaceSize.height - Blockly.BlockSpaceEditor.BUMP_PADDING_BOTTOM;
+    var blockSpaceInnerRight =
+      blockSpaceSize.width - Blockly.BlockSpaceEditor.BUMP_PADDING_RIGHT;
     var blockSpaceInnerWidth = blockSpaceInnerRight - blockSpaceInnerLeft;
     var blockSpaceInnerHeight = blockSpaceInnerBottom - blockSpaceInnerTop;
   }
 
   // Check every block, and bump if needed.
-  this.blockSpace.getTopBlocks(false, false).forEach(function (block) {
+  this.blockSpace.getTopBlocks(false, false).forEach(function(block) {
     if (!block.isVisible() || block.isCurrentlyBeingDragged()) {
       return;
     }
@@ -440,12 +516,18 @@ Blockly.BlockSpaceEditor.prototype.bumpBlocksIntoBlockSpace = function() {
     if (!Blockly.BlockSpaceEditor.BUMP_ENTIRE_BLOCK) {
       // Skip block if it doesn't fit in the view anyway.
       var blockHW = block.getHeightWidth();
-      if (blockHW.width > blockSpaceInnerWidth || blockHW.height > blockSpaceInnerHeight) {
+      if (
+        blockHW.width > blockSpaceInnerWidth ||
+        blockHW.height > blockSpaceInnerHeight
+      ) {
         return;
       }
     }
 
-    var howFarOutsideLeft, howFarOutsideRight, howFarAboveTop, howFarBelowBottom;
+    var howFarOutsideLeft,
+      howFarOutsideRight,
+      howFarAboveTop,
+      howFarBelowBottom;
 
     if (!Blockly.BlockSpaceEditor.BUMP_ENTIRE_BLOCK) {
       // If these values are positive, the block needs to be bumped
@@ -455,13 +537,19 @@ Blockly.BlockSpaceEditor.prototype.bumpBlocksIntoBlockSpace = function() {
       howFarAboveTop = Math.max(0, blockSpaceInnerTop - blockXY.y);
       howFarBelowBottom = Math.max(0, blockXY.y - blockSpaceInnerBottom);
     } else {
-      var paddedBlockSpaceBox = this.blockSpace.getScrollableBox()
-        .expand(-Blockly.BlockSpaceEditor.ENTIRE_BUMP_PADDING_TOP,
-        -Blockly.BlockSpaceEditor.ENTIRE_BUMP_PADDING_RIGHT,
-        -Blockly.BlockSpaceEditor.ENTIRE_BUMP_PADDING_BOTTOM,
-        -Blockly.BlockSpaceEditor.ENTIRE_BUMP_PADDING_LEFT);
+      var paddedBlockSpaceBox = this.blockSpace
+        .getScrollableBox()
+        .expand(
+          -Blockly.BlockSpaceEditor.ENTIRE_BUMP_PADDING_TOP,
+          -Blockly.BlockSpaceEditor.ENTIRE_BUMP_PADDING_RIGHT,
+          -Blockly.BlockSpaceEditor.ENTIRE_BUMP_PADDING_BOTTOM,
+          -Blockly.BlockSpaceEditor.ENTIRE_BUMP_PADDING_LEFT
+        );
       var originalBlockBox = block.getBox();
-      var overflow = Blockly.getBoxOverflow(paddedBlockSpaceBox, originalBlockBox);
+      var overflow = Blockly.getBoxOverflow(
+        paddedBlockSpaceBox,
+        originalBlockBox
+      );
 
       // If overflow values are positive, the block needs to be bumped
       howFarOutsideLeft = Math.max(0, overflow.left);
@@ -481,7 +569,7 @@ Blockly.BlockSpaceEditor.prototype.bumpBlocksIntoBlockSpace = function() {
         moveX = overflow.left;
       }
       if (Blockly.isBoxTallerThan(originalBlockBox, paddedBlockSpaceBox)) {
-        moveY = overflow.top
+        moveY = overflow.top;
       }
     }
 
@@ -490,31 +578,47 @@ Blockly.BlockSpaceEditor.prototype.bumpBlocksIntoBlockSpace = function() {
       block.moveBy(moveX, moveY);
     }
 
-    if (Blockly.BlockSpaceEditor.BUMP_DEBUG &&
-        Blockly.BlockSpaceEditor.BUMP_ENTIRE_BLOCK) {
+    if (
+      Blockly.BlockSpaceEditor.BUMP_DEBUG &&
+      Blockly.BlockSpaceEditor.BUMP_ENTIRE_BLOCK
+    ) {
       var afterBumpBlockBox = block.getBox();
-      var originalBlockBoxColor = shouldBump ? "red" : "green";
-      this.blockSpace.drawDebugBox("block box" + block.id,
-        originalBlockBox, originalBlockBoxColor);
-      this.blockSpace.drawDebugBox("block after" + block.id,
-        afterBumpBlockBox, "purple");
-      this.blockSpace.drawDebugBox("block space box" + block.id,
-        paddedBlockSpaceBox, "blue");
+      var originalBlockBoxColor = shouldBump ? 'red' : 'green';
+      this.blockSpace.drawDebugBox(
+        'block box' + block.id,
+        originalBlockBox,
+        originalBlockBoxColor
+      );
+      this.blockSpace.drawDebugBox(
+        'block after' + block.id,
+        afterBumpBlockBox,
+        'purple'
+      );
+      this.blockSpace.drawDebugBox(
+        'block space box' + block.id,
+        paddedBlockSpaceBox,
+        'blue'
+      );
     }
   }, this);
 };
-
 
 Blockly.BlockSpaceEditor.prototype.init_ = function() {
   this.detectBrokenControlPoints();
 
   // Bind pan-drag handlers
-  this.blockSpace.bindBeginPanDragHandler(this.svg_,
-    goog.bind(this.hideChaff, this));
+  this.blockSpace.bindBeginPanDragHandler(
+    this.svg_,
+    goog.bind(this.hideChaff, this)
+  );
   this.blockSpace.bindScrollOnWheelHandler(this.svg_);
 
-  Blockly.bindEvent_(Blockly.WidgetDiv.DIV, 'contextmenu', null,
-    Blockly.blockContextMenu);
+  Blockly.bindEvent_(
+    Blockly.WidgetDiv.DIV,
+    'contextmenu',
+    null,
+    Blockly.blockContextMenu
+  );
 
   if (!this.disableEventBindings && !Blockly.documentEventsBound_) {
     // Only bind the window/document events once.
@@ -526,9 +630,15 @@ Blockly.BlockSpaceEditor.prototype.init_ = function() {
     Blockly.bindEvent_(document, 'paste', this, this.onPaste_);
     // Some iPad versions don't fire resize after portrait to landscape change.
     if (goog.userAgent.IPAD) {
-      Blockly.bindEvent_(window, 'orientationchange', document, function () {
-        Blockly.fireUiEvent(window, 'resize');
-      }, false);
+      Blockly.bindEvent_(
+        window,
+        'orientationchange',
+        document,
+        function() {
+          Blockly.fireUiEvent(window, 'resize');
+        },
+        false
+      );
     }
     Blockly.documentEventsBound_ = true;
   }
@@ -542,10 +652,15 @@ Blockly.BlockSpaceEditor.prototype.init_ = function() {
       this.updateFlyout();
     }
   }
-  if (!this.noScrolling_ &&
-      (Blockly.hasVerticalScrollbars || Blockly.hasHorizontalScrollbars)) {
+  if (
+    !this.noScrolling_ &&
+    (Blockly.hasVerticalScrollbars || Blockly.hasHorizontalScrollbars)
+  ) {
     this.blockSpace.scrollbarPair = new Blockly.ScrollbarPair(
-      this.blockSpace, Blockly.hasHorizontalScrollbars, Blockly.hasVerticalScrollbars);
+      this.blockSpace,
+      Blockly.hasHorizontalScrollbars,
+      Blockly.hasVerticalScrollbars
+    );
     this.blockSpace.scrollbarPair.resize();
   }
 };
@@ -578,10 +693,13 @@ Blockly.BlockSpaceEditor.prototype.detectBrokenControlPoints = function() {
      that.
      */
     var container = Blockly.createSvgElement('g', {}, this.svg_);
-    Blockly.createSvgElement('path',
-      {'d': 'M 0,50 C 75,-25 75,50 125,0 Z'}, container);
+    Blockly.createSvgElement(
+      'path',
+      {d: 'M 0,50 C 75,-25 75,50 125,0 Z'},
+      container
+    );
     if (Blockly.isMsie() || Blockly.isTrident()) {
-      container.style.display = "inline";
+      container.style.display = 'inline';
       /* reqd for IE */
       container.bBox_ = {
         x: container.getBBox().x,
@@ -589,8 +707,7 @@ Blockly.BlockSpaceEditor.prototype.detectBrokenControlPoints = function() {
         width: container.scrollWidth,
         height: container.scrollHeight
       };
-    }
-    else {
+    } else {
       container.bBox_ = container.getBBox();
     }
     if (container.bBox_.height > 50) {
@@ -600,7 +717,6 @@ Blockly.BlockSpaceEditor.prototype.detectBrokenControlPoints = function() {
     this.svg_.removeChild(container);
   }
 };
-
 
 /**
  * Returns the dimensions of the current SVG image.
@@ -622,7 +738,8 @@ Blockly.BlockSpaceEditor.prototype.svgResize = function() {
   var svgStyle = window.getComputedStyle(svg);
   var svgBorderWidth = 0;
   if (svgStyle) {
-    svgBorderWidth = (parseInt(svgStyle.borderLeftWidth, 10) || 0) +
+    svgBorderWidth =
+      (parseInt(svgStyle.borderLeftWidth, 10) || 0) +
       (parseInt(svgStyle.borderRightWidth, 10) || 0);
   }
 
@@ -637,7 +754,7 @@ Blockly.BlockSpaceEditor.prototype.svgResize = function() {
     svg.setAttribute('width', svgWidth + 'px');
     svg.cachedWidth_ = svgWidth;
     if (this.flyout_) {
-      this.flyout_.setMaxWidth(svgWidth/2.5);
+      this.flyout_.setMaxWidth(svgWidth / 2.5);
       this.flyout_.blockSpace_.resizeHeight();
     }
   }
@@ -658,9 +775,13 @@ Blockly.BlockSpaceEditor.prototype.getWorkspaceTopOffset = function() {
   var svg = this.svg_;
   var containerDiv = svg.parentNode;
   var containerStyle = window.getComputedStyle(containerDiv);
-  var containerTopBorder = containerStyle ? (parseInt(containerStyle.borderTopWidth, 10) || 0) : 0;
-  return goog.style.getPageOffsetTop(svg) -
-    (goog.style.getPageOffsetTop(containerDiv) + containerTopBorder);
+  var containerTopBorder = containerStyle
+    ? parseInt(containerStyle.borderTopWidth, 10) || 0
+    : 0;
+  return (
+    goog.style.getPageOffsetTop(svg) -
+    (goog.style.getPageOffsetTop(containerDiv) + containerTopBorder)
+  );
 };
 
 /**
@@ -705,9 +826,9 @@ Blockly.BlockSpaceEditor.prototype.getToolboxWidth = function() {
 };
 
 /**
-* Set the cursor to be displayed when over something draggable.
-* @param {Blockly.Cursor} cursorType Enum.
-*/
+ * Set the cursor to be displayed when over something draggable.
+ * @param {Blockly.Cursor} cursorType Enum.
+ */
 Blockly.BlockSpaceEditor.prototype.setCursor = function(cursorType) {
   Blockly.Css.setCursor(cursorType, this.svg_);
 };
@@ -739,9 +860,11 @@ Blockly.BlockSpaceEditor.prototype.onKeyDown_ = function(e) {
       e.preventDefault();
     }
   } else if (e.altKey || e.ctrlKey || e.metaKey) {
-    if (Blockly.selected &&
+    if (
+      Blockly.selected &&
       Blockly.selected.isDeletable() &&
-      Blockly.selected.isCopyable()) {
+      Blockly.selected.isCopyable()
+    ) {
       this.hideChaff();
       if (e.keyCode == 67 || e.keyCode == 88) {
         // 'c' for copy, 'x' for cut.
@@ -774,7 +897,10 @@ Blockly.BlockSpaceEditor.prototype.onCutCopy_ = function(e) {
  */
 Blockly.BlockSpaceEditor.prototype.onPaste_ = function(e) {
   try {
-    var xml = Blockly.Xml.textToDom(e.clipboardData.getData('text/xml') || e.clipboardData.getData('text/plain'));
+    var xml = Blockly.Xml.textToDom(
+      e.clipboardData.getData('text/xml') ||
+        e.clipboardData.getData('text/plain')
+    );
     Blockly.focusedBlockSpace.paste(xml);
   } catch (e) {
     if (!/did not obtain a valid XML tree/.test(e)) {
@@ -868,8 +994,12 @@ Blockly.BlockSpaceEditor.showContextMenu_ = function(e) {
 Blockly.BlockSpaceEditor.prototype.hideChaff = function(opt_allowToolbox) {
   Blockly.Tooltip.hide();
   Blockly.WidgetDiv.hide();
-  if (this.toolbox && !opt_allowToolbox &&
-    this.toolbox.flyout_ && this.toolbox.flyout_.autoClose) {
+  if (
+    this.toolbox &&
+    !opt_allowToolbox &&
+    this.toolbox.flyout_ &&
+    this.toolbox.flyout_.autoClose
+  ) {
     this.toolbox.clearSelection();
   }
 };
@@ -950,7 +1080,7 @@ Blockly.BlockSpaceEditor.prototype.getBlockSpaceMetrics_ = function() {
  */
 Blockly.BlockSpaceEditor.prototype.getCanvasBBox = function(canvas) {
   if (Blockly.isMsie() || Blockly.isTrident()) {
-    canvas.style.display = "inline"; // required for IE
+    canvas.style.display = 'inline'; // required for IE
     return {
       x: canvas.getBBox().x,
       y: canvas.getBBox().y,
@@ -987,7 +1117,9 @@ Blockly.BlockSpaceEditor.prototype.setBlockSpaceMetrics_ = function(xyRatio) {
   this.blockSpace.getBubbleCanvas().setAttribute('transform', translation);
 
   var offset = Blockly.convertCoordinates(x, y, this.svg_, false);
-  this.blockSpace.getDragCanvas().setAttribute('transform', 'translate(' + offset.x + ',' + offset.y + ')');
+  this.blockSpace
+    .getDragCanvas()
+    .setAttribute('transform', 'translate(' + offset.x + ',' + offset.y + ')');
 };
 
 /**
@@ -998,14 +1130,23 @@ Blockly.BlockSpaceEditor.prototype.setBlockSpaceMetrics_ = function(xyRatio) {
 Blockly.BlockSpaceEditor.prototype.setBlockSpaceMetricsNoScroll_ = function() {
   var metrics = this.getBlockSpaceMetrics_();
   if (metrics) {
-    var translation = 'translate(' + (metrics.absoluteLeft) + ',' +
-      (metrics.absoluteTop) + ')';
+    var translation =
+      'translate(' + metrics.absoluteLeft + ',' + metrics.absoluteTop + ')';
     this.blockSpace.getCanvas().setAttribute('transform', translation);
-    this.blockSpace.getBubbleCanvas().setAttribute('transform',
-      translation);
+    this.blockSpace.getBubbleCanvas().setAttribute('transform', translation);
 
-    var offset = Blockly.convertCoordinates(metrics.absoluteLeft, metrics.absoluteTop, this.svg_, false);
-    this.blockSpace.getDragCanvas().setAttribute('transform', 'translate(' + offset.x + ',' + offset.y + ')');
+    var offset = Blockly.convertCoordinates(
+      metrics.absoluteLeft,
+      metrics.absoluteTop,
+      this.svg_,
+      false
+    );
+    this.blockSpace
+      .getDragCanvas()
+      .setAttribute(
+        'transform',
+        'translate(' + offset.x + ',' + offset.y + ')'
+      );
   }
 };
 
@@ -1016,19 +1157,29 @@ Blockly.BlockSpaceEditor.prototype.setBlockSpaceMetricsNoScroll_ = function() {
  *     removeChangeListener.
  */
 Blockly.BlockSpaceEditor.prototype.addChangeListener = function(func) {
-  return Blockly.bindEvent_(this.blockSpace.getCanvas(),
-    'blocklyBlockSpaceChange', this, func);
+  return Blockly.bindEvent_(
+    this.blockSpace.getCanvas(),
+    'blocklyBlockSpaceChange',
+    this,
+    func
+  );
 };
-Blockly.BlockSpaceEditor.prototype.addUnusedBlocksHelpListener = function(func) {
-  return Blockly.bindEvent_(this.blockSpace.getCanvas(),
-    Blockly.BlockSvgUnused.UNUSED_BLOCK_HELP_EVENT, this, func);
+Blockly.BlockSpaceEditor.prototype.addUnusedBlocksHelpListener = function(
+  func
+) {
+  return Blockly.bindEvent_(
+    this.blockSpace.getCanvas(),
+    Blockly.BlockSvgUnused.UNUSED_BLOCK_HELP_EVENT,
+    this,
+    func
+  );
 };
 
 /**
  * @returns {boolean}
  */
 Blockly.BlockSpaceEditor.prototype.isReadOnly = function() {
-  return (Blockly.readOnly || this.readOnly_);
+  return Blockly.readOnly || this.readOnly_;
 };
 
 /**

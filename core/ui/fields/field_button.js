@@ -20,7 +20,12 @@ var Y_OFFSET = -13;
  * @extends {Blockly.Field}
  * @constructor
  */
-Blockly.FieldButton = function(title, opt_buttonHandler, opt_color, opt_changeHandler) {
+Blockly.FieldButton = function(
+  title,
+  opt_buttonHandler,
+  opt_color,
+  opt_changeHandler
+) {
   Blockly.FieldButton.superClass_.constructor.call(this, '');
 
   this.changeHandler_ = opt_changeHandler;
@@ -28,15 +33,16 @@ Blockly.FieldButton = function(title, opt_buttonHandler, opt_color, opt_changeHa
 
   this.borderRect_.setAttribute('height', INNER_HEIGHT + 2);
   this.borderRect_.setAttribute('y', Y_OFFSET - 1);
-  this.buttonElement_ = Blockly.createSvgElement('rect',
-      {
-        rx: CORNER_RADIUS,
-        ry: CORNER_RADIUS,
-        x: (-Blockly.BlockSvg.SEP_SPACE_X / 2) + 1,
-        y: Y_OFFSET,
-        height: INNER_HEIGHT,
-      },
-      this.fieldGroup_
+  this.buttonElement_ = Blockly.createSvgElement(
+    'rect',
+    {
+      rx: CORNER_RADIUS,
+      ry: CORNER_RADIUS,
+      x: -Blockly.BlockSvg.SEP_SPACE_X / 2 + 1,
+      y: Y_OFFSET,
+      height: INNER_HEIGHT
+    },
+    this.fieldGroup_
   );
   this.buttonElement_.style.fillOpacity = 1;
   this.buttonElement_.style.fill = opt_color;
@@ -104,7 +110,9 @@ Blockly.FieldButton.prototype.showEditor_ = function() {
 Blockly.FieldButton.prototype.updateWidth_ = function() {
   Blockly.FieldButton.superClass_.updateWidth_.call(this);
   if (this.buttonElement_) {
-    this.buttonElement_.setAttribute('width', this.size_.width + Blockly.BlockSvg.SEP_SPACE_X - 2);
+    this.buttonElement_.setAttribute(
+      'width',
+      this.size_.width + Blockly.BlockSvg.SEP_SPACE_X - 2
+    );
   }
 };
-

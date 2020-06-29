@@ -20,7 +20,7 @@ goog.require('Blockly.Block');
  * Class for managing block limits
  * @constructor
  */
-Blockly.BlockLimits = function () {
+Blockly.BlockLimits = function() {
   /**
    * Store of block types to block limit tracking objects.
    * {Object.<string, BlockLimit>}
@@ -35,7 +35,7 @@ Blockly.BlockLimits = function () {
   this.events = new goog.events.EventTarget();
 };
 
-Blockly.BlockLimits.prototype.setLimit = function (type, limit) {
+Blockly.BlockLimits.prototype.setLimit = function(type, limit) {
   this.limits_[type] = {
     count: undefined,
     limit: limit
@@ -47,16 +47,19 @@ Blockly.BlockLimits.prototype.setLimit = function (type, limit) {
  * Update the block counts for limited-quantity workspace blocks
  * @param {string[]} blockTypes
  */
-Blockly.BlockLimits.prototype.updateBlockTotals = function (blockTypes) {
+Blockly.BlockLimits.prototype.updateBlockTotals = function(blockTypes) {
   var countsByType = Blockly.aggregateCounts(blockTypes);
 
-  goog.object.forEach(this.limits_, function (limit, type) {
-    var blockCount = countsByType[type] || 0;
-    this.updateCount(type, blockCount);
-  }.bind(this));
+  goog.object.forEach(
+    this.limits_,
+    function(limit, type) {
+      var blockCount = countsByType[type] || 0;
+      this.updateCount(type, blockCount);
+    }.bind(this)
+  );
 };
 
-Blockly.BlockLimits.prototype.updateCount = function (type, newCount) {
+Blockly.BlockLimits.prototype.updateCount = function(type, newCount) {
   var limit = this.limits_[type];
   var countChanged = newCount !== limit.count;
   limit.count = newCount;
@@ -69,7 +72,7 @@ Blockly.BlockLimits.prototype.updateCount = function (type, newCount) {
   }
 };
 
-Blockly.BlockLimits.prototype.getLimit = function (type) {
+Blockly.BlockLimits.prototype.getLimit = function(type) {
   return this.limits_[type] ? this.limits_[type].limit : undefined;
 };
 
@@ -77,7 +80,7 @@ Blockly.BlockLimits.prototype.getLimit = function (type) {
  * Returns true iff any of the blocks in this flyout are limited in quantity
  * @return {boolean}
  */
-Blockly.BlockLimits.prototype.hasBlockLimits = function () {
+Blockly.BlockLimits.prototype.hasBlockLimits = function() {
   return Object.keys(this.limits_).length > 0;
 };
 
@@ -87,12 +90,16 @@ Blockly.BlockLimits.prototype.hasBlockLimits = function () {
  * @param {string[]} blockTypes
  * @return {boolean}
  */
-Blockly.BlockLimits.prototype.canAddBlocks = function (blockTypes) {
+Blockly.BlockLimits.prototype.canAddBlocks = function(blockTypes) {
   var countsByType = Blockly.aggregateCounts(blockTypes);
 
-  var allWithinLimits = goog.object.every(countsByType, function (count, type) {
-    return this.blockTypeWithinLimits(type, count);
-  }, this);
+  var allWithinLimits = goog.object.every(
+    countsByType,
+    function(count, type) {
+      return this.blockTypeWithinLimits(type, count);
+    },
+    this
+  );
 
   return allWithinLimits;
 };
@@ -104,7 +111,7 @@ Blockly.BlockLimits.prototype.canAddBlocks = function (blockTypes) {
  * @param {number} count
  * @return {boolean}
  */
-Blockly.BlockLimits.prototype.blockTypeWithinLimits = function (type, count) {
+Blockly.BlockLimits.prototype.blockTypeWithinLimits = function(type, count) {
   if (count === undefined) {
     count = 1;
   }
@@ -119,8 +126,8 @@ Blockly.BlockLimits.prototype.blockTypeWithinLimits = function (type, count) {
 /**
  * Returns true if any block limit is currently exceeded
  */
-Blockly.BlockLimits.prototype.blockLimitExceeded = function () {
-  return goog.object.findKey(this.limits_, function (value) {
+Blockly.BlockLimits.prototype.blockLimitExceeded = function() {
+  return goog.object.findKey(this.limits_, function(value) {
     return value.count > value.limit;
   });
 };

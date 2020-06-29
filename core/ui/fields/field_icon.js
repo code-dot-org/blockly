@@ -24,5 +24,4 @@ Blockly.FieldIcon.prototype.EDITABLE = false;
  * To be overridden by the instance.
  * @private
  */
-Blockly.FieldIcon.prototype.showEditor_ = function() {
-};
+Blockly.FieldIcon.prototype.showEditor_ = function() {};

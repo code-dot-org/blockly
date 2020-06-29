@@ -31,7 +31,7 @@ goog.require('goog.math.Vec2');
  * @param {!Blockly.BlockSpace} blockSpace
  * @constructor
  */
-Blockly.ScrollOnBlockDragHandler = function (blockSpace) {
+Blockly.ScrollOnBlockDragHandler = function(blockSpace) {
   /**
    * BlockSpace to scroll
    * @private {Blockly.BlockSpace}
@@ -51,7 +51,7 @@ Blockly.ScrollOnBlockDragHandler = function (blockSpace) {
   };
 };
 
-Blockly.ScrollOnBlockDragHandler.prototype.stopAutoScrolling = function () {
+Blockly.ScrollOnBlockDragHandler.prototype.stopAutoScrolling = function() {
   if (this.activeAutoScroll_) {
     this.activeAutoScroll_.stopAndDestroy();
   }
@@ -64,14 +64,14 @@ var MS_PER_SEC = 1000;
  * Pixels-per-millisecond scrolling speeds for mouse-location triggered scrolling
  * @type {number}
  */
-var MOUSE_SPEED_SLOW = .5;
+var MOUSE_SPEED_SLOW = 0.5;
 var MOUSE_SPEED_FAST = 1.6;
 
 /**
  * Pixels-per-millisecond scrolling speeds for block-location triggered scrolling
  * @type {number}
  */
-var BLOCK_SPEED_SLOW = .28;
+var BLOCK_SPEED_SLOW = 0.28;
 var BLOCK_SPEED_FAST = 1.4;
 
 /**
@@ -132,9 +132,11 @@ Blockly.ScrollOnBlockDragHandler.DEBUG = false;
  * @param {number} mouseClientX
  * @param {number} mouseClientY
  */
-Blockly.ScrollOnBlockDragHandler.prototype.panIfOverEdge = function (block,
-                                                                     mouseClientX,
-                                                                     mouseClientY) {
+Blockly.ScrollOnBlockDragHandler.prototype.panIfOverEdge = function(
+  block,
+  mouseClientX,
+  mouseClientY
+) {
   if (!this.blockSpace_.currentlyScrollable()) {
     // Don't perform potentially expensive panning calculations if not currently
     // scrollable
@@ -143,13 +145,17 @@ Blockly.ScrollOnBlockDragHandler.prototype.panIfOverEdge = function (block,
 
   var SCROLLABLE_DIRECTIONS = [];
 
-  if (this.blockSpace_.scrollbarPair &&
-    this.blockSpace_.scrollbarPair.canScrollHorizontally()) {
+  if (
+    this.blockSpace_.scrollbarPair &&
+    this.blockSpace_.scrollbarPair.canScrollHorizontally()
+  ) {
     SCROLLABLE_DIRECTIONS.push('left', 'right');
   }
 
-  if (this.blockSpace_.scrollbarPair &&
-    this.blockSpace_.scrollbarPair.canScrollVertically()) {
+  if (
+    this.blockSpace_.scrollbarPair &&
+    this.blockSpace_.scrollbarPair.canScrollVertically()
+  ) {
     SCROLLABLE_DIRECTIONS.push('top', 'bottom');
   }
 
@@ -158,11 +164,18 @@ Blockly.ScrollOnBlockDragHandler.prototype.panIfOverEdge = function (block,
   }
 
   var mouseSvg = Blockly.mouseCoordinatesToSvg(
-    mouseClientX, mouseClientY, this.blockSpace_.blockSpaceEditor.svg_);
+    mouseClientX,
+    mouseClientY,
+    this.blockSpace_.blockSpaceEditor.svg_
+  );
   var mouseViewport = Blockly.svgCoordinatesToViewport(
-    new goog.math.Coordinate(mouseSvg.x, mouseSvg.y), this.blockSpace_);
+    new goog.math.Coordinate(mouseSvg.x, mouseSvg.y),
+    this.blockSpace_
+  );
   var mouseBlockSpace = Blockly.viewportCoordinateToBlockSpace(
-    mouseViewport, this.blockSpace_);
+    mouseViewport,
+    this.blockSpace_
+  );
 
   var viewportBox = this.blockSpace_.getViewportBox();
   var blockBox = block.getBox();
@@ -174,8 +187,14 @@ Blockly.ScrollOnBlockDragHandler.prototype.panIfOverEdge = function (block,
   var viewportHeight = Blockly.getBoxHeight(viewportBox);
   if (blockHeight > viewportHeight * OVERSIZE_BLOCK_THRESHOLD) {
     // Center box around cursor with fallback radius
-    blockBox.top = Math.max(blockBox.top, mouseBlockSpace.y - FALLBACK_DRAG_MARGIN);
-    blockBox.bottom = Math.min(blockBox.bottom, mouseBlockSpace.y + FALLBACK_DRAG_MARGIN);
+    blockBox.top = Math.max(
+      blockBox.top,
+      mouseBlockSpace.y - FALLBACK_DRAG_MARGIN
+    );
+    blockBox.bottom = Math.min(
+      blockBox.bottom,
+      mouseBlockSpace.y + FALLBACK_DRAG_MARGIN
+    );
   }
 
   // Same rule, but horizontal
@@ -183,34 +202,50 @@ Blockly.ScrollOnBlockDragHandler.prototype.panIfOverEdge = function (block,
   var viewportWidth = Blockly.getBoxWidth(viewportBox);
   if (blockWidth > viewportWidth * OVERSIZE_BLOCK_THRESHOLD) {
     // Center box around cursor with fallback radius
-    blockBox.left = Math.max(blockBox.left, mouseBlockSpace.x - FALLBACK_DRAG_MARGIN);
-    blockBox.right = Math.min(blockBox.right, mouseBlockSpace.x + FALLBACK_DRAG_MARGIN);
+    blockBox.left = Math.max(
+      blockBox.left,
+      mouseBlockSpace.x - FALLBACK_DRAG_MARGIN
+    );
+    blockBox.right = Math.min(
+      blockBox.right,
+      mouseBlockSpace.x + FALLBACK_DRAG_MARGIN
+    );
   }
 
   // Calculate how far out-of-bounds the dragged block/cursor is.
   var blockOverflows = Blockly.getBoxOverflow(viewportBox, blockBox);
-  var mouseOverflows = Blockly.getPointBoxOverflow(viewportBox,
-    new goog.math.Coordinate(mouseBlockSpace.x, mouseBlockSpace.y));
+  var mouseOverflows = Blockly.getPointBoxOverflow(
+    viewportBox,
+    new goog.math.Coordinate(mouseBlockSpace.x, mouseBlockSpace.y)
+  );
 
   if (Blockly.ScrollOnBlockDragHandler.DEBUG) {
-    this.blockSpace_.drawDebugCircle("mouse circle",
+    this.blockSpace_.drawDebugCircle(
+      'mouse circle',
       new goog.math.Coordinate(mouseBlockSpace.x, mouseBlockSpace.y),
-      "orange");
-    this.blockSpace_.drawDebugBox("block box" + block.id, blockBox, "purple");
-    this.blockSpace_.drawDebugBox("block space box", viewportBox, "blue");
+      'orange'
+    );
+    this.blockSpace_.drawDebugBox('block box' + block.id, blockBox, 'purple');
+    this.blockSpace_.drawDebugBox('block space box', viewportBox, 'blue');
   }
 
   var overallScrollVector = new goog.math.Vec2(0, 0);
 
-  SCROLLABLE_DIRECTIONS.forEach(function (direction) {
+  SCROLLABLE_DIRECTIONS.forEach(function(direction) {
     var mouseOverflow = mouseOverflows[direction];
     var blockOverflow = blockOverflows[direction];
     var scrollVector = this.SCROLL_DIRECTION_VECTORS[direction];
 
     var candidateScrolls = [];
 
-    if (Blockly.numberWithin(blockOverflow,
-        BLOCK_START_DISTANCE, BLOCK_START_FAST_DISTANCE, false)) {
+    if (
+      Blockly.numberWithin(
+        blockOverflow,
+        BLOCK_START_DISTANCE,
+        BLOCK_START_FAST_DISTANCE,
+        false
+      )
+    ) {
       candidateScrolls.push(scrollVector.clone().scale(BLOCK_SPEED_SLOW));
     }
 
@@ -218,8 +253,14 @@ Blockly.ScrollOnBlockDragHandler.prototype.panIfOverEdge = function (block,
       candidateScrolls.push(scrollVector.clone().scale(BLOCK_SPEED_FAST));
     }
 
-    if (Blockly.numberWithin(mouseOverflow,
-        MOUSE_START_DISTANCE, MOUSE_START_FAST_DISTANCE, false)) {
+    if (
+      Blockly.numberWithin(
+        mouseOverflow,
+        MOUSE_START_DISTANCE,
+        MOUSE_START_FAST_DISTANCE,
+        false
+      )
+    ) {
       candidateScrolls.push(scrollVector.clone().scale(MOUSE_SPEED_SLOW));
     }
 
@@ -227,20 +268,25 @@ Blockly.ScrollOnBlockDragHandler.prototype.panIfOverEdge = function (block,
       candidateScrolls.push(scrollVector.clone().scale(MOUSE_SPEED_FAST));
     }
 
-    var greatestScrollVector = candidateScrolls.reduce(
-      function (fastestScroll, candidateScroll) {
-        if (!fastestScroll) {
-          return candidateScroll;
-        }
+    var greatestScrollVector = candidateScrolls.reduce(function(
+      fastestScroll,
+      candidateScroll
+    ) {
+      if (!fastestScroll) {
+        return candidateScroll;
+      }
 
-        return fastestScroll.magnitude() > candidateScroll.magnitude() ?
-          fastestScroll : candidateScroll;
-      }, null
-    );
+      return fastestScroll.magnitude() > candidateScroll.magnitude()
+        ? fastestScroll
+        : candidateScroll;
+    },
+    null);
 
     if (greatestScrollVector) {
-      overallScrollVector =
-        goog.math.Vec2.sum(overallScrollVector, greatestScrollVector);
+      overallScrollVector = goog.math.Vec2.sum(
+        overallScrollVector,
+        greatestScrollVector
+      );
     }
   }, this);
 
@@ -249,9 +295,13 @@ Blockly.ScrollOnBlockDragHandler.prototype.panIfOverEdge = function (block,
     return;
   }
 
-  this.activeAutoScroll_ = this.activeAutoScroll_ ||
+  this.activeAutoScroll_ =
+    this.activeAutoScroll_ ||
     new Blockly.AutoScroll(this.blockSpace_, overallScrollVector);
 
-  this.activeAutoScroll_.updateProperties(overallScrollVector, mouseClientX,
-    mouseClientY);
+  this.activeAutoScroll_.updateProperties(
+    overallScrollVector,
+    mouseClientX,
+    mouseClientY
+  );
 };

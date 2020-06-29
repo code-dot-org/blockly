@@ -1082,7 +1082,6 @@ Blockly.FunctionEditor.prototype.addEditorFrame_ = function() {
 };
 
 Blockly.FunctionEditor.prototype.position_ = function() {
-  console.log(FRAME_MARGIN_TOP);
   if (!this.isOpen()) {
     return;
   }

@@ -56,6 +56,16 @@ Blockly.Warning.prototype.createIcon_ = function() {
   <path class="blocklyIconShield" d="..."/>
   <text class="blocklyIconMark" x="8" y="13">!</text>
   */
+  Blockly.createSvgElement(
+    'path',
+    {
+      class: 'blocklyIconShield',
+      d:
+        'M 2,15 Q -1,15 0.5,12 L 6.5,1.7 Q 8,-1 9.5,1.7 L 15.5,12 ' +
+        'Q 17,15 14,15 z'
+    },
+    this.iconGroup_
+  );
   this.iconMark_ = Blockly.createSvgElement(
     'text',
     {

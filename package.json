@@ -19,7 +19,7 @@
   "scripts": {
     "build": "webpack-cli",
     "build:dev": "DEV=1 webpack-cli",
-    "lint": "eslint --ext .js blocks core generators tests",
+    "lint": "eslint --ext .js .",
     "preversion": "npm run test",
     "version": "npm run build",
     "postversion": "git push && git push --tags && npm publish",
@@ -31,13 +31,16 @@
   "devDependencies": {
     "codecov": "^3.0.4",
     "eslint": "^6.1.0",
+    "eslint-config-prettier": "^3.6.0",
     "eslint-plugin-es5": "^1.4.1",
+    "eslint-plugin-prettier": "^3.0.1",
     "google-closure-compiler": "~20180610.0.2",
     "google-closure-library": "~20170124.0.0",
     "karma": "^2.0.4",
     "karma-chrome-launcher": "^2.2.0",
     "karma-coverage": "^1.1.2",
     "karma-custom": "^1.1.9",
+    "prettier": "1.16.1",
     "webpack": "^4.14.0",
     "webpack-cli": "^3.0.8",
     "webpack-closure-compiler": "^2.1.6"

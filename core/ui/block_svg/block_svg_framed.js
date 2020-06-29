@@ -6,11 +6,11 @@
 
 goog.provide('Blockly.BlockSvgFramed');
 
-var FRAME_MARGIN_SIDE = 15;
-var FRAME_MARGIN_TOP = 10;
-var FRAME_MARGIN_BOTTOM = 5;
+/** @const */ var FRAME_MARGIN_SIDE = 15;
+/** @const */ var FRAME_MARGIN_TOP = 10;
+/** @const */ var FRAME_MARGIN_BOTTOM = 5;
 
-var FRAME_HEADER_HEIGHT = 25;
+/** @const */ var FRAME_HEADER_HEIGHT = 25;
 
 Blockly.BlockSvgFramed = function(block) {
   Blockly.BlockSvg.call(this, block);

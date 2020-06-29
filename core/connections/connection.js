@@ -270,7 +270,7 @@ Blockly.Connection.prototype.handleOrphan_ = function(existingConnection) {
     }
     // Attempt to reattach the orphan at the bottom of the newly inserted
     // block.  Since this block may be a stack, walk down to the end.
-    var newBlock = this.sourceBlock_;
+    newBlock = this.sourceBlock_;
     while (newBlock.nextConnection) {
       if (newBlock.nextConnection.targetConnection) {
         newBlock = newBlock.nextConnection.targetBlock();
@@ -911,7 +911,6 @@ Blockly.Connection.prototype.neighbours_ = function(maxLimit) {
   pointerMin = pointerMid;
   pointerMax = pointerMid;
   var neighbours = [];
-  var sourceBlock = this.sourceBlock_;
   if (db.length) {
     while (pointerMin >= 0 && checkConnection_(pointerMin)) {
       pointerMin--;

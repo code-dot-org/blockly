@@ -17,8 +17,6 @@
  * limitations under the License.
  */
 
-/* global Blockly, goog */
-
 /**
  * @fileoverview The class representing one block.
  * @author fraser@google.com (Neil Fraser)
@@ -509,22 +507,26 @@ Blockly.Block.prototype.dispose = function(healStack, animate) {
   }
 
   // First, dispose of all my children.
-  for (var x = this.childBlocks_.length - 1; x >= 0; x--) {
+  var x;
+  for (x = this.childBlocks_.length - 1; x >= 0; x--) {
     this.childBlocks_[x].dispose(false);
   }
   // Then dispose of myself.
   var icons = this.getIcons();
-  for (var x = 0; x < icons.length; x++) {
+
+  for (x = 0; x < icons.length; x++) {
     icons[x].dispose();
   }
   // Dispose of all inputs and their titles.
-  for (var x = 0, input; (input = this.inputList[x]); x++) {
+  var input;
+  for (x = 0; x < this.inputList.length; x++) {
+    input = this.inputList[x];
     input.dispose();
   }
   this.inputList = [];
   // Dispose of any remaining connections (next/previous/output).
   var connections = this.getConnections_(true);
-  for (var x = 0; x < connections.length; x++) {
+  for (x = 0; x < connections.length; x++) {
     var connection = connections[x];
     if (connection.targetConnection) {
       connection.disconnect();
@@ -1195,16 +1197,17 @@ Blockly.Block.prototype.moveConnections_ = function(dx, dy) {
     return;
   }
   var myConnections = this.getConnections_(false);
-  for (var x = 0; x < myConnections.length; x++) {
+  var x;
+  for (x = 0; x < myConnections.length; x++) {
     myConnections[x].moveBy(dx, dy);
   }
   var icons = this.getIcons();
-  for (var x = 0; x < icons.length; x++) {
+  for (x = 0; x < icons.length; x++) {
     icons[x].computeIconLocation();
   }
 
   // Recurse through all blocks attached under this one.
-  for (var x = 0; x < this.childBlocks_.length; x++) {
+  for (x = 0; x < this.childBlocks_.length; x++) {
     this.childBlocks_[x].moveConnections_(dx, dy);
   }
 };
@@ -1330,7 +1333,8 @@ Blockly.Block.prototype.moveBlockBeingDragged_ = function(
       .getRootElement()
       .setAttribute('transform', 'translate(' + x + ', ' + y + ')');
     // Drag all the nested bubbles.
-    for (var i = 0; i < this.draggedBubbles_.length; i++) {
+    var i;
+    for (i = 0; i < this.draggedBubbles_.length; i++) {
       var data = this.draggedBubbles_[i];
       data.bubble.setIconLocation(data.x + dx, data.y + dy);
     }
@@ -1341,7 +1345,7 @@ Blockly.Block.prototype.moveBlockBeingDragged_ = function(
     var closestConnection = null;
     var localConnection = null;
     var radiusConnection = Blockly.SNAP_RADIUS;
-    for (var i = 0; i < myConnections.length; i++) {
+    for (i = 0; i < myConnections.length; i++) {
       var myConnection = myConnections[i];
       var neighbour = myConnection.closest(radiusConnection, dx, dy);
       if (neighbour.connection) {
@@ -1395,11 +1399,10 @@ Blockly.Block.prototype.moveBlockBeingDragged_ = function(
 /**
  * This is called when a block is dragged to or away from one of this block's
  * inputs. Override in subclasses if needed.
+ * @param oldConnection
+ * @param newConnection
  */
-Blockly.Block.prototype.pendingConnection = function(
-  oldConnection,
-  newConnection
-) {};
+Blockly.Block.prototype.pendingConnection = function() {};
 
 /**
  * Drag this block to follow the mouse.
@@ -1534,21 +1537,19 @@ Blockly.Block.prototype.getParent = function() {
  */
 Blockly.Block.prototype.getSurroundParent = function() {
   var block = this;
-  while (true) {
-    do {
-      var prevBlock = block;
-      block = block.getParent();
-      if (!block) {
-        // Ran off the top.
-        return null;
-      }
-    } while (
-      block.nextConnection &&
-      block.nextConnection.targetBlock() == prevBlock
-    );
-    // This block is an enclosing parent, not just a statement in a stack.
-    return block;
-  }
+  do {
+    var prevBlock = block;
+    block = block.getParent();
+    if (!block) {
+      // Ran off the top.
+      return null;
+    }
+  } while (
+    block.nextConnection &&
+    block.nextConnection.targetBlock() == prevBlock
+  );
+  // This block is an enclosing parent, not just a statement in a stack.
+  return block;
 };
 
 /**
@@ -1661,6 +1662,7 @@ Blockly.Block.prototype.setParent = function(newParent) {
   } else {
     this.blockSpace.addTopBlock(this);
   }
+  var shadowBlocks, miniToolboxBlocks, rootInputBlocks, sourceBlock;
   if (
     newParent &&
     newParent.miniFlyout &&
@@ -1668,8 +1670,8 @@ Blockly.Block.prototype.setParent = function(newParent) {
   ) {
     // Add a sprite block to an event socket
     if (newParent.isMiniFlyoutOpen) {
-      var miniToolboxBlocks = newParent.miniFlyout.blockSpace_.topBlocks_;
-      var rootInputBlocks = newParent
+      miniToolboxBlocks = newParent.miniFlyout.blockSpace_.topBlocks_;
+      rootInputBlocks = newParent
         .getConnections_(true /* all */)
         .filter(function(connection) {
           return connection.type === Blockly.INPUT_VALUE;
@@ -1682,22 +1684,22 @@ Blockly.Block.prototype.setParent = function(newParent) {
       });
     }
 
-    var shadowBlocks = getShadowBlocksInStack(newParent);
+    shadowBlocks = getShadowBlocksInStack(newParent);
     // We only care about shadow blocks that are shadowing this source block.
     shadowBlocks = shadowBlocks.filter(function(block) {
       return block.blockToShadow_(newParent) === this;
     }, this);
     this.setShadowBlocks(shadowBlocks);
     shadowBlocks.forEach(function(block) {
-      var sourceBlock = block.blockToShadow_(block.getRootBlock());
+      sourceBlock = block.blockToShadow_(block.getRootBlock());
       block.shadowBlockValue_(sourceBlock);
     });
     this.blockSpace.render();
   } else if (newParent && newParent.getRootBlock().miniFlyout) {
     // Add a block stack to an event stack
-    var shadowBlocks = getShadowBlocksInStack(this);
+    shadowBlocks = getShadowBlocksInStack(this);
     shadowBlocks.forEach(function(block) {
-      var sourceBlock = block.blockToShadow_(block.getRootBlock());
+      sourceBlock = block.blockToShadow_(block.getRootBlock());
       block.shadowBlockValue_(sourceBlock);
     });
   }
@@ -1708,8 +1710,8 @@ Blockly.Block.prototype.setParent = function(newParent) {
   ) {
     // Remove a sprite block from an event socket
     if (oldParent.isMiniFlyoutOpen) {
-      var miniToolboxBlocks = oldParent.miniFlyout.blockSpace_.topBlocks_;
-      var rootInputBlocks = oldParent
+      miniToolboxBlocks = oldParent.miniFlyout.blockSpace_.topBlocks_;
+      rootInputBlocks = oldParent
         .getConnections_(true /* all */)
         .filter(function(connection) {
           return connection.type === Blockly.INPUT_VALUE;
@@ -1723,16 +1725,16 @@ Blockly.Block.prototype.setParent = function(newParent) {
     }
 
     this.setShadowBlocks([]);
-    var shadowBlocks = getShadowBlocksInStack(oldParent);
+    shadowBlocks = getShadowBlocksInStack(oldParent);
     shadowBlocks.forEach(function(block) {
-      var sourceBlock = block.blockToShadow_(block.getRootBlock());
+      sourceBlock = block.blockToShadow_(block.getRootBlock());
       block.shadowBlockValue_(sourceBlock);
     });
   } else if (oldParent && oldParent.getRootBlock().miniFlyout) {
     // Remove a block stack from an event stack
-    var shadowBlocks = getShadowBlocksInStack(this);
+    shadowBlocks = getShadowBlocksInStack(this);
     shadowBlocks.forEach(function(block) {
-      var sourceBlock = block.blockToShadow_(block.getRootBlock());
+      sourceBlock = block.blockToShadow_(block.getRootBlock());
       block.shadowBlockValue_(sourceBlock);
     });
   }
@@ -1751,13 +1753,14 @@ Blockly.Block.prototype.shadowBlockValue_ = function(sourceBlock) {
     if (root.isCurrentlyBeingDragged()) {
       return;
     }
+    var previewField, textField;
     if (sourceBlock && sourceBlock.type === 'gamelab_allSpritesWithAnimation') {
       // Only works with allSpritesWithAnimation blocks
       var sourceField = sourceBlock.inputList[0].titleRow[0];
 
       // Only works with clicked/subject/object pointer blocks
-      var previewField = this.inputList[0].titleRow[1];
-      var textField = this.inputList[0].titleRow[0];
+      previewField = this.inputList[0].titleRow[1];
+      textField = this.inputList[0].titleRow[0];
 
       previewField.setText(
         sourceField.previewElement_.getAttribute('xlink:href')
@@ -1768,8 +1771,8 @@ Blockly.Block.prototype.shadowBlockValue_ = function(sourceBlock) {
       // Add this block to the list of blocks to update when the sprite dropdown field is changed.
       sourceBlock.addShadowBlock(this);
     } else {
-      var previewField = this.inputList[0].titleRow[1];
-      var textField = this.inputList[0].titleRow[0];
+      previewField = this.inputList[0].titleRow[1];
+      textField = this.inputList[0].titleRow[0];
       previewField.setText('');
       previewField.updateDimensions_(1, this.thumbnailSize);
       textField.setText(this.longString);
@@ -1896,13 +1899,17 @@ Blockly.Block.prototype.isEditable = function() {
  */
 Blockly.Block.prototype.setEditable = function(editable) {
   this.editable_ = editable;
-  for (var x = 0, input; (input = this.inputList[x]); x++) {
-    for (var y = 0, title; (title = input.titleRow[y]); y++) {
+  var x, y;
+  var input, title;
+  for (x = 0; x < this.inputList.length; x++) {
+    input = this.inputList[x];
+    for (y = 0; y < input.titleRow.length; y++) {
+      title = input.titleRow[y];
       title.updateEditable();
     }
   }
   var icons = this.getIcons();
-  for (var x = 0; x < icons.length; x++) {
+  for (x = 0; x < icons.length; x++) {
     icons[x].updateEditable();
   }
   if (this.editLabel_) {
@@ -2090,13 +2097,17 @@ Blockly.Block.prototype.setColour = function(colourHue) {
     this.svg_.updateColour();
   }
   var icons = this.getIcons();
-  for (var x = 0; x < icons.length; x++) {
+  var x, y;
+  var input, title;
+  for (x = 0; x < icons.length; x++) {
     icons[x].updateColour();
   }
   if (this.rendered) {
     // Bump every dropdown to change its colour.
-    for (var x = 0, input; (input = this.inputList[x]); x++) {
-      for (var y = 0, title; (title = input.titleRow[y]); y++) {
+    for (x = 0; x < this.inputList.length; x++) {
+      input = this.inputList[x];
+      for (y = 0; y < input.titleRow.length; y++) {
+        title = input.titleRow[y];
         title.setText(null);
       }
     }
@@ -2174,13 +2185,17 @@ Blockly.Block.prototype.setHSV = function(
     this.svg_.updateColour();
   }
   var icons = this.getIcons();
-  for (var x = 0; x < icons.length; x++) {
+  var x, y;
+  var input, title;
+  for (x = 0; x < icons.length; x++) {
     icons[x].updateColour();
   }
   if (this.rendered) {
     // Bump every dropdown to change its colour.
-    for (var x = 0, input; (input = this.inputList[x]); x++) {
-      for (var y = 0, title; (title = input.titleRow[y]); y++) {
+    for (x = 0; x < this.inputList.length; x++) {
+      input = this.inputList[x];
+      for (y = 0; y < input.titleRow.length; y++) {
+        title = input.titleRow[y];
         title.setText(null);
       }
     }
@@ -2479,15 +2494,14 @@ Blockly.Block.prototype.setDisabled = function(disabled) {
  */
 Blockly.Block.prototype.getInheritedDisabled = function() {
   var block = this;
-  while (true) {
-    block = block.getSurroundParent();
-    if (!block) {
-      // Ran off the top.
-      return false;
-    } else if (block.disabled) {
+  while (block) {
+    if (block.disabled) {
       return true;
     }
+    block = block.getSurroundParent();
   }
+  // Ran off the top.
+  return false;
 };
 
 /**
@@ -2509,14 +2523,17 @@ Blockly.Block.prototype.setCollapsed = function(collapsed) {
   this.collapsed_ = collapsed;
   var renderList = [];
   // Show/hide the inputs.
-  for (var x = 0, input; (input = this.inputList[x]); x++) {
+  var x;
+  for (x = 0; x < this.inputList.length; x++) {
+    var input = this.inputList[x];
     renderList = renderList.concat(input.setVisible(!collapsed));
   }
 
   var COLLAPSED_INPUT_NAME = '_TEMP_COLLAPSED_INPUT';
   if (collapsed) {
     var icons = this.getIcons();
-    for (var x = 0; x < icons.length; x++) {
+
+    for (x = 0; x < icons.length; x++) {
       icons[x].setVisible(false);
     }
     var text = this.toString(Blockly.COLLAPSE_CHARS);
@@ -2530,7 +2547,8 @@ Blockly.Block.prototype.setCollapsed = function(collapsed) {
     renderList[0] = this;
   }
   if (this.rendered) {
-    for (var x = 0, block; (block = renderList[x]); x++) {
+    for (x = 0; x < renderList.length; x++) {
+      var block = renderList[x];
       block.render();
     }
     this.bumpNeighbours();
@@ -2626,14 +2644,15 @@ Blockly.Block.prototype.appendFunctionalInput = function(name) {
  *     dummy input.  This last parameter is mandatory; there may be any number
  *     of tuples (though the number of tuples must match the symbols in msg).
  */
-Blockly.Block.prototype.interpolateMsg = function(msg, var_args) {
+Blockly.Block.prototype.interpolateMsg = function(msg) {
   // Remove the msg from the start and the dummy alignment from the end of args.
   goog.asserts.assertString(msg);
   var dummyAlign = arguments.length - 1;
   goog.asserts.assertNumber(dummyAlign);
 
   var tokens = msg.split(/(%\d)/);
-  for (var i = 0; i < tokens.length; i += 2) {
+  var i;
+  for (i = 0; i < tokens.length; i += 2) {
     var text = goog.string.trim(tokens[i]);
     var symbol = tokens[i + 1];
     if (symbol) {
@@ -2659,7 +2678,7 @@ Blockly.Block.prototype.interpolateMsg = function(msg, var_args) {
     }
   }
   // Verify that all inputs were used.
-  for (var i = 1; i < arguments.length - 1; i++) {
+  for (i = 1; i < arguments.length - 1; i++) {
     goog.asserts.assert(
       arguments[i] === null,
       'Input "%%s" not used in message: "%s"',

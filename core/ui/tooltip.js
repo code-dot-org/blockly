@@ -189,10 +189,9 @@ Blockly.Tooltip.onMouseOver_ = function(e) {
 
 /**
  * Hide the tooltip if the mouse leaves the object and enters the blockSpace.
- * @param {!Event} e Mouse event.
  * @private
  */
-Blockly.Tooltip.onMouseOut_ = function(e) {
+Blockly.Tooltip.onMouseOut_ = function() {
   // Moving from one element to another (overlapping or with no gap) generates
   // a mouseOut followed instantly by a mouseOver.  Fork off the mouseOut
   // event and kill it if a mouseOver is received immediately.
@@ -287,19 +286,20 @@ Blockly.Tooltip.show_ = function() {
   Blockly.Tooltip.visible = true;
   Blockly.Tooltip.svgGroup_.style.display = 'block';
   // Resize the background and shadow to fit.
+  var bBox;
   if (
     navigator.userAgent.indexOf('MSIE') >= 0 ||
     navigator.userAgent.indexOf('Trident') >= 0
   ) {
     Blockly.Tooltip.svgText_.style.display = 'inline'; /* reqd for IE */
-    var bBox = {
+    bBox = {
       x: Blockly.Tooltip.svgText_.getBBox().x,
       y: Blockly.Tooltip.svgText_.getBBox().y,
       width: Blockly.Tooltip.svgText_.scrollWidth,
       height: Blockly.Tooltip.svgText_.scrollHeight
     };
   } else {
-    var bBox = Blockly.Tooltip.svgText_.getBBox();
+    bBox = Blockly.Tooltip.svgText_.getBBox();
   }
   var width = 2 * Blockly.Tooltip.MARGINS + bBox.width;
   var height = bBox.height;

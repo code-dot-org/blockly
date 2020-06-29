@@ -105,7 +105,7 @@ Blockly.bindEvent_ = function(element, name, thisObject, func, useCapture) {
   if (!element.addEventListener) {
     throw 'Element is not a DOM node with addEventListener.';
   }
-  wrapFunc = function(e) {
+  wrapFunc = function() {
     func.apply(thisObject, arguments);
   };
   // Add equivalent touch event.
@@ -217,15 +217,16 @@ Blockly.fireUiEvent = function(element, eventName, opt_properties) {
   opt_properties = opt_properties || {};
 
   var doc = document;
+  var evt;
   if (doc.createEvent) {
     // W3
-    var evt = doc.createEvent('UIEvents');
+    evt = doc.createEvent('UIEvents');
     goog.object.extend(evt, opt_properties);
     evt.initEvent(eventName, true, true); // event type, bubbling, cancelable
     element.dispatchEvent(evt);
   } else if (doc.createEventObject) {
     // MSIE
-    var evt = doc.createEventObject();
+    evt = doc.createEventObject();
     goog.object.extend(evt, opt_properties);
     element.fireEvent('on' + eventName, evt);
   } else {
@@ -522,9 +523,10 @@ Blockly.commonWordPrefix = function(array, opt_shortest) {
   }
   var wordPrefix = 0;
   var max = opt_shortest || Blockly.shortestStringLength(array);
+  var i, letter;
   for (var len = 0; len < max; len++) {
-    var letter = array[0][len];
-    for (var i = 1; i < array.length; i++) {
+    letter = array[0][len];
+    for (i = 1; i < array.length; i++) {
       if (letter != array[i][len]) {
         return wordPrefix;
       }
@@ -533,8 +535,8 @@ Blockly.commonWordPrefix = function(array, opt_shortest) {
       wordPrefix = len + 1;
     }
   }
-  for (var i = 1; i < array.length; i++) {
-    var letter = array[i][len];
+  for (i = 1; i < array.length; i++) {
+    letter = array[i][len];
     if (letter && letter != ' ') {
       return wordPrefix;
     }
@@ -557,9 +559,10 @@ Blockly.commonWordSuffix = function(array, opt_shortest) {
   }
   var wordPrefix = 0;
   var max = opt_shortest || Blockly.shortestStringLength(array);
+  var i, letter;
   for (var len = 0; len < max; len++) {
-    var letter = array[0].substr(-len - 1, 1);
-    for (var i = 1; i < array.length; i++) {
+    letter = array[0].substr(-len - 1, 1);
+    for (i = 1; i < array.length; i++) {
       if (letter != array[i].substr(-len - 1, 1)) {
         return wordPrefix;
       }
@@ -568,8 +571,8 @@ Blockly.commonWordSuffix = function(array, opt_shortest) {
       wordPrefix = len + 1;
     }
   }
-  for (var i = 1; i < array.length; i++) {
-    var letter = array[i].charAt(array[i].length - len - 1);
+  for (i = 1; i < array.length; i++) {
+    letter = array[i].charAt(array[i].length - len - 1);
     if (letter && letter != ' ') {
       return wordPrefix;
     }
@@ -643,7 +646,7 @@ Blockly.printerRangeToNumbers = function(rangeString) {
   var rangeStringNoSpaces = rangeString.replace(/ /g, '');
   var rangeItems = rangeStringNoSpaces.split(',');
   var fullNumberList = [];
-  var rangeRegexp = /^(\d+)\-(\d+)$/; // e.g., "5-10", "20-30"
+  var rangeRegexp = /^(\d+)-(\d+)$/; // e.g., "5-10", "20-30"
   var numberRegexp = /^(\d+)$/; // e.g., "3", "500"
   for (var i = 0; i < rangeItems.length; i++) {
     var numberOrRange = rangeItems[i];
@@ -925,6 +928,8 @@ Blockly.findEmptyContainerBlock = function(blocks) {
  * @returns {Blockly.Input|null} empty input or null if none found
  */
 Blockly.findEmptyInput = function(block, inputType) {
+  // eslint false positive for ES6 method find
+  // eslint-disable-next-line es5/no-es6-methods
   return goog.array.find(block.inputList, function(input) {
     return input.type === inputType && !input.connection.targetConnection;
   });

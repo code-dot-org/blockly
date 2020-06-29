@@ -279,19 +279,20 @@ Blockly.FieldTextInput.prototype.validate_ = function() {
  */
 Blockly.FieldTextInput.prototype.resizeEditor_ = function() {
   var div = Blockly.WidgetDiv.DIV;
+  var bBox;
   if (
     navigator.userAgent.indexOf('MSIE') >= 0 ||
     navigator.userAgent.indexOf('Trident') >= 0
   ) {
     this.fieldGroup_.style.display = 'inline'; /* reqd for IE */
-    var bBox = {
+    bBox = {
       x: this.fieldGroup_.getBBox().x,
       y: this.fieldGroup_.getBBox().y,
       width: this.fieldGroup_.scrollWidth,
       height: this.fieldGroup_.scrollHeight
     };
   } else {
-    var bBox = this.fieldGroup_.getBBox();
+    bBox = this.fieldGroup_.getBBox();
   }
   div.style.width = bBox.width + 'px';
   this.positionWidgetDiv();
@@ -308,19 +309,20 @@ Blockly.FieldTextInput.prototype.positionWidgetDiv = function() {
   // In RTL mode block titles and LTR input titles the left edge moves,
   // whereas the right edge is fixed.  Reposition the editor.
   if (Blockly.RTL) {
+    var borderBBox;
     if (
       navigator.userAgent.indexOf('MSIE') >= 0 ||
       navigator.userAgent.indexOf('Trident') >= 0
     ) {
       this.borderRect_.style.display = 'inline'; /* reqd for IE */
-      var borderBBox = {
+      borderBBox = {
         x: this.borderRect_.getBBox().x,
         y: this.borderRect_.getBBox().y,
         width: this.borderRect_.scrollWidth,
         height: this.borderRect_.scrollHeight
       };
     } else {
-      var borderBBox = this.borderRect_.getBBox();
+      borderBBox = this.borderRect_.getBBox();
     }
     xy.x += borderBBox.width;
     xy.x -= Blockly.WidgetDiv.DIV.offsetWidth;

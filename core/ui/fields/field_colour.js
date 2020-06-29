@@ -151,19 +151,20 @@ Blockly.FieldColour.prototype.positionWidgetDiv = function() {
     /** @type {!Element} */ (this.borderRect_),
     this.getRootSVGElement_()
   );
+  var borderBBox;
   if (
     navigator.userAgent.indexOf('MSIE') >= 0 ||
     navigator.userAgent.indexOf('Trident') >= 0
   ) {
     this.borderRect_.style.display = 'inline'; /* reqd for IE */
-    var borderBBox = {
+    borderBBox = {
       x: this.borderRect_.getBBox().x,
       y: this.borderRect_.getBBox().y,
       width: this.borderRect_.scrollWidth,
       height: this.borderRect_.scrollHeight
     };
   } else {
-    var borderBBox = this.borderRect_.getBBox();
+    borderBBox = this.borderRect_.getBBox();
   }
   if (Blockly.RTL) {
     xy.x += borderBBox.width;

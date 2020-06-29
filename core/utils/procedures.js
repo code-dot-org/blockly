@@ -216,20 +216,21 @@ Blockly.Procedures.flyoutCategory = function(
     !Blockly.disableProcedureAutopopulate &&
     !Blockly.topLevelProcedureAutopopulate
   ) {
+    var block;
     if (Blockly.Blocks.procedures_defnoreturn) {
-      var block = new Blockly.Block(blockSpace, 'procedures_defnoreturn');
+      block = new Blockly.Block(blockSpace, 'procedures_defnoreturn');
       block.initSvg();
       blocks.push(block);
       gaps.push(margin * 2);
     }
     if (Blockly.Blocks.procedures_defreturn) {
-      var block = new Blockly.Block(blockSpace, 'procedures_defreturn');
+      block = new Blockly.Block(blockSpace, 'procedures_defreturn');
       block.initSvg();
       blocks.push(block);
       gaps.push(margin * 2);
     }
     if (Blockly.Blocks.procedures_ifreturn) {
-      var block = new Blockly.Block(blockSpace, 'procedures_ifreturn');
+      block = new Blockly.Block(blockSpace, 'procedures_ifreturn');
       block.initSvg();
       blocks.push(block);
       gaps.push(margin * 2);
@@ -365,6 +366,8 @@ Blockly.Procedures.mutateCallers = function(
  * @return {Blockly.Block} The procedure definition block, or null not found.
  */
 Blockly.Procedures.getDefinition = function(name, blockSpace) {
+  // eslint false positive for ES6 method find
+  // eslint-disable-next-line es5/no-es6-methods
   return goog.array.find(blockSpace.getAllBlocks(), function(block) {
     return (
       block.getProcedureInfo &&

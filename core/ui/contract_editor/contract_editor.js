@@ -34,11 +34,13 @@ goog.require('goog.array');
 /** @const */ var EXAMPLE_BLOCK_MARGIN_BELOW = 20; // px
 /** @const */ var EXAMPLE_BLOCK_MARGIN_LEFT =
   Blockly.FunctionEditor.BLOCK_LAYOUT_LEFT_MARGIN; // px
-/** @const */ var EXAMPLE_BLOCK_SECTION_MAGIN_BELOW = 10; // px
-/** @const */ var EXAMPLE_BLOCK_SECTION_MAGIN_ABOVE = 15; // px
+/** @const */ var EXAMPLE_BLOCK_SECTION_MARGIN_BELOW = 10; // px
 /** @const */ var HEADER_HEIGHT = 30; // px
 /** @const */ var DEFAULT_EXAMPLE_CALL_SECTION_WIDTH = 100; // px
 /** @const */ var MARGIN_BLOCK_TO_CALL_SLOT = 13; // px
+
+/** @const */ var YELLOW_HEX = '#ffa400';
+/** @const */ var HIGHLIGHT_BOX_WIDTH = 10; //px
 
 /** @const */ var USER_TYPE_CHOICES = [
   Blockly.BlockValueType.NUMBER,
@@ -1020,7 +1022,7 @@ Blockly.ContractEditor.prototype.updateFrameColorForType_ = function(newType) {
     newColorHSV[2] * 255
   );
   this.setFrameColor_(newColorHex);
-  this.allSections_.forEach(function(sectionView, sectionName) {
+  this.allSections_.forEach(function(sectionView) {
     sectionView.setHeaderColor(newColorHex);
   }, this);
 };
@@ -1160,7 +1162,7 @@ Blockly.ContractEditor.prototype.onPlaceExampleContent = function(currentY) {
     this.modalBlockSpace.yOffsetFromView + currentY + 'px';
   this.exampleAreaDiv.style.width = metrics.viewWidth + 'px';
 
-  var blockSplitMargin = EXAMPLE_BLOCK_SECTION_MAGIN_BELOW / 2;
+  var blockSplitMargin = EXAMPLE_BLOCK_SECTION_MARGIN_BELOW / 2;
 
   var newY = currentY;
 
@@ -1239,7 +1241,7 @@ Blockly.ContractEditor.prototype.onPlaceExampleContent = function(currentY) {
   this.addExampleButton.style.top = newY - exampleDivTop + 'px';
   this.addExampleButton.style.left = EXAMPLE_BLOCK_MARGIN_LEFT + 'px';
   newY += this.addExampleButton.offsetHeight;
-  newY += EXAMPLE_BLOCK_SECTION_MAGIN_BELOW;
+  newY += EXAMPLE_BLOCK_SECTION_MARGIN_BELOW;
 
   this.exampleAreaDiv.style.height = newY - currentY + 'px';
 

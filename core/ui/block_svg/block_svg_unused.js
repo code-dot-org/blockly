@@ -1,8 +1,6 @@
 /**
  * @fileoverview
  */
-
-/* global Blockly, goog, document */
 'use strict';
 
 goog.provide('Blockly.BlockSvgUnused');

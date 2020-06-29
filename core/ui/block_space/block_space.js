@@ -17,8 +17,6 @@
  * limitations under the License.
  */
 
-/* global Blockly, goog */
-
 /**
  * @fileoverview Object representing a block blockSpace.
  * @author fraser@google.com (Neil Fraser)
@@ -325,6 +323,8 @@ Blockly.BlockSpace.prototype.debugLogOnEvents = function() {
 };
 
 Blockly.BlockSpace.prototype.findFunction = function(functionName) {
+  // eslint false positive for ES6 method find
+  // eslint-disable-next-line es5/no-es6-methods
   return goog.array.find(this.getTopBlocks(), function(block) {
     return (
       goog.array.contains(

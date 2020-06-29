@@ -441,6 +441,6 @@ Blockly.Toolbox.TreeNode.prototype.onMouseDown = function(e) {
  * @override
  * @private
  */
-Blockly.Toolbox.TreeNode.prototype.onDoubleClick_ = function(e) {
+Blockly.Toolbox.TreeNode.prototype.onDoubleClick_ = function() {
   // NOP.
 };

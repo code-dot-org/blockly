@@ -481,19 +481,20 @@ Blockly.Bubble.prototype.layoutBubble_ = function() {
       Blockly.BlockSvg.SEP_SPACE_Y + metrics.viewTop
     ) {
       // Slide the bubble below the block.
+      var bBox;
       if (
         navigator.userAgent.indexOf('MSIE') >= 0 ||
         navigator.userAgent.indexOf('Trident') >= 0
       ) {
         this.shape_.style.display = 'inline'; /* reqd for IE */
-        var bBox = {
+        bBox = {
           x: this.shape_.getBBox().x,
           y: this.shape_.getBBox().y,
           width: this.shape_.scrollWidth,
           height: this.shape_.scrollHeight
         };
       } else {
-        var bBox = /** @type {SVGLocatable} */ (this.shape_).getBBox();
+        bBox = /** @type {SVGLocatable} */ (this.shape_).getBBox();
       }
       relativeTop = bBox.height;
     }

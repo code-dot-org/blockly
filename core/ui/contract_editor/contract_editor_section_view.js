@@ -5,8 +5,6 @@ goog.provide('Blockly.ContractEditorSectionView');
 /** @const */ var DOWN_TRIANGLE_CHARACTER = '\u25BC'; // ▼
 /** @const */ var RIGHT_TRIANGLE_CHARACTER = '\u25B6'; // ▶
 /** @const */ var DARK_GRAY_HEX = '#898989';
-/** @const */ var YELLOW_HEX = '#ffa400';
-/** @const */ var HIGHLIGHT_BOX_WIDTH = 10; //px
 /** @const */ var DEFAULT_HEADER_HEIGHT = 25; //px
 
 /**
@@ -26,7 +24,10 @@ Blockly.ContractEditorSectionView = function(canvas, opt_options) {
    * @type {number|null}
    * @private
    */
-  this.sectionNumber_ = opt_options.hasOwnProperty('sectionNumber')
+  this.sectionNumber_ = Object.prototype.hasOwnProperty.call(
+    opt_options,
+    'sectionNumber'
+  )
     ? opt_options.sectionNumber
     : null;
 

@@ -4,8 +4,6 @@
  */
 'use strict';
 
-/* global Blockly, goog */
-
 goog.provide('Blockly.BlockLimits');
 
 goog.require('Blockly.Block');

@@ -37,9 +37,6 @@ Blockly.Blocks.functional_parameters_get = {
     this.setHelpUrl(Blockly.Msg.VARIABLES_GET_HELPURL);
     this.setHSV(312, 0.32, 0.62);
     this.setFunctional(true);
-    var options = {
-      fixedSize: {height: 35}
-    };
     this.appendDummyInput()
       .appendTitle(Blockly.Msg.VARIABLES_GET_TITLE)
       .appendTitle(fieldLabel, 'VAR')

@@ -49,7 +49,7 @@ Blockly.Blocks.functional_example = {
     this.setTooltip(Blockly.Msg.EXAMPLE_DESCRIPTION);
   },
   mutationToDom: function() {},
-  domToMutation: function(xmlElement) {},
+  domToMutation: function() {},
   updateOutputType: function(outputType) {
     this.outputType_ = outputType;
     this.changeFunctionalOutput(this.outputType_);

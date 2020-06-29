@@ -160,11 +160,12 @@ Blockly.Blocks.controls_if = {
     // Store a pointer to any connected child blocks.
     var clauseBlock = containerBlock.getInputTargetBlock('STACK');
     var x = 1;
+    var inputDo;
     while (clauseBlock) {
       switch (clauseBlock.type) {
         case 'controls_if_elseif':
           var inputIf = this.getInput('IF' + x);
-          var inputDo = this.getInput('DO' + x);
+          inputDo = this.getInput('DO' + x);
           clauseBlock.valueConnection_ =
             inputIf && inputIf.connection.targetConnection;
           clauseBlock.statementConnection_ =
@@ -172,7 +173,7 @@ Blockly.Blocks.controls_if = {
           x++;
           break;
         case 'controls_if_else':
-          var inputDo = this.getInput('ELSE');
+          inputDo = this.getInput('ELSE');
           clauseBlock.statementConnection_ =
             inputDo && inputDo.connection.targetConnection;
           break;
@@ -226,8 +227,9 @@ Blockly.Blocks.controls_if_else = {
 Blockly.Blocks.logic_compare = {
   // Comparison operator.
   init: function() {
+    var OPERATORS;
     if (Blockly.RTL) {
-      var OPERATORS = [
+      OPERATORS = [
         ['=', 'EQ'],
         ['\u2260', 'NEQ'],
         ['>', 'LT'],
@@ -236,7 +238,7 @@ Blockly.Blocks.logic_compare = {
         ['\u2264', 'GTE']
       ];
     } else {
-      var OPERATORS = [
+      OPERATORS = [
         ['=', 'EQ'],
         ['\u2260', 'NEQ'],
         ['<', 'LT'],
@@ -292,7 +294,7 @@ Blockly.Blocks.logic_operation = {
         AND: Blockly.Msg.LOGIC_OPERATION_TOOLTIP_AND,
         OR: Blockly.Msg.LOGIC_OPERATION_TOOLTIP_OR
       };
-      return thisBlock.TOOLTIPS[op];
+      return TOOLTIPS[op];
     });
   }
 };

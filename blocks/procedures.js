@@ -238,7 +238,8 @@ Blockly.Block.createProcedureDefinitionBlock = function(config) {
     },
     renameVar: function(oldName, newName) {
       var change = false;
-      for (var x = 0; x < this.parameterNames_.length; x++) {
+      var x;
+      for (x = 0; x < this.parameterNames_.length; x++) {
         if (Blockly.Names.equals(oldName, this.parameterNames_[x])) {
           this.parameterNames_[x] = newName;
           change = true;
@@ -249,7 +250,8 @@ Blockly.Block.createProcedureDefinitionBlock = function(config) {
         // Update the mutator's variables if the mutator is open.
         if (this.mutator && this.mutator.isVisible()) {
           var blocks = this.mutator.blockSpace_.getAllBlocks();
-          for (var x = 0, block; (block = blocks[x]); x++) {
+          for (x = 0; x < blocks.length; x++) {
+            var block = blocks[x];
             if (
               block.type == 'procedures_mutatorarg' &&
               Blockly.Names.equals(oldName, block.getTitleValue('NAME'))
@@ -278,7 +280,8 @@ Blockly.Block.createProcedureDefinitionBlock = function(config) {
 
       var xmlMutation = goog.dom.createDom('mutation');
       xmlMutation.setAttribute('name', name);
-      for (var x = 0; x < this.parameterNames_.length; x++) {
+      var x;
+      for (x = 0; x < this.parameterNames_.length; x++) {
         var xmlArg = goog.dom.createDom('arg');
         xmlArg.setAttribute('name', this.parameterNames_[x]);
         xmlMutation.appendChild(xmlArg);
@@ -289,13 +292,13 @@ Blockly.Block.createProcedureDefinitionBlock = function(config) {
 
       options.push(option);
       // Add options to create getters for each parameter.
-      for (var x = 0; x < this.parameterNames_.length; x++) {
-        var option = {enabled: true};
-        var name = this.parameterNames_[x];
+      for (x = 0; x < this.parameterNames_.length; x++) {
+        option = {enabled: true};
+        name = this.parameterNames_[x];
         option.text = Blockly.Msg.VARIABLES_SET_CREATE_GET.replace('%1', name);
         var xmlTitle = goog.dom.createDom('title', null, name);
         xmlTitle.setAttribute('name', 'VAR');
-        var xmlBlock = goog.dom.createDom('block', null, xmlTitle);
+        xmlBlock = goog.dom.createDom('block', null, xmlTitle);
         xmlBlock.setAttribute('type', 'variables_get');
         option.callback = Blockly.ContextMenu.callbackFactory(this, xmlBlock);
         options.push(option);
@@ -504,10 +507,11 @@ Blockly.Blocks.procedures_callnoreturn = {
     var savedRendered = this.rendered;
     this.rendered = false;
     // Update the quarkConnections_ with existing connections.
-    for (var x = this.currentParameterNames_.length - 1; x >= 0; x--) {
-      var input = this.getInput('ARG' + x);
+    var x, input, connection;
+    for (x = this.currentParameterNames_.length - 1; x >= 0; x--) {
+      input = this.getInput('ARG' + x);
       if (input) {
-        var connection = input.connection.targetConnection;
+        connection = input.connection.targetConnection;
         this.parameterIDsToArgumentConnections[
           this.currentParameterIDs[x]
         ] = connection;
@@ -519,15 +523,15 @@ Blockly.Blocks.procedures_callnoreturn = {
     this.currentParameterNames_ = [].concat(paramNames);
     this.currentParameterIDs = paramIds;
     this.currentParameterTypes_ = paramTypes;
-    for (var x = 0; x < this.currentParameterNames_.length; x++) {
-      var input = this.appendValueInput('ARG' + x)
+    for (x = 0; x < this.currentParameterNames_.length; x++) {
+      input = this.appendValueInput('ARG' + x)
         .setAlign(Blockly.ALIGN_RIGHT)
         .appendTitle(this.currentParameterNames_[x]);
       if (this.currentParameterIDs) {
         // Reconnect any child blocks.
         var parameterID = this.currentParameterIDs[x];
         if (parameterID in this.parameterIDsToArgumentConnections) {
-          var connection = this.parameterIDsToArgumentConnections[parameterID];
+          connection = this.parameterIDsToArgumentConnections[parameterID];
           if (
             !connection ||
             connection.targetConnection ||

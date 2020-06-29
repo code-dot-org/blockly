@@ -230,7 +230,8 @@ Blockly.Blocks.functional_definition = {
   },
   renameVar: function(oldName, newName) {
     var change = false;
-    for (var x = 0; x < this.parameterNames_.length; x++) {
+    var x;
+    for (x = 0; x < this.parameterNames_.length; x++) {
       if (Blockly.Names.equals(oldName, this.parameterNames_[x])) {
         this.parameterNames_[x] = newName;
         change = true;
@@ -241,7 +242,8 @@ Blockly.Blocks.functional_definition = {
       // Update the mutator's variables if the mutator is open.
       if (this.mutator && this.mutator.isVisible()) {
         var blocks = this.mutator.blockSpace_.getAllBlocks();
-        for (var x = 0, block; (block = blocks[x]); x++) {
+        for (x = 0; x < blocks.length; x++) {
+          var block = blocks[x];
           if (
             block.type == 'functional_procedures_mutatorarg' &&
             Blockly.Names.equals(oldName, block.getTitleValue('NAME'))
@@ -414,10 +416,11 @@ Blockly.Blocks.functional_call = {
     var savedRendered = this.rendered;
     this.rendered = false;
     // Update the parameterIDsToArgumentConnections with existing connections.
-    for (var x = this.currentParameterNames_.length - 1; x >= 0; x--) {
-      var input = this.getInput('ARG' + x);
+    var x, input, connection;
+    for (x = this.currentParameterNames_.length - 1; x >= 0; x--) {
+      input = this.getInput('ARG' + x);
       if (input) {
-        var connection = input.connection.targetConnection;
+        connection = input.connection.targetConnection;
         this.parameterIDsToArgumentConnections_[
           this.currentParameterIDs_[x]
         ] = connection;
@@ -429,8 +432,8 @@ Blockly.Blocks.functional_call = {
     this.currentParameterNames_ = goog.array.clone(paramNames);
     this.currentParameterIDs_ = goog.array.clone(paramIds);
     this.currentParameterTypes_ = goog.array.clone(opt_paramTypes);
-    for (var x = 0; x < this.currentParameterNames_.length; x++) {
-      var input = this.appendFunctionalInput('ARG' + x)
+    for (x = 0; x < this.currentParameterNames_.length; x++) {
+      input = this.appendFunctionalInput('ARG' + x)
         .setAlign(Blockly.ALIGN_CENTRE)
         .setInline(x > 0);
       var currentParameterType = this.currentParameterTypes_[x];
@@ -443,7 +446,7 @@ Blockly.Blocks.functional_call = {
         // Reconnect any child blocks.
         var paramID = this.currentParameterIDs_[x];
         if (paramID in this.parameterIDsToArgumentConnections_) {
-          var connection = this.parameterIDsToArgumentConnections_[paramID];
+          connection = this.parameterIDsToArgumentConnections_[paramID];
           if (
             !connection ||
             connection.targetConnection ||

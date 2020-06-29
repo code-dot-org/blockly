@@ -258,6 +258,14 @@ Blockly.BlockSpaceEditor.prototype.createDom_ = function(container) {
   container.setAttribute('dir', 'LTR');
 
   this.populateSVGEffects_(container);
+  
+  var classes = ['blocklySvg'];
+  if (this.inline_) {
+    classes.push('inline');
+  }
+  if (this.readOnly_) {
+    classes.push('readOnlyBlockSpace');
+  }
 
   // Build the SVG DOM.
   /*
@@ -275,7 +283,7 @@ Blockly.BlockSpaceEditor.prototype.createDom_ = function(container) {
     'xmlns:html': 'http://www.w3.org/1999/xhtml',
     'xmlns:xlink': 'http://www.w3.org/1999/xlink',
     'version': '1.1',
-    'class': this.inline_ ? 'blocklySvg inline' : 'blocklySvg'
+    'class': classes.join(' ')
   }, null);
   this.svg_ = svg;
 

@@ -66,7 +66,7 @@ Apps will now reference your local blockly repository rather than the npm packag
 
 ### Publishing changes
 
-To publish a new version to npm switch to the master branch, use `npm login` to sign in as an account with access to the `@code-dot-org` scope, then `npm version [major|minor|patch|premajor|preminor|prepatch]` for the appropriate version bump.  This will do the following:
+To publish a new version to npm switch to the main branch, use `npm login` to sign in as an account with access to the `@code-dot-org` scope, then `npm version [major|minor|patch|premajor|preminor|prepatch]` for the appropriate version bump.  This will do the following:
 
 * Run linting and tests to verify your local repo.
 * Rebuild the release package.

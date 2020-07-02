@@ -19,7 +19,7 @@
   "scripts": {
     "build": "webpack-cli",
     "build:dev": "DEV=1 webpack-cli",
-    "lint": "eslint --fix --ext .js .",
+    "lint": "eslint --ext .js .",
     "preversion": "npm run test",
     "version": "npm run build",
     "postversion": "git push && git push --tags && npm publish",
@@ -28,6 +28,9 @@
     "test:watch": "karma start",
     "report-coverage": "codecov"
   },
+  "pre-commit": [
+    "lint"
+  ],
   "devDependencies": {
     "codecov": "^3.0.4",
     "eslint": "^6.1.0",
@@ -40,6 +43,7 @@
     "karma-chrome-launcher": "^2.2.0",
     "karma-coverage": "^1.1.2",
     "karma-custom": "^1.1.9",
+    "pre-commit": "^1.2.2",
     "prettier": "1.16.1",
     "webpack": "^4.14.0",
     "webpack-cli": "^3.0.8",

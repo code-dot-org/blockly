@@ -33,7 +33,6 @@ Blockly.BlockSvgFunctional.prototype.initChildren = function() {
     this.block_.getValue()
   );
   var lightColor = goog.color.lighten(goog.color.hexToRgb(rgb), 0.3);
-  var lighterColor = goog.color.lighten(goog.color.hexToRgb(rgb), 0.8);
 
   Blockly.BlockSvgFunctional.superClass_.initChildren.call(this);
 
@@ -131,7 +130,7 @@ Blockly.BlockSvgFunctional.prototype.createFunctionalMarkers_ = function() {
       element.parentNode.removeChild(element);
       delete this.inputMarkers_[markerName];
 
-      var element = this.inputClickTargets_[markerName];
+      element = this.inputClickTargets_[markerName];
       element.parentNode.removeChild(element);
       delete this.inputMarkers_[markerName];
     }
@@ -158,17 +157,14 @@ Blockly.BlockSvgFunctional.prototype.addInputClickListener_ = function(
         return;
       }
       var childType;
-      var titleIndex;
       var input = parentBlock.getInput(inputName);
       if (input.connection.acceptsAnyType()) {
         return;
       }
       if (input.connection.acceptsType('Number')) {
         childType = 'functional_math_number';
-        titleIndex = 0;
       } else if (input.connection.acceptsType('String')) {
         childType = 'functional_string';
-        titleIndex = 1;
       } else {
         return;
       }
@@ -225,16 +221,14 @@ Blockly.BlockSvgFunctional.prototype.renderDrawRightInlineFunctional_ = function
   // todo (brent) - RTL
   var inputTopLeft = {
     x: renderInfo.curX,
-    y: renderInfo.curY + BS.INLINE_PADDING_Y
+    y: renderInfo.curY + Blockly.BlockSvg.INLINE_PADDING_Y
   };
 
-  var notchStart = BS.NOTCH_WIDTH - BS.NOTCH_PATH_WIDTH;
+  var notchStart =
+    Blockly.BlockSvg.NOTCH_WIDTH - Blockly.BlockSvg.NOTCH_PATH_WIDTH;
   var notchPaths = input.connection.getNotchPaths();
 
   var inputSteps = [];
-
-  var forcedInputSpacing = this.forcedInputSpacings[input.name];
-  var inputWidthToTakeUp = forcedInputSpacing || input.renderWidth;
 
   inputSteps.push('M', inputTopLeft.x + ',' + inputTopLeft.y);
   inputSteps.push('h', notchStart);
@@ -265,10 +259,12 @@ Blockly.BlockSvgFunctional.prototype.renderDrawRightInlineFunctional_ = function
     input.connection.targetConnection ? 'hidden' : 'visible'
   );
 
-  renderInfo.curX += this.inputWidthToOccupy_(input) + BS.SEP_SPACE_X;
+  renderInfo.curX +=
+    this.inputWidthToOccupy_(input) + Blockly.BlockSvg.SEP_SPACE_X;
 
   // Create inline input connection.
-  var connectionX = connectionsXY.x + inputTopLeft.x + BS.NOTCH_WIDTH;
+  var connectionX =
+    connectionsXY.x + inputTopLeft.x + Blockly.BlockSvg.NOTCH_WIDTH;
   var connectionY = connectionsXY.y + inputTopLeft.y;
 
   input.connection.moveTo(connectionX, connectionY);

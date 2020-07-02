@@ -68,7 +68,7 @@ Blockly.Mutator.prototype.createIcon = function() {
   <text class="blocklyIconMark" x="8" y="12">★</text>
   */
   var quantum = Blockly.Icon.RADIUS / 2;
-  var iconShield = Blockly.createSvgElement(
+  Blockly.createSvgElement(
     'rect',
     {
       class: 'blocklyIconShield',

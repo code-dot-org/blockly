@@ -47,7 +47,10 @@ Blockly.FieldLabel = function(text, customOptions) {
   );
 
   var loadingSize = {width: 0, height: 25};
-  this.forceSize_ = customOptions.hasOwnProperty('fixedSize');
+  this.forceSize_ = Object.prototype.hasOwnProperty.call(
+    customOptions,
+    'fixedSize'
+  );
   this.forceWidth_ =
     this.forceSize_ && customOptions.fixedSize.width !== undefined;
 

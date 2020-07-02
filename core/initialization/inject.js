@@ -96,12 +96,7 @@ Blockly.inject = function(container, opt_options, opt_audioPlayer) {
  * @private
  */
 Blockly.parseOptions_ = function(options) {
-  var hasCategories,
-    hasTrashcan,
-    hasCollapse,
-    grayOutUndeletableBlocks,
-    tree,
-    hasScrollbars;
+  var hasCategories, hasTrashcan, hasCollapse, grayOutUndeletableBlocks, tree;
 
   var readOnly = !!options['readOnly'];
   var showUnusedBlocks = !!options['showUnusedBlocks'];
@@ -113,7 +108,7 @@ Blockly.parseOptions_ = function(options) {
     grayOutUndeletableBlocks = false;
     tree = null;
   } else {
-    var tree = options['toolbox'];
+    tree = options['toolbox'];
     if (tree) {
       if (typeof tree != 'string' && typeof XSLTProcessor == 'undefined') {
         // In this case the tree will not have been properly built by the

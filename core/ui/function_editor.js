@@ -16,6 +16,10 @@ goog.require('goog.array');
 goog.require('goog.events');
 goog.require('goog.structs.LinkedMap');
 
+/** @const */ var FRAME_MARGIN_SIDE = 15;
+/** @const */ var FRAME_MARGIN_TOP = 10;
+/** @const */ var FRAME_HEADER_HEIGHT = 25;
+
 /**
  * Class for a modal function editor.
  * @constructor
@@ -218,9 +222,7 @@ Blockly.FunctionEditor.prototype.openAndEditFunction = function(functionName) {
  * @param targetFunctionDefinitionBlock
  * @protected
  */
-Blockly.FunctionEditor.prototype.setupUIForBlock_ = function(
-  targetFunctionDefinitionBlock
-) {};
+Blockly.FunctionEditor.prototype.setupUIForBlock_ = function() {};
 
 /**
  * Lets subclass tweak the UI once the function block is set
@@ -340,7 +342,7 @@ Blockly.FunctionEditor.prototype.newParameterBlock = function(
 };
 
 Blockly.FunctionEditor.prototype.renameParameter = function(oldName, newName) {
-  this.orderedParamIDsToBlocks_.forEach(function(block, paramID, linkedMap) {
+  this.orderedParamIDsToBlocks_.forEach(function(block) {
     if (
       block.firstElementChild &&
       block.firstElementChild.textContent === oldName
@@ -357,7 +359,7 @@ Blockly.FunctionEditor.prototype.changeParameterTypeInFlyoutXML = function(
   name,
   newType
 ) {
-  this.orderedParamIDsToBlocks_.forEach(function(blockXML, paramID, linkedMap) {
+  this.orderedParamIDsToBlocks_.forEach(function(blockXML) {
     if (
       blockXML.firstElementChild &&
       blockXML.firstElementChild.textContent === name

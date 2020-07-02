@@ -17,8 +17,6 @@
  * limitations under the License.
  */
 
-/* global Blockly, goog */
-
 /**
  * @fileoverview Flyout tray containing blocks which may be created.
  * @author fraser@google.com (Neil Fraser)
@@ -240,21 +238,22 @@ Blockly.Flyout.prototype.getMetrics_ = function() {
   }
   var viewHeight = this.height_ - 2 * this.CORNER_RADIUS;
   var viewWidth = this.width_;
+  var optionBox;
   try {
     if (Blockly.isMsie() || Blockly.isTrident()) {
       this.blockSpace_.getCanvas().style.display = 'inline'; // required for IE
-      var optionBox = {
+      optionBox = {
         x: this.blockSpace_.getCanvas().getBBox().x,
         y: this.blockSpace_.getCanvas().getBBox().y,
         width: this.blockSpace_.getCanvas().scrollWidth,
         height: this.blockSpace_.getCanvas().scrollHeight
       };
     } else {
-      var optionBox = this.blockSpace_.getCanvas().getBBox();
+      optionBox = this.blockSpace_.getCanvas().getBBox();
     }
   } catch (e) {
     // Firefox has trouble with hidden elements (Bug 528969).
-    var optionBox = {height: 0, y: 0};
+    optionBox = {height: 0, y: 0};
   }
   return {
     viewHeight: viewHeight,
@@ -422,8 +421,9 @@ Blockly.Flyout.prototype.hide = function(opt_saveBlock) {
   this.svgGroup_.style.display = 'none';
   // Delete all the event listeners.
   this.blockSpace_.unbindBeginPanDragHandler();
-  for (var x = 0, listen; (listen = this.listeners_[x]); x++) {
-    Blockly.unbindEvent_(listen);
+  var x;
+  for (x = 0; x < this.listeners_.length; x++) {
+    Blockly.unbindEvent_(this.listeners_[x]);
   }
   this.listeners_.splice(0);
   if (this.reflowWrapper_) {
@@ -437,8 +437,8 @@ Blockly.Flyout.prototype.hide = function(opt_saveBlock) {
     }
   });
   // Delete all the background buttons.
-  for (var x = 0, rect; (rect = this.buttons_[x]); x++) {
-    goog.dom.removeNode(rect);
+  for (x = 0; x < this.buttons_.length; x++) {
+    goog.dom.removeNode(this.buttons_[x]);
   }
   // Delete the 'Create a Function' button.
   goog.dom.removeNode(
@@ -452,9 +452,10 @@ Blockly.Flyout.prototype.hide = function(opt_saveBlock) {
  * @param block
  * @param cursor
  * @param gap
+ * @param initialX
  * @private
  */
-Blockly.Flyout.prototype.layoutBlock_ = function(block, cursor, gap, initialX) {
+Blockly.Flyout.prototype.layoutBlock_ = function(block, cursor, gap) {
   var blockHW = block.getHeightWidth();
   block.moveBy(cursor.x, cursor.y);
   cursor.y += blockHW.height + gap;
@@ -797,8 +798,12 @@ Blockly.Flyout.prototype.reflow = function() {
   var flyoutWidth = this.minFlyoutWidth_ || 0;
   var margin = this.CORNER_RADIUS;
   var blocks = this.blockSpace_.getTopBlocks(false);
-  for (var x = 0, block; (block = blocks[x]); x++) {
-    var blockHW = block.getHeightWidth();
+  var x;
+  var blockHW;
+  var block;
+  for (x = 0; x < blocks.length; x++) {
+    block = blocks[x];
+    blockHW = block.getHeightWidth();
     flyoutWidth = Math.max(flyoutWidth, blockHW.width);
   }
   flyoutWidth +=
@@ -812,8 +817,9 @@ Blockly.Flyout.prototype.reflow = function() {
     flyoutWidth = Math.min(flyoutWidth, this.maxWidth_);
   }
   if (this.width_ != flyoutWidth) {
-    for (var x = 0, block; (block = blocks[x]); x++) {
-      var blockHW = block.getHeightWidth();
+    for (x = 0; x < blocks.length; x++) {
+      block = blocks[x];
+      blockHW = block.getHeightWidth();
       var blockXY = block.getRelativeToSurfaceXY();
       if (Blockly.RTL) {
         // With the flyoutWidth known, right-align the blocks.

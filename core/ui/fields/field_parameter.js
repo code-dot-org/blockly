@@ -31,18 +31,11 @@ goog.require('Blockly.FieldVariable');
  * Class for a variable's parameter dropdown field.
  * @param {!string} varname The default name for the variable.  If null,
  *     a unique variable name will be generated.
- * @param {?Function} opt_changeHandler A function that is executed when a new
- *     option is selected.
- * @param {?Function} opt_createHandler A function that is executed after creation
  * @extends {Blockly.FieldDropdown}
  * * @extends {Blockly.FieldDropdown}
  * @constructor
  */
-Blockly.FieldParameter = function(
-  varname,
-  opt_changeHandler,
-  opt_createHandler
-) {
+Blockly.FieldParameter = function(varname) {
   Blockly.FieldParameter.superClass_.constructor.call(
     this,
     varname,

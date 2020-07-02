@@ -17,8 +17,6 @@
  * limitations under the License.
  */
 
-/* global Blockly, goog */
-
 /**
  * @fileoverview XML reader and writer.
  * @author fraser@google.com (Neil Fraser)

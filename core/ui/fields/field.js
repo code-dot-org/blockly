@@ -417,7 +417,7 @@ Blockly.Field.prototype.onClick_ = function(e) {
  * @param {string|!Element} newTip Text for tooltip or a parent element to
  *     link to for its tooltip.
  */
-Blockly.Field.prototype.setTooltip = function(newTip) {
+Blockly.Field.prototype.setTooltip = function() {
   // Non-abstract sub-classes may wish to implement this.  See FieldLabel.
 };
 

@@ -63,11 +63,12 @@ Blockly.Blocks.text_join = {
     return container;
   },
   domToMutation: function(xmlElement) {
-    for (var x = 0; x < this.itemCount_; x++) {
+    var x;
+    for (x = 0; x < this.itemCount_; x++) {
       this.removeInput('ADD' + x);
     }
     this.itemCount_ = window.parseInt(xmlElement.getAttribute('items'), 10);
-    for (var x = 0; x < this.itemCount_; x++) {
+    for (x = 0; x < this.itemCount_; x++) {
       var input = this.appendValueInput('ADD' + x);
       if (x == 0) {
         input.appendTitle(Blockly.Msg.TEXT_JOIN_TITLE_CREATEWITH);
@@ -497,7 +498,7 @@ Blockly.Blocks.text_prompt = {
       );
     this.setOutput(true, Blockly.BlockValueType.STRING);
     // Assign 'this' to a variable for use in the tooltip closure below.
-    var thisBlock = this;
+    thisBlock = this;
     this.setTooltip(function() {
       return thisBlock.getTitleValue('TYPE') == 'TEXT'
         ? Blockly.Msg.TEXT_PROMPT_TOOLTIP_TEXT

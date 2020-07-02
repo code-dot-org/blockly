@@ -17,8 +17,6 @@
  * limitations under the License.
  */
 
-/* global Blockly, goog, assertEquals, assert */
-
 'use strict';
 
 var SMALL_NUMBER_BLOCK =
@@ -447,7 +445,7 @@ function test_paste() {
 }
 
 function test_locked_serialization() {
-  var container = Blockly.Test.initializeBlockSpaceEditor();
+  Blockly.Test.initializeBlockSpaceEditor();
   var blockXML =
     '<xml>' +
     '<block type="text_print"></block>' +

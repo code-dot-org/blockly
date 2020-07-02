@@ -1,5 +1,3 @@
-/* global Blockly, goog */
-/* global assert, assertNull, assertNotNull, assertEquals, assertFalse */
 'use strict';
 
 function test_field_scroll_listener() {

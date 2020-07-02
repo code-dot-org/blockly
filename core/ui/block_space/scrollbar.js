@@ -289,8 +289,9 @@ Blockly.ScrollbarSvg.prototype.resize = function(opt_metrics) {
    * .absoluteTop: Top-edge of view.
    * .absoluteLeft: Left-edge of view.
    */
+  var outerLength, innerLength, innerOffset;
   if (this.horizontal_) {
-    var outerLength = hostMetrics.viewWidth;
+    outerLength = hostMetrics.viewWidth;
     if (this.pair_) {
       // Shorten the scrollbar to make room for the corner square.
       outerLength -= Blockly.Scrollbar.scrollbarThickness;
@@ -308,8 +309,8 @@ Blockly.ScrollbarSvg.prototype.resize = function(opt_metrics) {
     ) {
       this.ratio_ = 0;
     }
-    var innerLength = hostMetrics.viewWidth * this.ratio_;
-    var innerOffset = hostMetrics.viewLeft * this.ratio_;
+    innerLength = hostMetrics.viewWidth * this.ratio_;
+    innerOffset = hostMetrics.viewLeft * this.ratio_;
     this.svgKnob_.setAttribute('width', Math.max(0, innerLength));
     this.xCoordinate = hostMetrics.absoluteLeft;
     if (this.pair_ && Blockly.RTL) {
@@ -327,7 +328,7 @@ Blockly.ScrollbarSvg.prototype.resize = function(opt_metrics) {
     this.svgBackground_.setAttribute('width', Math.max(0, outerLength));
     this.svgKnob_.setAttribute('x', this.constrainKnob_(innerOffset));
   } else {
-    var outerLength = hostMetrics.viewHeight;
+    outerLength = hostMetrics.viewHeight;
     if (this.pair_) {
       // Shorten the scrollbar to make room for the corner square.
       outerLength -= Blockly.Scrollbar.scrollbarThickness;
@@ -343,8 +344,10 @@ Blockly.ScrollbarSvg.prototype.resize = function(opt_metrics) {
     ) {
       this.ratio_ = 0;
     }
-    var innerLength = hostMetrics.viewHeight * this.ratio_;
-    var innerOffset = hostMetrics.viewTop * this.ratio_;
+
+    innerLength = hostMetrics.viewHeight * this.ratio_;
+
+    innerOffset = hostMetrics.viewTop * this.ratio_;
     this.svgKnob_.setAttribute('height', Math.max(0, innerLength));
     this.xCoordinate = hostMetrics.absoluteLeft;
     if (!Blockly.RTL) {

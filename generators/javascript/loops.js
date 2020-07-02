@@ -80,7 +80,7 @@ Blockly.JavaScript.controls_repeat_ext = function() {
   );
   var endVar = repeats;
   if (!repeats.match(/^\w+$/) && !Blockly.isNumber(repeats)) {
-    var endVar = Blockly.JavaScript.variableDB_.getDistinctName(
+    endVar = Blockly.JavaScript.variableDB_.getDistinctName(
       'repeat_end',
       Blockly.Variables.NAME_TYPE
     );
@@ -196,7 +196,7 @@ Blockly.JavaScript.controls_for = function() {
     );
     var startVar = argument0;
     if (!argument0.match(/^\w+$/) && !Blockly.isNumber(argument0)) {
-      var startVar = Blockly.JavaScript.variableDB_.getDistinctName(
+      startVar = Blockly.JavaScript.variableDB_.getDistinctName(
         variable0Undec + '_start',
         Blockly.Variables.NAME_TYPE
       );
@@ -204,7 +204,7 @@ Blockly.JavaScript.controls_for = function() {
     }
     var endVar = argument1;
     if (!argument1.match(/^\w+$/) && !Blockly.isNumber(argument1)) {
-      var endVar = Blockly.JavaScript.variableDB_.getDistinctName(
+      endVar = Blockly.JavaScript.variableDB_.getDistinctName(
         variable0Undec + '_end',
         Blockly.Variables.NAME_TYPE
       );

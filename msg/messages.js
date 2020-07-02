@@ -729,7 +729,6 @@ Blockly.Msg.LISTS_INDEX_OF_LAST = 'find last occurrence of item';
 Blockly.Msg.LISTS_INDEX_OF_TOOLTIP =
   'Returns the index of the first/last occurrence of the item in the list.  Returns 0 if text is not found.';
 
-Blockly.Msg.LISTS_GET_INDEX_HELPURL = Blockly.Msg.LISTS_GET_INDEX_HELPURL;
 /// dropdown - Indicates that the user wishes to [https://code.google.com/p/blockly/wiki/Lists#Getting_a_single_item get an item from a list] without removing it from the list.
 Blockly.Msg.LISTS_GET_INDEX_GET = 'get';
 /// dropdown - Indicates that the user wishes to [https://code.google.com/p/blockly/wiki/Lists#Getting_a_single_item get and remove an item from a list], as opposed to merely getting it without modifying the list.

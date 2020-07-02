@@ -12,7 +12,7 @@ goog.require('Blockly.Block');
  * Class for a horizontal flyout.
  * @constructor
  */
-Blockly.HorizontalFlyout = function(blockSpaceEditor) {
+Blockly.HorizontalFlyout = function() {
   Blockly.Flyout.apply(this, arguments);
   this.autoClose = false;
   this.height_ = 10;
@@ -26,7 +26,7 @@ goog.inherits(Blockly.HorizontalFlyout, Blockly.Flyout);
  * @param {!Array|string} xmlList List of blocks to show.
  *     Variables and procedures have a custom set of blocks.
  */
-Blockly.HorizontalFlyout.prototype.show = function(xmlList) {
+Blockly.HorizontalFlyout.prototype.show = function() {
   var metrics = this.targetBlockSpace_.getMetrics();
   this.width_ = Math.max(0, metrics.viewWidth - this.CORNER_RADIUS * 2);
   Blockly.HorizontalFlyout.superClass_.show.apply(this, arguments);

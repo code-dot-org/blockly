@@ -17,8 +17,6 @@
  * limitations under the License.
  */
 
-/* global Blockly, goog */
-
 /**
  * @fileoverview Methods for graphically rendering a block as SVG.
  * @author fraser@google.com (Neil Fraser)
@@ -1586,7 +1584,6 @@ Blockly.BlockSvg.prototype.renderDrawRightInputValue_ = function(
   rowIndex,
   connectionsXY
 ) {
-  var connectionX, connectionY;
   // External input.
   var connectionX, connectionY;
   var row = inputRows[rowIndex];
@@ -1663,7 +1660,6 @@ Blockly.BlockSvg.prototype.renderDrawRightNextStatement_ = function(
   rowIndex,
   connectionsXY
 ) {
-  var connectionX, connectionY;
   // Nested statement.
   var connectionX, connectionY;
   var row = inputRows[rowIndex];
@@ -1837,7 +1833,7 @@ Blockly.BlockSvg.prototype.renderDrawRightInline_ = function(
         renderInfo.highlightInline.push(paths.TAB_PATH_DOWN_HIGHLIGHT);
       }
       // Create inline input connection.
-      var connectionX =
+      connectionX =
         connectionsXY.x +
         oppositeIfRTL(
           renderInfo.curX +
@@ -1847,7 +1843,7 @@ Blockly.BlockSvg.prototype.renderDrawRightInline_ = function(
             1
         );
 
-      var connectionY = connectionsXY.y + renderInfo.curY + BS.INLINE_PADDING_Y;
+      connectionY = connectionsXY.y + renderInfo.curY + BS.INLINE_PADDING_Y;
       input.connection.moveTo(connectionX, connectionY);
       if (input.connection.targetConnection) {
         input.connection.tighten_();
@@ -1890,11 +1886,7 @@ Blockly.BlockSvg.prototype.inputWidthToOccupy_ = function(input) {
  * @param {!Object} connectionsXY Location of block.
  * @private
  */
-Blockly.BlockSvg.prototype.renderDrawRightInlineFunctional_ = function(
-  renderInfo,
-  input,
-  connectionsXY
-) {
+Blockly.BlockSvg.prototype.renderDrawRightInlineFunctional_ = function() {
   // Overriden by BlockSvgFunctional
   throw 'Only supported for functional blocks';
 };

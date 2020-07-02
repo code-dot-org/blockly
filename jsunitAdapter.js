@@ -1,34 +1,35 @@
+/* global G_testRunner */
+/* eslint-disable no-unused-vars */
 goog.require('Blockly.Test');
 goog.require('goog.testing.jsunit');
 
-let karma;
+var karma;
 function setUpPage() {
-  karma.info({ total: G_testRunner.testCase.getCount() });
+  karma.info({total: G_testRunner.testCase.getCount()});
 }
 
-let numErrors = 0;
+var numErrors = 0;
 function tearDown() {
-  const errors = G_testRunner.testCase.result_.errors;
-  const success = errors.length === numErrors;
+  var errors = G_testRunner.testCase.result_.errors;
+  var success = errors.length === numErrors;
   numErrors = errors.length;
-  const lastError = errors[errors.length - 1];
+  var lastError = errors[errors.length - 1];
   karma.result({
     description: G_testRunner.testCase.curTest_.name,
-    success,
+    success: success,
     suite: ['Blockly'],
-    log: success ? [] : [
-      lastError.message,
-      ...lastError.stack.split('\n').slice(0, 3)
-    ],
+    log: success
+      ? []
+      : [lastError.message].concat(lastError.stack.split('\n').slice(0, 3))
   });
 }
 
 function tearDownPage() {
-  karma.complete({ coverage: window.__coverage__ });
+  karma.complete({coverage: window.__coverage__});
 }
 
 window.karmaCustomEnv = {
-  execute: function (k) {
+  execute: function(k) {
     karma = k;
-  },
+  }
 };

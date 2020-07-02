@@ -138,9 +138,7 @@ Blockly.FieldRectangularDropdown.prototype.createDropdownArrow_ = function() {
   );
 };
 
-Blockly.FieldRectangularDropdown.prototype.updatePreviewData_ = function(
-  previewData
-) {
+Blockly.FieldRectangularDropdown.prototype.updatePreviewData_ = function() {
   throw Error(
     'FieldRectangularDropdown.prototype.updatePreviewData_ not implemented'
   );
@@ -192,10 +190,7 @@ Blockly.FieldRectangularDropdown.prototype.updateDimensions_ = function(
   this.refreshRender();
 };
 
-Blockly.FieldRectangularDropdown.prototype.updatePreviewDimensions_ = function(
-  previewWidth,
-  previewHeight
-) {
+Blockly.FieldRectangularDropdown.prototype.updatePreviewDimensions_ = function() {
   throw Error(
     'FieldRectangularDropdown.prototype.updatePreviewDimensions_ not implemented'
   );
@@ -207,9 +202,7 @@ Blockly.FieldRectangularDropdown.prototype.updatePreviewDimensions_ = function(
  * @returns {HTMLElement}
  * @private
  */
-Blockly.FieldRectangularDropdown.prototype.createDropdownPreviewElement_ = function(
-  previewData
-) {
+Blockly.FieldRectangularDropdown.prototype.createDropdownPreviewElement_ = function() {
   throw Error(
     'FieldRectangularDropdown.prototype.updatePreviewDimensions_ not implemented'
   );
@@ -568,7 +561,7 @@ Blockly.FieldRectangularDropdown.prototype.onMouseUp_ = function(e) {
   this.showMenu_();
 };
 
-Blockly.FieldRectangularDropdown.prototype.onMouseDown_ = function(e) {
+Blockly.FieldRectangularDropdown.prototype.onMouseDown_ = function() {
   if (this.menuAlreadyShowing_()) {
     // Menu is being closed, don't re-open if they click the arrow
     this.doNotOpenEditorNextMouseUp_ = true;

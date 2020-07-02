@@ -202,15 +202,7 @@ Blockly.Blocks.button_block = {
     this.appendDummyInput()
       .appendTitle("here's a button on a really long block")
       .appendTitle(
-        new Blockly.FieldButton(
-          span,
-          function() {
-            return new Promise(function(resolve) {
-              resolve(prompt());
-            });
-          },
-          this.getHexColour()
-        ),
+        new Blockly.FieldButton(span, function() {}, this.getHexColour()),
         'VALUE'
       );
     this.setOutput(true, Blockly.BlockValueType.STRING);

@@ -118,7 +118,7 @@ Blockly.Names.prototype.checkSpecificType = function(name, type, specificType) {
  *     ('VARIABLE', 'PROCEDURE', 'BUILTIN', etc...).
  * @return {string} An entity name legal for the exported language.
  */
-Blockly.Names.prototype.getDistinctName = function(name, type) {
+Blockly.Names.prototype.getDistinctName = function(name) {
   var safeName = this.safeName_(name);
   var i = '';
   while (

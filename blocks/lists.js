@@ -50,17 +50,18 @@ Blockly.Blocks.lists_create_with = {
     this.setTooltip(Blockly.Msg.LISTS_CREATE_WITH_TOOLTIP);
     this.itemCount_ = 3;
   },
-  mutationToDom: function(blockSpace) {
+  mutationToDom: function() {
     var container = document.createElement('mutation');
     container.setAttribute('items', this.itemCount_);
     return container;
   },
   domToMutation: function(container) {
-    for (var x = 0; x < this.itemCount_; x++) {
+    var x;
+    for (x = 0; x < this.itemCount_; x++) {
       this.removeInput('ADD' + x);
     }
     this.itemCount_ = window.parseInt(container.getAttribute('items'), 10);
-    for (var x = 0; x < this.itemCount_; x++) {
+    for (x = 0; x < this.itemCount_; x++) {
       var input = this.appendValueInput('ADD' + x);
       if (x == 0) {
         input.appendTitle(Blockly.Msg.LISTS_CREATE_WITH_INPUT_WITH);

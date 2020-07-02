@@ -58,8 +58,6 @@ Blockly.ScrollOnBlockDragHandler.prototype.stopAutoScrolling = function() {
   this.activeAutoScroll_ = null;
 };
 
-var MS_PER_SEC = 1000;
-
 /**
  * Pixels-per-millisecond scrolling speeds for mouse-location triggered scrolling
  * @type {number}

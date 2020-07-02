@@ -14,6 +14,7 @@
   "rules": {},
   "globals": {
     "Blockly": true,
-    "goog": true
+    "goog": true,
+    "module": true
   }
 }

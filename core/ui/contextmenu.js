@@ -54,7 +54,8 @@ Blockly.ContextMenu.show = function(e, options) {
   */
   var menu = new goog.ui.Menu();
 
-  for (var x = 0, option; (option = options[x]); x++) {
+  for (var i = 0; i < options.length; i++) {
+    var option = options[i];
     var menuItem = new goog.ui.MenuItem(option.text);
     menu.addItem(menuItem);
     menuItem.setEnabled(option.enabled);
@@ -126,7 +127,7 @@ Blockly.ContextMenu.optionToDom_ = function(text) {
     </g>
   */
   var gElement = Blockly.createSvgElement('g', {class: 'blocklyMenuDiv'}, null);
-  var rectElement = Blockly.createSvgElement(
+  Blockly.createSvgElement(
     'rect',
     {height: Blockly.ContextMenu.Y_HEIGHT},
     gElement

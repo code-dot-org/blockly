@@ -1,9 +1,6 @@
 /**
  * Tests for code generation with hidden blocks.
  */
-
-/* global Blockly, goog */
-/* global assertEquals */
 'use strict';
 
 var HIDDEN_VAR_REASSIGNMENT =

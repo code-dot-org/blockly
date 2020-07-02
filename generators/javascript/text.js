@@ -35,11 +35,11 @@ Blockly.JavaScript.text = function() {
 
 Blockly.JavaScript.text_join = function() {
   // Create a string made up of any number of elements of any type.
-  var code;
+  var code, argument0;
   if (this.itemCount_ == 0) {
     return ["''", Blockly.JavaScript.ORDER_ATOMIC];
   } else if (this.itemCount_ == 1) {
-    var argument0 =
+    argument0 =
       Blockly.JavaScript.valueToCode(
         this,
         'ADD0',
@@ -48,7 +48,7 @@ Blockly.JavaScript.text_join = function() {
     code = 'String(' + argument0 + ')';
     return [code, Blockly.JavaScript.ORDER_FUNCTION_CALL];
   } else if (this.itemCount_ == 2) {
-    var argument0 =
+    argument0 =
       Blockly.JavaScript.valueToCode(
         this,
         'ADD0',
@@ -147,12 +147,13 @@ Blockly.JavaScript.text_charAt = function() {
       'VALUE',
       Blockly.JavaScript.ORDER_MEMBER
     ) || "''";
+  var code;
   switch (where) {
     case 'FIRST':
-      var code = text + '.charAt(0)';
+      code = text + '.charAt(0)';
       return [code, Blockly.JavaScript.ORDER_FUNCTION_CALL];
     case 'LAST':
-      var code = text + '.slice(-1)';
+      code = text + '.slice(-1)';
       return [code, Blockly.JavaScript.ORDER_FUNCTION_CALL];
     case 'FROM_START':
       // Blockly uses one-based indicies.
@@ -163,10 +164,10 @@ Blockly.JavaScript.text_charAt = function() {
         // If the index is dynamic, decrement it in code.
         at += ' - 1';
       }
-      var code = text + '.charAt(' + at + ')';
+      code = text + '.charAt(' + at + ')';
       return [code, Blockly.JavaScript.ORDER_FUNCTION_CALL];
     case 'FROM_END':
-      var code = text + '.slice(-' + at + ').charAt(0)';
+      code = text + '.slice(-' + at + ').charAt(0)';
       return [code, Blockly.JavaScript.ORDER_FUNCTION_CALL];
     case 'RANDOM':
       if (!Blockly.JavaScript.definitions_['text_random_letter']) {
@@ -211,8 +212,9 @@ Blockly.JavaScript.text_getSubstring = function() {
       'AT2',
       Blockly.JavaScript.ORDER_NONE
     ) || '1';
+  var code;
   if (where1 == 'FIRST' && where2 == 'LAST') {
-    var code = text;
+    code = text;
   } else {
     if (!Blockly.JavaScript.definitions_['text_get_substring']) {
       var functionName = Blockly.JavaScript.variableDB_.getDistinctName(
@@ -244,7 +246,7 @@ Blockly.JavaScript.text_getSubstring = function() {
       func.push('}');
       Blockly.JavaScript.definitions_['text_get_substring'] = func.join('\n');
     }
-    var code =
+    code =
       Blockly.JavaScript.text_getSubstring.func +
       '(' +
       text +
@@ -265,10 +267,10 @@ Blockly.JavaScript.text_changeCase = function() {
   // Change capitalization.
   var mode = this.getTitleValue('CASE');
   var operator = Blockly.JavaScript.text_changeCase.OPERATORS[mode];
-  var code;
+  var code, argument0;
   if (operator) {
     // Upper and lower case are functions built into JavaScript.
-    var argument0 =
+    argument0 =
       Blockly.JavaScript.valueToCode(
         this,
         'TEXT',
@@ -293,7 +295,7 @@ Blockly.JavaScript.text_changeCase = function() {
       func.push('}');
       Blockly.JavaScript.definitions_['text_toTitleCase'] = func.join('\n');
     }
-    var argument0 =
+    argument0 =
       Blockly.JavaScript.valueToCode(
         this,
         'TEXT',

@@ -16,9 +16,6 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
-/* global Blockly, goog */
-/* global assert, assertNull, assertNotNull, assertEquals, assertFalse */
 'use strict';
 
 function test_setBlockNotDisconnectable() {

@@ -56,7 +56,7 @@ Blockly.Warning.prototype.createIcon_ = function() {
   <path class="blocklyIconShield" d="..."/>
   <text class="blocklyIconMark" x="8" y="13">!</text>
   */
-  var iconShield = Blockly.createSvgElement(
+  Blockly.createSvgElement(
     'path',
     {
       class: 'blocklyIconShield',
@@ -127,6 +127,7 @@ Blockly.Warning.prototype.setVisible = function(visible) {
     if (Blockly.RTL) {
       // Right-align the paragraph.
       // This cannot be done until the bubble is rendered on screen.
+      var maxWidth;
       if (
         navigator.userAgent.indexOf('MSIE') >= 0 ||
         navigator.userAgent.indexOf('Trident') >= 0
@@ -138,9 +139,9 @@ Blockly.Warning.prototype.setVisible = function(visible) {
           width: paragraph.scrollWidth,
           height: paragraph.scrollHeight
         };
-        var maxWidth = bBox.width;
+        maxWidth = bBox.width;
       } else {
-        var maxWidth = paragraph.getBBox().width;
+        maxWidth = paragraph.getBBox().width;
       }
       for (
         var x = 0, textElement;
@@ -166,10 +167,9 @@ Blockly.Warning.prototype.setVisible = function(visible) {
 
 /**
  * Bring the warning to the top of the stack when clicked on.
- * @param {!Event} e Mouse up event.
  * @private
  */
-Blockly.Warning.prototype.bodyFocus_ = function(e) {
+Blockly.Warning.prototype.bodyFocus_ = function() {
   this.bubble_.promote_();
 };
 

@@ -111,10 +111,9 @@ Blockly.Icon.prototype.isVisible = function() {
 
 /**
  * Clicking on the icon toggles if the bubble is visible.
- * @param {!Event} e Mouse click event.
  * @private
  */
-Blockly.Icon.prototype.iconClick_ = function(e) {
+Blockly.Icon.prototype.iconClick_ = function() {
   if (this.block_.isEditable() && !this.block_.isInFlyout) {
     this.setVisible(!this.isVisible());
   }

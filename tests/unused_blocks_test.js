@@ -4,44 +4,44 @@
 
 var TWO_CONNECTED_BLOCKS =
   '<xml>' +
-    '<block type="variables_set">' +
-      '<title name="VAR">x</title>' +
-      '<value name="VALUE">' +
-        '<block type="math_number">' +
-          '<title name="NUM">1</title>' +
-        '</block>' +
-      '</value>' +
-      '<next>' +
-        '<block type="variables_set">' +
-          '<title name="VAR">x</title>' +
-          '<value name="VALUE">' +
-            '<block type="math_number">' +
-              '<title name="NUM">2</title>' +
-            '</block>' +
-          '</value>' +
-        '</block>' +
-      '</next>' +
-    '</block>' +
+  '<block type="variables_set">' +
+  '<title name="VAR">x</title>' +
+  '<value name="VALUE">' +
+  '<block type="math_number">' +
+  '<title name="NUM">1</title>' +
+  '</block>' +
+  '</value>' +
+  '<next>' +
+  '<block type="variables_set">' +
+  '<title name="VAR">x</title>' +
+  '<value name="VALUE">' +
+  '<block type="math_number">' +
+  '<title name="NUM">2</title>' +
+  '</block>' +
+  '</value>' +
+  '</block>' +
+  '</next>' +
+  '</block>' +
   '</xml>';
 
 var TWO_DISCONNECTED_BLOCKS =
   '<xml>' +
-    '<block type="variables_set">' +
-      '<title name="VAR">x</title>' +
-      '<value name="VALUE">' +
-        '<block type="math_number">' +
-          '<title name="NUM">1</title>' +
-        '</block>' +
-      '</value>' +
-    '</block>' +
-    '<block type="variables_set">' +
-      '<title name="VAR">x</title>' +
-      '<value name="VALUE">' +
-        '<block type="math_number">' +
-          '<title name="NUM">2</title>' +
-        '</block>' +
-      '</value>' +
-    '</block>' +
+  '<block type="variables_set">' +
+  '<title name="VAR">x</title>' +
+  '<value name="VALUE">' +
+  '<block type="math_number">' +
+  '<title name="NUM">1</title>' +
+  '</block>' +
+  '</value>' +
+  '</block>' +
+  '<block type="variables_set">' +
+  '<title name="VAR">x</title>' +
+  '<value name="VALUE">' +
+  '<block type="math_number">' +
+  '<title name="NUM">2</title>' +
+  '</block>' +
+  '</value>' +
+  '</block>' +
   '</xml>';
 
 var DISCONNECTED_INLINE_BLOCKS =
@@ -54,21 +54,21 @@ var DISCONNECTED_INLINE_BLOCKS =
   '  </block>' +
   '</xml>';
 
-
 function test_unattachedBlocks() {
   var orig = Blockly.showUnusedBlocks;
   var container = Blockly.Test.initializeBlockSpaceEditor();
   var blockSpace = Blockly.mainBlockSpace;
 
   var expectedCode = [
-    ["var x;\n\n\nx = 1;\nx = 2;\n",
-    "var x;\n\n\nx = 1;\n\nx = 2;\n"],
-    ["var x;\n\n\n/*\nx = 1;\nx = 2;\n*/\n",
-    "var x;\n\n\n/*\nx = 1;\n*/\n\n/*\nx = 2;\n*/\n"]
+    ['var x;\n\n\nx = 1;\nx = 2;\n', 'var x;\n\n\nx = 1;\n\nx = 2;\n'],
+    [
+      'var x;\n\n\n/*\nx = 1;\nx = 2;\n*/\n',
+      'var x;\n\n\n/*\nx = 1;\n*/\n\n/*\nx = 2;\n*/\n'
+    ]
   ];
 
-  [false, true].forEach(function (showUnusedBlocks, i) {
-    [TWO_CONNECTED_BLOCKS, TWO_DISCONNECTED_BLOCKS].forEach(function (xml, j) {
+  [false, true].forEach(function(showUnusedBlocks, i) {
+    [TWO_CONNECTED_BLOCKS, TWO_DISCONNECTED_BLOCKS].forEach(function(xml, j) {
       Blockly.showUnusedBlocks = showUnusedBlocks;
       blockSpace.clear();
       Blockly.Xml.domToBlockSpace(blockSpace, Blockly.Xml.textToDom(xml));
@@ -88,14 +88,17 @@ function test_unattachedInlineBlocks() {
   var blockSpace = Blockly.mainBlockSpace;
 
   var expectedCode = [
-    "var x;\n\n\n1;\n\nx;\n",
-    "var x;\n\n\n/*\n1;\n*/\n\n/*\nx;\n*/\n"
+    'var x;\n\n\n1;\n\nx;\n',
+    'var x;\n\n\n/*\n1;\n*/\n\n/*\nx;\n*/\n'
   ];
 
-  [false, true].forEach(function (showUnusedBlocks, i) {
+  [false, true].forEach(function(showUnusedBlocks, i) {
     Blockly.showUnusedBlocks = showUnusedBlocks;
     blockSpace.clear();
-    Blockly.Xml.domToBlockSpace(blockSpace, Blockly.Xml.textToDom(DISCONNECTED_INLINE_BLOCKS));
+    Blockly.Xml.domToBlockSpace(
+      blockSpace,
+      Blockly.Xml.textToDom(DISCONNECTED_INLINE_BLOCKS)
+    );
     var generatedCode = Blockly.Generator.blockSpaceToCode('JavaScript');
     assertEquals(expectedCode[i], generatedCode);
   });

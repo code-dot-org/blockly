@@ -10,7 +10,7 @@ goog.provide('Blockly.DomainNameInput');
  * @param {Function} options.onEnterPressed
  * @constructor
  */
-Blockly.DomainNameInput = function (options) {
+Blockly.DomainNameInput = function(options) {
   this.onNameChanged = options.onNameChanged;
   this.onEnterPressed = options.onEnterPressed;
   this.name = options.name;
@@ -29,10 +29,10 @@ Blockly.DomainNameInput = function (options) {
   this.inputElement_ = null;
 };
 
-Blockly.DomainNameInput.prototype.render = function (parent) {
+Blockly.DomainNameInput.prototype.render = function(parent) {
   var inputElement = goog.dom.createDom('input');
-  inputElement.type = "text";
-  inputElement.style.width = "200px";
+  inputElement.type = 'text';
+  inputElement.style.width = '200px';
   inputElement.style.placeholder = Blockly.Msg.FUNCTIONAL_NAME_LABEL;
 
   if (this.name) {
@@ -41,10 +41,13 @@ Blockly.DomainNameInput.prototype.render = function (parent) {
 
   parent.appendChild(inputElement);
 
-
-  this.eventsToUnbind_.push(Blockly.bindEvent_(inputElement, 'input', this, this.onInputChange_));
+  this.eventsToUnbind_.push(
+    Blockly.bindEvent_(inputElement, 'input', this, this.onInputChange_)
+  );
   // IE9 doesn't fire oninput when delete key is pressed, bind keydown also
-  this.eventsToUnbind_.push(Blockly.bindEvent_(inputElement, 'keydown', this, this.onInputChange_));
+  this.eventsToUnbind_.push(
+    Blockly.bindEvent_(inputElement, 'keydown', this, this.onInputChange_)
+  );
 
   this.inputElement_ = inputElement;
 };
@@ -53,13 +56,13 @@ Blockly.DomainNameInput.prototype.render = function (parent) {
  * @param {Event} DOM event from <input> tag 'input' or 'keydown' changes
  * @private
  */
-Blockly.DomainNameInput.prototype.onInputChange_ = function (event) {
+Blockly.DomainNameInput.prototype.onInputChange_ = function(event) {
   if (this.onNameChanged) {
     this.onNameChanged(event.target.value);
   }
 };
 
-Blockly.DomainNameInput.prototype.dispose = function () {
+Blockly.DomainNameInput.prototype.dispose = function() {
   this.eventsToUnbind_.forEach(function(eventHandle) {
     Blockly.unbindEvent_(eventHandle);
   });

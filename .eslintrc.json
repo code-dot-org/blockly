@@ -2,17 +2,16 @@
   "parserOptions": {
     "ecmaVersion": 5
   },
-  "plugins": [
-    "es5"
-  ],
+  "plugins": ["es5"],
   "extends": [
+    "eslint:recommended",
+    "plugin:prettier/recommended",
     "plugin:es5/no-es2015"
   ],
   "env": {
     "browser": true
   },
-  "rules": {
-  },
+  "rules": {},
   "globals": {
     "Blockly": true,
     "goog": true

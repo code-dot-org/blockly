@@ -27,7 +27,6 @@ goog.provide('Blockly.JavaScript.variables');
 
 goog.require('Blockly.JavaScript');
 
-
 Blockly.JavaScript.variables_get = function() {
   // Variable getter.
   var code = Blockly.JavaScript.translateVarName(this.getTitleValue('VAR'));
@@ -36,8 +35,12 @@ Blockly.JavaScript.variables_get = function() {
 
 Blockly.JavaScript.variables_set = function() {
   // Variable setter.
-  var argument0 = Blockly.JavaScript.valueToCode(this, 'VALUE',
-      Blockly.JavaScript.ORDER_ASSIGNMENT) || '0';
+  var argument0 =
+    Blockly.JavaScript.valueToCode(
+      this,
+      'VALUE',
+      Blockly.JavaScript.ORDER_ASSIGNMENT
+    ) || '0';
   var varName = Blockly.JavaScript.translateVarName(this.getTitleValue('VAR'));
   return varName + ' = ' + argument0 + ';\n';
 };

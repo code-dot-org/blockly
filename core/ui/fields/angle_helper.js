@@ -11,10 +11,10 @@ goog.require('goog.math.Vec2');
  * @param {string} direction - 'turnRight' or 'turnLeft' as set by
  * direction dropdown.
  * @param {object} options
- * @param {String} options.arcColour 
- * @param {number} options.angle 
- * @param {number} options.height 
- * @param {number} options.width 
+ * @param {String} options.arcColour
+ * @param {number} options.angle
+ * @param {number} options.height
+ * @param {number} options.width
  * @param {number[]} options.snapPoints
  * @param {function} options.onUpdate
  * @param {bool} option.enableBackgroundRotation
@@ -26,14 +26,16 @@ Blockly.AngleHelper = function(direction, options) {
   this.arcColour_ = options.arcColour || this.lineColour_;
   this.height_ = options.height || 150;
   this.width_ = options.width || 150;
-  this.snapPoints_ = options.snapPoints && options.snapPoints.map(function (point) {
-    return Math.round(parseInt(point));
-  });
+  this.snapPoints_ =
+    options.snapPoints &&
+    options.snapPoints.map(function(point) {
+      return Math.round(parseInt(point));
+    });
   this.onUpdate_ = options.onUpdate;
   this.enableBackgroundRotation_ = options.enableBackgroundRotation || false;
 
   this.turnRight_ = direction === 'turnRight';
-  
+
   this.picker_ = {
     handleRadius: 10,
     isDragging: false,
@@ -41,7 +43,7 @@ Blockly.AngleHelper = function(direction, options) {
     line: null,
     handle: null
   };
-  
+
   this.background_ = {
     handleRadius: 5,
     tickSpacing: 15,
@@ -51,24 +53,33 @@ Blockly.AngleHelper = function(direction, options) {
     line: null,
     ticks: []
   };
-  
-  this.radius_ = new goog.math.Vec2(Math.min(this.height_, this.width_) / 2 - this.picker_.handleRadius - this.strokeWidth_, 0);
+
+  this.radius_ = new goog.math.Vec2(
+    Math.min(this.height_, this.width_) / 2 -
+      this.picker_.handleRadius -
+      this.strokeWidth_,
+    0
+  );
   this.center_ = new goog.math.Vec2(this.width_ / 2, this.height_ / 2);
 
   if (this.enableBackgroundRotation_) {
-    this.picker_.handleCenter = this.center_.clone().add(
-    new goog.math.Vec2(this.radius_.x - this.picker_.handleRadius, 0));
+    this.picker_.handleCenter = this.center_
+      .clone()
+      .add(new goog.math.Vec2(this.radius_.x - this.picker_.handleRadius, 0));
   } else {
     this.picker_.handleCenter = this.center_.clone().add(this.radius_);
   }
   this.picker_.handleCenter = goog.math.Vec2.rotateAroundPoint(
     this.picker_.handleCenter,
     this.center_,
-    goog.math.toRadians(this.turnRight_ ? this.picker_.angle : -this.picker_.angle)
+    goog.math.toRadians(
+      this.turnRight_ ? this.picker_.angle : -this.picker_.angle
+    )
   );
 
-  this.background_.handleCenter = this.center_.clone().add(
-    new goog.math.Vec2(this.radius_.x + this.background_.handleRadius, 0));
+  this.background_.handleCenter = this.center_
+    .clone()
+    .add(new goog.math.Vec2(this.radius_.x + this.background_.handleRadius, 0));
 
   this.arc_ = null;
   this.svg_ = null;
@@ -83,7 +94,10 @@ Blockly.AngleHelper = function(direction, options) {
  * @param {number} targetAngle
  * @param {number=200} animationDuration
  */
-Blockly.AngleHelper.prototype.animateAngleChange = function(targetAngle, animationDuration) {
+Blockly.AngleHelper.prototype.animateAngleChange = function(
+  targetAngle,
+  animationDuration
+) {
   animationDuration = animationDuration || 200;
   var minSteps = animationDuration / 10;
 
@@ -93,15 +107,18 @@ Blockly.AngleHelper.prototype.animateAngleChange = function(targetAngle, animati
   var diffPerStep = totalDiff / steps;
 
   clearInterval(this.animationInterval_);
-  this.animationInterval_ = setInterval(function () {
-    if (Math.abs(this.getAngle() - targetAngle) < 1) {
-      this.setAngle(targetAngle);
-      clearInterval(this.animationInterval_);
-    } else {
-      var newAngle = this.getAngle() + diffPerStep;
-      this.setAngle(newAngle, true);
-    }
-  }.bind(this), timePerStep);
+  this.animationInterval_ = setInterval(
+    function() {
+      if (Math.abs(this.getAngle() - targetAngle) < 1) {
+        this.setAngle(targetAngle);
+        clearInterval(this.animationInterval_);
+      } else {
+        var newAngle = this.getAngle() + diffPerStep;
+        this.setAngle(newAngle, true);
+      }
+    }.bind(this),
+    timePerStep
+  );
 };
 
 /**
@@ -123,50 +140,81 @@ Blockly.AngleHelper.prototype.getAngle = function() {
 };
 
 Blockly.AngleHelper.prototype.init = function(svgContainer) {
-  this.svg_ = Blockly.createSvgElement('svg', {
-    'xmlns': 'http://www.w3.org/2000/svg',
-    'xmlns:html': 'http://www.w3.org/1999/xhtml',
-    'xmlns:xlink': 'http://www.w3.org/1999/xlink',
-    'version': '1.1',
-    'height': this.height_ + 'px',
-    'width': this.width_ + 'px',
-    'style': 'background: rgb(255, 255, 255);',
-  }, svgContainer);
+  this.svg_ = Blockly.createSvgElement(
+    'svg',
+    {
+      xmlns: 'http://www.w3.org/2000/svg',
+      'xmlns:html': 'http://www.w3.org/1999/xhtml',
+      'xmlns:xlink': 'http://www.w3.org/1999/xlink',
+      version: '1.1',
+      height: this.height_ + 'px',
+      width: this.width_ + 'px',
+      style: 'background: rgb(255, 255, 255);'
+    },
+    svgContainer
+  );
   this.rect_ = this.svg_.getBoundingClientRect();
-  this.mouseMoveWrapper_ = Blockly.bindEvent_(this.svg_, 'mousemove', this, this.updateDrag_);
-  this.mouseUpWrapper_ = Blockly.bindEvent_(this.svg_, 'mouseup', this, this.stopDrag_);
-  this.mouseDownWrapper_ = Blockly.bindEvent_(this.svg_, 'mousedown', this, this.startDrag_);
+  this.mouseMoveWrapper_ = Blockly.bindEvent_(
+    this.svg_,
+    'mousemove',
+    this,
+    this.updateDrag_
+  );
+  this.mouseUpWrapper_ = Blockly.bindEvent_(
+    this.svg_,
+    'mouseup',
+    this,
+    this.stopDrag_
+  );
+  this.mouseDownWrapper_ = Blockly.bindEvent_(
+    this.svg_,
+    'mousedown',
+    this,
+    this.startDrag_
+  );
 
-  this.background_.line = Blockly.createSvgElement('line', {
-    'stroke': this.lineColour_,
-    'stroke-width': this.strokeWidth_,
-    'stroke-linecap': 'round',
-    'stroke-dasharray': '6 6',
-    'stroke-opacity': '0.5',
-    'x1': this.center_.x - this.radius_.x,
-    'x2': this.center_.x + this.radius_.x,
-    'y1': this.center_.y,
-    'y2': this.center_.y,
-  }, this.svg_);
-  
+  this.background_.line = Blockly.createSvgElement(
+    'line',
+    {
+      stroke: this.lineColour_,
+      'stroke-width': this.strokeWidth_,
+      'stroke-linecap': 'round',
+      'stroke-dasharray': '6 6',
+      'stroke-opacity': '0.5',
+      x1: this.center_.x - this.radius_.x,
+      x2: this.center_.x + this.radius_.x,
+      y1: this.center_.y,
+      y2: this.center_.y
+    },
+    this.svg_
+  );
+
   if (this.enableBackgroundRotation_) {
-    this.background_.handle = Blockly.createSvgElement('circle', {
-      'cx': this.background_.handleCenter.x,
-      'cy': this.background_.handleCenter.y,
-      'fill': this.lineColour_,
-      'stroke': this.lineColour_,
-      'stroke-width': 1,
-      'r': this.background_.handleRadius,
-      'style': 'cursor: pointer;'
-    }, this.svg_);
+    this.background_.handle = Blockly.createSvgElement(
+      'circle',
+      {
+        cx: this.background_.handleCenter.x,
+        cy: this.background_.handleCenter.y,
+        fill: this.lineColour_,
+        stroke: this.lineColour_,
+        'stroke-width': 1,
+        r: this.background_.handleRadius,
+        style: 'cursor: pointer;'
+      },
+      this.svg_
+    );
   }
 
-  this.arc_ = Blockly.createSvgElement('path', {
-    'stroke': this.arcColour_,
-    'fill': this.arcColour_,
-    'fill-opacity': '0.3',
-    'stroke-width': this.strokeWidth_,
-  }, this.svg_);
+  this.arc_ = Blockly.createSvgElement(
+    'path',
+    {
+      stroke: this.arcColour_,
+      fill: this.arcColour_,
+      'fill-opacity': '0.3',
+      'stroke-width': this.strokeWidth_
+    },
+    this.svg_
+  );
 
   // Draw markers every this.background_.tickSpacing degrees around the edge.
   for (var angle = 0; angle < 360; angle += this.background_.tickSpacing) {
@@ -180,38 +228,59 @@ Blockly.AngleHelper.prototype.init = function(svgContainer) {
     } else {
       markerSize = 5;
     }
-    this.background_.ticks.push(Blockly.createSvgElement('line', {
-      'stroke-linecap': 'round',
-      'stroke-opacity': 0.3,
-      'stroke': this.lineColour_,
-      'x1': this.center_.x + this.radius_.x,
-      'y1': this.center_.y,
-      'x2': this.center_.x + this.radius_.x - markerSize,
-      'y2': this.center_.y,
-      'class': 'blocklyAngleMarks',
-      'transform': 'rotate(' + angle + ', ' + this.center_.x + ', ' + this.center_.y + ')'
-    }, this.svg_));
+    this.background_.ticks.push(
+      Blockly.createSvgElement(
+        'line',
+        {
+          'stroke-linecap': 'round',
+          'stroke-opacity': 0.3,
+          stroke: this.lineColour_,
+          x1: this.center_.x + this.radius_.x,
+          y1: this.center_.y,
+          x2: this.center_.x + this.radius_.x - markerSize,
+          y2: this.center_.y,
+          class: 'blocklyAngleMarks',
+          transform:
+            'rotate(' +
+            angle +
+            ', ' +
+            this.center_.x +
+            ', ' +
+            this.center_.y +
+            ')'
+        },
+        this.svg_
+      )
+    );
   }
 
-  this.picker_.line = Blockly.createSvgElement('line', {
-    'stroke': this.lineColour_,
-    'stroke-width': this.strokeWidth_,
-    'stroke-linecap': 'round',
-    'x1': this.center_.x,
-    'x2': this.picker_.handleCenter.x,
-    'y1': this.center_.y,
-    'y2': this.picker_.handleCenter.y
-  }, this.svg_);
+  this.picker_.line = Blockly.createSvgElement(
+    'line',
+    {
+      stroke: this.lineColour_,
+      'stroke-width': this.strokeWidth_,
+      'stroke-linecap': 'round',
+      x1: this.center_.x,
+      x2: this.picker_.handleCenter.x,
+      y1: this.center_.y,
+      y2: this.picker_.handleCenter.y
+    },
+    this.svg_
+  );
 
-  this.picker_.handle = Blockly.createSvgElement('circle', {
-    'cx': this.picker_.handleCenter.x,
-    'cy': this.picker_.handleCenter.y,
-    'fill': '#a69bc1',
-    'r': this.picker_.handleRadius,
-    'stroke': this.lineColour_,
-    'stroke-width': this.strokeWidth_,
-    'style': 'cursor: pointer;',
-  }, this.svg_);
+  this.picker_.handle = Blockly.createSvgElement(
+    'circle',
+    {
+      cx: this.picker_.handleCenter.x,
+      cy: this.picker_.handleCenter.y,
+      fill: '#a69bc1',
+      r: this.picker_.handleRadius,
+      stroke: this.lineColour_,
+      'stroke-width': this.strokeWidth_,
+      style: 'cursor: pointer;'
+    },
+    this.svg_
+  );
 
   this.update_();
 };
@@ -223,22 +292,37 @@ Blockly.AngleHelper.prototype.init = function(svgContainer) {
  */
 Blockly.AngleHelper.prototype.update_ = function() {
   if (this.enableBackgroundRotation_) {
-    this.background_.line.setAttribute('transform',
-    'rotate(' + this.background_.angle + ', ' + this.center_.x + ', ' + this.center_.y + ')');
+    this.background_.line.setAttribute(
+      'transform',
+      'rotate(' +
+        this.background_.angle +
+        ', ' +
+        this.center_.x +
+        ', ' +
+        this.center_.y +
+        ')'
+    );
     for (var i = 0; i < this.background_.ticks.length; i++) {
-      var angle = (this.background_.tickSpacing * i + this.background_.angle) % 360;
-      this.background_.ticks[i].setAttribute('transform',
-      'rotate(' + angle + ', ' + this.center_.x + ', ' + this.center_.y + ')');
+      var angle =
+        (this.background_.tickSpacing * i + this.background_.angle) % 360;
+      this.background_.ticks[i].setAttribute(
+        'transform',
+        'rotate(' + angle + ', ' + this.center_.x + ', ' + this.center_.y + ')'
+      );
     }
-    this.picker_.handleCenter = this.center_.clone().add(
-      new goog.math.Vec2(this.radius_.x - this.picker_.handleRadius, 0));
+    this.picker_.handleCenter = this.center_
+      .clone()
+      .add(new goog.math.Vec2(this.radius_.x - this.picker_.handleRadius, 0));
   } else {
     this.picker_.handleCenter = this.center_.clone().add(this.radius_);
   }
   this.picker_.handleCenter = goog.math.Vec2.rotateAroundPoint(
     this.picker_.handleCenter,
     this.center_,
-    goog.math.toRadians(this.background_.angle + (this.turnRight_ ? this.picker_.angle : -this.picker_.angle))
+    goog.math.toRadians(
+      this.background_.angle +
+        (this.turnRight_ ? this.picker_.angle : -this.picker_.angle)
+    )
   );
 
   this.picker_.line.setAttribute('x2', this.picker_.handleCenter.x);
@@ -249,7 +333,11 @@ Blockly.AngleHelper.prototype.update_ = function() {
 
   if (this.enableBackgroundRotation_) {
     this.background_.handleCenter = goog.math.Vec2.rotateAroundPoint(
-      this.center_.clone().add(new goog.math.Vec2(this.radius_.x + this.background_.handleRadius, 0)),
+      this.center_
+        .clone()
+        .add(
+          new goog.math.Vec2(this.radius_.x + this.background_.handleRadius, 0)
+        ),
       this.center_,
       goog.math.toRadians(this.background_.angle)
     );
@@ -258,16 +346,24 @@ Blockly.AngleHelper.prototype.update_ = function() {
   }
 
   var arcStart = this.background_.angle;
-  var arcEnd = this.background_.angle + (this.turnRight_ ? this.picker_.angle : -this.picker_.angle);
-  this.arc_.setAttribute('d', Blockly.AngleHelper.describeArc(this.center_, 20, arcStart, arcEnd));
+  var arcEnd =
+    this.background_.angle +
+    (this.turnRight_ ? this.picker_.angle : -this.picker_.angle);
+  this.arc_.setAttribute(
+    'd',
+    Blockly.AngleHelper.describeArc(this.center_, 20, arcStart, arcEnd)
+  );
 };
 
 Blockly.AngleHelper.prototype.startDrag_ = function(e) {
   var x = e.clientX - this.rect_.left;
   var y = e.clientY - this.rect_.top;
   var mouseLocation = new goog.math.Vec2(x, y);
-  if (this.enableBackgroundRotation_ &&
-    goog.math.Vec2.distance(this.background_.handleCenter, mouseLocation) < this.background_.handleRadius) {
+  if (
+    this.enableBackgroundRotation_ &&
+    goog.math.Vec2.distance(this.background_.handleCenter, mouseLocation) <
+      this.background_.handleRadius
+  ) {
     this.background_.isDragging = true;
   } else {
     this.picker_.isDragging = true;
@@ -348,10 +444,23 @@ Blockly.AngleHelper.prototype.dispose = function() {
  * @param {number} endAngle
  * @return {String} path
  */
-Blockly.AngleHelper.describeArc = function(center, radius, startAngle, endAngle) {
+Blockly.AngleHelper.describeArc = function(
+  center,
+  radius,
+  startAngle,
+  endAngle
+) {
   var vector = center.clone().add(new goog.math.Vec2(radius, 0));
-  var start = goog.math.Vec2.rotateAroundPoint(vector, center, goog.math.toRadians(startAngle));
-  var end = goog.math.Vec2.rotateAroundPoint(vector, center, goog.math.toRadians(endAngle));
+  var start = goog.math.Vec2.rotateAroundPoint(
+    vector,
+    center,
+    goog.math.toRadians(startAngle)
+  );
+  var end = goog.math.Vec2.rotateAroundPoint(
+    vector,
+    center,
+    goog.math.toRadians(endAngle)
+  );
 
   // largeArcFlag should be set if the angle to be drawn is greater than
   // 180 degrees; it determines which "direction" the arc travels around
@@ -363,10 +472,21 @@ Blockly.AngleHelper.describeArc = function(center, radius, startAngle, endAngle)
   var sweepFlag = endAngle - startAngle < 0 ? '0' : '1';
 
   var d = [
-    'M', start.x.toFixed(2), start.y.toFixed(2),
-    'A', radius, radius, 0, largeArcFlag, sweepFlag, end.x.toFixed(2), end.y.toFixed(2),
-    'L', center.x, center.y
+    'M',
+    start.x.toFixed(2),
+    start.y.toFixed(2),
+    'A',
+    radius,
+    radius,
+    0,
+    largeArcFlag,
+    sweepFlag,
+    end.x.toFixed(2),
+    end.y.toFixed(2),
+    'L',
+    center.x,
+    center.y
   ].join(' ');
 
   return d;
-}
+};

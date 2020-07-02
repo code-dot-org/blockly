@@ -21,11 +21,12 @@
 
 'use strict';
 
-var SMALL_NUMBER_BLOCK  = '<xml>' +
-    '<block type="math_number">' +
-    '<title name="NUM">0</title>' +
-    '</block>' +
-    '</xml>';
+var SMALL_NUMBER_BLOCK =
+  '<xml>' +
+  '<block type="math_number">' +
+  '<title name="NUM">0</title>' +
+  '</block>' +
+  '</xml>';
 
 function test_initializeBlockSpace() {
   var container = Blockly.Test.initializeBlockSpaceEditor();
@@ -35,8 +36,12 @@ function test_initializeBlockSpace() {
 function test_blockSpaceBumpsBlocks() {
   var container = Blockly.Test.initializeBlockSpaceEditor();
 
-  var blockXML = '<xml><block type="text_print" x="100" y="100"></block><block type="text" x="150" y="100"><title name="TEXT"></title></block></xml>';
-  Blockly.Xml.domToBlockSpace(Blockly.mainBlockSpace, Blockly.Xml.textToDom(blockXML));
+  var blockXML =
+    '<xml><block type="text_print" x="100" y="100"></block><block type="text" x="150" y="100"><title name="TEXT"></title></block></xml>';
+  Blockly.Xml.domToBlockSpace(
+    Blockly.mainBlockSpace,
+    Blockly.Xml.textToDom(blockXML)
+  );
   var parent = Blockly.mainBlockSpace.getTopBlocks()[0];
   var child = Blockly.mainBlockSpace.getTopBlocks()[1];
   assertEquals('text_print', parent.type);
@@ -46,8 +51,14 @@ function test_blockSpaceBumpsBlocks() {
   var connection = parent.getConnections_()[2];
 
   parent.bumpNeighbours();
-  assertEquals(connection.x_ + Blockly.SNAP_RADIUS, child.getRelativeToSurfaceXY().x);
-  assertEquals(connection.y_ + Blockly.SNAP_RADIUS * 2, child.getRelativeToSurfaceXY().y);
+  assertEquals(
+    connection.x_ + Blockly.SNAP_RADIUS,
+    child.getRelativeToSurfaceXY().x
+  );
+  assertEquals(
+    connection.y_ + Blockly.SNAP_RADIUS * 2,
+    child.getRelativeToSurfaceXY().y
+  );
 
   goog.dom.removeNode(container);
 }
@@ -55,8 +66,12 @@ function test_blockSpaceBumpsBlocks() {
 function test_bumpNeighbours() {
   var container = Blockly.Test.initializeBlockSpaceEditor();
 
-  var blockXML = '<xml><block type="math_number"><title name="NUM">0</title></block></xml>';
-  Blockly.Xml.domToBlockSpace(Blockly.mainBlockSpace, Blockly.Xml.textToDom(blockXML));
+  var blockXML =
+    '<xml><block type="math_number"><title name="NUM">0</title></block></xml>';
+  Blockly.Xml.domToBlockSpace(
+    Blockly.mainBlockSpace,
+    Blockly.Xml.textToDom(blockXML)
+  );
   var numberBlock = Blockly.mainBlockSpace.getTopBlocks()[0];
   assertEquals('math_number', numberBlock.type);
   numberBlock.moveTo(10, 10);
@@ -66,8 +81,14 @@ function test_bumpNeighbours() {
   numberBlock.moveTo(-10, -10);
   assertEquals(-10, numberBlock.getRelativeToSurfaceXY().x);
   Blockly.mainBlockSpaceEditor.bumpBlocksIntoBlockSpace();
-  assertEquals(Blockly.BlockSpaceEditor.BUMP_PADDING_LEFT, numberBlock.getRelativeToSurfaceXY().x);
-  assertEquals(Blockly.BlockSpaceEditor.BUMP_PADDING_TOP, numberBlock.getRelativeToSurfaceXY().y);
+  assertEquals(
+    Blockly.BlockSpaceEditor.BUMP_PADDING_LEFT,
+    numberBlock.getRelativeToSurfaceXY().x
+  );
+  assertEquals(
+    Blockly.BlockSpaceEditor.BUMP_PADDING_TOP,
+    numberBlock.getRelativeToSurfaceXY().y
+  );
 
   goog.dom.removeNode(container);
 }
@@ -79,23 +100,27 @@ function test_noInfiniteBumpOnPaste() {
   // after the changes in https://github.com/code-dot-org/blockly/pull/128
   // See https://github.com/code-dot-org/dance-party/issues/62 as an example of this in
   // the wild.
-  var blockXML = '<xml>' +
+  var blockXML =
+    '<xml>' +
     '<block type="controls_repeat">' +
-      '<statement name="DO">' +
-        '<block type="controls_if">' +
-          '<statement name="DO0">' +
-            '<block type="controls_whileUntil">' +
-              '<next>' +
-                '<block type="variables_set">' +
-                '</block>' +
-              '</next>' +
-            '</block>' +
-          '</statement>' +
-        '</block>' +
-      '</statement>' +
+    '<statement name="DO">' +
+    '<block type="controls_if">' +
+    '<statement name="DO0">' +
+    '<block type="controls_whileUntil">' +
+    '<next>' +
+    '<block type="variables_set">' +
     '</block>' +
-  '</xml>';
-  Blockly.Xml.domToBlockSpace(Blockly.mainBlockSpace, Blockly.Xml.textToDom(blockXML));
+    '</next>' +
+    '</block>' +
+    '</statement>' +
+    '</block>' +
+    '</statement>' +
+    '</block>' +
+    '</xml>';
+  Blockly.Xml.domToBlockSpace(
+    Blockly.mainBlockSpace,
+    Blockly.Xml.textToDom(blockXML)
+  );
 
   // Locate the while-block
   var repeatBlock = Blockly.mainBlockSpace.getTopBlocks()[0];
@@ -114,7 +139,10 @@ function test_noInfiniteBumpOnPaste() {
   assertEquals('controls_whileUntil', newWhileBlock.type);
 
   // The copied block should not have moved
-  assertObjectEquals(originalLocation, originalWhileBlock.getRelativeToSurfaceXY());
+  assertObjectEquals(
+    originalLocation,
+    originalWhileBlock.getRelativeToSurfaceXY()
+  );
 
   // The newly-pasted block should have moved down
   assertTrue(newWhileBlock.getRelativeToSurfaceXY().x > originalLocation.x);
@@ -124,19 +152,19 @@ function test_noInfiniteBumpOnPaste() {
 }
 
 function test_scrollingCapturesMouseWheelEvents() {
-  [true, false].forEach(function (scrollingEnabled) {
+  [true, false].forEach(function(scrollingEnabled) {
     var container = Blockly.Test.initializeBlockSpaceEditor({
       noScrolling: !scrollingEnabled
     });
 
     var eventCaptured = true;
-    container.addEventListener('wheel', function () {
+    container.addEventListener('wheel', function() {
       eventCaptured = false;
     });
 
     Blockly.fireUiEvent(Blockly.mainBlockSpace.blockSpaceEditor.svg_, 'wheel', {
       deltaY: 10
-    })
+    });
 
     // When scrolling is enabled, the event should be captured by the
     // ScrollBarPair and not make it up to the container.
@@ -151,11 +179,18 @@ function test_scrollingCapturesMouseWheelEvents() {
 function test_scrollBarsActivateOnDropOutsideViewport() {
   var container = Blockly.Test.initializeBlockSpaceEditor();
 
-  var blockXML = '<xml><block type="math_number"><title name="NUM">0</title></block></xml>';
-  Blockly.Xml.domToBlockSpace(Blockly.mainBlockSpace, Blockly.Xml.textToDom(blockXML));
+  var blockXML =
+    '<xml><block type="math_number"><title name="NUM">0</title></block></xml>';
+  Blockly.Xml.domToBlockSpace(
+    Blockly.mainBlockSpace,
+    Blockly.Xml.textToDom(blockXML)
+  );
   var numberBlock = Blockly.mainBlockSpace.getTopBlocks()[0];
 
-  assert('Scrollbars not visible to start', !Blockly.mainBlockSpace.scrollbarPair.vScroll.isVisible());
+  assert(
+    'Scrollbars not visible to start',
+    !Blockly.mainBlockSpace.scrollbarPair.vScroll.isVisible()
+  );
 
   var viewportHeight = Blockly.mainBlockSpace.getMetrics().viewHeight;
   numberBlock.moveTo(0, viewportHeight); // hanging off bottom
@@ -163,8 +198,10 @@ function test_scrollBarsActivateOnDropOutsideViewport() {
 
   Blockly.mainBlockSpace.scrollbarPair.resize();
 
-  assert('Scrollbars visible after block dragged below bottom',
-    Blockly.mainBlockSpace.scrollbarPair.vScroll.isVisible());
+  assert(
+    'Scrollbars visible after block dragged below bottom',
+    Blockly.mainBlockSpace.scrollbarPair.vScroll.isVisible()
+  );
 
   goog.dom.removeNode(container);
 }
@@ -173,30 +210,39 @@ function test_blockSpaceExpandsWithMarginAfterBlockDrop() {
   var container = Blockly.Test.initializeBlockSpaceEditor();
 
   var blockSpace = Blockly.mainBlockSpace;
-  Blockly.Xml.domToBlockSpace(blockSpace, Blockly.Xml.textToDom(SMALL_NUMBER_BLOCK));
+  Blockly.Xml.domToBlockSpace(
+    blockSpace,
+    Blockly.Xml.textToDom(SMALL_NUMBER_BLOCK)
+  );
   var numberBlock = blockSpace.getTopBlocks()[0];
   var viewportHeight = blockSpace.getMetrics().viewHeight;
   var originalScrollableHeight = blockSpace.getScrollableSize(
-      blockSpace.getMetrics()).height;
+    blockSpace.getMetrics()
+  ).height;
 
   assertEquals(viewportHeight, originalScrollableHeight);
 
   // drop block just at bottom
   var distanceFromBottom = 10;
-  numberBlock.moveTo(0, viewportHeight -
-      numberBlock.getHeightWidth().height -
-      distanceFromBottom);
+  numberBlock.moveTo(
+    0,
+    viewportHeight - numberBlock.getHeightWidth().height - distanceFromBottom
+  );
 
   Blockly.mainBlockSpace.scrollbarPair.resize();
 
-  var originalPlusMargin = originalScrollableHeight +
-      Blockly.BlockSpace.SCROLLABLE_MARGIN_BELOW_BOTTOM -
-      distanceFromBottom;
-  var newScrollableHeight =
-      blockSpace.getScrollableSize(blockSpace.getMetrics()).height;
+  var originalPlusMargin =
+    originalScrollableHeight +
+    Blockly.BlockSpace.SCROLLABLE_MARGIN_BELOW_BOTTOM -
+    distanceFromBottom;
+  var newScrollableHeight = blockSpace.getScrollableSize(
+    blockSpace.getMetrics()
+  ).height;
 
-  assert("Scrollable area has increased",
-      newScrollableHeight > originalPlusMargin);
+  assert(
+    'Scrollable area has increased',
+    newScrollableHeight > originalPlusMargin
+  );
 
   goog.dom.removeNode(container);
 }
@@ -213,7 +259,7 @@ function test_blockSpaceAutoPositioning() {
     '<block type="math_number" x="119" y="129"><title name="NUM">0</title></block>',
     '<block type="math_number" uservisible="false" x="139"><title name="NUM">0</title></block>',
     '<block type="math_number" uservisible="false" y="149"><title name="NUM">0</title></block>',
-    '<block type="math_number" uservisible="false" x="159" y="169"><title name="NUM">0</title></block>',
+    '<block type="math_number" uservisible="false" x="159" y="169"><title name="NUM">0</title></block>'
   ];
 
   var expected_positions = [
@@ -229,7 +275,10 @@ function test_blockSpaceAutoPositioning() {
   ];
 
   var blockXML = '<xml>' + blocks.join('') + '</xml>';
-  Blockly.Xml.domToBlockSpace(Blockly.mainBlockSpace, Blockly.Xml.textToDom(blockXML));
+  Blockly.Xml.domToBlockSpace(
+    Blockly.mainBlockSpace,
+    Blockly.Xml.textToDom(blockXML)
+  );
   var topBlocks = Blockly.mainBlockSpace.getTopBlocks();
 
   for (var i = 0; i < topBlocks.length; i++) {
@@ -276,7 +325,8 @@ function test_blockSpace_isReadOnly() {
 function test_readOnlyBlockSpaceCanRender() {
   Blockly.Test.testWithReadOnlyBlockSpaceEditor(function(blockSpaceEditor) {
     var blockSpace = blockSpaceEditor.blockSpace;
-    var blockXML = '<xml><block type="math_number"><title name="NUM">0</title></block></xml>';
+    var blockXML =
+      '<xml><block type="math_number"><title name="NUM">0</title></block></xml>';
     Blockly.Xml.domToBlockSpace(blockSpace, Blockly.Xml.textToDom(blockXML));
     var numberBlock = blockSpace.getTopBlocks()[0];
     assertEquals(numberBlock.isEditable(), false);
@@ -305,9 +355,9 @@ function test_blockSpaceWithLimitedQuantitiesOfBlocks() {
   var toolboxXML = Blockly.Xml.textToDom(
     '<xml>' +
       '<block type="math_number" limit="1">' +
-        '<title name="NUM">0</title>' +
+      '<title name="NUM">0</title>' +
       '</block>' +
-    '</xml>'
+      '</xml>'
   );
   flyout.show(toolboxXML.childNodes);
 
@@ -321,13 +371,16 @@ function test_blockSpaceWithLimitedQuantitiesOfBlocks() {
   assertEquals(true, blockLimits.blockTypeWithinLimits('math_number', 1));
   assertEquals(false, blockLimits.blockTypeWithinLimits('math_number', 2));
 
-  Blockly.Xml.domToBlockSpace(Blockly.mainBlockSpace, Blockly.Xml.textToDom(
-    '<xml>' +
-      '<block type="math_number">' +
+  Blockly.Xml.domToBlockSpace(
+    Blockly.mainBlockSpace,
+    Blockly.Xml.textToDom(
+      '<xml>' +
+        '<block type="math_number">' +
         '<title name="NUM">0</title>' +
-      '</block>' +
-    '</xml>'
-  ));
+        '</block>' +
+        '</xml>'
+    )
+  );
   flyout.onBlockSpaceChange_();
 
   // can no longer even accomodate one
@@ -344,7 +397,7 @@ function test_paste() {
     return {
       type: type,
       clipboardData: {
-        getData: function () {
+        getData: function() {
           return data;
         }
       }
@@ -352,32 +405,41 @@ function test_paste() {
   }
 
   // Ignores malformed XML on the clipboard.
-  Blockly.mainBlockSpaceEditor.onPaste_(createMockClipboardEvent('paste', 'not real XML'));
-  assertEquals('Ignores malformed XML on the clipboard', 0, Blockly.mainBlockSpace.getTopBlocks().length);
+  Blockly.mainBlockSpaceEditor.onPaste_(
+    createMockClipboardEvent('paste', 'not real XML')
+  );
+  assertEquals(
+    'Ignores malformed XML on the clipboard',
+    0,
+    Blockly.mainBlockSpace.getTopBlocks().length
+  );
 
   // Can paste a block.
-  Blockly.mainBlockSpaceEditor.onPaste_(createMockClipboardEvent('paste', '<xml><block type="math_number"/></xml>'));
+  Blockly.mainBlockSpaceEditor.onPaste_(
+    createMockClipboardEvent('paste', '<xml><block type="math_number"/></xml>')
+  );
   var topBlocks = Blockly.mainBlockSpace.getTopBlocks();
   assertEquals('Can paste a block', 1, topBlocks.length);
   assertEquals('math_number', topBlocks[0].type);
 
   // Doesn't swallow errors not related to XML formatting.
-  var xml = '<xml>' +
+  var xml =
+    '<xml>' +
     '<block type="controls_repeat_ext">' +
-      '<value name="TIMES">' +
-        '<block type="math_number">' +
-          '<title name="NUM">10</title>' +
-        '</block>' +
-      '</value>' +
-      '<value name="TIMES">' +
-        '<block type="math_number">' +
-          '<title name="NUM">20</title>' +
-        '</block>' +
-      '</value>' +
+    '<value name="TIMES">' +
+    '<block type="math_number">' +
+    '<title name="NUM">10</title>' +
     '</block>' +
-  '</xml>';
+    '</value>' +
+    '<value name="TIMES">' +
+    '<block type="math_number">' +
+    '<title name="NUM">20</title>' +
+    '</block>' +
+    '</value>' +
+    '</block>' +
+    '</xml>';
   var mockEvent = createMockClipboardEvent('paste', xml);
-  assertThrows(function () {
+  assertThrows(function() {
     Blockly.mainBlockSpaceEditor.onPaste_(mockEvent);
   });
 
@@ -386,19 +448,26 @@ function test_paste() {
 
 function test_locked_serialization() {
   var container = Blockly.Test.initializeBlockSpaceEditor();
-  var blockXML = '<xml>' +
+  var blockXML =
+    '<xml>' +
     '<block type="text_print"></block>' +
     '<block type="text">' +
-      '<title name="TEXT"></title>' +
+    '<title name="TEXT"></title>' +
     '</block>' +
-  '</xml>';
+    '</xml>';
   Blockly.Xml.domToBlockSpace(
-    Blockly.mainBlockSpace, Blockly.Xml.textToDom(blockXML));
+    Blockly.mainBlockSpace,
+    Blockly.Xml.textToDom(blockXML)
+  );
 
   Blockly.mainBlockSpace.blockSpaceEditor.lockMovement();
   var newBlockXml = Blockly.Xml.domToText(
-    Blockly.Xml.blockSpaceToDom(Blockly.mainBlockSpace));
+    Blockly.Xml.blockSpaceToDom(Blockly.mainBlockSpace)
+  );
 
-  assertEquals('Block Xml is not changed by locking movement',
-    blockXML, newBlockXml);
+  assertEquals(
+    'Block Xml is not changed by locking movement',
+    blockXML,
+    newBlockXml
+  );
 }

@@ -22,8 +22,11 @@ function test_safeName() {
   var varDB = new Blockly.Names('window,door');
   assertEquals('SafeName empty.', 'unnamed', varDB.safeName_(''));
   assertEquals('SafeName ok.', 'foobar', varDB.safeName_('foobar'));
-  assertEquals('SafeName number start.', 'my_9lives',
-               varDB.safeName_('9lives'));
+  assertEquals(
+    'SafeName number start.',
+    'my_9lives',
+    varDB.safeName_('9lives')
+  );
   assertEquals('SafeName number end.', 'lives9', varDB.safeName_('lives9'));
   assertEquals('SafeName special chars.', '____', varDB.safeName_('!@#$'));
   assertEquals('SafeName reserved.', 'door', varDB.safeName_('door'));
@@ -43,15 +46,27 @@ function test_getName() {
 
 function test_getDistinctName() {
   var varDB = new Blockly.Names('window,door');
-  assertEquals('Name distinct #1.', 'Foo_bar',
-               varDB.getDistinctName('Foo.bar', 'var'));
-  assertEquals('Name distinct #2.', 'Foo_bar2',
-               varDB.getDistinctName('Foo.bar', 'var'));
-  assertEquals('Name distinct #3.', 'Foo_bar3',
-               varDB.getDistinctName('Foo.bar', 'proc'));
+  assertEquals(
+    'Name distinct #1.',
+    'Foo_bar',
+    varDB.getDistinctName('Foo.bar', 'var')
+  );
+  assertEquals(
+    'Name distinct #2.',
+    'Foo_bar2',
+    varDB.getDistinctName('Foo.bar', 'var')
+  );
+  assertEquals(
+    'Name distinct #3.',
+    'Foo_bar3',
+    varDB.getDistinctName('Foo.bar', 'proc')
+  );
   varDB.reset();
-  assertEquals('Name distinct #4.', 'Foo_bar',
-               varDB.getDistinctName('Foo.bar', 'var'));
+  assertEquals(
+    'Name distinct #4.',
+    'Foo_bar',
+    varDB.getDistinctName('Foo.bar', 'var')
+  );
 }
 
 function test_nameEquals() {

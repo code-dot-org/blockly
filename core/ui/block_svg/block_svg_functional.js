@@ -9,7 +9,7 @@ goog.provide('Blockly.BlockSvgFunctional');
 /**
  * Render this block with a header row that has a different color.
  */
-Blockly.BlockSvgFunctional = function (block, options) {
+Blockly.BlockSvgFunctional = function(block, options) {
   options = options || {};
   this.headerHeight = options.headerHeight || 0;
   this.rowBuffer = options.rowBuffer || 0;
@@ -26,33 +26,51 @@ Blockly.BlockSvgFunctional = function (block, options) {
 };
 goog.inherits(Blockly.BlockSvgFunctional, Blockly.BlockSvg);
 
-Blockly.BlockSvgFunctional.prototype.initChildren = function () {
-  var rgb = Blockly.makeColour(this.block_.getColour(),
-    this.block_.getSaturation(), this.block_.getValue());
+Blockly.BlockSvgFunctional.prototype.initChildren = function() {
+  var rgb = Blockly.makeColour(
+    this.block_.getColour(),
+    this.block_.getSaturation(),
+    this.block_.getValue()
+  );
   var lightColor = goog.color.lighten(goog.color.hexToRgb(rgb), 0.3);
   var lighterColor = goog.color.lighten(goog.color.hexToRgb(rgb), 0.8);
 
   Blockly.BlockSvgFunctional.superClass_.initChildren.call(this);
 
-  var clip = Blockly.createSvgElement('clipPath', {
-    id: 'blockClip' + this.block_.id
-  }, this.svgGroup_);
+  var clip = Blockly.createSvgElement(
+    'clipPath',
+    {
+      id: 'blockClip' + this.block_.id
+    },
+    this.svgGroup_
+  );
   this.blockClipRect_ = Blockly.createSvgElement('path', {}, clip);
-  this.divider_ = Blockly.createSvgElement('rect', {
-    x: 1,
-    y: this.headerHeight,
-    height: 3,
-    width: 0,
-    fill: goog.color.rgbArrayToHex(lightColor),
-    'clip-path': 'url(#blockClip' + this.block_.id + ')',
-    visibility: this.headerHeight > 0 ? 'visible' : 'hidden'
-  }, this.svgGroup_);
+  this.divider_ = Blockly.createSvgElement(
+    'rect',
+    {
+      x: 1,
+      y: this.headerHeight,
+      height: 3,
+      width: 0,
+      fill: goog.color.rgbArrayToHex(lightColor),
+      'clip-path': 'url(#blockClip' + this.block_.id + ')',
+      visibility: this.headerHeight > 0 ? 'visible' : 'hidden'
+    },
+    this.svgGroup_
+  );
   this.createFunctionalMarkers_();
 };
 
-Blockly.BlockSvgFunctional.prototype.renderDraw_ = function(iconWidth, inputRows) {
+Blockly.BlockSvgFunctional.prototype.renderDraw_ = function(
+  iconWidth,
+  inputRows
+) {
   this.createFunctionalMarkers_();
-  Blockly.BlockSvgFunctional.superClass_.renderDraw_.call(this, iconWidth, inputRows);
+  Blockly.BlockSvgFunctional.superClass_.renderDraw_.call(
+    this,
+    iconWidth,
+    inputRows
+  );
 
   this.blockClipRect_.setAttribute('d', this.svgPath_.getAttribute('d'));
 
@@ -69,7 +87,7 @@ Blockly.BlockSvgFunctional.prototype.renderDraw_ = function(iconWidth, inputRows
  * Ensures functional markers exist for each input
  * @private
  */
-Blockly.BlockSvgFunctional.prototype.createFunctionalMarkers_ = function () {
+Blockly.BlockSvgFunctional.prototype.createFunctionalMarkers_ = function() {
   var functionalMarkers = [];
   for (var i = 0; i < this.block_.inputList.length; i++) {
     var input = this.block_.inputList[i];
@@ -80,18 +98,26 @@ Blockly.BlockSvgFunctional.prototype.createFunctionalMarkers_ = function () {
     if (input.type !== Blockly.FUNCTIONAL_INPUT) {
       continue;
     }
-    this.inputMarkers_[input.name] = Blockly.createSvgElement('rect', {
-      fill: 'white'
-    }, this.svgGroup_);
+    this.inputMarkers_[input.name] = Blockly.createSvgElement(
+      'rect',
+      {
+        fill: 'white'
+      },
+      this.svgGroup_
+    );
 
     // Create a click target, that will end up having the same path as the input
     // Set opacity to 0 so that we can see marker through it.
     // Set class so that click handler knows not to select parent.
-    this.inputClickTargets_[input.name] = Blockly.createSvgElement('path', {
-      fill: 'white',
-      opacity: '0',
-      'class': 'inputClickTarget'
-    }, this.svgGroup_);
+    this.inputClickTargets_[input.name] = Blockly.createSvgElement(
+      'path',
+      {
+        fill: 'white',
+        opacity: '0',
+        class: 'inputClickTarget'
+      },
+      this.svgGroup_
+    );
 
     if (!this.block_.blockSpace.isFlyout) {
       this.addInputClickListener_(input.name);
@@ -99,7 +125,7 @@ Blockly.BlockSvgFunctional.prototype.createFunctionalMarkers_ = function () {
   }
 
   // Remove input markers that disappeared
-  Object.keys(this.inputMarkers_).forEach(function (markerName) {
+  Object.keys(this.inputMarkers_).forEach(function(markerName) {
     if (functionalMarkers.indexOf(markerName) === -1) {
       var element = this.inputMarkers_[markerName];
       element.parentNode.removeChild(element);
@@ -110,7 +136,6 @@ Blockly.BlockSvgFunctional.prototype.createFunctionalMarkers_ = function () {
       delete this.inputMarkers_[markerName];
     }
   }, this);
-
 };
 
 /**
@@ -118,47 +143,57 @@ Blockly.BlockSvgFunctional.prototype.createFunctionalMarkers_ = function () {
  * child block on click if it's a number or string
  * @param {string} inputName
  */
-Blockly.BlockSvgFunctional.prototype.addInputClickListener_ = function (inputName) {
+Blockly.BlockSvgFunctional.prototype.addInputClickListener_ = function(
+  inputName
+) {
   var blockSpace = this.block_.blockSpace;
   var parentBlock = this.block_;
-  Blockly.bindEvent_(this.inputClickTargets_[inputName], 'mousedown', this, function (e) {
-    if (Blockly.isRightButton(e)) {
-      // Right-click.
-      return;
-    }
-    var childType;
-    var titleIndex;
-    var input = parentBlock.getInput(inputName);
-    if (input.connection.acceptsAnyType()) {
-      return;
-    }
-    if (input.connection.acceptsType('Number')) {
-      childType = 'functional_math_number';
-      titleIndex = 0;
-    } else if (input.connection.acceptsType('String')) {
-      childType = 'functional_string';
-      titleIndex = 1;
-    } else {
-      return;
-    }
-
-    var block = new Blockly.Block(blockSpace, childType);
-    block.initSvg();
-    input.connection.connect(block.previousConnection);
-
-    var titles = block.getTitles();
-    for (var i = 0; i < titles.length; i++) {
-      if (titles[i] instanceof Blockly.FieldTextInput) {
-        titles[i].showEditor_();
+  Blockly.bindEvent_(
+    this.inputClickTargets_[inputName],
+    'mousedown',
+    this,
+    function(e) {
+      if (Blockly.isRightButton(e)) {
+        // Right-click.
+        return;
       }
+      var childType;
+      var titleIndex;
+      var input = parentBlock.getInput(inputName);
+      if (input.connection.acceptsAnyType()) {
+        return;
+      }
+      if (input.connection.acceptsType('Number')) {
+        childType = 'functional_math_number';
+        titleIndex = 0;
+      } else if (input.connection.acceptsType('String')) {
+        childType = 'functional_string';
+        titleIndex = 1;
+      } else {
+        return;
+      }
+
+      var block = new Blockly.Block(blockSpace, childType);
+      block.initSvg();
+      input.connection.connect(block.previousConnection);
+
+      var titles = block.getTitles();
+      for (var i = 0; i < titles.length; i++) {
+        if (titles[i] instanceof Blockly.FieldTextInput) {
+          titles[i].showEditor_();
+        }
+      }
+      block.render();
     }
-    block.render();
-  });
+  );
 };
 
-Blockly.BlockSvgFunctional.prototype.renderDrawRight_ = function(renderInfo,
-    connectionsXY, inputRows, iconWidth) {
-
+Blockly.BlockSvgFunctional.prototype.renderDrawRight_ = function(
+  renderInfo,
+  connectionsXY,
+  inputRows,
+  iconWidth
+) {
   // add a little bit of extra buffer space on top so that our notch doesn't
   // cut into our titles
   if (this.rowBuffer) {
@@ -166,8 +201,13 @@ Blockly.BlockSvgFunctional.prototype.renderDrawRight_ = function(renderInfo,
     renderInfo.curY += this.rowBuffer;
   }
 
-  Blockly.BlockSvgFunctional.superClass_.renderDrawRight_.call(this, renderInfo, connectionsXY, inputRows, iconWidth);
-
+  Blockly.BlockSvgFunctional.superClass_.renderDrawRight_.call(
+    this,
+    renderInfo,
+    connectionsXY,
+    inputRows,
+    iconWidth
+  );
 };
 
 /**
@@ -177,8 +217,11 @@ Blockly.BlockSvgFunctional.prototype.renderDrawRight_ = function(renderInfo,
  * @param {!Object} connectionsXY Location of block.
  * @private
  */
-Blockly.BlockSvgFunctional.prototype.renderDrawRightInlineFunctional_ =
-    function(renderInfo, input, connectionsXY) {
+Blockly.BlockSvgFunctional.prototype.renderDrawRightInlineFunctional_ = function(
+  renderInfo,
+  input,
+  connectionsXY
+) {
   // todo (brent) - RTL
   var inputTopLeft = {
     x: renderInfo.curX,
@@ -213,10 +256,14 @@ Blockly.BlockSvgFunctional.prototype.renderDrawRightInlineFunctional_ =
 
   // hide inputs that have targets, so that the rectangle doesn't show up when
   // dragging
-  this.inputMarkers_[input.name].setAttribute('visibility',
-    input.connection.targetConnection ? 'hidden' : 'visible');
-  this.inputClickTargets_[input.name].setAttribute('visibility',
-    input.connection.targetConnection ? 'hidden' : 'visible');
+  this.inputMarkers_[input.name].setAttribute(
+    'visibility',
+    input.connection.targetConnection ? 'hidden' : 'visible'
+  );
+  this.inputClickTargets_[input.name].setAttribute(
+    'visibility',
+    input.connection.targetConnection ? 'hidden' : 'visible'
+  );
 
   renderInfo.curX += this.inputWidthToOccupy_(input) + BS.SEP_SPACE_X;
 
@@ -244,7 +291,7 @@ Blockly.BlockSvgFunctional.prototype.updateToColour_ = function(hexColour) {
   this.divider_.setAttribute('fill', goog.color.rgbArrayToHex(lightColor));
 };
 
-Blockly.BlockSvgFunctional.prototype.dispose = function () {
+Blockly.BlockSvgFunctional.prototype.dispose = function() {
   Blockly.BlockSvgFunctional.superClass_.dispose.call(this);
 
   this.blockClipRect_ = null;

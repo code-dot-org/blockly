@@ -46,7 +46,8 @@ Blockly.FieldVariable = function(
   opt_changeHandler,
   opt_createHandler,
   opt_category,
-  opt_categoryName) {
+  opt_categoryName
+) {
   this.category = opt_category || Blockly.Variables.DEFAULT_CATEGORY;
   this.categoryName = opt_categoryName || Blockly.Msg.VARIABLE;
   var changeHandler;
@@ -59,11 +60,11 @@ Blockly.FieldVariable = function(
       var retVal = thisObj.dropdownChange(value);
       var newVal;
       if (retVal === undefined) {
-        newVal = value;  // Existing variable selected.
+        newVal = value; // Existing variable selected.
       } else if (retVal === null) {
-        newVal = thisObj.getValue();  // Abort, no change.
+        newVal = thisObj.getValue(); // Abort, no change.
       } else {
-        newVal = retVal;  // Variable name entered.
+        newVal = retVal; // Variable name entered.
       }
       opt_changeHandler.call(thisObj, newVal);
       return retVal;
@@ -72,8 +73,11 @@ Blockly.FieldVariable = function(
     changeHandler = this.dropdownChange;
   }
 
-  Blockly.FieldVariable.superClass_.constructor.call(this,
-      opt_createHandler || Blockly.FieldVariable.dropdownCreate, changeHandler);
+  Blockly.FieldVariable.superClass_.constructor.call(
+    this,
+    opt_createHandler || Blockly.FieldVariable.dropdownCreate,
+    changeHandler
+  );
 
   if (varname) {
     this.setValue(varname);
@@ -82,7 +86,6 @@ Blockly.FieldVariable = function(
   }
 };
 goog.inherits(Blockly.FieldVariable, Blockly.FieldDropdown);
-
 
 /**
  * Get the variable's name (use a variableDB to convert into a real name).
@@ -142,24 +145,32 @@ Blockly.FieldVariable.prototype.dropdownChange = function(text) {
     var oldVar = this.getText();
     this.getParentEditor_().hideChaff();
     Blockly.FieldVariable.modalPromptName(
-        Blockly.Msg.RENAME_VARIABLE_TITLE.replace('%1', oldVar),
-        Blockly.Msg.CONFIRM_RENAME_VARIABLE,
-        oldVar,
-        function(newVar) {
-          Blockly.Variables.renameVariable(oldVar, newVar, this.sourceBlock_.blockSpace);
-        }.bind(this));
+      Blockly.Msg.RENAME_VARIABLE_TITLE.replace('%1', oldVar),
+      Blockly.Msg.CONFIRM_RENAME_VARIABLE,
+      oldVar,
+      function(newVar) {
+        Blockly.Variables.renameVariable(
+          oldVar,
+          newVar,
+          this.sourceBlock_.blockSpace
+        );
+      }.bind(this)
+    );
     return null;
-  } else if (text === Blockly.Msg.RENAME_THIS.replace('%1', this.categoryName)) {
+  } else if (
+    text === Blockly.Msg.RENAME_THIS.replace('%1', this.categoryName)
+  ) {
     this.getParentEditor_().hideChaff();
     Blockly.FieldVariable.modalPromptName(
-        Blockly.Msg.NEW_VARIABLE_TITLE,
-        Blockly.Msg.CONFIRM_CREATE_VARIABLE,
-        '',
-        function(newVar) {
-          if (newVar) {
-            this.setText(newVar);
-          }
-        }.bind(this));
+      Blockly.Msg.NEW_VARIABLE_TITLE,
+      Blockly.Msg.CONFIRM_CREATE_VARIABLE,
+      '',
+      function(newVar) {
+        if (newVar) {
+          this.setText(newVar);
+        }
+      }.bind(this)
+    );
     return null;
   }
   return undefined;
@@ -172,8 +183,12 @@ Blockly.FieldVariable.prototype.dropdownChange = function(text) {
  * @param {string} defaultText default input text for window prompt
  * @param {Function} callback with parameter (text) of new name
  */
-Blockly.FieldVariable.modalPromptName =
-    function(promptText, confirmButtonLabel, defaultText, callback) {
+Blockly.FieldVariable.modalPromptName = function(
+  promptText,
+  confirmButtonLabel,
+  defaultText,
+  callback
+) {
   Blockly.showSimpleDialog({
     bodyText: promptText,
     prompt: true,
@@ -183,7 +198,7 @@ Blockly.FieldVariable.modalPromptName =
     onConfirm: null,
     onCancel: callback
   });
-}
+};
 
 Blockly.FieldVariable.removeExtraWhitespace = function(inputString) {
   var multipleWhitespaceCharactersRegex = /[\s\xa0]+/g;

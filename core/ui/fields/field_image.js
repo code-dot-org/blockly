@@ -40,11 +40,14 @@ goog.require('Blockly.ImageDimensionCache');
 Blockly.FieldImage = function(src, width, height) {
   if (!width && !height) {
     var self = this;
-    var dimensions = Blockly.ImageDimensionCache.getCachedDimensionsOrDefaultAndUpdate(src, function(updatedWidth, updatedHeight) {
-      if (!self.isDestroyed_()) {
-        self.updateDimensions_(updatedWidth, updatedHeight);
+    var dimensions = Blockly.ImageDimensionCache.getCachedDimensionsOrDefaultAndUpdate(
+      src,
+      function(updatedWidth, updatedHeight) {
+        if (!self.isDestroyed_()) {
+          self.updateDimensions_(updatedWidth, updatedHeight);
+        }
       }
-    });
+    );
     width = dimensions.width;
     height = dimensions.height;
   }
@@ -61,32 +64,52 @@ Blockly.FieldImage.IMAGE_LOADING_HEIGHT = 40;
 Blockly.FieldImage.IMAGE_OFFSET_Y = 6 - Blockly.BlockSvg.TITLE_HEIGHT;
 Blockly.FieldImage.BELOW_IMAGE_PADDING = 10;
 
-Blockly.FieldImage.prototype.initializeWithImage_ = function(src, width, height) {
+Blockly.FieldImage.prototype.initializeWithImage_ = function(
+  src,
+  width,
+  height
+) {
   this.sourceBlock_ = null;
   // Ensure height and width are numbers.  Strings are bad at math.
   height = Number(height);
   width = Number(width);
-  this.size_ = {height: height + Blockly.FieldImage.BELOW_IMAGE_PADDING, width: width};
+  this.size_ = {
+    height: height + Blockly.FieldImage.BELOW_IMAGE_PADDING,
+    width: width
+  };
   // Build the DOM.
   this.fieldGroup_ = Blockly.createSvgElement('g', {}, null);
-  this.imageElement_ = Blockly.createSvgElement('image',
-      {'height': height + 'px',
-       'width': width + 'px',
-       'y': Blockly.FieldImage.IMAGE_OFFSET_Y}, this.fieldGroup_);
+  this.imageElement_ = Blockly.createSvgElement(
+    'image',
+    {
+      height: height + 'px',
+      width: width + 'px',
+      y: Blockly.FieldImage.IMAGE_OFFSET_Y
+    },
+    this.fieldGroup_
+  );
   this.setText(src);
   if (goog.userAgent.GECKO) {
     // Due to a Firefox bug which eats mouse events on image elements,
     // a transparent rectangle needs to be placed on top of the image.
-    this.clickRectElement_ = Blockly.createSvgElement('rect',
-        {'height': height + 'px',
-         'width': width + 'px',
-         'y': Blockly.FieldImage.IMAGE_OFFSET_Y,
-         'fill-opacity': 0}, this.fieldGroup_);
+    this.clickRectElement_ = Blockly.createSvgElement(
+      'rect',
+      {
+        height: height + 'px',
+        width: width + 'px',
+        y: Blockly.FieldImage.IMAGE_OFFSET_Y,
+        'fill-opacity': 0
+      },
+      this.fieldGroup_
+    );
   }
 };
 
 Blockly.FieldImage.prototype.updateDimensions_ = function(width, height) {
-  this.size_ = {height: height + Blockly.FieldImage.BELOW_IMAGE_PADDING, width: width};
+  this.size_ = {
+    height: height + Blockly.FieldImage.BELOW_IMAGE_PADDING,
+    width: width
+  };
   this.imageElement_.setAttribute('width', width + 'px');
   this.imageElement_.setAttribute('height', height + 'px');
   if (this.clickRectElement_) {
@@ -139,7 +162,7 @@ Blockly.FieldImage.prototype.dispose = function() {
  * Returns the click target for this image
  * @returns {Element}
  */
-Blockly.FieldImage.prototype.getClickTarget = function () {
+Blockly.FieldImage.prototype.getClickTarget = function() {
   return this.clickRectElement_ || this.imageElement_;
 };
 /**
@@ -171,6 +194,9 @@ Blockly.FieldImage.prototype.setText = function(src) {
     return;
   }
   this.src_ = src;
-  this.imageElement_.setAttributeNS('http://www.w3.org/1999/xlink',
-      'xlink:href', goog.isString(src) ? src : '');
+  this.imageElement_.setAttributeNS(
+    'http://www.w3.org/1999/xlink',
+    'xlink:href',
+    goog.isString(src) ? src : ''
+  );
 };

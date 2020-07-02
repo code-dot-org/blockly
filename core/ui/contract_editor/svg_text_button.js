@@ -9,25 +9,37 @@ goog.provide('Blockly.SvgTextButton');
  * @param {Function} onMouseDown
  * @constructor
  */
-Blockly.SvgTextButton = function (parent, text, onMouseDown) {
-  var button = Blockly.createSvgElement('g', {
-    'class': 'svgTextButton',
-    'filter': 'url(#blocklyTrashcanShadowFilter)'
-  }, parent);
+Blockly.SvgTextButton = function(parent, text, onMouseDown) {
+  var button = Blockly.createSvgElement(
+    'g',
+    {
+      class: 'svgTextButton',
+      filter: 'url(#blocklyTrashcanShadowFilter)'
+    },
+    parent
+  );
   var padding = 7;
   var purpleFillColor = '#7665a0';
-  this.buttonRect = Blockly.createSvgElement('rect', {
-    'rx': 12,
-    'ry': 12,
-    'fill': purpleFillColor,
-    'stroke': 'white',
-    'stroke-width': '2.5'
-  }, button);
-  var textElement = Blockly.createSvgElement('text', {
-    'x': padding,
-    'y': padding,
-    'class': 'blocklyText'
-  }, button);
+  this.buttonRect = Blockly.createSvgElement(
+    'rect',
+    {
+      rx: 12,
+      ry: 12,
+      fill: purpleFillColor,
+      stroke: 'white',
+      'stroke-width': '2.5'
+    },
+    button
+  );
+  var textElement = Blockly.createSvgElement(
+    'text',
+    {
+      x: padding,
+      y: padding,
+      class: 'blocklyText'
+    },
+    button
+  );
   textElement.textContent = text;
   var bounds = textElement.getBoundingClientRect();
   this.buttonRect.setAttribute('width', bounds.width + 2 * padding);
@@ -46,19 +58,21 @@ Blockly.SvgTextButton = function (parent, text, onMouseDown) {
  * @param yOffset {Number}
  * @return {Number} y offset to continue rendering at
  */
-Blockly.SvgTextButton.prototype.renderAt = function (xOffset, yOffset) {
-  this.svgGroup_.setAttribute('transform', 'translate(' + xOffset + ','
-      + yOffset + ')');
+Blockly.SvgTextButton.prototype.renderAt = function(xOffset, yOffset) {
+  this.svgGroup_.setAttribute(
+    'transform',
+    'translate(' + xOffset + ',' + yOffset + ')'
+  );
   return yOffset + this.buttonRectHeight;
 };
 
-Blockly.SvgTextButton.prototype.setVisible = function (visible) {
+Blockly.SvgTextButton.prototype.setVisible = function(visible) {
   goog.style.setElementShown(this.svgGroup_, visible);
 };
 
 /**
  * @returns {number} width of the button
  */
-Blockly.SvgTextButton.prototype.getButtonWidth = function () {
+Blockly.SvgTextButton.prototype.getButtonWidth = function() {
   return parseInt(this.buttonRect.getAttribute('width'), 10);
 };

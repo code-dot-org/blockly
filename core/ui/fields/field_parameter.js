@@ -38,9 +38,17 @@ goog.require('Blockly.FieldVariable');
  * * @extends {Blockly.FieldDropdown}
  * @constructor
  */
-Blockly.FieldParameter = function(varname, opt_changeHandler, opt_createHandler) {
-  Blockly.FieldParameter.superClass_.constructor.call(this, varname,
-    Blockly.FieldParameter.dropdownChange, Blockly.FieldParameter.dropdownCreate);
+Blockly.FieldParameter = function(
+  varname,
+  opt_changeHandler,
+  opt_createHandler
+) {
+  Blockly.FieldParameter.superClass_.constructor.call(
+    this,
+    varname,
+    Blockly.FieldParameter.dropdownChange,
+    Blockly.FieldParameter.dropdownCreate
+  );
 };
 goog.inherits(Blockly.FieldParameter, Blockly.FieldVariable);
 
@@ -69,12 +77,17 @@ Blockly.FieldParameter.dropdownChange = function(text) {
   if (text === Blockly.Msg.RENAME_PARAMETER) {
     this.getParentEditor_().hideChaff();
     Blockly.FieldVariable.modalPromptName(
-        Blockly.Msg.RENAME_PARAMETER_TITLE.replace('%1', oldVar),
-        Blockly.Msg.CONFIRM_RENAME_VARIABLE,
-        oldVar,
-        function(newVar) {
-          Blockly.Variables.renameVariable(oldVar, newVar, this.sourceBlock_.blockSpace);
-        }.bind(this));
+      Blockly.Msg.RENAME_PARAMETER_TITLE.replace('%1', oldVar),
+      Blockly.Msg.CONFIRM_RENAME_VARIABLE,
+      oldVar,
+      function(newVar) {
+        Blockly.Variables.renameVariable(
+          oldVar,
+          newVar,
+          this.sourceBlock_.blockSpace
+        );
+      }.bind(this)
+    );
   } else if (text === Blockly.Msg.DELETE_PARAMETER) {
     Blockly.showSimpleDialog({
       bodyText: Blockly.Msg.DELETE_PARAMETER_TITLE.replace('%1', oldVar),

@@ -27,59 +27,98 @@ goog.provide('Blockly.JavaScript.loops');
 
 goog.require('Blockly.JavaScript');
 
-
 Blockly.JavaScript.controls_repeat = function() {
   // Repeat n times (internal number).
   var repeats = Number(this.getTitleValue('TIMES')) || 0;
   var branch = Blockly.JavaScript.statementToCode(this, 'DO');
   if (Blockly.JavaScript.INFINITE_LOOP_TRAP) {
-    branch = Blockly.JavaScript.INFINITE_LOOP_TRAP.replace(/%1/g,
-        '\'' + this.id + '\'') + branch;
+    branch =
+      Blockly.JavaScript.INFINITE_LOOP_TRAP.replace(
+        /%1/g,
+        "'" + this.id + "'"
+      ) + branch;
   }
   var loopVar = Blockly.JavaScript.variableDB_.getDistinctName(
-      'count', Blockly.Variables.NAME_TYPE);
-  var code = 'for (var ' + loopVar + ' = 0; ' +
-      loopVar + ' < ' + repeats + '; ' +
-      loopVar + '++) {\n' +
-      branch + '}\n';
+    'count',
+    Blockly.Variables.NAME_TYPE
+  );
+  var code =
+    'for (var ' +
+    loopVar +
+    ' = 0; ' +
+    loopVar +
+    ' < ' +
+    repeats +
+    '; ' +
+    loopVar +
+    '++) {\n' +
+    branch +
+    '}\n';
   return code;
 };
 
 Blockly.JavaScript.controls_repeat_ext = function() {
   // Repeat n times (external number).
-  var repeats = Blockly.JavaScript.valueToCode(this, 'TIMES',
-      Blockly.JavaScript.ORDER_ASSIGNMENT) || '0';
+  var repeats =
+    Blockly.JavaScript.valueToCode(
+      this,
+      'TIMES',
+      Blockly.JavaScript.ORDER_ASSIGNMENT
+    ) || '0';
   var branch = Blockly.JavaScript.statementToCode(this, 'DO');
   if (Blockly.JavaScript.INFINITE_LOOP_TRAP) {
-    branch = Blockly.JavaScript.INFINITE_LOOP_TRAP.replace(/%1/g,
-        '\'' + this.id + '\'') + branch;
+    branch =
+      Blockly.JavaScript.INFINITE_LOOP_TRAP.replace(
+        /%1/g,
+        "'" + this.id + "'"
+      ) + branch;
   }
   var code = '';
   var loopVar = Blockly.JavaScript.variableDB_.getDistinctName(
-      'count', Blockly.Variables.NAME_TYPE);
+    'count',
+    Blockly.Variables.NAME_TYPE
+  );
   var endVar = repeats;
   if (!repeats.match(/^\w+$/) && !Blockly.isNumber(repeats)) {
     var endVar = Blockly.JavaScript.variableDB_.getDistinctName(
-        'repeat_end', Blockly.Variables.NAME_TYPE);
+      'repeat_end',
+      Blockly.Variables.NAME_TYPE
+    );
     code += 'var ' + endVar + ' = ' + repeats + ';\n';
   }
-  code += 'for (var ' + loopVar + ' = 0; ' +
-      loopVar + ' < ' + endVar + '; ' +
-      loopVar + '++) {\n' +
-      branch + '}\n';
+  code +=
+    'for (var ' +
+    loopVar +
+    ' = 0; ' +
+    loopVar +
+    ' < ' +
+    endVar +
+    '; ' +
+    loopVar +
+    '++) {\n' +
+    branch +
+    '}\n';
   return code;
 };
 
 Blockly.JavaScript.controls_whileUntil = function() {
   // Do while/until loop.
   var until = this.getTitleValue('MODE') == 'UNTIL';
-  var argument0 = Blockly.JavaScript.valueToCode(this, 'BOOL',
-      until ? Blockly.JavaScript.ORDER_LOGICAL_NOT :
-      Blockly.JavaScript.ORDER_NONE) || 'false';
+  var argument0 =
+    Blockly.JavaScript.valueToCode(
+      this,
+      'BOOL',
+      until
+        ? Blockly.JavaScript.ORDER_LOGICAL_NOT
+        : Blockly.JavaScript.ORDER_NONE
+    ) || 'false';
   var branch = Blockly.JavaScript.statementToCode(this, 'DO');
   if (Blockly.JavaScript.INFINITE_LOOP_TRAP) {
-    branch = Blockly.JavaScript.INFINITE_LOOP_TRAP.replace(/%1/g,
-        '\'' + this.id + '\'') + branch;
+    branch =
+      Blockly.JavaScript.INFINITE_LOOP_TRAP.replace(
+        /%1/g,
+        "'" + this.id + "'"
+      ) + branch;
   }
   if (until) {
     argument0 = '!' + argument0;
@@ -90,26 +129,53 @@ Blockly.JavaScript.controls_whileUntil = function() {
 Blockly.JavaScript.controls_for = function() {
   // For loop.
   var variable0 = Blockly.JavaScript.translateVarName(
-      this.getTitleValue('VAR'));
-  var argument0 = Blockly.JavaScript.valueToCode(this, 'FROM',
-      Blockly.JavaScript.ORDER_ASSIGNMENT) || '0';
-  var argument1 = Blockly.JavaScript.valueToCode(this, 'TO',
-      Blockly.JavaScript.ORDER_ASSIGNMENT) || '0';
-  var increment = Blockly.JavaScript.valueToCode(this, 'BY',
-      Blockly.JavaScript.ORDER_ASSIGNMENT) || '1';
+    this.getTitleValue('VAR')
+  );
+  var argument0 =
+    Blockly.JavaScript.valueToCode(
+      this,
+      'FROM',
+      Blockly.JavaScript.ORDER_ASSIGNMENT
+    ) || '0';
+  var argument1 =
+    Blockly.JavaScript.valueToCode(
+      this,
+      'TO',
+      Blockly.JavaScript.ORDER_ASSIGNMENT
+    ) || '0';
+  var increment =
+    Blockly.JavaScript.valueToCode(
+      this,
+      'BY',
+      Blockly.JavaScript.ORDER_ASSIGNMENT
+    ) || '1';
   var branch = Blockly.JavaScript.statementToCode(this, 'DO');
   if (Blockly.JavaScript.INFINITE_LOOP_TRAP) {
-    branch = Blockly.JavaScript.INFINITE_LOOP_TRAP.replace(/%1/g,
-        '\'' + this.id + '\'') + branch;
+    branch =
+      Blockly.JavaScript.INFINITE_LOOP_TRAP.replace(
+        /%1/g,
+        "'" + this.id + "'"
+      ) + branch;
   }
   var code;
-  if (Blockly.isNumber(argument0) && Blockly.isNumber(argument1) &&
-      Blockly.isNumber(increment)) {
+  if (
+    Blockly.isNumber(argument0) &&
+    Blockly.isNumber(argument1) &&
+    Blockly.isNumber(increment)
+  ) {
     // All arguments are simple numbers.
     var up = parseFloat(argument0) <= parseFloat(argument1);
-    code = 'for (' + variable0 + ' = ' + argument0 + '; ' +
-        variable0 + (up ? ' <= ' : ' >= ') + argument1 + '; ' +
-        variable0;
+    code =
+      'for (' +
+      variable0 +
+      ' = ' +
+      argument0 +
+      '; ' +
+      variable0 +
+      (up ? ' <= ' : ' >= ') +
+      argument1 +
+      '; ' +
+      variable0;
     var step = Math.abs(parseFloat(increment));
     if (step === 1) {
       code += up ? '++' : '--';
@@ -125,23 +191,31 @@ Blockly.JavaScript.controls_for = function() {
     code = '';
     // Cache non-trivial values to variables to prevent repeated look-ups.
     var variable0Undec = Blockly.JavaScript.variableDB_.getName(
-        this.getTitleValue('VAR'), Blockly.Variables.NAME_TYPE);
+      this.getTitleValue('VAR'),
+      Blockly.Variables.NAME_TYPE
+    );
     var startVar = argument0;
     if (!argument0.match(/^\w+$/) && !Blockly.isNumber(argument0)) {
       var startVar = Blockly.JavaScript.variableDB_.getDistinctName(
-          variable0Undec + '_start', Blockly.Variables.NAME_TYPE);
+        variable0Undec + '_start',
+        Blockly.Variables.NAME_TYPE
+      );
       code += 'var ' + startVar + ' = ' + argument0 + ';\n';
     }
     var endVar = argument1;
     if (!argument1.match(/^\w+$/) && !Blockly.isNumber(argument1)) {
       var endVar = Blockly.JavaScript.variableDB_.getDistinctName(
-          variable0Undec + '_end', Blockly.Variables.NAME_TYPE);
+        variable0Undec + '_end',
+        Blockly.Variables.NAME_TYPE
+      );
       code += 'var ' + endVar + ' = ' + argument1 + ';\n';
     }
     // Determine loop direction at start, in case one of the bounds
     // changes during loop execution.
     var incVar = Blockly.JavaScript.variableDB_.getDistinctName(
-        variable0Undec + '_inc', Blockly.Variables.NAME_TYPE);
+      variable0Undec + '_inc',
+      Blockly.Variables.NAME_TYPE
+    );
     code += 'var ' + incVar + ' = ';
     if (Blockly.isNumber(increment)) {
       code += Math.abs(increment) + ';\n';
@@ -149,14 +223,32 @@ Blockly.JavaScript.controls_for = function() {
       code += 'Math.abs(' + increment + ');\n';
     }
     code += 'if (' + startVar + ' > ' + endVar + ') {\n';
-    code += '  ' + incVar + ' = -' + incVar +';\n';
+    code += '  ' + incVar + ' = -' + incVar + ';\n';
     code += '}\n';
-    code += 'for (' + variable0 + ' = ' + startVar + ';\n' +
-        '     '  + incVar + ' >= 0 ? ' +
-        variable0 + ' <= ' + endVar + ' : ' +
-        variable0 + ' >= ' + endVar + ';\n' +
-        '     ' + variable0 + ' += ' + incVar + ') {\n' +
-        branch + '}\n';
+    code +=
+      'for (' +
+      variable0 +
+      ' = ' +
+      startVar +
+      ';\n' +
+      '     ' +
+      incVar +
+      ' >= 0 ? ' +
+      variable0 +
+      ' <= ' +
+      endVar +
+      ' : ' +
+      variable0 +
+      ' >= ' +
+      endVar +
+      ';\n' +
+      '     ' +
+      variable0 +
+      ' += ' +
+      incVar +
+      ') {\n' +
+      branch +
+      '}\n';
   }
   return code;
 };
@@ -164,34 +256,58 @@ Blockly.JavaScript.controls_for = function() {
 Blockly.JavaScript.controls_forEach = function() {
   // For each loop.
   var variable0 = Blockly.JavaScript.translateVarName(
-      this.getTitleValue('VAR'));
-  var argument0 = Blockly.JavaScript.valueToCode(this, 'LIST',
-      Blockly.JavaScript.ORDER_ASSIGNMENT) || '[]';
+    this.getTitleValue('VAR')
+  );
+  var argument0 =
+    Blockly.JavaScript.valueToCode(
+      this,
+      'LIST',
+      Blockly.JavaScript.ORDER_ASSIGNMENT
+    ) || '[]';
   var branch = Blockly.JavaScript.statementToCode(this, 'DO');
   if (Blockly.JavaScript.INFINITE_LOOP_TRAP) {
-    branch = Blockly.JavaScript.INFINITE_LOOP_TRAP.replace(/%1/g,
-        '\'' + this.id + '\'') + branch;
+    branch =
+      Blockly.JavaScript.INFINITE_LOOP_TRAP.replace(
+        /%1/g,
+        "'" + this.id + "'"
+      ) + branch;
   }
   var code;
   var variable0Undec = Blockly.JavaScript.variableDB_.getName(
-      this.getTitleValue('VAR'), Blockly.Variables.NAME_TYPE);
+    this.getTitleValue('VAR'),
+    Blockly.Variables.NAME_TYPE
+  );
   var indexVar = Blockly.JavaScript.variableDB_.getDistinctName(
-      variable0Undec + '_index', Blockly.Variables.NAME_TYPE);
+    variable0Undec + '_index',
+    Blockly.Variables.NAME_TYPE
+  );
   if (argument0.match(/^\w+$/)) {
-    branch = '  ' + variable0 + ' = ' + argument0 + '[' + indexVar + '];\n' +
-        branch;
-    code = 'for (var ' + indexVar + ' in  ' + argument0 + ') {\n' +
-        branch + '}\n';
+    branch =
+      '  ' + variable0 + ' = ' + argument0 + '[' + indexVar + '];\n' + branch;
+    code =
+      'for (var ' + indexVar + ' in  ' + argument0 + ') {\n' + branch + '}\n';
   } else {
     // The list appears to be more complicated than a simple variable.
     // Cache it to a variable to prevent repeated look-ups.
     var listVar = Blockly.JavaScript.variableDB_.getDistinctName(
-        variable0Undec + '_list', Blockly.Variables.NAME_TYPE);
-    branch = '  ' + variable0 + ' = ' + listVar + '[' + indexVar + '];\n' +
-        branch;
-    code = 'var ' + listVar + ' = ' + argument0 + ';\n' +
-        'for (var ' + indexVar + ' in ' + listVar + ') {\n' +
-        branch + '}\n';
+      variable0Undec + '_list',
+      Blockly.Variables.NAME_TYPE
+    );
+    branch =
+      '  ' + variable0 + ' = ' + listVar + '[' + indexVar + '];\n' + branch;
+    code =
+      'var ' +
+      listVar +
+      ' = ' +
+      argument0 +
+      ';\n' +
+      'for (var ' +
+      indexVar +
+      ' in ' +
+      listVar +
+      ') {\n' +
+      branch +
+      '}\n';
   }
   return code;
 };

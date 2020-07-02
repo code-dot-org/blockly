@@ -48,11 +48,14 @@ Blockly.addClass_ = function(element, className) {
   }
 };
 
-Blockly.elementHasClass_ = function (element, className) {
-  return Blockly.stringContainsClass_(element.getAttribute('class') || '', className);
+Blockly.elementHasClass_ = function(element, className) {
+  return Blockly.stringContainsClass_(
+    element.getAttribute('class') || '',
+    className
+  );
 };
 
-Blockly.stringContainsClass_ = function (classes, className) {
+Blockly.stringContainsClass_ = function(classes, className) {
   return (' ' + classes + ' ').indexOf(' ' + className + ' ') !== -1;
 };
 
@@ -109,17 +112,22 @@ Blockly.bindEvent_ = function(element, name, thisObject, func, useCapture) {
   var equivTouchEvent = Blockly.bindEvent_.TOUCH_MAP[name];
   if (equivTouchEvent) {
     // Also bind the mouse event, unless the browser supports pointer events.
-    if (!window.navigator.pointerEnabled && !window.navigator.msPointerEnabled) {
+    if (
+      !window.navigator.pointerEnabled &&
+      !window.navigator.msPointerEnabled
+    ) {
       element.addEventListener(name, wrapFunc, useCapture);
       bindData.push([element, name, wrapFunc, useCapture]);
     }
-    wrapFunc = function (e) {
+    wrapFunc = function(e) {
       if (e.target && e.target.style) {
         var targetStyle = e.target.style;
-        if (targetStyle.touchAction) {  // required for IE 11+
-          targetStyle.touchAction = "none";
-        } else if (targetStyle.msTouchAction) {  // required for IE 10
-          targetStyle.msTouchAction = "none";
+        if (targetStyle.touchAction) {
+          // required for IE 11+
+          targetStyle.touchAction = 'none';
+        } else if (targetStyle.msTouchAction) {
+          // required for IE 10
+          targetStyle.msTouchAction = 'none';
         }
       }
 
@@ -153,19 +161,25 @@ Blockly.bindEvent_ = function(element, name, thisObject, func, useCapture) {
  * @type {Object}
  */
 Blockly.bindEvent_.TOUCH_MAP = {};
-if (window.navigator.pointerEnabled) {  // IE 11+ support
+if (window.navigator.pointerEnabled) {
+  // IE 11+ support
   Blockly.bindEvent_.TOUCH_MAP = {
     mousedown: 'pointerdown',
     mousemove: 'pointermove',
     mouseup: 'pointerup'
   };
-} else if (window.navigator.msPointerEnabled) {  // IE 10 support
+} else if (window.navigator.msPointerEnabled) {
+  // IE 10 support
   Blockly.bindEvent_.TOUCH_MAP = {
     mousedown: 'MSPointerDown',
     mousemove: 'MSPointerMove',
     mouseup: 'MSPointerUp'
   };
-} else if ('ontouchstart' in document.documentElement || navigator.maxTouchPoints > 0) { // https://www.chromestatus.com/feature/4764225348042752
+} else if (
+  'ontouchstart' in document.documentElement ||
+  navigator.maxTouchPoints > 0
+) {
+  // https://www.chromestatus.com/feature/4764225348042752
   Blockly.bindEvent_.TOUCH_MAP = {
     mousedown: 'touchstart',
     mousemove: 'touchmove',
@@ -207,7 +221,7 @@ Blockly.fireUiEvent = function(element, eventName, opt_properties) {
     // W3
     var evt = doc.createEvent('UIEvents');
     goog.object.extend(evt, opt_properties);
-    evt.initEvent(eventName, true, true);  // event type, bubbling, cancelable
+    evt.initEvent(eventName, true, true); // event type, bubbling, cancelable
     element.dispatchEvent(evt);
   } else if (doc.createEventObject) {
     // MSIE
@@ -253,7 +267,8 @@ Blockly.getRelativeXY = function(element) {
   // 'translate(12, 0)'.
   // Note that IE (9,10) returns 'translate(16 8)' instead of
   // 'translate(16, 8)'.
-  var r = transform &&
+  var r =
+    transform &&
     transform.match(/translate\(\s*([-\d.]+)([ ,]\s*([-\d.]+)\s*\))?/);
   if (r) {
     xy.x += parseFloat(r[1]);
@@ -298,7 +313,12 @@ Blockly.getSvgXY_ = function(element, opt_svgParent) {
  */
 Blockly.getAbsoluteXY_ = function(element, opt_svgParent) {
   var xy = Blockly.getSvgXY_(element, opt_svgParent);
-  return Blockly.convertCoordinates(xy.x, xy.y, opt_svgParent || Blockly.topMostSVGParent(element), false);
+  return Blockly.convertCoordinates(
+    xy.x,
+    xy.y,
+    opt_svgParent || Blockly.topMostSVGParent(element),
+    false
+  );
 };
 
 /**
@@ -316,7 +336,7 @@ Blockly.topMostSVGParent = function(element) {
     element = goog.dom.getParentElement(element);
   }
 
-  return (topMostSVG || Blockly.mainBlockSpaceEditor.getSVGElement());
+  return topMostSVG || Blockly.mainBlockSpaceEditor.getSVGElement();
 };
 
 /**
@@ -330,15 +350,18 @@ Blockly.topMostSVGParent = function(element) {
 Blockly.createSvgElement = function(name, attrs, opt_parent, opt_options) {
   opt_options = opt_options || {};
 
-  var e = /** @type {!SVGElement} */ (
-      document.createElementNS(Blockly.SVG_NS, name));
+  var e = /** @type {!SVGElement} */ (document.createElementNS(
+    Blockly.SVG_NS,
+    name
+  ));
   for (var key in attrs) {
     e.setAttribute(key, attrs[key]);
   }
   // IE defines a unique attribute "runtimeStyle", it is NOT applied to
   // elements created with createElementNS. However, Closure checks for IE
   // and assumes the presence of the attribute and crashes.
-  if (document.body.runtimeStyle) {  // Indicates presence of IE-only attr.
+  if (document.body.runtimeStyle) {
+    // Indicates presence of IE-only attr.
     e.runtimeStyle = e.currentStyle = e.style;
   }
   if (opt_parent) {
@@ -389,8 +412,12 @@ Blockly.convertCoordinates = function(x, y, svg, toSvg) {
   }
   var xy = svgPoint.matrixTransform(matrix);
   if (!toSvg) {
-    if (!((goog.userAgent.IPAD || goog.userAgent.IPHONE) &&
-        !goog.userAgent.isVersionOrHigher(538))) {
+    if (
+      !(
+        (goog.userAgent.IPAD || goog.userAgent.IPHONE) &&
+        !goog.userAgent.isVersionOrHigher(538)
+      )
+    ) {
       // Do nothing here on iOS 7 and earlier. svg.getScreenCTM
       // ignores scrolling in those iOS versions, so the scroll
       // position is already accounted for.
@@ -415,7 +442,8 @@ Blockly.mouseToSvg = function(e, opt_svgParent) {
   return Blockly.mouseCoordinatesToSvg(
     e.clientX,
     e.clientY,
-    opt_svgParent || Blockly.topMostSVGParent(e.target));
+    opt_svgParent || Blockly.topMostSVGParent(e.target)
+  );
 };
 
 /**
@@ -428,9 +456,11 @@ Blockly.mouseToSvg = function(e, opt_svgParent) {
  */
 Blockly.mouseCoordinatesToSvg = function(clientX, clientY, target) {
   return Blockly.convertCoordinates(
-      clientX + window.pageXOffset,
-      clientY + window.pageYOffset,
-      target, true);
+    clientX + window.pageXOffset,
+    clientY + window.pageYOffset,
+    target,
+    true
+  );
 };
 
 /**
@@ -443,7 +473,8 @@ Blockly.svgCoordinatesToViewport = function(coordinates, blockSpace) {
   var blockSpaceMetrics = blockSpace.getMetrics();
   return new goog.math.Coordinate(
     coordinates.x - blockSpaceMetrics.absoluteLeft,
-    coordinates.y - blockSpaceMetrics.absoluteTop);
+    coordinates.y - blockSpaceMetrics.absoluteTop
+  );
 };
 
 /**
@@ -454,8 +485,10 @@ Blockly.svgCoordinatesToViewport = function(coordinates, blockSpace) {
  */
 Blockly.viewportCoordinateToBlockSpace = function(coordinates, blockSpace) {
   var viewportBox = blockSpace.getViewportBox();
-  return new goog.math.Coordinate(coordinates.x + viewportBox.left,
-    coordinates.y + viewportBox.top);
+  return new goog.math.Coordinate(
+    coordinates.x + viewportBox.left,
+    coordinates.y + viewportBox.top
+  );
 };
 
 /**
@@ -554,11 +587,11 @@ Blockly.isNumber = function(str) {
 };
 
 Blockly.isMsie = function() {
-  return window.navigator.userAgent.indexOf("MSIE") >= 0;
+  return window.navigator.userAgent.indexOf('MSIE') >= 0;
 };
 
 Blockly.isTrident = function() {
-  return window.navigator.userAgent.indexOf("Trident") >= 0;
+  return window.navigator.userAgent.indexOf('Trident') >= 0;
 };
 
 Blockly.isIOS = function() {
@@ -578,12 +611,25 @@ Blockly.ieVersion = function() {
  * @param foregroundOpacity {number} opacity, number from 0.0 to 1.0
  * @returns {string} the hex value of the resulting colour
  */
-Blockly.mixColoursWithForegroundOpacity = function(foregroundColor, backgroundColor, foregroundOpacity) {
+Blockly.mixColoursWithForegroundOpacity = function(
+  foregroundColor,
+  backgroundColor,
+  foregroundOpacity
+) {
   var foregroundRGB = goog.color.hexToRgb(foregroundColor);
   var backgroundRGB = goog.color.hexToRgb(backgroundColor);
-  var resultRed = Math.round(backgroundRGB[0] * (1 - foregroundOpacity) + foregroundRGB[0] * foregroundOpacity);
-  var resultGreen = Math.round(backgroundRGB[1] * (1 - foregroundOpacity) + foregroundRGB[1] * foregroundOpacity);
-  var resultBlue = Math.round(backgroundRGB[2] * (1 - foregroundOpacity) + foregroundRGB[2] * foregroundOpacity);
+  var resultRed = Math.round(
+    backgroundRGB[0] * (1 - foregroundOpacity) +
+      foregroundRGB[0] * foregroundOpacity
+  );
+  var resultGreen = Math.round(
+    backgroundRGB[1] * (1 - foregroundOpacity) +
+      foregroundRGB[1] * foregroundOpacity
+  );
+  var resultBlue = Math.round(
+    backgroundRGB[2] * (1 - foregroundOpacity) +
+      foregroundRGB[2] * foregroundOpacity
+  );
   return goog.color.rgbToHex(resultRed, resultGreen, resultBlue);
 };
 
@@ -628,9 +674,12 @@ Blockly.getUID = function() {
  * @param {!Event} e An event.
  * @return {boolean}
  */
-Blockly.isTargetInput = function (e) {
-  return e.target.type == 'textarea' || e.target.type == 'text' ||
-    e.target.type == 'tel';
+Blockly.isTargetInput = function(e) {
+  return (
+    e.target.type == 'textarea' ||
+    e.target.type == 'text' ||
+    e.target.type == 'tel'
+  );
 };
 
 /**
@@ -638,7 +687,7 @@ Blockly.isTargetInput = function (e) {
  * @param {!Event} e contextmenu event.
  * @private
  */
-Blockly.blockContextMenu = function (e) {
+Blockly.blockContextMenu = function(e) {
   if (!Blockly.isTargetInput(e)) {
     e.preventDefault();
   }
@@ -652,8 +701,8 @@ Blockly.blockContextMenu = function (e) {
  * @param {!Event} e scrollwheel or wheel event.
  * @return {number|null} wheelDeltaY normalized scroll dy, + is down, or null if
  * no wheel delta present in event
-*/
-Blockly.getNormalizedWheelDeltaY = function (e) {
+ */
+Blockly.getNormalizedWheelDeltaY = function(e) {
   // Safari uses wheelDeltaY (- is down), others use deltaY (+ is down)
   var wheelDeltaY = e.deltaY || -e.wheelDeltaY; // + is down
 
@@ -676,12 +725,13 @@ Blockly.getNormalizedWheelDeltaY = function (e) {
  * @param {goog.math.Box} innerBox
  * @return {goog.math.Box} overflow on each side, (+) is amount hanging off
  */
-Blockly.getBoxOverflow = function (outerBox, innerBox) {
+Blockly.getBoxOverflow = function(outerBox, innerBox) {
   return new goog.math.Box(
     Math.max(0, outerBox.top - innerBox.top),
     Math.max(0, innerBox.right - outerBox.right),
     Math.max(0, innerBox.bottom - outerBox.bottom),
-    Math.max(0, outerBox.left - innerBox.left));
+    Math.max(0, outerBox.left - innerBox.left)
+  );
 };
 
 /**
@@ -690,12 +740,13 @@ Blockly.getBoxOverflow = function (outerBox, innerBox) {
  * @param {goog.math.Coordinate} innerPoint
  * @return {goog.math.Box} distances to each side, from point's perspective
  */
-Blockly.getPointBoxOverflow = function (outerBox, innerPoint) {
+Blockly.getPointBoxOverflow = function(outerBox, innerPoint) {
   return new goog.math.Box(
     outerBox.top - innerPoint.y,
     innerPoint.x - outerBox.right,
     innerPoint.y - outerBox.bottom,
-    outerBox.left - innerPoint.x);
+    outerBox.left - innerPoint.x
+  );
 };
 
 /**
@@ -703,7 +754,7 @@ Blockly.getPointBoxOverflow = function (outerBox, innerPoint) {
  * @param {goog.math.Box} boxB
  * @returns {boolean} whether boxA is wider than boxB
  */
-Blockly.isBoxWiderThan = function (boxA, boxB) {
+Blockly.isBoxWiderThan = function(boxA, boxB) {
   return Blockly.getBoxWidth(boxA) > Blockly.getBoxWidth(boxB);
 };
 
@@ -712,7 +763,7 @@ Blockly.isBoxWiderThan = function (boxA, boxB) {
  * @param {goog.math.Box} boxB
  * @returns {boolean} whether boxA is taller than boxB
  */
-Blockly.isBoxTallerThan = function (boxA, boxB) {
+Blockly.isBoxTallerThan = function(boxA, boxB) {
   return Blockly.getBoxHeight(boxA) > Blockly.getBoxHeight(boxB);
 };
 
@@ -720,7 +771,7 @@ Blockly.isBoxTallerThan = function (boxA, boxB) {
  * @param {goog.math.Box} box
  * @return {number} width of box
  */
-Blockly.getBoxWidth = function (box) {
+Blockly.getBoxWidth = function(box) {
   return box.right - box.left;
 };
 
@@ -728,7 +779,7 @@ Blockly.getBoxWidth = function (box) {
  * @param {goog.math.Box} box
  * @return {number} height of box
  */
-Blockly.getBoxHeight = function (box) {
+Blockly.getBoxHeight = function(box) {
   return box.bottom - box.top;
 };
 
@@ -739,28 +790,31 @@ Blockly.getBoxHeight = function (box) {
  * @param {boolean} inclusive
  * @return {boolean} whether given number is within range
  */
-Blockly.numberWithin = function (number, min, max, inclusive) {
-  return inclusive?
-    (number >= min && number <= max) :
-    (number > min && number < max);
+Blockly.numberWithin = function(number, min, max, inclusive) {
+  return inclusive
+    ? number >= min && number <= max
+    : number > min && number < max;
 };
 
 /**
  * @param {SVGRect} svgRect
  * @returns {goog.math.Rect}
  */
-Blockly.svgRectToRect = function (svgRect) {
-  return new goog.math.Rect(svgRect.x, svgRect.y, svgRect.width,
-    svgRect.height);
+Blockly.svgRectToRect = function(svgRect) {
+  return new goog.math.Rect(
+    svgRect.x,
+    svgRect.y,
+    svgRect.width,
+    svgRect.height
+  );
 };
-
 
 /**
  * @param {Object} dialogOptions simple dialog options
  * @see FeedbackUtils.prototype.showSimpleDialog in cdo/apps/src/feedback.js
  *     for options
  */
-Blockly.showSimpleDialog = function (dialogOptions) {
+Blockly.showSimpleDialog = function(dialogOptions) {
   if (Blockly.customSimpleDialog) {
     Blockly.customSimpleDialog(dialogOptions);
   }
@@ -777,8 +831,8 @@ Blockly.BOX_DIRECTIONS = ['top', 'right', 'bottom', 'left'];
  * @param {goog.math.Box} box
  * @param {number} amount
  */
-Blockly.addToNonZeroSides = function (box, amount) {
-  Blockly.BOX_DIRECTIONS.forEach(function (direction) {
+Blockly.addToNonZeroSides = function(box, amount) {
+  Blockly.BOX_DIRECTIONS.forEach(function(direction) {
     if (box[direction] !== 0) {
       box[direction] += amount;
     }
@@ -791,7 +845,7 @@ Blockly.addToNonZeroSides = function (box, amount) {
  * {@link https://css-tricks.com/almanac/properties/p/pointer-events/}
  * @param {Element} element - SVG element
  */
-Blockly.svgIgnoreMouseEvents = function (element) {
+Blockly.svgIgnoreMouseEvents = function(element) {
   element.style.pointerEvents = 'none';
 };
 
@@ -801,7 +855,7 @@ Blockly.svgIgnoreMouseEvents = function (element) {
  * Note: Intended for testing only. Creates events using MouseEvents.
  * @param target
  */
-Blockly.fireTestClickSequence = function (target) {
+Blockly.fireTestClickSequence = function(target) {
   Blockly.fireTestMouseEvent(target, 'mousedown');
   Blockly.fireTestMouseEvent(target, 'mouseup');
   Blockly.fireTestMouseEvent(target, 'click');
@@ -815,9 +869,9 @@ Blockly.fireTestClickSequence = function (target) {
  * @param {EventTarget} target
  * @param {string} eventName e.g. click, mousedown, mouseup
  */
-Blockly.fireTestMouseEvent = function (target, eventName) {
+Blockly.fireTestMouseEvent = function(target, eventName) {
   if (!document.createEvent) {
-    throw "fireTestMouseEvent is only for testing in browsers with createEvent";
+    throw 'fireTestMouseEvent is only for testing in browsers with createEvent';
   }
 
   target.dispatchEvent(Blockly.makeTestMouseEvent(eventName));
@@ -827,10 +881,25 @@ Blockly.fireTestMouseEvent = function (target, eventName) {
  * Makes a dummy mouse event with the given event name.
  * @param {string} eventName e.g. click, mousedown, mouseup
  */
-Blockly.makeTestMouseEvent = function (eventName) {
-  var event = document.createEvent("MouseEvents");
-  event.initMouseEvent(eventName, true, true, window,
-      0, 0, 0, 0, 0, false, false, false, false, 0, null);
+Blockly.makeTestMouseEvent = function(eventName) {
+  var event = document.createEvent('MouseEvents');
+  event.initMouseEvent(
+    eventName,
+    true,
+    true,
+    window,
+    0,
+    0,
+    0,
+    0,
+    0,
+    false,
+    false,
+    false,
+    false,
+    0,
+    null
+  );
   return event;
 };
 
@@ -839,7 +908,7 @@ Blockly.makeTestMouseEvent = function (eventName) {
  * @param {Blockly.Block[]} blocks
  * @returns {Blockly.Block|null} block with empty input, or null if none found
  */
-Blockly.findEmptyContainerBlock = function (blocks) {
+Blockly.findEmptyContainerBlock = function(blocks) {
   for (var i = 0; i < blocks.length; i++) {
     var block = blocks[i];
     if (Blockly.findEmptyInput(block, Blockly.NEXT_STATEMENT)) {
@@ -855,7 +924,7 @@ Blockly.findEmptyContainerBlock = function (blocks) {
  * @param {number} inputType
  * @returns {Blockly.Input|null} empty input or null if none found
  */
-Blockly.findEmptyInput = function (block, inputType) {
+Blockly.findEmptyInput = function(block, inputType) {
   return goog.array.find(block.inputList, function(input) {
     return input.type === inputType && !input.connection.targetConnection;
   });
@@ -867,8 +936,8 @@ Blockly.findEmptyInput = function (block, inputType) {
  * @param {string[]} list
  * @returns {Object.<string, number>}
  */
-Blockly.aggregateCounts = function (list) {
-  return list.reduce(function (prev, curr) {
+Blockly.aggregateCounts = function(list) {
+  return list.reduce(function(prev, curr) {
     var count = prev[curr] || 0;
     prev[curr] = count + 1;
     return prev;

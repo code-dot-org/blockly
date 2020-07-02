@@ -27,14 +27,12 @@ goog.provide('Blockly.Blocks.lists');
 
 goog.require('Blockly.Blocks');
 
-
 Blockly.Blocks.lists_create_empty = {
   // Create an empty list.
   init: function() {
     this.setHelpUrl(Blockly.Msg.LISTS_CREATE_EMPTY_HELPURL);
     this.setOutput(true, Blockly.BlockValueType.ARRAY);
-    this.appendDummyInput()
-        .appendTitle(Blockly.Msg.LISTS_CREATE_EMPTY_TITLE);
+    this.appendDummyInput().appendTitle(Blockly.Msg.LISTS_CREATE_EMPTY_TITLE);
     this.setTooltip(Blockly.Msg.LISTS_CREATE_EMPTY_TOOLTIP);
   }
 };
@@ -42,8 +40,9 @@ Blockly.Blocks.lists_create_empty = {
 Blockly.Blocks.lists_create_with = {
   // Create a list with any number of elements of any type.
   init: function() {
-    this.appendValueInput('ADD0')
-        .appendTitle(Blockly.Msg.LISTS_CREATE_WITH_INPUT_WITH);
+    this.appendValueInput('ADD0').appendTitle(
+      Blockly.Msg.LISTS_CREATE_WITH_INPUT_WITH
+    );
     this.appendValueInput('ADD1');
     this.appendValueInput('ADD2');
     this.setOutput(true, Blockly.BlockValueType.ARRAY);
@@ -68,13 +67,16 @@ Blockly.Blocks.lists_create_with = {
       }
     }
     if (this.itemCount_ == 0) {
-      this.appendDummyInput('EMPTY')
-          .appendTitle(Blockly.Msg.LISTS_CREATE_EMPTY_TITLE);
+      this.appendDummyInput('EMPTY').appendTitle(
+        Blockly.Msg.LISTS_CREATE_EMPTY_TITLE
+      );
     }
   },
   decompose: function(blockSpace) {
-    var containerBlock = new Blockly.Block(blockSpace,
-                                           'lists_create_with_container');
+    var containerBlock = new Blockly.Block(
+      blockSpace,
+      'lists_create_with_container'
+    );
     containerBlock.initSvg();
     var connection = containerBlock.getInput('STACK').connection;
     for (var x = 0; x < this.itemCount_; x++) {
@@ -107,12 +109,13 @@ Blockly.Blocks.lists_create_with = {
         input.connection.connect(itemBlock.valueConnection_);
       }
       this.itemCount_++;
-      itemBlock = itemBlock.nextConnection &&
-          itemBlock.nextConnection.targetBlock();
+      itemBlock =
+        itemBlock.nextConnection && itemBlock.nextConnection.targetBlock();
     }
     if (this.itemCount_ == 0) {
-      this.appendDummyInput('EMPTY')
-          .appendTitle(Blockly.Msg.LISTS_CREATE_EMPTY_TITLE);
+      this.appendDummyInput('EMPTY').appendTitle(
+        Blockly.Msg.LISTS_CREATE_EMPTY_TITLE
+      );
     }
   },
   saveConnections: function(containerBlock) {
@@ -123,8 +126,8 @@ Blockly.Blocks.lists_create_with = {
       var input = this.getInput('ADD' + x);
       itemBlock.valueConnection_ = input && input.connection.targetConnection;
       x++;
-      itemBlock = itemBlock.nextConnection &&
-          itemBlock.nextConnection.targetBlock();
+      itemBlock =
+        itemBlock.nextConnection && itemBlock.nextConnection.targetBlock();
     }
   }
 };
@@ -133,8 +136,9 @@ Blockly.Blocks.lists_create_with_container = {
   // Container.
   init: function() {
     this.setHSV(40, 1.0, 0.99);
-    this.appendDummyInput()
-        .appendTitle(Blockly.Msg.LISTS_CREATE_WITH_CONTAINER_TITLE_ADD);
+    this.appendDummyInput().appendTitle(
+      Blockly.Msg.LISTS_CREATE_WITH_CONTAINER_TITLE_ADD
+    );
     this.appendStatementInput('STACK');
     this.setTooltip(Blockly.Msg.LISTS_CREATE_WITH_CONTAINER_TOOLTIP);
     this.contextMenu = false;
@@ -145,8 +149,9 @@ Blockly.Blocks.lists_create_with_item = {
   // Add items.
   init: function() {
     this.setHSV(40, 1.0, 0.99);
-    this.appendDummyInput()
-        .appendTitle(Blockly.Msg.LISTS_CREATE_WITH_ITEM_TITLE);
+    this.appendDummyInput().appendTitle(
+      Blockly.Msg.LISTS_CREATE_WITH_ITEM_TITLE
+    );
     this.setPreviousStatement(true);
     this.setNextStatement(true);
     this.setTooltip(Blockly.Msg.LISTS_CREATE_WITH_ITEM_TOOLTIP);
@@ -159,10 +164,12 @@ Blockly.Blocks.lists_repeat = {
   init: function() {
     this.setHelpUrl(Blockly.Msg.LISTS_REPEAT_HELPURL);
     this.setOutput(true, Blockly.BlockValueType.ARRAY);
-    this.interpolateMsg(Blockly.Msg.LISTS_REPEAT_TITLE,
-                        ['ITEM', null, Blockly.ALIGN_RIGHT],
-                        ['NUM', 'Number', Blockly.ALIGN_RIGHT],
-                        Blockly.ALIGN_RIGHT);
+    this.interpolateMsg(
+      Blockly.Msg.LISTS_REPEAT_TITLE,
+      ['ITEM', null, Blockly.ALIGN_RIGHT],
+      ['NUM', 'Number', Blockly.ALIGN_RIGHT],
+      Blockly.ALIGN_RIGHT
+    );
     this.setTooltip(Blockly.Msg.LISTS_REPEAT_TOOLTIP);
   }
 };
@@ -173,8 +180,8 @@ Blockly.Blocks.lists_length = {
     this.setHelpUrl(Blockly.Msg.LISTS_LENGTH_HELPURL);
     this.setHSV(40, 1.0, 0.99);
     this.appendValueInput('VALUE')
-        .setCheck([Blockly.BlockValueType.ARRAY, Blockly.BlockValueType.STRING])
-        .appendTitle(Blockly.Msg.LISTS_LENGTH_INPUT_LENGTH);
+      .setCheck([Blockly.BlockValueType.ARRAY, Blockly.BlockValueType.STRING])
+      .appendTitle(Blockly.Msg.LISTS_LENGTH_INPUT_LENGTH);
     this.setOutput(true, Blockly.BlockValueType.NUMBER);
     this.setTooltip(Blockly.Msg.LISTS_LENGTH_TOOLTIP);
   }
@@ -185,9 +192,11 @@ Blockly.Blocks.lists_isEmpty = {
   init: function() {
     this.setHelpUrl(Blockly.Msg.LISTS_IS_EMPTY_HELPURL);
     this.setHSV(40, 1.0, 0.99);
-    this.interpolateMsg(Blockly.Msg.LISTS_IS_EMPTY_TITLE,
-                        ['VALUE', ['Array', 'String'], Blockly.ALIGN_RIGHT],
-                        Blockly.ALIGN_RIGHT)
+    this.interpolateMsg(
+      Blockly.Msg.LISTS_IS_EMPTY_TITLE,
+      ['VALUE', ['Array', 'String'], Blockly.ALIGN_RIGHT],
+      Blockly.ALIGN_RIGHT
+    );
     this.setInputsInline(true);
     this.setOutput(true, Blockly.BlockValueType.BOOLEAN);
     this.setTooltip(Blockly.Msg.LISTS_TOOLTIP);
@@ -197,17 +206,20 @@ Blockly.Blocks.lists_isEmpty = {
 Blockly.Blocks.lists_indexOf = {
   // Find an item in the list.
   init: function() {
-    var OPERATORS =
-        [[Blockly.Msg.LISTS_INDEX_OF_FIRST, 'FIRST'],
-         [Blockly.Msg.LISTS_INDEX_OF_LAST, 'LAST']];
+    var OPERATORS = [
+      [Blockly.Msg.LISTS_INDEX_OF_FIRST, 'FIRST'],
+      [Blockly.Msg.LISTS_INDEX_OF_LAST, 'LAST']
+    ];
     this.setHelpUrl(Blockly.Msg.LISTS_INDEX_OF_HELPURL);
     this.setHSV(40, 1.0, 0.99);
     this.setOutput(true, Blockly.BlockValueType.NUMBER);
     this.appendValueInput('VALUE')
-        .setCheck(Blockly.BlockValueType.ARRAY)
-        .appendTitle(Blockly.Msg.LISTS_INDEX_OF_INPUT_IN_LIST);
-    this.appendValueInput('FIND')
-        .appendTitle(new Blockly.FieldDropdown(OPERATORS), 'END');
+      .setCheck(Blockly.BlockValueType.ARRAY)
+      .appendTitle(Blockly.Msg.LISTS_INDEX_OF_INPUT_IN_LIST);
+    this.appendValueInput('FIND').appendTitle(
+      new Blockly.FieldDropdown(OPERATORS),
+      'END'
+    );
     this.setInputsInline(true);
     this.setTooltip(Blockly.Msg.LISTS_INDEX_OF_TOOLTIP);
   }
@@ -216,32 +228,35 @@ Blockly.Blocks.lists_indexOf = {
 Blockly.Blocks.lists_getIndex = {
   // Get element at index.
   init: function() {
-    var MODE =
-        [[Blockly.Msg.LISTS_GET_INDEX_GET, 'GET'],
-         [Blockly.Msg.LISTS_GET_INDEX_GET_REMOVE, 'GET_REMOVE'],
-         [Blockly.Msg.LISTS_GET_INDEX_REMOVE, 'REMOVE']];
-    this.WHERE_OPTIONS =
-        [[Blockly.Msg.LISTS_GET_INDEX_FROM_START, 'FROM_START'],
-         [Blockly.Msg.LISTS_GET_INDEX_FROM_END, 'FROM_END'],
-         [Blockly.Msg.LISTS_GET_INDEX_FIRST, 'FIRST'],
-         [Blockly.Msg.LISTS_GET_INDEX_LAST, 'LAST'],
-         [Blockly.Msg.LISTS_GET_INDEX_RANDOM, 'RANDOM']];
+    var MODE = [
+      [Blockly.Msg.LISTS_GET_INDEX_GET, 'GET'],
+      [Blockly.Msg.LISTS_GET_INDEX_GET_REMOVE, 'GET_REMOVE'],
+      [Blockly.Msg.LISTS_GET_INDEX_REMOVE, 'REMOVE']
+    ];
+    this.WHERE_OPTIONS = [
+      [Blockly.Msg.LISTS_GET_INDEX_FROM_START, 'FROM_START'],
+      [Blockly.Msg.LISTS_GET_INDEX_FROM_END, 'FROM_END'],
+      [Blockly.Msg.LISTS_GET_INDEX_FIRST, 'FIRST'],
+      [Blockly.Msg.LISTS_GET_INDEX_LAST, 'LAST'],
+      [Blockly.Msg.LISTS_GET_INDEX_RANDOM, 'RANDOM']
+    ];
     this.setHelpUrl(Blockly.Msg.LISTS_GET_INDEX_HELPURL);
     this.setHSV(40, 1.0, 0.99);
     var modeMenu = new Blockly.FieldDropdown(MODE, function(value) {
-      var isStatement = (value == 'REMOVE');
+      var isStatement = value == 'REMOVE';
       this.sourceBlock_.updateStatement(isStatement);
     });
     this.appendValueInput('VALUE')
-        .setCheck(Blockly.BlockValueType.ARRAY)
-        .appendTitle(Blockly.Msg.LISTS_GET_INDEX_INPUT_IN_LIST);
+      .setCheck(Blockly.BlockValueType.ARRAY)
+      .appendTitle(Blockly.Msg.LISTS_GET_INDEX_INPUT_IN_LIST);
     this.appendDummyInput()
-        .appendTitle(modeMenu, 'MODE')
-        .appendTitle('', 'SPACE');
+      .appendTitle(modeMenu, 'MODE')
+      .appendTitle('', 'SPACE');
     this.appendDummyInput('AT');
     if (Blockly.Msg.LISTS_GET_INDEX_TAIL) {
-      this.appendDummyInput('TAIL')
-          .appendTitle(Blockly.Msg.LISTS_GET_INDEX_TAIL);
+      this.appendDummyInput('TAIL').appendTitle(
+        Blockly.Msg.LISTS_GET_INDEX_TAIL
+      );
     }
     this.setInputsInline(true);
     this.setOutput(true);
@@ -249,8 +264,10 @@ Blockly.Blocks.lists_getIndex = {
     // Assign 'this' to a variable for use in the tooltip closure below.
     var thisBlock = this;
     this.setTooltip(function() {
-      var combo = thisBlock.getTitleValue('MODE') + '_' +
-          thisBlock.getTitleValue('WHERE');
+      var combo =
+        thisBlock.getTitleValue('MODE') +
+        '_' +
+        thisBlock.getTitleValue('WHERE');
       return Blockly.Msg['LISTS_GET_INDEX_TOOLTIP_' + combo];
     });
   },
@@ -268,9 +285,9 @@ Blockly.Blocks.lists_getIndex = {
     // Restore the block shape.
     // Note: Until January 2013 this block did not have mutations,
     // so 'statement' defaults to false and 'at' defaults to true.
-    var isStatement = (xmlElement.getAttribute('statement') == 'true');
+    var isStatement = xmlElement.getAttribute('statement') == 'true';
     this.updateStatement(isStatement);
-    var isAt = (xmlElement.getAttribute('at') != 'false');
+    var isAt = xmlElement.getAttribute('at') != 'false';
     this.updateAt(isAt);
   },
   updateStatement: function(newStatement) {
@@ -298,14 +315,15 @@ Blockly.Blocks.lists_getIndex = {
     if (isAt) {
       this.appendValueInput('AT').setCheck(Blockly.BlockValueType.NUMBER);
       if (Blockly.Msg.ORDINAL_NUMBER_SUFFIX) {
-        this.appendDummyInput('ORDINAL')
-            .appendTitle(Blockly.Msg.ORDINAL_NUMBER_SUFFIX);
+        this.appendDummyInput('ORDINAL').appendTitle(
+          Blockly.Msg.ORDINAL_NUMBER_SUFFIX
+        );
       }
     } else {
       this.appendDummyInput('AT');
     }
     var menu = new Blockly.FieldDropdown(this.WHERE_OPTIONS, function(value) {
-      var newAt = (value == 'FROM_START') || (value == 'FROM_END');
+      var newAt = value == 'FROM_START' || value == 'FROM_END';
       // The 'isAt' variable is available due to this function being a closure.
       if (newAt != isAt) {
         var block = this.sourceBlock_;
@@ -326,26 +344,29 @@ Blockly.Blocks.lists_getIndex = {
 Blockly.Blocks.lists_setIndex = {
   // Set element at index.
   init: function() {
-    var MODE =
-        [[Blockly.Msg.LISTS_SET_INDEX_SET, 'SET'],
-         [Blockly.Msg.LISTS_SET_INDEX_INSERT, 'INSERT']];
-    this.WHERE_OPTIONS =
-        [[Blockly.Msg.LISTS_GET_INDEX_FROM_START, 'FROM_START'],
-         [Blockly.Msg.LISTS_GET_INDEX_FROM_END, 'FROM_END'],
-         [Blockly.Msg.LISTS_GET_INDEX_FIRST, 'FIRST'],
-         [Blockly.Msg.LISTS_GET_INDEX_LAST, 'LAST'],
-         [Blockly.Msg.LISTS_GET_INDEX_RANDOM, 'RANDOM']];
+    var MODE = [
+      [Blockly.Msg.LISTS_SET_INDEX_SET, 'SET'],
+      [Blockly.Msg.LISTS_SET_INDEX_INSERT, 'INSERT']
+    ];
+    this.WHERE_OPTIONS = [
+      [Blockly.Msg.LISTS_GET_INDEX_FROM_START, 'FROM_START'],
+      [Blockly.Msg.LISTS_GET_INDEX_FROM_END, 'FROM_END'],
+      [Blockly.Msg.LISTS_GET_INDEX_FIRST, 'FIRST'],
+      [Blockly.Msg.LISTS_GET_INDEX_LAST, 'LAST'],
+      [Blockly.Msg.LISTS_GET_INDEX_RANDOM, 'RANDOM']
+    ];
     this.setHelpUrl(Blockly.Msg.LISTS_SET_INDEX_HELPURL);
     this.setHSV(40, 1.0, 0.99);
     this.appendValueInput('LIST')
-        .setCheck(Blockly.BlockValueType.ARRAY)
-        .appendTitle(Blockly.Msg.LISTS_SET_INDEX_INPUT_IN_LIST);
+      .setCheck(Blockly.BlockValueType.ARRAY)
+      .appendTitle(Blockly.Msg.LISTS_SET_INDEX_INPUT_IN_LIST);
     this.appendDummyInput()
-        .appendTitle(new Blockly.FieldDropdown(MODE), 'MODE')
-        .appendTitle('', 'SPACE');
+      .appendTitle(new Blockly.FieldDropdown(MODE), 'MODE')
+      .appendTitle('', 'SPACE');
     this.appendDummyInput('AT');
-    this.appendValueInput('TO')
-        .appendTitle(Blockly.Msg.LISTS_SET_INDEX_INPUT_TO);
+    this.appendValueInput('TO').appendTitle(
+      Blockly.Msg.LISTS_SET_INDEX_INPUT_TO
+    );
     this.setInputsInline(true);
     this.setPreviousStatement(true);
     this.setNextStatement(true);
@@ -354,8 +375,10 @@ Blockly.Blocks.lists_setIndex = {
     // Assign 'this' to a variable for use in the tooltip closure below.
     var thisBlock = this;
     this.setTooltip(function() {
-      var combo = thisBlock.getTitleValue('MODE') + '_' +
-          thisBlock.getTitleValue('WHERE');
+      var combo =
+        thisBlock.getTitleValue('MODE') +
+        '_' +
+        thisBlock.getTitleValue('WHERE');
       return Blockly.Msg['LISTS_SET_INDEX_TOOLTIP_' + combo];
     });
   },
@@ -370,7 +393,7 @@ Blockly.Blocks.lists_setIndex = {
     // Restore the block shape.
     // Note: Until January 2013 this block did not have mutations,
     // so 'at' defaults to true.
-    var isAt = (xmlElement.getAttribute('at') != 'false');
+    var isAt = xmlElement.getAttribute('at') != 'false';
     this.updateAt(isAt);
   },
   updateAt: function(isAt) {
@@ -382,14 +405,15 @@ Blockly.Blocks.lists_setIndex = {
     if (isAt) {
       this.appendValueInput('AT').setCheck(Blockly.BlockValueType.NUMBER);
       if (Blockly.Msg.ORDINAL_NUMBER_SUFFIX) {
-        this.appendDummyInput('ORDINAL')
-            .appendTitle(Blockly.Msg.ORDINAL_NUMBER_SUFFIX);
+        this.appendDummyInput('ORDINAL').appendTitle(
+          Blockly.Msg.ORDINAL_NUMBER_SUFFIX
+        );
       }
     } else {
       this.appendDummyInput('AT');
     }
     var menu = new Blockly.FieldDropdown(this.WHERE_OPTIONS, function(value) {
-      var newAt = (value == 'FROM_START') || (value == 'FROM_END');
+      var newAt = value == 'FROM_START' || value == 'FROM_END';
       // The 'isAt' variable is available due to this function being a closure.
       if (newAt != isAt) {
         var block = this.sourceBlock_;
@@ -412,23 +436,26 @@ Blockly.Blocks.lists_setIndex = {
 Blockly.Blocks.lists_getSublist = {
   // Get sublist.
   init: function() {
-    this.WHERE_OPTIONS_1 =
-        [[Blockly.Msg.LISTS_GET_INDEX_FROM_START, 'FROM_START'],
-         [Blockly.Msg.LISTS_GET_INDEX_FROM_END, 'FROM_END'],
-         [Blockly.Msg.LISTS_GET_INDEX_FIRST, 'FIRST']];
-    this.WHERE_OPTIONS_2 =
-        [[Blockly.Msg.LISTS_GET_INDEX_FROM_START, 'FROM_START'],
-         [Blockly.Msg.LISTS_GET_INDEX_FROM_END, 'FROM_END'],
-         [Blockly.Msg.LISTS_GET_INDEX_LAST, 'LAST']];
+    this.WHERE_OPTIONS_1 = [
+      [Blockly.Msg.LISTS_GET_INDEX_FROM_START, 'FROM_START'],
+      [Blockly.Msg.LISTS_GET_INDEX_FROM_END, 'FROM_END'],
+      [Blockly.Msg.LISTS_GET_INDEX_FIRST, 'FIRST']
+    ];
+    this.WHERE_OPTIONS_2 = [
+      [Blockly.Msg.LISTS_GET_INDEX_FROM_START, 'FROM_START'],
+      [Blockly.Msg.LISTS_GET_INDEX_FROM_END, 'FROM_END'],
+      [Blockly.Msg.LISTS_GET_INDEX_LAST, 'LAST']
+    ];
     this.setHelpUrl(Blockly.Msg.LISTS_GET_SUBLIST_HELPURL);
     this.appendValueInput('LIST')
-        .setCheck(Blockly.BlockValueType.ARRAY)
-        .appendTitle(Blockly.Msg.LISTS_GET_SUBLIST_INPUT_IN_LIST);
+      .setCheck(Blockly.BlockValueType.ARRAY)
+      .appendTitle(Blockly.Msg.LISTS_GET_SUBLIST_INPUT_IN_LIST);
     this.appendDummyInput('AT1');
     this.appendDummyInput('AT2');
     if (Blockly.Msg.LISTS_GET_SUBLIST_TAIL) {
-      this.appendDummyInput('TAIL')
-          .appendTitle(Blockly.Msg.LISTS_GET_SUBLIST_TAIL);
+      this.appendDummyInput('TAIL').appendTitle(
+        Blockly.Msg.LISTS_GET_SUBLIST_TAIL
+      );
     }
     this.setInputsInline(true);
     this.setOutput(true, Blockly.BlockValueType.ARRAY);
@@ -447,8 +474,8 @@ Blockly.Blocks.lists_getSublist = {
   },
   domToMutation: function(xmlElement) {
     // Restore the block shape.
-    var isAt1 = (xmlElement.getAttribute('at1') == 'true');
-    var isAt2 = (xmlElement.getAttribute('at2') == 'true');
+    var isAt1 = xmlElement.getAttribute('at1') == 'true';
+    var isAt2 = xmlElement.getAttribute('at2') == 'true';
     this.updateAt(1, isAt1);
     this.updateAt(2, isAt2);
   },
@@ -461,15 +488,17 @@ Blockly.Blocks.lists_getSublist = {
     if (isAt) {
       this.appendValueInput('AT' + n).setCheck(Blockly.BlockValueType.NUMBER);
       if (Blockly.Msg.ORDINAL_NUMBER_SUFFIX) {
-        this.appendDummyInput('ORDINAL' + n)
-            .appendTitle(Blockly.Msg.ORDINAL_NUMBER_SUFFIX);
+        this.appendDummyInput('ORDINAL' + n).appendTitle(
+          Blockly.Msg.ORDINAL_NUMBER_SUFFIX
+        );
       }
     } else {
       this.appendDummyInput('AT' + n);
     }
-    var menu = new Blockly.FieldDropdown(this['WHERE_OPTIONS_' + n],
-        function(value) {
-      var newAt = (value == 'FROM_START') || (value == 'FROM_END');
+    var menu = new Blockly.FieldDropdown(this['WHERE_OPTIONS_' + n], function(
+      value
+    ) {
+      var newAt = value == 'FROM_START' || value == 'FROM_END';
       // The 'isAt' variable is available due to this function being a closure.
       if (newAt != isAt) {
         var block = this.sourceBlock_;
@@ -480,8 +509,7 @@ Blockly.Blocks.lists_getSublist = {
       }
       return undefined;
     });
-    this.getInput('AT' + n)
-        .appendTitle(menu, 'WHERE' + n);
+    this.getInput('AT' + n).appendTitle(menu, 'WHERE' + n);
     if (n == 1) {
       this.moveInputBefore('AT1', 'AT2');
       if (this.getInput('ORDINAL1')) {

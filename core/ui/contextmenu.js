@@ -54,17 +54,23 @@ Blockly.ContextMenu.show = function(e, options) {
   */
   var menu = new goog.ui.Menu();
 
-  for (var x = 0, option; option = options[x]; x++) {
+  for (var x = 0, option; (option = options[x]); x++) {
     var menuItem = new goog.ui.MenuItem(option.text);
     menu.addItem(menuItem);
     menuItem.setEnabled(option.enabled);
     if (option.enabled) {
-      goog.events.listen(menuItem, goog.ui.Component.EventType.ACTION,
-                         option.callback);
+      goog.events.listen(
+        menuItem,
+        goog.ui.Component.EventType.ACTION,
+        option.callback
+      );
     }
   }
-  goog.events.listen(menu, goog.ui.Component.EventType.ACTION,
-                     Blockly.ContextMenu.hide);
+  goog.events.listen(
+    menu,
+    goog.ui.Component.EventType.ACTION,
+    Blockly.ContextMenu.hide
+  );
   // Record windowSize and scrollOffset before adding menu.
   var windowSize = goog.dom.getViewportSize();
   var scrollOffset = goog.style.getViewportPageOffset(document);
@@ -119,14 +125,17 @@ Blockly.ContextMenu.optionToDom_ = function(text) {
       <text class="blocklyMenuText" x="20" y="15">Make It So</text>
     </g>
   */
-  var gElement = Blockly.createSvgElement('g', {'class': 'blocklyMenuDiv'},
-                                          null);
-  var rectElement = Blockly.createSvgElement('rect',
-      {'height': Blockly.ContextMenu.Y_HEIGHT}, gElement);
-  var textElement = Blockly.createSvgElement('text',
-      {'class': 'blocklyMenuText',
-      'x': Blockly.ContextMenu.X_PADDING,
-      'y': 15}, gElement);
+  var gElement = Blockly.createSvgElement('g', {class: 'blocklyMenuDiv'}, null);
+  var rectElement = Blockly.createSvgElement(
+    'rect',
+    {height: Blockly.ContextMenu.Y_HEIGHT},
+    gElement
+  );
+  var textElement = Blockly.createSvgElement(
+    'text',
+    {class: 'blocklyMenuText', x: Blockly.ContextMenu.X_PADDING, y: 15},
+    gElement
+  );
   var textNode = document.createTextNode(text);
   textElement.appendChild(textNode);
   return gElement;

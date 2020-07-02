@@ -27,15 +27,15 @@ Blockly.Blocks.unittest_main = {
   // Container for unit tests.
   init: function() {
     this.setColour(65);
-    this.appendDummyInput()
-        .appendTitle('run tests');
+    this.appendDummyInput().appendTitle('run tests');
     this.appendStatementInput('DO');
-    this.setTooltip('Executes the enclosed unit tests,\n' +
-                    'then prints a summary.');
+    this.setTooltip(
+      'Executes the enclosed unit tests,\n' + 'then prints a summary.'
+    );
   },
   getVars: function() {
     return {
-      Default: ['unittestResults'],
+      Default: ['unittestResults']
     };
   }
 };
@@ -46,17 +46,17 @@ Blockly.Blocks.unittest_assertequals = {
     this.setColour(65);
     this.setPreviousStatement(true);
     this.setNextStatement(true);
-    this.appendDummyInput()
-        .appendTitle(new Blockly.FieldTextInput('test name'), 'MESSAGE');
-    this.appendValueInput('ACTUAL', null)
-        .appendTitle('actual');
-    this.appendValueInput('EXPECTED', null)
-        .appendTitle('expected');
+    this.appendDummyInput().appendTitle(
+      new Blockly.FieldTextInput('test name'),
+      'MESSAGE'
+    );
+    this.appendValueInput('ACTUAL', null).appendTitle('actual');
+    this.appendValueInput('EXPECTED', null).appendTitle('expected');
     this.setTooltip('Tests that "actual == expected".');
   },
   getVars: function() {
     return {
-      Default: ['unittestResults'],
+      Default: ['unittestResults']
     };
   }
 };
@@ -67,17 +67,25 @@ Blockly.Blocks.unittest_assertvalue = {
     this.setColour(65);
     this.setPreviousStatement(true);
     this.setNextStatement(true);
-    this.appendDummyInput()
-        .appendTitle(new Blockly.FieldTextInput('test name'), 'MESSAGE');
+    this.appendDummyInput().appendTitle(
+      new Blockly.FieldTextInput('test name'),
+      'MESSAGE'
+    );
     this.appendValueInput('ACTUAL', Boolean)
-        .appendTitle('assert')
-        .appendTitle(new Blockly.FieldDropdown(
-        [['true', 'TRUE'], ['false', 'FALSE'], ['null', 'NULL']]), 'EXPECTED');
+      .appendTitle('assert')
+      .appendTitle(
+        new Blockly.FieldDropdown([
+          ['true', 'TRUE'],
+          ['false', 'FALSE'],
+          ['null', 'NULL']
+        ]),
+        'EXPECTED'
+      );
     this.setTooltip('Tests that the value is true, false, or null.');
   },
   getVars: function() {
     return {
-      Default: ['unittestResults'],
+      Default: ['unittestResults']
     };
   }
 };
@@ -89,13 +97,13 @@ Blockly.Blocks.unittest_fail = {
     this.setPreviousStatement(true);
     this.setNextStatement(true);
     this.appendDummyInput()
-        .appendTitle(new Blockly.FieldTextInput('test name'), 'MESSAGE')
-        .appendTitle('fail');
+      .appendTitle(new Blockly.FieldTextInput('test name'), 'MESSAGE')
+      .appendTitle('fail');
     this.setTooltip('Records an error.');
   },
   getVars: function() {
     return {
-      Default: ['unittestResults'],
+      Default: ['unittestResults']
     };
   }
 };

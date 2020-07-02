@@ -40,12 +40,16 @@ Blockly.FieldLabel = function(text, customOptions) {
 
   this.sourceBlock_ = null;
   // Build the DOM.
-  this.textElement_ = Blockly.createSvgElement('text',
-      {'class': 'blocklyText'}, null);
+  this.textElement_ = Blockly.createSvgElement(
+    'text',
+    {class: 'blocklyText'},
+    null
+  );
 
   var loadingSize = {width: 0, height: 25};
   this.forceSize_ = customOptions.hasOwnProperty('fixedSize');
-  this.forceWidth_ = this.forceSize_ && customOptions.fixedSize.width !== undefined;
+  this.forceWidth_ =
+    this.forceSize_ && customOptions.fixedSize.width !== undefined;
 
   // ideally we would dynamically resize based on fontSize. instead we depend
   // on fixedSize being set if you want to also change the size
@@ -87,7 +91,6 @@ Blockly.FieldLabel.prototype.getSize = function() {
   return this.size_;
 };
 
-
 Blockly.FieldLabel.prototype.getBufferY = function() {
   // If we explicitly set a fontSize, center our text by having a y buffer on top.
   if (!this.fontSize_) {
@@ -115,7 +118,7 @@ Blockly.FieldLabel.prototype.setText = function(text) {
   this.textElement_.appendChild(textNode);
 
   if (this.fontSize_) {
-    this.textElement_.style.fontSize = this.fontSize_ + "px";
+    this.textElement_.style.fontSize = this.fontSize_ + 'px';
   }
 
   // Cached width is obsolete.  Clear it.

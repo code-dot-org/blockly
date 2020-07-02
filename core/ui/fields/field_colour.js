@@ -28,7 +28,6 @@ goog.provide('Blockly.FieldColour');
 goog.require('Blockly.Field');
 goog.require('goog.ui.ColorPicker');
 
-
 /**
  * Class for a colour input field.
  * @param {string} colour The initial colour in '#rrggbb' format.
@@ -123,22 +122,24 @@ Blockly.FieldColour.prototype.showEditor_ = function() {
 
   // Configure event handler.
   var thisObj = this;
-  Blockly.FieldColour.changeEventKey_ = goog.events.listen(picker,
-      goog.ui.ColorPicker.EventType.CHANGE,
-      function(event) {
-        var colour = event.target.getSelectedColor() || '#000000';
-        Blockly.WidgetDiv.hide();
-        if (thisObj.changeHandler_) {
-          // Call any change handler, and allow it to override.
-          var override = thisObj.changeHandler_(colour);
-          if (override !== undefined) {
-            colour = override;
-          }
+  Blockly.FieldColour.changeEventKey_ = goog.events.listen(
+    picker,
+    goog.ui.ColorPicker.EventType.CHANGE,
+    function(event) {
+      var colour = event.target.getSelectedColor() || '#000000';
+      Blockly.WidgetDiv.hide();
+      if (thisObj.changeHandler_) {
+        // Call any change handler, and allow it to override.
+        var override = thisObj.changeHandler_(colour);
+        if (override !== undefined) {
+          colour = override;
         }
-        if (colour !== null) {
-          thisObj.setValue(colour);
-        }
-      });
+      }
+      if (colour !== null) {
+        thisObj.setValue(colour);
+      }
+    }
+  );
 };
 
 /**
@@ -146,19 +147,23 @@ Blockly.FieldColour.prototype.showEditor_ = function() {
  */
 Blockly.FieldColour.prototype.positionWidgetDiv = function() {
   // Position the palette to line up with the field.
-  var xy = Blockly.getAbsoluteXY_(/** @type {!Element} */ (this.borderRect_), this.
-    getRootSVGElement_());
-  if (navigator.userAgent.indexOf("MSIE") >= 0 || navigator.userAgent.indexOf("Trident") >= 0) {
-      this.borderRect_.style.display = "inline";   /* reqd for IE */
-      var borderBBox = {
-          x: this.borderRect_.getBBox().x,
-          y: this.borderRect_.getBBox().y,
-          width: this.borderRect_.scrollWidth,
-          height: this.borderRect_.scrollHeight
-      };
-  }
-  else {
-      var borderBBox = this.borderRect_.getBBox();
+  var xy = Blockly.getAbsoluteXY_(
+    /** @type {!Element} */ (this.borderRect_),
+    this.getRootSVGElement_()
+  );
+  if (
+    navigator.userAgent.indexOf('MSIE') >= 0 ||
+    navigator.userAgent.indexOf('Trident') >= 0
+  ) {
+    this.borderRect_.style.display = 'inline'; /* reqd for IE */
+    var borderBBox = {
+      x: this.borderRect_.getBBox().x,
+      y: this.borderRect_.getBBox().y,
+      width: this.borderRect_.scrollWidth,
+      height: this.borderRect_.scrollHeight
+    };
+  } else {
+    var borderBBox = this.borderRect_.getBBox();
   }
   if (Blockly.RTL) {
     xy.x += borderBBox.width;
@@ -166,20 +171,22 @@ Blockly.FieldColour.prototype.positionWidgetDiv = function() {
   xy.y += borderBBox.height - 1;
   var div = Blockly.WidgetDiv.DIV;
   if (Blockly.RTL && div) {
-    xy.x -= div.offsetWidth
+    xy.x -= div.offsetWidth;
   }
 
   var windowSize = goog.dom.getViewportSize();
   var scrollOffset = goog.style.getViewportPageOffset(document);
   Blockly.WidgetDiv.position(xy.x, xy.y, windowSize, scrollOffset);
-}
+};
 
 /**
  * Hide the colour palette.
  * @override
  */
 Blockly.FieldColour.prototype.generateWidgetDisposeHandler_ = function() {
-  var superWidgetDisposeHandler_ = Blockly.FieldRectangularDropdown.superClass_.generateWidgetDisposeHandler_.call(this);
+  var superWidgetDisposeHandler_ = Blockly.FieldRectangularDropdown.superClass_.generateWidgetDisposeHandler_.call(
+    this
+  );
   return function() {
     superWidgetDisposeHandler_();
     if (Blockly.FieldColour.changeEventKey_) {

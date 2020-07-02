@@ -8,4 +8,3 @@ goog.provide('Blockly.BlockFieldHelper');
 Blockly.BlockFieldHelper = {
   ANGLE_HELPER: 'Angle Helper'
 };
-

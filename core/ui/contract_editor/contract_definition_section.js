@@ -15,34 +15,50 @@ var FUNCTION_BLOCK_VERTICAL_MARGIN = Blockly.BlockSpaceEditor.BUMP_PADDING_TOP;
  * @const
  */
 var FUNCTION_BLOCK_MIN_HORIZONTAL_MARGIN =
-    Blockly.BlockSpaceEditor.BUMP_PADDING_LEFT;
+  Blockly.BlockSpaceEditor.BUMP_PADDING_LEFT;
 
 /**
  * Handles UI state and layout for the contract editor definition section/block
  * @param {Element} canvasToDrawOn element this section should be drawn on
  * @constructor
  */
-Blockly.ContractDefinitionSection = function (canvasToDrawOn) {
+Blockly.ContractDefinitionSection = function(canvasToDrawOn) {
   this.definitionTableGroup = Blockly.createSvgElement('g', {}, canvasToDrawOn);
-  this.grayDefinitionBackground = Blockly.createSvgElement('rect', {
-    'fill': '#DDD'
-  }, this.definitionTableGroup);
+  this.grayDefinitionBackground = Blockly.createSvgElement(
+    'rect',
+    {
+      fill: '#DDD'
+    },
+    this.definitionTableGroup
+  );
   Blockly.svgIgnoreMouseEvents(this.grayDefinitionBackground);
 
-  this.verticalDefinitionMidline = Blockly.createSvgElement('rect', {
-    'fill': Blockly.ContractEditor.GRID_LINE_COLOR
-  }, this.definitionTableGroup);
+  this.verticalDefinitionMidline = Blockly.createSvgElement(
+    'rect',
+    {
+      fill: Blockly.ContractEditor.GRID_LINE_COLOR
+    },
+    this.definitionTableGroup
+  );
   this.verticalDefinitionMidline.setAttribute('width', 2.0);
   Blockly.svgIgnoreMouseEvents(this.verticalDefinitionMidline);
 
-  this.horizontalDefinitionTopLine = Blockly.createSvgElement('rect', {
-    'fill': Blockly.ContractEditor.GRID_LINE_COLOR
-  }, this.definitionTableGroup);
+  this.horizontalDefinitionTopLine = Blockly.createSvgElement(
+    'rect',
+    {
+      fill: Blockly.ContractEditor.GRID_LINE_COLOR
+    },
+    this.definitionTableGroup
+  );
   this.horizontalDefinitionTopLine.setAttribute('height', 2.0);
   Blockly.svgIgnoreMouseEvents(this.horizontalDefinitionTopLine);
-  this.horizontalDefinitionBottomLine = Blockly.createSvgElement('rect', {
-    'fill': Blockly.ContractEditor.GRID_LINE_COLOR
-  }, this.definitionTableGroup);
+  this.horizontalDefinitionBottomLine = Blockly.createSvgElement(
+    'rect',
+    {
+      fill: Blockly.ContractEditor.GRID_LINE_COLOR
+    },
+    this.definitionTableGroup
+  );
   this.horizontalDefinitionBottomLine.setAttribute('height', 2.0);
   Blockly.svgIgnoreMouseEvents(this.horizontalDefinitionBottomLine);
 };
@@ -51,7 +67,9 @@ Blockly.ContractDefinitionSection = function (canvasToDrawOn) {
  * Update UI to match new collapse state
  * @param {boolean} isNowCollapsed - whether we are now collapsed
  */
-Blockly.ContractDefinitionSection.prototype.handleCollapse = function (isNowCollapsed) {
+Blockly.ContractDefinitionSection.prototype.handleCollapse = function(
+  isNowCollapsed
+) {
   this.definitionTableGroup.style.display = isNowCollapsed ? 'none' : 'block';
 };
 
@@ -66,8 +84,12 @@ Blockly.ContractDefinitionSection.prototype.handleCollapse = function (isNowColl
  *        (possibly null during initialization steps)
  * @returns {number} new Y to continue laying out at
  */
-Blockly.ContractDefinitionSection.prototype.placeContent = function (currentY,
-    verticalMidlineX, fullWidth, functionDefinitionBlock) {
+Blockly.ContractDefinitionSection.prototype.placeContent = function(
+  currentY,
+  verticalMidlineX,
+  fullWidth,
+  functionDefinitionBlock
+) {
   if (!functionDefinitionBlock) {
     return currentY;
   }
@@ -78,20 +100,26 @@ Blockly.ContractDefinitionSection.prototype.placeContent = function (currentY,
     this.definitionTableGroup.style.display = 'none';
   } else {
     this.definitionTableGroup.style.display = 'block';
-    this.horizontalDefinitionTopLine.setAttribute('transform',
-        'translate(' + 0 + ',' + verticalMidlineY + ')');
-    this.verticalDefinitionMidline.setAttribute('transform',
-        'translate(' + verticalMidlineX + ',' + verticalMidlineY + ')');
-    this.grayDefinitionBackground.setAttribute('transform',
-        'translate(' + 0 + ',' + currentY + ')');
+    this.horizontalDefinitionTopLine.setAttribute(
+      'transform',
+      'translate(' + 0 + ',' + verticalMidlineY + ')'
+    );
+    this.verticalDefinitionMidline.setAttribute(
+      'transform',
+      'translate(' + verticalMidlineX + ',' + verticalMidlineY + ')'
+    );
+    this.grayDefinitionBackground.setAttribute(
+      'transform',
+      'translate(' + 0 + ',' + currentY + ')'
+    );
     this.horizontalDefinitionTopLine.setAttribute('width', fullWidth);
   }
 
   currentY += FUNCTION_BLOCK_VERTICAL_MARGIN;
 
-  var xOffset = functionDefinitionBlock.isVariable() ?
-      FUNCTION_BLOCK_MIN_HORIZONTAL_MARGIN :
-      FUNCTION_BLOCK_MIN_HORIZONTAL_MARGIN + verticalMidlineX;
+  var xOffset = functionDefinitionBlock.isVariable()
+    ? FUNCTION_BLOCK_MIN_HORIZONTAL_MARGIN
+    : FUNCTION_BLOCK_MIN_HORIZONTAL_MARGIN + verticalMidlineX;
   functionDefinitionBlock.moveTo(xOffset, currentY);
 
   currentY += functionDefinitionBlock.getHeightWidth().height;
@@ -99,11 +127,19 @@ Blockly.ContractDefinitionSection.prototype.placeContent = function (currentY,
   currentY += FUNCTION_BLOCK_VERTICAL_MARGIN;
 
   if (!functionDefinitionBlock.isVariable()) {
-    this.horizontalDefinitionBottomLine.setAttribute('transform',
-        'translate(' + 0 + ',' + currentY + ')');
+    this.horizontalDefinitionBottomLine.setAttribute(
+      'transform',
+      'translate(' + 0 + ',' + currentY + ')'
+    );
     this.horizontalDefinitionBottomLine.setAttribute('width', fullWidth);
-    this.verticalDefinitionMidline.setAttribute('height', currentY - verticalMidlineY);
-    this.grayDefinitionBackground.setAttribute('height', currentY - verticalMidlineY);
+    this.verticalDefinitionMidline.setAttribute(
+      'height',
+      currentY - verticalMidlineY
+    );
+    this.grayDefinitionBackground.setAttribute(
+      'height',
+      currentY - verticalMidlineY
+    );
     this.grayDefinitionBackground.setAttribute('width', verticalMidlineX);
   }
 

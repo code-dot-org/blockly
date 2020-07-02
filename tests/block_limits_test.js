@@ -6,7 +6,7 @@
 function test_blockLimits() {
   var blockLimits = new Blockly.BlockLimits();
 
-  blockLimits.events.listen('change', function (eventObject) {
+  blockLimits.events.listen('change', function(eventObject) {
     var limit = blockLimits.limits_[eventObject.type];
     assertEquals(limit.limit, eventObject.limit);
     assertEquals(limit.count + eventObject.remaining, limit.limit);
@@ -46,7 +46,10 @@ function test_blockLimits() {
   assertEquals(true, blockLimits.canAddBlocks(['test_block']));
   assertEquals(true, blockLimits.canAddBlocks(['other_block']));
   assertEquals(true, blockLimits.canAddBlocks(['test_block', 'test_block']));
-  assertEquals(false, blockLimits.canAddBlocks(['test_block', 'test_block', 'test_block']));
+  assertEquals(
+    false,
+    blockLimits.canAddBlocks(['test_block', 'test_block', 'test_block'])
+  );
 
   // add one, can add only one more
   blockLimits.updateBlockTotals(['test_block']);

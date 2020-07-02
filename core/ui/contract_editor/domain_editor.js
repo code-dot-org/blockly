@@ -19,7 +19,7 @@ goog.require('Blockly.XButton');
  * @param {Object.<String, Blockly.BlockValueType>} options.typeChoices
  * @constructor
  */
-Blockly.DomainEditor = function (options) {
+Blockly.DomainEditor = function(options) {
   this.options = options;
 
   /**
@@ -40,14 +40,14 @@ Blockly.DomainEditor = function (options) {
  * Get unique parameter ID of editor
  * @returns {string}
  */
-Blockly.DomainEditor.prototype.getParamID = function () {
+Blockly.DomainEditor.prototype.getParamID = function() {
   return this.options.paramID;
 };
 
 /**
  * @param {Element} parent
  */
-Blockly.DomainEditor.prototype.render = function (parent) {
+Blockly.DomainEditor.prototype.render = function(parent) {
   var editorDOM = goog.dom.createDom('div');
 
   var typeDropdown = new Blockly.TypeDropdown({
@@ -77,7 +77,7 @@ Blockly.DomainEditor.prototype.render = function (parent) {
   this.nameInput_ = nameInput;
 };
 
-Blockly.DomainEditor.prototype.dispose = function () {
+Blockly.DomainEditor.prototype.dispose = function() {
   this.nameInput_.dispose();
   this.typeDropdown_.dispose();
   goog.dom.removeNode(this.editorDom_);

@@ -27,7 +27,6 @@ goog.provide('Blockly.Trashcan');
 
 goog.require('goog.math.Rect');
 
-
 /**
  * Class for a trash can.
  * @param {!Blockly.BlockSpace} blockSpace The blockSpace to sit in.
@@ -79,12 +78,11 @@ Blockly.Trashcan.MARGIN_TOP_ = 15;
  */
 Blockly.Trashcan.MARGIN_SIDE_ = 22;
 
-
 /**
-* Extent of hotspot on all sides beyond the size of the image.
-* @type {number}
-* @private
-*/
+ * Extent of hotspot on all sides beyond the size of the image.
+ * @type {number}
+ * @private
+ */
 Blockly.Trashcan.MARGIN_HOTSPOT_ = 25;
 
 /**
@@ -147,25 +145,43 @@ Blockly.Trashcan.prototype.createDom = function() {
     <line x0="0" y1="0" x2="100" y2="100" stroke="red" visibility="hidden"></line>
   </g>
   */
-  this.svgGroup_ = Blockly.createSvgElement('g',
-      {'id': 'trashcan', 'filter': 'url(#blocklyTrashcanShadowFilter)'}, null);
-  this.svgClosedCan_ = Blockly.createSvgElement('image',
-      {'width': Blockly.Trashcan.WIDTH_, 'height': Blockly.Trashcan.HEIGHT_},
-      this.svgGroup_);
+  this.svgGroup_ = Blockly.createSvgElement(
+    'g',
+    {id: 'trashcan', filter: 'url(#blocklyTrashcanShadowFilter)'},
+    null
+  );
+  this.svgClosedCan_ = Blockly.createSvgElement(
+    'image',
+    {width: Blockly.Trashcan.WIDTH_, height: Blockly.Trashcan.HEIGHT_},
+    this.svgGroup_
+  );
   this.svgClosedCan_.setAttributeNS(
-      'http://www.w3.org/1999/xlink', 'xlink:href',
-      Blockly.assetUrl(Blockly.Trashcan.CLOSED_URL_));
-  this.svgOpenCan_ = Blockly.createSvgElement('image',
-      {'width': Blockly.Trashcan.WIDTH_, 'height': Blockly.Trashcan.HEIGHT_},
-      this.svgGroup_);
+    'http://www.w3.org/1999/xlink',
+    'xlink:href',
+    Blockly.assetUrl(Blockly.Trashcan.CLOSED_URL_)
+  );
+  this.svgOpenCan_ = Blockly.createSvgElement(
+    'image',
+    {width: Blockly.Trashcan.WIDTH_, height: Blockly.Trashcan.HEIGHT_},
+    this.svgGroup_
+  );
   this.svgOpenCan_.setAttribute('visibility', 'hidden');
-  this.svgOpenCan_.setAttributeNS('http://www.w3.org/1999/xlink', 'xlink:href',
-      Blockly.assetUrl(Blockly.Trashcan.OPEN_URL_));
+  this.svgOpenCan_.setAttributeNS(
+    'http://www.w3.org/1999/xlink',
+    'xlink:href',
+    Blockly.assetUrl(Blockly.Trashcan.OPEN_URL_)
+  );
   this.notAllowed_ = Blockly.createSvgElement('g', {}, this.svgGroup_);
-  Blockly.createSvgElement('line',
-      {x1: 15, y1: 15, x2: 55, y2: 55, stroke: '#c00', 'stroke-width': 5}, this.notAllowed_);
-  Blockly.createSvgElement('circle',
-    {cx: 36, cy: 34, r: 28, stroke: '#c00', 'stroke-width': 5, fill: 'none'}, this.notAllowed_);
+  Blockly.createSvgElement(
+    'line',
+    {x1: 15, y1: 15, x2: 55, y2: 55, stroke: '#c00', 'stroke-width': 5},
+    this.notAllowed_
+  );
+  Blockly.createSvgElement(
+    'circle',
+    {cx: 36, cy: 34, r: 28, stroke: '#c00', 'stroke-width': 5, fill: 'none'},
+    this.notAllowed_
+  );
   this.notAllowed_.setAttribute('visibility', 'hidden');
   return this.svgGroup_;
 };

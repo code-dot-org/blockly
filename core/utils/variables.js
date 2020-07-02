@@ -32,7 +32,6 @@ goog.provide('Blockly.Variables');
 goog.require('Blockly.Toolbox');
 goog.require('Blockly.BlockSpace');
 
-
 /**
  * Category to separate variable names from procedures and generated functions.
  */
@@ -50,9 +49,12 @@ Blockly.Variables.DEFAULT_CATEGORY = 'Default';
  * @return {!Array.<string>} Array of variable names.
  */
 Blockly.Variables.allVariables = function(opt_blocks, opt_category) {
-  if (opt_category && opt_category !== Blockly.Variables.DEFAULT_CATEGORY &&
-      (Blockly.valueTypeTabShapeMap &&
-      Blockly.valueTypeTabShapeMap[opt_category] === undefined)) {
+  if (
+    opt_category &&
+    opt_category !== Blockly.Variables.DEFAULT_CATEGORY &&
+    (Blockly.valueTypeTabShapeMap &&
+      Blockly.valueTypeTabShapeMap[opt_category] === undefined)
+  ) {
     throw new Error('Variable category must be "Default" or a strict type');
   }
   var blocks;
@@ -104,21 +106,21 @@ Blockly.Variables.allVariablesFromBlock = function(block) {
     return [];
   }
   var varsByCategory = block.getVars();
-  return Object.keys(varsByCategory).reduce(function (vars, category) {
+  return Object.keys(varsByCategory).reduce(function(vars, category) {
     return vars.concat(varsByCategory[category]);
   }, []);
-}
+};
 
 /**
  * Standard implementation of getVars for blocks with a single 'VAR' title
  * @param {string=} opt_category Variable category, defaults to 'Default'
  */
-Blockly.Variables.getVars = function (opt_category) {
+Blockly.Variables.getVars = function(opt_category) {
   var category = opt_category || Blockly.Variables.DEFAULT_CATEGORY;
-  var vars = {}
+  var vars = {};
   vars[category] = [this.getTitleValue('VAR')];
   return vars;
-}
+};
 
 /**
  * Find all instances of the specified variable in the current workspace and
@@ -140,7 +142,7 @@ Blockly.Variables.renameVariable = function(oldName, newName, blockSpace) {
     }
   }
 
-  Blockly.FunctionEditor.allFunctionEditors.forEach(function (functionEditor) {
+  Blockly.FunctionEditor.allFunctionEditors.forEach(function(functionEditor) {
     if (functionEditor.isOpen()) {
       functionEditor.renameParameter(oldName, newName);
       functionEditor.refreshParamsEverywhere();
@@ -164,7 +166,7 @@ Blockly.Variables.deleteVariable = function(nameToRemove, blockSpace) {
     }
   }
   // Notify the modal workspace to remove the parameter from its flyout
-  Blockly.FunctionEditor.allFunctionEditors.forEach(function (functionEditor) {
+  Blockly.FunctionEditor.allFunctionEditors.forEach(function(functionEditor) {
     if (functionEditor.isOpen()) {
       functionEditor.removeParameter(nameToRemove);
       functionEditor.refreshParamsEverywhere();
@@ -223,35 +225,37 @@ Blockly.Variables.flyoutCategory = function(
 };
 
 Blockly.Variables.getters = {
-  'Default': 'variables_get',
+  Default: 'variables_get'
 };
 Blockly.Variables.getGetter = function(blockSpace, category) {
   var getterName = Blockly.Variables.getters[category];
-  return (getterName && Blockly.Blocks[getterName]) ?
-      new Blockly.Block(blockSpace, getterName) : null;
+  return getterName && Blockly.Blocks[getterName]
+    ? new Blockly.Block(blockSpace, getterName)
+    : null;
 };
 Blockly.Variables.registerGetter = function(category, blockName) {
   Blockly.Variables.getters[category] = blockName;
 };
 
 Blockly.Variables.setters = {
-  'Default': 'variables_set',
+  Default: 'variables_set'
 };
 Blockly.Variables.getSetter = function(blockSpace, category) {
   var setterName = Blockly.Variables.setters[category];
-  return (setterName && Blockly.Blocks[setterName]) ?
-      new Blockly.Block(blockSpace, setterName) : null;
+  return setterName && Blockly.Blocks[setterName]
+    ? new Blockly.Block(blockSpace, setterName)
+    : null;
 };
 Blockly.Variables.registerSetter = function(category, blockName) {
   Blockly.Variables.setters[category] = blockName;
 };
 
 /**
-* Return a new variable name that is not yet being used. This will try to
-* generate single letter variable names in the range 'i' to 'z' to start with.
-* If no unique name is located it will try 'i1' to 'z1', then 'i2' to 'z2' etc.
-* @return {string} New variable name.
-*/
+ * Return a new variable name that is not yet being used. This will try to
+ * generate single letter variable names in the range 'i' to 'z' to start with.
+ * If no unique name is located it will try 'i1' to 'z1', then 'i2' to 'z2' etc.
+ * @return {string} New variable name.
+ */
 Blockly.Variables.generateUniqueName = function(baseName) {
   if (baseName) {
     return Blockly.Variables.generateUniqueNameFromBase_(baseName);
@@ -261,7 +265,10 @@ Blockly.Variables.generateUniqueName = function(baseName) {
   var newName = '';
   if (variableList.length) {
     variableList.sort(goog.string.caseInsensitiveCompare);
-    var nameSuffix = 0, potName = 'i', i = 0, inUse = false;
+    var nameSuffix = 0,
+      potName = 'i',
+      i = 0,
+      inUse = false;
     while (!newName) {
       i = 0;
       inUse = false;
@@ -327,5 +334,5 @@ Blockly.Variables.generateUniqueNameFromBase_ = function(baseName) {
     if (variableList.indexOf(newName) === -1) {
       return newName;
     }
-  } while(num++);
+  } while (num++);
 };

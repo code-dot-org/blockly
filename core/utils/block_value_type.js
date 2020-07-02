@@ -35,5 +35,5 @@ Blockly.BlockValueType = {
    * {number} Location.x
    * {number} Location.y
    */
-  LOCATION: 'Location',
+  LOCATION: 'Location'
 };

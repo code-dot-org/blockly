@@ -800,8 +800,9 @@ Blockly.Flyout.prototype.reflow = function() {
   var blocks = this.blockSpace_.getTopBlocks(false);
   var x;
   var blockHW;
+  var block;
   for (x = 0; x < blocks.length; x++) {
-    var block = blocks[x];
+    block = blocks[x];
     blockHW = block.getHeightWidth();
     flyoutWidth = Math.max(flyoutWidth, blockHW.width);
   }
@@ -816,7 +817,8 @@ Blockly.Flyout.prototype.reflow = function() {
     flyoutWidth = Math.min(flyoutWidth, this.maxWidth_);
   }
   if (this.width_ != flyoutWidth) {
-    for (x = 0, block; (block = blocks[x]); x++) {
+    for (x = 0; x < blocks.length; x++) {
+      block = blocks[x];
       blockHW = block.getHeightWidth();
       var blockXY = block.getRelativeToSurfaceXY();
       if (Blockly.RTL) {

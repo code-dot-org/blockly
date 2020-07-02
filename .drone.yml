@@ -17,11 +17,11 @@ steps:
 
 trigger:
   branch:
-  - master
+  - main
   event:
   - pull_request
 ---
 kind: signature
-hmac: d7c858821dad31679f179bb4d342c4b422a644ce8e9763467f003999bcbd06da
+hmac: efb1ce4e6b15b2368d17d94ff775016281eb3ea899fb82a55edc29841c70bc0b
 
 ...

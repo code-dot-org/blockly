@@ -31,16 +31,17 @@ goog.require('Blockly.FieldVariable');
  * Class for a variable's parameter dropdown field.
  * @param {!string} varname The default name for the variable.  If null,
  *     a unique variable name will be generated.
- * @param {?Function} opt_changeHandler A function that is executed when a new
- *     option is selected.
- * @param {?Function} opt_createHandler A function that is executed after creation
  * @extends {Blockly.FieldDropdown}
  * * @extends {Blockly.FieldDropdown}
  * @constructor
  */
-Blockly.FieldParameter = function(varname, opt_changeHandler, opt_createHandler) {
-  Blockly.FieldParameter.superClass_.constructor.call(this, varname,
-    Blockly.FieldParameter.dropdownChange, Blockly.FieldParameter.dropdownCreate);
+Blockly.FieldParameter = function(varname) {
+  Blockly.FieldParameter.superClass_.constructor.call(
+    this,
+    varname,
+    Blockly.FieldParameter.dropdownChange,
+    Blockly.FieldParameter.dropdownCreate
+  );
 };
 goog.inherits(Blockly.FieldParameter, Blockly.FieldVariable);
 
@@ -69,12 +70,17 @@ Blockly.FieldParameter.dropdownChange = function(text) {
   if (text === Blockly.Msg.RENAME_PARAMETER) {
     this.getParentEditor_().hideChaff();
     Blockly.FieldVariable.modalPromptName(
-        Blockly.Msg.RENAME_PARAMETER_TITLE.replace('%1', oldVar),
-        Blockly.Msg.CONFIRM_RENAME_VARIABLE,
-        oldVar,
-        function(newVar) {
-          Blockly.Variables.renameVariable(oldVar, newVar, this.sourceBlock_.blockSpace);
-        }.bind(this));
+      Blockly.Msg.RENAME_PARAMETER_TITLE.replace('%1', oldVar),
+      Blockly.Msg.CONFIRM_RENAME_VARIABLE,
+      oldVar,
+      function(newVar) {
+        Blockly.Variables.renameVariable(
+          oldVar,
+          newVar,
+          this.sourceBlock_.blockSpace
+        );
+      }.bind(this)
+    );
   } else if (text === Blockly.Msg.DELETE_PARAMETER) {
     Blockly.showSimpleDialog({
       bodyText: Blockly.Msg.DELETE_PARAMETER_TITLE.replace('%1', oldVar),

@@ -1,0 +1,20 @@
+{
+  "rules": {
+    "no-unused-vars": "off"
+  },
+  "globals": {
+    "Blockly": true,
+    "goog": true,
+    "assert": true,
+    "assertContains": true,
+    "assertEquals": true,
+    "assertFalse": true,
+    "assertNotContains": true,
+    "assertNotNull": true,
+    "assertNull": true,
+    "assertObjectEquals": true,
+    "assertRegExp": true,
+    "assertThrows": true,
+    "assertTrue": true
+  }
+}

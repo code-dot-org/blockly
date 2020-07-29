@@ -37,40 +37,55 @@ goog.require('Blockly.FieldRectangularDropdown');
  */
 Blockly.FieldColourDropdown = function(choices, width, height) {
   var colourChoiceTuples = this.convertColourChoicesToTuples_(choices);
-  Blockly.FieldColourDropdown.superClass_.constructor.call(this, colourChoiceTuples);
+  Blockly.FieldColourDropdown.superClass_.constructor.call(
+    this,
+    colourChoiceTuples
+  );
   this.updateDimensions_(width, height);
 };
 goog.inherits(Blockly.FieldColourDropdown, Blockly.FieldRectangularDropdown);
 
 /**
- * Convert an array of colour choices ['#000000', '#FFFFFF'] to an array of those 
+ * Convert an array of colour choices ['#000000', '#FFFFFF'] to an array of those
  * choices as preview data / value tuples for the superclass.
  * E.g., [['#000000', '#000000'], ['#FFFFFF', '#FFFFFF']]
  * @param choices
  * @returns {Array}
  * @private
  */
-Blockly.FieldColourDropdown.prototype.convertColourChoicesToTuples_ = function (choices) {
+Blockly.FieldColourDropdown.prototype.convertColourChoicesToTuples_ = function(
+  choices
+) {
   var previewDataValueTuples = [];
   for (var i = 0; i < choices.length; i++) {
     var choice = choices[i];
     var choiceTuple = [];
-    choiceTuple[Blockly.FieldRectangularDropdown.TUPLE_PREVIEW_DATA_INDEX] = choice;
+    choiceTuple[
+      Blockly.FieldRectangularDropdown.TUPLE_PREVIEW_DATA_INDEX
+    ] = choice;
     choiceTuple[Blockly.FieldRectangularDropdown.TUPLE_VALUE_INDEX] = choice;
     previewDataValueTuples.push(choiceTuple);
   }
   return previewDataValueTuples;
 };
 
-Blockly.FieldColourDropdown.prototype.addPreviewElementTo_ = function(parentElement) {
-  this.previewElement_ = Blockly.createSvgElement('rect', {
-    'y': Blockly.FieldImage.IMAGE_OFFSET_Y,
-    'height': Blockly.FieldImage.IMAGE_LOADING_HEIGHT + 'px',
-    'width': Blockly.FieldImage.IMAGE_LOADING_WIDTH + 'px'
-  }, parentElement);
+Blockly.FieldColourDropdown.prototype.addPreviewElementTo_ = function(
+  parentElement
+) {
+  this.previewElement_ = Blockly.createSvgElement(
+    'rect',
+    {
+      y: Blockly.FieldImage.IMAGE_OFFSET_Y,
+      height: Blockly.FieldImage.IMAGE_LOADING_HEIGHT + 'px',
+      width: Blockly.FieldImage.IMAGE_LOADING_WIDTH + 'px'
+    },
+    parentElement
+  );
 };
 
-Blockly.FieldColourDropdown.prototype.createDropdownPreviewElement_ = function(previewData) {
+Blockly.FieldColourDropdown.prototype.createDropdownPreviewElement_ = function(
+  previewData
+) {
   var rect = document.createElement('div');
   rect.style.backgroundColor = previewData;
   rect.style.width = this.previewSize_.width + 'px';
@@ -78,11 +93,16 @@ Blockly.FieldColourDropdown.prototype.createDropdownPreviewElement_ = function(p
   return rect;
 };
 
-Blockly.FieldColourDropdown.prototype.updatePreviewData_ = function(previewData) {
+Blockly.FieldColourDropdown.prototype.updatePreviewData_ = function(
+  previewData
+) {
   this.previewElement_.setAttribute('fill', previewData);
 };
 
-Blockly.FieldColourDropdown.prototype.updatePreviewDimensions_ = function(previewWidth, previewHeight) {
+Blockly.FieldColourDropdown.prototype.updatePreviewDimensions_ = function(
+  previewWidth,
+  previewHeight
+) {
   this.previewElement_.setAttribute('width', previewWidth + 'px');
   this.previewElement_.setAttribute('height', previewHeight + 'px');
 };

@@ -18,105 +18,107 @@
  */
 'use strict';
 
-var SINGLE_DEFINITION_FILLED = '' +
-'<xml>' +
+var SINGLE_DEFINITION_FILLED =
+  '' +
+  '<xml>' +
   '<block type="functional_definition" inline="false" editable="false">' +
-    '<mutation>' +
-      '<outputtype>Number</outputtype>' +
-    '</mutation>' +
-    '<title name="NAME">functional-function</title>' +
-    '<functional_input name="STACK">' +
-      '<block type="functional_parameters_get">' +
-        '<mutation>' +
-          '<outputtype>Number</outputtype>' +
-        '</mutation>' +
-        '<title name="VAR">param0</title>' +
-      '</block>' +
-    '</functional_input>' +
+  '<mutation>' +
+  '<outputtype>Number</outputtype>' +
+  '</mutation>' +
+  '<title name="NAME">functional-function</title>' +
+  '<functional_input name="STACK">' +
+  '<block type="functional_parameters_get">' +
+  '<mutation>' +
+  '<outputtype>Number</outputtype>' +
+  '</mutation>' +
+  '<title name="VAR">param0</title>' +
   '</block>' +
-'</xml>';
+  '</functional_input>' +
+  '</block>' +
+  '</xml>';
 
-var SINGLE_DEFINITION_NOT_FILLED = '' +
-'<xml>' +
+var SINGLE_DEFINITION_NOT_FILLED =
+  '' +
+  '<xml>' +
   '<block type="functional_definition" inline="false" editable="false">' +
-    '<mutation>' +
-      '<outputtype>Number</outputtype>' +
-    '</mutation>' +
-    '<title name="NAME">functional-function</title>' +
+  '<mutation>' +
+  '<outputtype>Number</outputtype>' +
+  '</mutation>' +
+  '<title name="NAME">functional-function</title>' +
   '</block>' +
-'</xml>';
+  '</xml>';
 
 var PROCEDURE =
-'<xml>' +
+  '<xml>' +
   '<block type="procedures_defnoreturn" editable="false">' +
-    '<mutation></mutation>' +
-    '<title name="NAME">test-function</title>' +
+  '<mutation></mutation>' +
+  '<title name="NAME">test-function</title>' +
   '</block>' +
-'</xml>';
+  '</xml>';
 
 var PROCEDURE_WITH_PARAM =
-'<xml>' +
+  '<xml>' +
   '<block type="procedures_defnoreturn">' +
-    '<mutation>' +
-      '<arg name="x"/>' +
-      '<arg name="y"/>' +
-    '</mutation>' +
-    '<title name="NAME">procedure with param 1</title>' +
-    '<statement name="STACK">' +
-      '<block type="controls_repeat_ext" inline="true">' +
-        '<value name="TIMES">' +
-          '<block type="parameters_get">' +
-            '<title name="VAR">x</title>' +
-          '</block>' +
-        '</value>' +
-        '<next>' +
-          '<block type="controls_repeat_ext" inline="true">' +
-            '<value name="TIMES">' +
-              '<block type="parameters_get">' +
-                '<title name="VAR">y</title>' +
-              '</block>' +
-            '</value>' +
-          '</block>' +
-        '</next>' +
-      '</block>' +
-    '</statement>' +
+  '<mutation>' +
+  '<arg name="x"/>' +
+  '<arg name="y"/>' +
+  '</mutation>' +
+  '<title name="NAME">procedure with param 1</title>' +
+  '<statement name="STACK">' +
+  '<block type="controls_repeat_ext" inline="true">' +
+  '<value name="TIMES">' +
+  '<block type="parameters_get">' +
+  '<title name="VAR">x</title>' +
+  '</block>' +
+  '</value>' +
+  '<next>' +
+  '<block type="controls_repeat_ext" inline="true">' +
+  '<value name="TIMES">' +
+  '<block type="parameters_get">' +
+  '<title name="VAR">y</title>' +
+  '</block>' +
+  '</value>' +
+  '</block>' +
+  '</next>' +
+  '</block>' +
+  '</statement>' +
   '</block>' +
   '<block type="procedures_defnoreturn">' +
-    '<mutation>' +
-      '<arg name="x"/>' +
-    '</mutation>' +
-    '<title name="NAME">procedure with param 2</title>' +
-    '<statement name="STACK">' +
-      '<block type="controls_repeat_ext" inline="true">' +
-        '<value name="TIMES">' +
-          '<block type="parameters_get">' +
-            '<title name="VAR">x</title>' +
-          '</block>' +
-        '</value>' +
-      '</block>' +
-    '</statement>' +
+  '<mutation>' +
+  '<arg name="x"/>' +
+  '</mutation>' +
+  '<title name="NAME">procedure with param 2</title>' +
+  '<statement name="STACK">' +
+  '<block type="controls_repeat_ext" inline="true">' +
+  '<value name="TIMES">' +
+  '<block type="parameters_get">' +
+  '<title name="VAR">x</title>' +
   '</block>' +
-'</xml>';
+  '</value>' +
+  '</block>' +
+  '</statement>' +
+  '</block>' +
+  '</xml>';
 
 var PROCEDURE_WITH_TYPED_PARAM =
-'<xml>' +
+  '<xml>' +
   '<block type="procedures_defnoreturn">' +
-    '<mutation>' +
-      '<arg name="abc" type="Number"/>' +
-      '<arg name="zzz" type="String"/>' +
-    '</mutation>' +
-    '<title name="NAME">procedure with typed param</title>' +
-    '<statement name="STACK"/>' +
+  '<mutation>' +
+  '<arg name="abc" type="Number"/>' +
+  '<arg name="zzz" type="String"/>' +
+  '</mutation>' +
+  '<title name="NAME">procedure with typed param</title>' +
+  '<statement name="STACK"/>' +
   '</block>' +
-'</xml>';
+  '</xml>';
 
 var USER_CREATED_PROCEDURE =
-'<xml>' +
+  '<xml>' +
   '<block type="procedures_defnoreturn" usercreated="true">' +
-    '<mutation></mutation>' +
-    '<title name="NAME">test-usercreated-function</title>' +
+  '<mutation></mutation>' +
+  '<title name="NAME">test-usercreated-function</title>' +
   '</block>' +
-'</xml>';
+  '</xml>';
 
 var defaultSimpleDialog = null;
 
@@ -151,12 +153,14 @@ function openFunctionEditor(opt_name) {
 }
 
 function getParametersUsedInFunctionEditor() {
-  return Blockly.functionEditor.functionDefinitionBlock.getDescendants().
-      filter(function(block) {
-        return block.type == 'parameters_get';
-      }).map(function(block) {
-        return block.getTitleValue('VAR');
-      });
+  return Blockly.functionEditor.functionDefinitionBlock
+    .getDescendants()
+    .filter(function(block) {
+      return block.type == 'parameters_get';
+    })
+    .map(function(block) {
+      return block.getTitleValue('VAR');
+    });
 }
 
 function cleanupFunctionEditor() {
@@ -178,8 +182,12 @@ function resetCustomSimpleDialog() {
 function test_functionEditorDoesntBumpBlocksInMainBlockspace() {
   var container = Blockly.Test.initializeBlockSpaceEditor();
 
-  var blockXML = '<xml><block type="math_number"><title name="NUM">0</title></block></xml>';
-  Blockly.Xml.domToBlockSpace(Blockly.mainBlockSpace, Blockly.Xml.textToDom(blockXML));
+  var blockXML =
+    '<xml><block type="math_number"><title name="NUM">0</title></block></xml>';
+  Blockly.Xml.domToBlockSpace(
+    Blockly.mainBlockSpace,
+    Blockly.Xml.textToDom(blockXML)
+  );
   var numberBlock = Blockly.mainBlockSpace.getTopBlocks(false, false)[0];
 
   initializeFunctionEditor();
@@ -195,8 +203,11 @@ function test_functionEditorDoesntBumpBlocksInMainBlockspace() {
 
   Blockly.modalBlockSpaceEditor.bumpBlocksIntoBlockSpace();
 
-  assertEquals("Opening function editor doesn't bump main block",
-    viewportHeight, numberBlock.getRelativeToSurfaceXY().y);
+  assertEquals(
+    "Opening function editor doesn't bump main block",
+    viewportHeight,
+    numberBlock.getRelativeToSurfaceXY().y
+  );
 
   goog.dom.removeNode(container);
 }
@@ -213,7 +224,9 @@ function test_initializeFunctionEditor() {
   assertEquals(false, definitionBlock.shouldBeGrayedOut());
   assertEquals(false, definitionBlock.isDeletable());
   assertEquals(false, definitionBlock.isEditable());
-  assertFalse(goog.style.isElementShown(goog.dom.getElementByClass('svgTextButton')));
+  assertFalse(
+    goog.style.isElementShown(goog.dom.getElementByClass('svgTextButton'))
+  );
 
   cleanupFunctionEditor();
   goog.dom.removeNode(container);
@@ -224,21 +237,34 @@ function test_functionEditor_deleteButton() {
   initializeFunctionEditor(USER_CREATED_PROCEDURE);
   openFunctionEditor('test-usercreated-function');
 
-  assertNotNull('Function exists',
-      Blockly.mainBlockSpace.findFunction('test-usercreated-function'));
-  assertNotNull('Function editor has delete button',
-      goog.dom.getElementByClass('svgTextButton'));
-  assert('Delete button is visible',
-      goog.style.isElementShown(goog.dom.getElementByClass('svgTextButton')));
-  assertEquals('Delete button says "Delete"', 'Delete',
-      goog.dom.getElementByClass('svgTextButton').textContent);
+  assertNotNull(
+    'Function exists',
+    Blockly.mainBlockSpace.findFunction('test-usercreated-function')
+  );
+  assertNotNull(
+    'Function editor has delete button',
+    goog.dom.getElementByClass('svgTextButton')
+  );
+  assert(
+    'Delete button is visible',
+    goog.style.isElementShown(goog.dom.getElementByClass('svgTextButton'))
+  );
+  assertEquals(
+    'Delete button says "Delete"',
+    'Delete',
+    goog.dom.getElementByClass('svgTextButton').textContent
+  );
 
   // Skip confirmation dialog
-  setCustomSimpleDialog(function(e) {e.onCancel();});
+  setCustomSimpleDialog(function(e) {
+    e.onCancel();
+  });
   Blockly.fireTestClickSequence(goog.dom.getElementByClass('svgTextButton'));
 
-  assertNull('Function no longer exists',
-      Blockly.mainBlockSpace.findFunction('test-usercreated-function'));
+  assertNull(
+    'Function no longer exists',
+    Blockly.mainBlockSpace.findFunction('test-usercreated-function')
+  );
 
   resetCustomSimpleDialog();
   cleanupFunctionEditor();
@@ -256,7 +282,7 @@ function test_functionEditor_renameParam() {
   assertContains('Does not change other parameter', 'y', paramsUsed);
   assertNotContains('No more old parameter', 'x', paramsUsed);
 
-  cleanupFunctionEditor()
+  cleanupFunctionEditor();
 
   // Check that the rename was limited to procedure 1's scope
   openFunctionEditor('procedure with param 2');
@@ -279,7 +305,8 @@ function test_functionEditor_useSimpleDialogForParamRenaming() {
   });
 
   Blockly.fireTestClickSequence(
-      document.querySelector('.blocklyUndraggable .blocklyArrow'));
+    document.querySelector('.blocklyUndraggable .blocklyArrow')
+  );
   var renameOption = document.querySelectorAll('.goog-menuitem-content')[0];
   assertEquals('Rename parameter...', renameOption.textContent);
   Blockly.fireTestClickSequence(renameOption);
@@ -305,7 +332,6 @@ function test_functionEditor_deleteParam() {
   assertNotContains('Parameter deleted', 'x', paramsUsed);
   assertContains('Still has other parameter', 'y', paramsUsed);
 
-
   cleanupFunctionEditor();
   goog.dom.removeNode(container);
 }
@@ -321,7 +347,8 @@ function test_functionEditor_useSimpleDialogForParamDeletion() {
   });
 
   Blockly.fireTestClickSequence(
-      document.querySelector('.blocklyUndraggable .blocklyArrow'));
+    document.querySelector('.blocklyUndraggable .blocklyArrow')
+  );
   var deleteOption = document.querySelectorAll('.goog-menuitem-content')[1];
   assertEquals('Delete parameter...', deleteOption.textContent);
   Blockly.fireTestClickSequence(deleteOption);
@@ -341,7 +368,7 @@ function test_functionEditor_typedParams() {
   openFunctionEditor('procedure with typed param');
 
   var params = Blockly.functionEditor.orderedParamIDsToBlocks_.getValues();
-  var paramTypes = params.map(function (node) {
+  var paramTypes = params.map(function(node) {
     return node.querySelector('mutation').getAttribute('output');
   });
   assertEquals('First param has Number type', 'Number', paramTypes[0]);
@@ -364,7 +391,8 @@ function test_contractEditor_add_examples() {
   assertEquals('Added two examples', 2, contractEditor.exampleBlocks.length);
   var firstExample = contractEditor.exampleBlocks[0];
   var callBlock = firstExample.getInputTargetBlock(
-      Blockly.ContractEditor.EXAMPLE_BLOCK_ACTUAL_INPUT_NAME);
+    Blockly.ContractEditor.EXAMPLE_BLOCK_ACTUAL_INPUT_NAME
+  );
   assertFalse(callBlock.canDisconnectFromParent());
   contractEditor.hideIfOpen();
   goog.dom.removeNode(container);
@@ -377,8 +405,10 @@ function test_contractEditor_deleteButton_notVisibleForPrewritten() {
   contractEditor.autoOpenWithLevelConfiguration({
     autoOpenFunction: 'functional-function'
   });
-  assertFalse('Delete button is not visible',
-      goog.style.isElementShown(goog.dom.getElementByClass('svgTextButton')));
+  assertFalse(
+    'Delete button is not visible',
+    goog.style.isElementShown(goog.dom.getElementByClass('svgTextButton'))
+  );
   contractEditor.hideIfOpen();
   goog.dom.removeNode(container);
 }
@@ -388,8 +418,10 @@ function test_contractEditor_deleteButton_visibleForUserCreated() {
 
   Blockly.contractEditor.openWithNewFunction();
 
-  assert('Delete button is visible for new contract function',
-      goog.style.isElementShown(goog.dom.getElementByClass('svgTextButton')));
+  assert(
+    'Delete button is visible for new contract function',
+    goog.style.isElementShown(goog.dom.getElementByClass('svgTextButton'))
+  );
 
   var contractEditor = Blockly.contractEditor;
   var definitionBlock = contractEditor.functionDefinitionBlock;
@@ -397,8 +429,10 @@ function test_contractEditor_deleteButton_visibleForUserCreated() {
   contractEditor.hideIfOpen();
   openFunctionEditor(functionName);
 
-  assert('Delete button is visible for existing contract function',
-      goog.style.isElementShown(goog.dom.getElementByClass('svgTextButton')));
+  assert(
+    'Delete button is visible for existing contract function',
+    goog.style.isElementShown(goog.dom.getElementByClass('svgTextButton'))
+  );
   contractEditor.hideIfOpen();
   goog.dom.removeNode(container);
 }
@@ -415,7 +449,8 @@ function test_contractEditor_run_test_with_definition_runs() {
   Blockly.fireTestClickSequence(goog.dom.getElementByClass('testButton'));
 
   var resultText = goog.dom.getTextContent(
-      goog.dom.getElementByClass('example-result-text'));
+    goog.dom.getElementByClass('example-result-text')
+  );
   assertRegExp('^Block ID is', resultText);
   contractEditor.hideIfOpen();
   goog.dom.removeNode(container);
@@ -433,7 +468,8 @@ function test_contractEditor_run_test_no_definition_error() {
   Blockly.fireTestClickSequence(goog.dom.getElementByClass('testButton'));
 
   var resultText = goog.dom.getTextContent(
-      goog.dom.getElementByClass('example-result-text'));
+    goog.dom.getElementByClass('example-result-text')
+  );
   assertEquals('Define the function below and try again.', resultText);
   contractEditor.hideIfOpen();
   goog.dom.removeNode(container);
@@ -448,13 +484,24 @@ function test_contractEditor_new_function_button() {
   var definitionBlock = Blockly.contractEditor.functionDefinitionBlock;
   assertNotNull(definitionBlock);
   assertEquals('functional_definition', definitionBlock.type);
-  assertEquals('Has two examples', 2, Blockly.contractEditor.exampleBlocks.length);
-  assertNotNull('Contract editor has delete button',
-      goog.dom.getElementByClass('svgTextButton'));
-  assert('Delete button is visible',
-      goog.style.isElementShown(goog.dom.getElementByClass('svgTextButton')));
-  assertEquals('Delete button says "Delete"', 'Delete',
-      goog.dom.getElementByClass('svgTextButton').textContent);
+  assertEquals(
+    'Has two examples',
+    2,
+    Blockly.contractEditor.exampleBlocks.length
+  );
+  assertNotNull(
+    'Contract editor has delete button',
+    goog.dom.getElementByClass('svgTextButton')
+  );
+  assert(
+    'Delete button is visible',
+    goog.style.isElementShown(goog.dom.getElementByClass('svgTextButton'))
+  );
+  assertEquals(
+    'Delete button says "Delete"',
+    'Delete',
+    goog.dom.getElementByClass('svgTextButton').textContent
+  );
 
   Blockly.contractEditor.hideIfOpen();
   goog.dom.removeNode(container);
@@ -469,8 +516,11 @@ function test_contractEditor_new_variable_button() {
   assertNotNull(definitionBlock);
   assertEquals('functional_definition', definitionBlock.type);
   assert(Blockly.contractEditor.isEditingVariable());
-  assertEquals('Variables have no examples', 0,
-    Blockly.contractEditor.exampleBlocks.length);
+  assertEquals(
+    'Variables have no examples',
+    0,
+    Blockly.contractEditor.exampleBlocks.length
+  );
 
   Blockly.contractEditor.hideIfOpen();
   goog.dom.removeNode(container);
@@ -501,8 +551,10 @@ function test_contractEditor_new_function_no_output_definition() {
 
   contractEditor.openWithNewFunction();
 
-  assert('New functional definition block should not have an output',
-      !contractEditor.functionDefinitionBlock.previousConnection);
+  assert(
+    'New functional definition block should not have an output',
+    !contractEditor.functionDefinitionBlock.previousConnection
+  );
 
   contractEditor.hideIfOpen();
   goog.dom.removeNode(container);
@@ -514,11 +566,15 @@ function assertContractDefinitionLaidOutAsExpected(contractEditor) {
   var functionDefinitionBlock = contractEditor.functionDefinitionBlock;
 
   assertEquals('block', definitionTableGroup.style.display);
-  assert('Contract definition is not variable',
-      !functionDefinitionBlock.isVariable());
-  assert('Contract definition is positioned relative to examples.',
-      functionDefinitionBlock.getRelativeToSurfaceXY().x >
-      Blockly.BlockSpaceEditor.BUMP_PADDING_LEFT);
+  assert(
+    'Contract definition is not variable',
+    !functionDefinitionBlock.isVariable()
+  );
+  assert(
+    'Contract definition is positioned relative to examples.',
+    functionDefinitionBlock.getRelativeToSurfaceXY().x >
+      Blockly.BlockSpaceEditor.BUMP_PADDING_LEFT
+  );
 }
 
 function assertContractVariableDefinitionLaidOutAsExpected(contractEditor) {
@@ -527,15 +583,21 @@ function assertContractVariableDefinitionLaidOutAsExpected(contractEditor) {
   var variableDefinitionBlock = contractEditor.functionDefinitionBlock;
 
   assert('Variable is detected properly', variableDefinitionBlock.isVariable());
-  assertEquals('Variable definition block laid out to the',
-      Blockly.BlockSpaceEditor.BUMP_PADDING_LEFT,
-      variableDefinitionBlock.getRelativeToSurfaceXY().x);
-  assertEquals('Variable definition is hidden properly',
-      'none', definitionTableGroup.style.display);
+  assertEquals(
+    'Variable definition block laid out to the',
+    Blockly.BlockSpaceEditor.BUMP_PADDING_LEFT,
+    variableDefinitionBlock.getRelativeToSurfaceXY().x
+  );
+  assertEquals(
+    'Variable definition is hidden properly',
+    'none',
+    definitionTableGroup.style.display
+  );
 }
 
 function test_contractEditor_change_output_types() {
-  var singleDefinitionString = '<xml><block type="functional_definition" inline="false" editable="false"><mutation><outputtype>Number</outputtype></mutation><title name="NAME">functional-function</title><functional_input name="STACK"><block type="functional_call"><mutation name="functional-function"></mutation></block></functional_input></block></xml>';
+  var singleDefinitionString =
+    '<xml><block type="functional_definition" inline="false" editable="false"><mutation><outputtype>Number</outputtype></mutation><title name="NAME">functional-function</title><functional_input name="STACK"><block type="functional_call"><mutation name="functional-function"></mutation></block></functional_input></block></xml>';
   var container = initializeWithContractEditor(singleDefinitionString);
   Blockly.contractEditor.autoOpenWithLevelConfiguration({
     autoOpenFunction: 'functional-function'
@@ -544,46 +606,92 @@ function test_contractEditor_change_output_types() {
   Blockly.contractEditor.addNewExampleBlock_();
 
   var firstExample = Blockly.contractEditor.exampleBlocks[0];
-  var fnDefInput = Blockly.contractEditor.functionDefinitionBlock.getInput('STACK');
+  var fnDefInput = Blockly.contractEditor.functionDefinitionBlock.getInput(
+    'STACK'
+  );
   assertEquals('functional_call', fnDefInput.connection.targetBlock().type);
 
-  assertEquals('Function definition has correct initial type', 'Number',
-    Blockly.contractEditor.currentFunctionDefinitionType_());
-  assertEquals('Example actual slot has correct initial type', 'Number',
-    firstExample.getInput('ACTUAL').connection.check_[0]);
-  assertEquals('Example expected slot has correct initial type', 'Number',
-    firstExample.getInput('EXPECTED').connection.check_[0]);
-  assertEquals('Function definition slot has correct initial type', 'Number',
-    fnDefInput.connection.check_[0]);
-  var exampleFnCallBlockBefore = firstExample.getInput('ACTUAL').connection.targetBlock();
-  assertEquals('Example default function call block has correct type', 'Number',
-    exampleFnCallBlockBefore.previousConnection.check_[0]);
-  assertEquals('Function definition call block has correct type', 'Number',
-    fnDefInput.connection.targetBlock().previousConnection.check_[0]);
+  assertEquals(
+    'Function definition has correct initial type',
+    'Number',
+    Blockly.contractEditor.currentFunctionDefinitionType_()
+  );
+  assertEquals(
+    'Example actual slot has correct initial type',
+    'Number',
+    firstExample.getInput('ACTUAL').connection.check_[0]
+  );
+  assertEquals(
+    'Example expected slot has correct initial type',
+    'Number',
+    firstExample.getInput('EXPECTED').connection.check_[0]
+  );
+  assertEquals(
+    'Function definition slot has correct initial type',
+    'Number',
+    fnDefInput.connection.check_[0]
+  );
+  var exampleFnCallBlockBefore = firstExample
+    .getInput('ACTUAL')
+    .connection.targetBlock();
+  assertEquals(
+    'Example default function call block has correct type',
+    'Number',
+    exampleFnCallBlockBefore.previousConnection.check_[0]
+  );
+  assertEquals(
+    'Function definition call block has correct type',
+    'Number',
+    fnDefInput.connection.targetBlock().previousConnection.check_[0]
+  );
 
   Blockly.contractEditor.outputTypeChanged_('String');
 
-  assertEquals('Example actual has correct input type after type change', 'String',
-    firstExample.getInput('ACTUAL').connection.check_[0]);
-  assertEquals('Example expected has correct input type after type change', 'String',
-    firstExample.getInput('EXPECTED').connection.check_[0]);
+  assertEquals(
+    'Example actual has correct input type after type change',
+    'String',
+    firstExample.getInput('ACTUAL').connection.check_[0]
+  );
+  assertEquals(
+    'Example expected has correct input type after type change',
+    'String',
+    firstExample.getInput('EXPECTED').connection.check_[0]
+  );
 
-  var exampleFnCallBlockAfter = firstExample.getInput('ACTUAL').connection.targetBlock();
-  assertNotNull('Example actual call block is connected after type change',
-    exampleFnCallBlockAfter);
-  assertEquals('Example actual call block has correct type', 'String',
-    exampleFnCallBlockAfter.previousConnection.check_[0]);
+  var exampleFnCallBlockAfter = firstExample
+    .getInput('ACTUAL')
+    .connection.targetBlock();
+  assertNotNull(
+    'Example actual call block is connected after type change',
+    exampleFnCallBlockAfter
+  );
+  assertEquals(
+    'Example actual call block has correct type',
+    'String',
+    exampleFnCallBlockAfter.previousConnection.check_[0]
+  );
 
-  assertEquals('Function definition changes type', 'String',
-    Blockly.contractEditor.currentFunctionDefinitionType_());
-  assertEquals('Function definition has correct input type after type change', 'String',
-    fnDefInput.connection.check_[0]);
+  assertEquals(
+    'Function definition changes type',
+    'String',
+    Blockly.contractEditor.currentFunctionDefinitionType_()
+  );
+  assertEquals(
+    'Function definition has correct input type after type change',
+    'String',
+    fnDefInput.connection.check_[0]
+  );
 
   var fnDefInputBlockAfter = fnDefInput.connection.targetBlock();
-  assertNotNull('Function call block still connected to function definition after type change',
-    fnDefInputBlockAfter);
-  assertEquals('Function definition call block has correct new type', 'String',
-    fnDefInputBlockAfter.previousConnection.check_[0]);
+  assertNotNull(
+    'Function call block still connected to function definition after type change',
+    fnDefInputBlockAfter
+  );
+  assertEquals(
+    'Function definition call block has correct new type',
+    'String',
+    fnDefInputBlockAfter.previousConnection.check_[0]
+  );
 
   Blockly.contractEditor.hideIfOpen();
   goog.dom.removeNode(container);
@@ -606,7 +714,7 @@ function test_contractEditor_new_function_button_then_delete() {
    * @type {SimpleDialogFunction}
    * @param {DialogOptions} dialogOptions
    */
-  var instantAcceptDialog = function (dialogOptions) {
+  var instantAcceptDialog = function(dialogOptions) {
     // Fake dialog class which accepts deletion immediately
     // in dialog parlence, deletion -> cancel (left side button)
     acceptDialogTriggered = true;
@@ -618,7 +726,7 @@ function test_contractEditor_new_function_button_then_delete() {
    * @type {SimpleDialogFunction}
    * @param {DialogOptions} dialogOptions
    */
-  var instantRejectDialog = function (dialogOptions) {
+  var instantRejectDialog = function(dialogOptions) {
     // Fake dialog class which rejects deletion immediately
     // in dialog parlence, rejection -> confirm (right side button)
     rejectDialogTriggered = true;
@@ -627,20 +735,30 @@ function test_contractEditor_new_function_button_then_delete() {
     }
   };
 
-  var beforeDeletionAssertions = function () {
+  var beforeDeletionAssertions = function() {
     assertTrue('Contract editor is open', contractEditor.isOpen());
-    assertEquals('Has four examples',
-        4, Blockly.mainBlockSpace.findFunctionExamples(functionName).length);
-    assertNotNull('Function exists',
-        Blockly.mainBlockSpace.findFunction(functionName));
+    assertEquals(
+      'Has four examples',
+      4,
+      Blockly.mainBlockSpace.findFunctionExamples(functionName).length
+    );
+    assertNotNull(
+      'Function exists',
+      Blockly.mainBlockSpace.findFunction(functionName)
+    );
   };
 
-  var afterDeletionAssertions = function () {
+  var afterDeletionAssertions = function() {
     assertFalse('Contract editor no longer open', contractEditor.isOpen());
-    assertEquals('Has no examples',
-        0, Blockly.mainBlockSpace.findFunctionExamples(functionName).length);
-    assertNull('Function no longer exists',
-        Blockly.mainBlockSpace.findFunction(functionName));
+    assertEquals(
+      'Has no examples',
+      0,
+      Blockly.mainBlockSpace.findFunctionExamples(functionName).length
+    );
+    assertNull(
+      'Function no longer exists',
+      Blockly.mainBlockSpace.findFunction(functionName)
+    );
   };
 
   beforeDeletionAssertions();
@@ -653,7 +771,7 @@ function test_contractEditor_new_function_button_then_delete() {
   assertTrue(rejectDialogTriggered);
   beforeDeletionAssertions();
 
-  setCustomSimpleDialog(instantAcceptDialog)
+  setCustomSimpleDialog(instantAcceptDialog);
   Blockly.fireTestClickSequence(goog.dom.getElementByClass('svgTextButton'));
 
   assertTrue(acceptDialogTriggered);

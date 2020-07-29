@@ -16,9 +16,6 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
-/* global Blockly, goog */
-/* global assert, assertNull, assertNotNull, assertEquals, assertFalse */
 'use strict';
 
 function test_setBlockNotDisconnectable() {
@@ -34,7 +31,7 @@ function test_setBlockNotDisconnectable() {
   assertNotNull(block1);
   assertEquals(2, blockSpace.topBlocks_.length);
 
-  var inputName = "myInputName";
+  var inputName = 'myInputName';
   block1.appendFunctionalInput(inputName);
   block1.attachBlockToInputName(block2, inputName);
   block2.setCanDisconnectFromParent(false);
@@ -80,20 +77,23 @@ function test_checkAllowedConnectionType() {
 
   var strictInputBlock = new Blockly.Block(blockSpace);
   strictInputBlock.initSvg();
-  strictInputBlock.appendValueInput('VALUE')
-      .setStrictCheck(Blockly.BlockValueType.SPRITE);
+  strictInputBlock
+    .appendValueInput('VALUE')
+    .setStrictCheck(Blockly.BlockValueType.SPRITE);
   var strictInput = strictInputBlock.inputList[0].connection;
 
   var nonStrictInputBlock = new Blockly.Block(blockSpace);
   nonStrictInputBlock.initSvg();
-  nonStrictInputBlock.appendValueInput('VALUE')
-      .setCheck(Blockly.BlockValueType.SPRITE);
+  nonStrictInputBlock
+    .appendValueInput('VALUE')
+    .setCheck(Blockly.BlockValueType.SPRITE);
   var nonStrictInput = nonStrictInputBlock.inputList[0].connection;
 
   var otherTypeInputBlock = new Blockly.Block(blockSpace);
   otherTypeInputBlock.initSvg();
-  otherTypeInputBlock.appendValueInput('VALUE')
-      .setCheck(Blockly.BlockValueType.NUMBER);
+  otherTypeInputBlock
+    .appendValueInput('VALUE')
+    .setCheck(Blockly.BlockValueType.NUMBER);
   var otherTypeInput = otherTypeInputBlock.inputList[0].connection;
 
   var noneTypeInputBlock = new Blockly.Block(blockSpace);
@@ -128,22 +128,27 @@ function test_clickIntoEditableUnmovableBlock() {
   var containerDiv = Blockly.Test.initializeBlockSpaceEditor();
 
   var blockSpace = Blockly.mainBlockSpace;
-  var unmovableButEditable = ''+
-      '<xml>' +
-      '  <block type="math_number" movable="false">' +
-      '    <title name="NUM">0</title>' +
-      '  </block>' +
-      '</xml>';
+  var unmovableButEditable =
+    '' +
+    '<xml>' +
+    '  <block type="math_number" movable="false">' +
+    '    <title name="NUM">0</title>' +
+    '  </block>' +
+    '</xml>';
 
-  Blockly.Xml.domToBlockSpace(blockSpace, Blockly.Xml.textToDom(
-      unmovableButEditable));
+  Blockly.Xml.domToBlockSpace(
+    blockSpace,
+    Blockly.Xml.textToDom(unmovableButEditable)
+  );
 
   var inputText = goog.dom.getElementByClass('blocklyText');
 
   Blockly.fireTestClickSequence(inputText);
 
-  assertNotNull("input should show up when editable field is clicked",
-      goog.dom.getElementByClass('blocklyHtmlInput'));
+  assertNotNull(
+    'input should show up when editable field is clicked',
+    goog.dom.getElementByClass('blocklyHtmlInput')
+  );
 
   goog.dom.removeNode(containerDiv);
 }
@@ -152,15 +157,18 @@ function test_setBlockNextConnectionDisabled() {
   var containerDiv = Blockly.Test.initializeBlockSpaceEditor();
 
   var blockSpace = Blockly.mainBlockSpace;
-  var single_block_next_connection_default = ''+
-      '<xml>' +
-        '<block type="math_change">' +
-          '<title name="VAR">i</title>' +
-        '</block>' +
-      '</xml>';
+  var single_block_next_connection_default =
+    '' +
+    '<xml>' +
+    '<block type="math_change">' +
+    '<title name="VAR">i</title>' +
+    '</block>' +
+    '</xml>';
 
-  Blockly.Xml.domToBlockSpace(blockSpace, Blockly.Xml.textToDom(
-      single_block_next_connection_default));
+  Blockly.Xml.domToBlockSpace(
+    blockSpace,
+    Blockly.Xml.textToDom(single_block_next_connection_default)
+  );
 
   var block = blockSpace.getTopBlocks()[0];
 
@@ -169,15 +177,18 @@ function test_setBlockNextConnectionDisabled() {
   assert(block.nextConnection instanceof Blockly.Connection);
   assert(block.nextConnectionDisabled_ === false);
 
-  var single_block_next_connection_enabled = ''+
-      '<xml>' +
-      '  <block type="math_change" next_connection_disabled="false">' +
-      '    <title name="VAR">j</title>' +
-      '  </block>' +
-      '</xml>';
+  var single_block_next_connection_enabled =
+    '' +
+    '<xml>' +
+    '  <block type="math_change" next_connection_disabled="false">' +
+    '    <title name="VAR">j</title>' +
+    '  </block>' +
+    '</xml>';
 
-  Blockly.Xml.domToBlockSpace(blockSpace, Blockly.Xml.textToDom(
-      single_block_next_connection_enabled));
+  Blockly.Xml.domToBlockSpace(
+    blockSpace,
+    Blockly.Xml.textToDom(single_block_next_connection_enabled)
+  );
 
   block = blockSpace.getTopBlocks()[1];
 
@@ -186,15 +197,18 @@ function test_setBlockNextConnectionDisabled() {
   assert(block.nextConnection instanceof Blockly.Connection);
   assert(block.nextConnectionDisabled_ === false);
 
-  var single_block_next_connection_disabled = ''+
-      '<xml>' +
-      '  <block type="math_change" next_connection_disabled="true">' +
-      '    <title name="VAR">k</title>' +
-      '  </block>' +
-      '</xml>';
+  var single_block_next_connection_disabled =
+    '' +
+    '<xml>' +
+    '  <block type="math_change" next_connection_disabled="true">' +
+    '    <title name="VAR">k</title>' +
+    '  </block>' +
+    '</xml>';
 
-  Blockly.Xml.domToBlockSpace(blockSpace, Blockly.Xml.textToDom(
-      single_block_next_connection_disabled));
+  Blockly.Xml.domToBlockSpace(
+    blockSpace,
+    Blockly.Xml.textToDom(single_block_next_connection_disabled)
+  );
 
   block = blockSpace.getTopBlocks()[2];
 
@@ -209,18 +223,21 @@ function test_visibleThroughParent() {
   var containerDiv = Blockly.Test.initializeBlockSpaceEditor();
   var blockSpace = Blockly.mainBlockSpace;
 
-  Blockly.Xml.domToBlockSpace(blockSpace, Blockly.Xml.textToDom(
-    '<xml>' +
-      '<block type="math_change">' +
+  Blockly.Xml.domToBlockSpace(
+    blockSpace,
+    Blockly.Xml.textToDom(
+      '<xml>' +
+        '<block type="math_change">' +
         '<title name="VAR">i</title>' +
         '<next>' +
-          '<block type="math_change">' +
-            '<title name="VAR">j</title>' +
-          '</block>' +
+        '<block type="math_change">' +
+        '<title name="VAR">j</title>' +
+        '</block>' +
         '</next>' +
-      '</block>' +
-    '</xml>'
-  ));
+        '</block>' +
+        '</xml>'
+    )
+  );
 
   var parentBlock = blockSpace.getTopBlocks()[0];
   var childBlock = parentBlock.getChildren()[0];
@@ -240,13 +257,16 @@ function test_isVisible() {
   var containerDiv = Blockly.Test.initializeBlockSpaceEditor();
   var blockSpace = Blockly.mainBlockSpace;
 
-  Blockly.Xml.domToBlockSpace(blockSpace, Blockly.Xml.textToDom(
-    '<xml>' +
-      '<block type="math_change">' +
+  Blockly.Xml.domToBlockSpace(
+    blockSpace,
+    Blockly.Xml.textToDom(
+      '<xml>' +
+        '<block type="math_change">' +
         '<title name="VAR">k</title>' +
-      '</block>' +
-    '</xml>'
-  ));
+        '</block>' +
+        '</xml>'
+    )
+  );
   var block = blockSpace.getTopBlocks()[0];
 
   // block defaults to visible
@@ -289,11 +309,13 @@ function test_blockSetIsUnused() {
   var blockXml = [
     '<block type="controls_whileUntil" />',
     '<block type="variables_set" uservisible="false" />',
-    '<block type="functional_definition" />',
+    '<block type="functional_definition" />'
   ];
 
-  Blockly.Xml.domToBlockSpace(blockSpace,
-      Blockly.Xml.textToDom('<xml>' + blockXml.join('') + '</xml>'));
+  Blockly.Xml.domToBlockSpace(
+    blockSpace,
+    Blockly.Xml.textToDom('<xml>' + blockXml.join('') + '</xml>')
+  );
 
   var blocks = blockSpace.getTopBlocks();
   assertEquals(3, blocks.length);
@@ -323,26 +345,29 @@ function test_unknownLanguageBlocks() {
   var blockSpace = Blockly.mainBlockSpace;
   var lastEvent = null;
 
-  window.addEventListener('unknownBlock', function (e) {
+  window.addEventListener('unknownBlock', function(e) {
     lastEvent = e;
   });
 
-  Blockly.Xml.domToBlockSpace(blockSpace, Blockly.Xml.textToDom(
-    '<xml>' +
-      '<block type="not_a_real_block" movable="false">' +
+  Blockly.Xml.domToBlockSpace(
+    blockSpace,
+    Blockly.Xml.textToDom(
+      '<xml>' +
+        '<block type="not_a_real_block" movable="false">' +
         '<statement name="DO">' +
-          '<block type="math_change" movable="false"/>' +
+        '<block type="math_change" movable="false"/>' +
         '</statement>' +
         '<next>' +
-          '<block type="math_change" movable="false">' +
-            '<next>' +
-            '<block type="math_change" movable="false"/>' +
-            '</next>' +
-          '</block>' +
+        '<block type="math_change" movable="false">' +
+        '<next>' +
+        '<block type="math_change" movable="false"/>' +
         '</next>' +
-      '</block>' +
-    '</xml>'
-  ));
+        '</block>' +
+        '</next>' +
+        '</block>' +
+        '</xml>'
+    )
+  );
 
   assertEquals('not_a_real_block', lastEvent.name);
 
@@ -363,29 +388,36 @@ function test_typedParams() {
   var containerDiv = Blockly.Test.initializeBlockSpaceEditor();
   var blockSpace = Blockly.mainBlockSpace;
 
-  Blockly.Xml.domToBlockSpace(blockSpace, Blockly.Xml.textToDom(
-    '<xml>' +
-      '<block type="procedures_defnoreturn">' +
+  Blockly.Xml.domToBlockSpace(
+    blockSpace,
+    Blockly.Xml.textToDom(
+      '<xml>' +
+        '<block type="procedures_defnoreturn">' +
         '<mutation>' +
-          '<arg name="x" type="Number"></arg>' +
-          '<arg name="y" type="Number"></arg>' +
+        '<arg name="x" type="Number"></arg>' +
+        '<arg name="y" type="Number"></arg>' +
         '</mutation>' +
         '<title name="NAME">do something</title>' +
-      '</block>' +
-      '<block type="procedures_callnoreturn" inline="false">' +
+        '</block>' +
+        '<block type="procedures_callnoreturn" inline="false">' +
         '<mutation name="do something">' +
-          '<arg name="x" type="Number"></arg>' +
-          '<arg name="y" type="Number"></arg>' +
+        '<arg name="x" type="Number"></arg>' +
+        '<arg name="y" type="Number"></arg>' +
         '</mutation>' +
-      '</block>' +
-    '</xml>'
-  ));
+        '</block>' +
+        '</xml>'
+    )
+  );
 
   var blocks = Blockly.mainBlockSpace.getTopBlocks();
   var definition = blocks[0];
   var call = blocks[1];
 
-  definition.updateParamsFromArrays(['abc', 'def'], [1, 2], ['String', 'Sprite']);
+  definition.updateParamsFromArrays(
+    ['abc', 'def'],
+    [1, 2],
+    ['String', 'Sprite']
+  );
 
   var procInfo = definition.getProcedureInfo();
 
@@ -397,25 +429,28 @@ function test_typedParams() {
 }
 
 function test_shouldCopyOnDrag() {
-  let containerDiv = Blockly.Test.initializeBlockSpaceEditor();
-  let blockSpace = Blockly.mainBlockSpace;
-  Blockly.Xml.domToBlockSpace(blockSpace, Blockly.Xml.textToDom(
-    '<xml>' +
-      '<block type="parent">' +
+  var containerDiv = Blockly.Test.initializeBlockSpaceEditor();
+  var blockSpace = Blockly.mainBlockSpace;
+  Blockly.Xml.domToBlockSpace(
+    blockSpace,
+    Blockly.Xml.textToDom(
+      '<xml>' +
+        '<block type="parent">' +
         '<value name="CLICK">' +
-          '<block type="child">' +
-          '</block>' +
+        '<block type="child">' +
+        '</block>' +
         '</value>' +
-      '</block>' +
-      '<block type="orphan"></block>' +
-    '</xml>'
-  ));
-  let blocks = blockSpace.getTopBlocks();
+        '</block>' +
+        '<block type="orphan"></block>' +
+        '</xml>'
+    )
+  );
+  var blocks = blockSpace.getTopBlocks();
   assertEquals(2, blocks.length);
 
-  let parentBlock = blockSpace.getTopBlocks()[0];
-  let childBlock = parentBlock.getChildren()[0];
-  let orphanBlock = blockSpace.getTopBlocks()[1];
+  var parentBlock = blockSpace.getTopBlocks()[0];
+  var childBlock = parentBlock.getChildren()[0];
+  var orphanBlock = blockSpace.getTopBlocks()[1];
 
   childBlock.setParentForCopyOnDrag('parent');
   orphanBlock.setParentForCopyOnDrag('parent');
@@ -432,17 +467,20 @@ function test_shouldCopyOnDrag() {
 }
 
 function test_connectTwoBlocks() {
-  let containerDiv = Blockly.Test.initializeBlockSpaceEditor();
-  let blockSpace = Blockly.mainBlockSpace;
-  Blockly.Xml.domToBlockSpace(blockSpace, Blockly.Xml.textToDom(`
-    <xml>
-      <block type="variables_set"></block>
-      <block type="colour_picker"></block>
-    </xml>
-  `));
+  var containerDiv = Blockly.Test.initializeBlockSpaceEditor();
+  var blockSpace = Blockly.mainBlockSpace;
+  Blockly.Xml.domToBlockSpace(
+    blockSpace,
+    Blockly.Xml.textToDom(
+      '<xml>' +
+        '<block type="variables_set"></block>' +
+        '<block type="colour_picker"></block>' +
+        '</xml>'
+    )
+  );
 
-  const target = blockSpace.getTopBlocks()[0];
-  const orphan = blockSpace.getTopBlocks()[1];
+  var target = blockSpace.getTopBlocks()[0];
+  var orphan = blockSpace.getTopBlocks()[1];
 
   assertNull(orphan.getParent());
   Blockly.Test.simulateDrag(orphan, target.getInput('VALUE').connection);

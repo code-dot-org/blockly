@@ -27,35 +27,51 @@ goog.provide('Blockly.JavaScript.functionalProcedures');
 
 goog.require('Blockly.JavaScript');
 
-
 Blockly.JavaScript.functional_definition = function() {
   // Define a functional procedure with a return value.
   var funcName = Blockly.JavaScript.variableDB_.getName(
-      this.getTitleValue('NAME'), Blockly.Procedures.NAME_TYPE);
+    this.getTitleValue('NAME'),
+    Blockly.Procedures.NAME_TYPE
+  );
   // Store names for each of the args
   // NOTE: It is important to do this first so the first call to getName()
   // for each arg includes the specific type of NAME_TYPE_LOCAL (local var)
   var args = [];
   for (var x = 0; x < this.parameterNames_.length; x++) {
-    args[x] = Blockly.JavaScript.variableDB_.getName(this.parameterNames_[x],
-        Blockly.Variables.NAME_TYPE,
-        Blockly.Variables.NAME_TYPE_LOCAL);
+    args[x] = Blockly.JavaScript.variableDB_.getName(
+      this.parameterNames_[x],
+      Blockly.Variables.NAME_TYPE,
+      Blockly.Variables.NAME_TYPE_LOCAL
+    );
   }
   var branch = '';
 
   if (Blockly.JavaScript.INFINITE_LOOP_TRAP) {
-    branch = Blockly.JavaScript.INFINITE_LOOP_TRAP.replace(/%1/g,
-        '\'' + this.id + '\'') + branch;
+    branch =
+      Blockly.JavaScript.INFINITE_LOOP_TRAP.replace(
+        /%1/g,
+        "'" + this.id + "'"
+      ) + branch;
   }
-  var returnValue = Blockly.JavaScript.statementToCode(this, 'STACK',
-      Blockly.JavaScript.ORDER_NONE) || '';
+  var returnValue =
+    Blockly.JavaScript.statementToCode(
+      this,
+      'STACK',
+      Blockly.JavaScript.ORDER_NONE
+    ) || '';
   if (returnValue) {
     returnValue = '  return ' + returnValue + ';\n';
   }
-  var code = (Blockly.varsInGlobals ?
-                'Globals.' + funcName + ' = function' :
-                'function ' + funcName) +
-             '(' + args.join(', ') + ') {\n' + branch + returnValue + '\n}';
+  var code =
+    (Blockly.varsInGlobals
+      ? 'Globals.' + funcName + ' = function'
+      : 'function ' + funcName) +
+    '(' +
+    args.join(', ') +
+    ') {\n' +
+    branch +
+    returnValue +
+    '\n}';
   code = Blockly.JavaScript.scrub_(this, code);
   Blockly.JavaScript.definitions_[funcName] = code;
   return null;
@@ -64,21 +80,33 @@ Blockly.JavaScript.functional_definition = function() {
 Blockly.JavaScript.functional_call = function() {
   // Call a functional procedure with a return value.
   var funcName = Blockly.JavaScript.variableDB_.getName(
-      this.getTitleValue('NAME'), Blockly.Procedures.NAME_TYPE);
+    this.getTitleValue('NAME'),
+    Blockly.Procedures.NAME_TYPE
+  );
   var args = [];
   for (var x = 0; x < this.currentParameterNames_.length; x++) {
-    args[x] = Blockly.JavaScript.statementToCode(this, 'ARG' + x,
-        Blockly.JavaScript.ORDER_COMMA) || 'null';
+    args[x] =
+      Blockly.JavaScript.statementToCode(
+        this,
+        'ARG' + x,
+        Blockly.JavaScript.ORDER_COMMA
+      ) || 'null';
   }
-  var code = (Blockly.varsInGlobals ? 'Globals.' : '') +
-              funcName + '(' + args.join(', ') + ')';
+  var code =
+    (Blockly.varsInGlobals ? 'Globals.' : '') +
+    funcName +
+    '(' +
+    args.join(', ') +
+    ')';
   return code;
 };
 
 Blockly.JavaScript.functional_pass = function() {
   // Pass a functional procedure
   var funcName = Blockly.JavaScript.variableDB_.getName(
-      this.getTitleValue('NAME'), Blockly.Procedures.NAME_TYPE);
+    this.getTitleValue('NAME'),
+    Blockly.Procedures.NAME_TYPE
+  );
   var code = (Blockly.varsInGlobals ? 'Globals.' : '') + funcName;
   return code;
 };
@@ -86,15 +114,24 @@ Blockly.JavaScript.functional_pass = function() {
 Blockly.JavaScript.procedural_to_functional_call = function() {
   // Call a functional procedure with a return value.
   var funcName = Blockly.JavaScript.variableDB_.getName(
-      this.getTitleValue('NAME'), Blockly.Procedures.NAME_TYPE);
+    this.getTitleValue('NAME'),
+    Blockly.Procedures.NAME_TYPE
+  );
   var args = [];
   for (var x = 0; x < this.currentParameterNames_.length; x++) {
-    var value = Blockly.JavaScript.valueToCode(this, 'ARG' + x,
-        Blockly.JavaScript.ORDER_COMMA);
+    var value = Blockly.JavaScript.valueToCode(
+      this,
+      'ARG' + x,
+      Blockly.JavaScript.ORDER_COMMA
+    );
     args[x] = value || 'null';
   }
-  var code = (Blockly.varsInGlobals ? 'Globals.' : '') +
-              funcName + '(' + args.join(', ') + ')';
+  var code =
+    (Blockly.varsInGlobals ? 'Globals.' : '') +
+    funcName +
+    '(' +
+    args.join(', ') +
+    ')';
   // convert functional output to procedural output.
   return [code, Blockly.JavaScript.ORDER_NONE];
 };

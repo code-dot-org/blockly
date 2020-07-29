@@ -170,7 +170,6 @@ Blockly.DUMMY_INPUT = 5;
 Blockly.FUNCTIONAL_INPUT = 6;
 Blockly.FUNCTIONAL_OUTPUT = 7;
 
-
 /**
  * ENUM for left alignment.
  * @const
@@ -306,7 +305,8 @@ Blockly.removeAllRanges = function() {
     }
   }
 
-  if (window.getSelection) {  // W3
+  if (window.getSelection) {
+    // W3
     var sel = window.getSelection();
     if (sel && sel.removeAllRanges) {
       removeAllSafe();

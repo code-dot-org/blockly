@@ -28,7 +28,7 @@ goog.provide('Blockly.ScrollOnWheelHandler');
  * @param {!Blockly.BlockSpace} blockSpace
  * @constructor
  */
-Blockly.ScrollOnWheelHandler = function (blockSpace) {
+Blockly.ScrollOnWheelHandler = function(blockSpace) {
   /**
    * @private {Blockly.BlockSpace}
    */
@@ -50,22 +50,30 @@ Blockly.ScrollOnWheelHandler = function (blockSpace) {
  * Establish a mousewheel handler on the given wheelTarget that will
  * @param {!EventTarget} wheelTarget
  */
-Blockly.ScrollOnWheelHandler.prototype.bindTo = function (wheelTarget) {
+Blockly.ScrollOnWheelHandler.prototype.bindTo = function(wheelTarget) {
   this.unbindWheelScrollHandler();
 
-  this.wheelEventBindData_ = Blockly.bindEvent_(wheelTarget,
-      'wheel', this, this.onWheel_);
+  this.wheelEventBindData_ = Blockly.bindEvent_(
+    wheelTarget,
+    'wheel',
+    this,
+    this.onWheel_
+  );
 
   // Safari uses 'mousewheel'
   this.mousewheelEventBindData_ = Blockly.bindEvent_(
-      wheelTarget, 'mousewheel', this, this.onWheel_);
+    wheelTarget,
+    'mousewheel',
+    this,
+    this.onWheel_
+  );
 };
 
 /**
  * Unbinds previously bound handler to begin pan-drag.  Safe to call if no
  * such handler is bound.
  */
-Blockly.ScrollOnWheelHandler.prototype.unbindWheelScrollHandler = function () {
+Blockly.ScrollOnWheelHandler.prototype.unbindWheelScrollHandler = function() {
   if (this.wheelEventBindData_) {
     Blockly.unbindEvent_(this.wheelEventBindData_);
     this.wheelEventBindData_ = null;
@@ -93,7 +101,9 @@ Blockly.ScrollOnWheelHandler.prototype.onWheel_ = function(e) {
     this.blockSpace_.scrollWithAnySelectedBlock(
       this.blockSpace_.getScrollOffsetX(),
       this.blockSpace_.getScrollOffsetY() + wheelDelta,
-      e.clientX, e.clientY);
+      e.clientX,
+      e.clientY
+    );
 
     // Don't scroll the page.
     e.stopPropagation();

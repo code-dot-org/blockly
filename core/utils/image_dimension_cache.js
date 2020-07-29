@@ -26,7 +26,7 @@ goog.provide('Blockly.ImageDimensionCache');
 
 /**
  * Cache for image dimensions
- * Hash of hashes: {imageUrl: String => {width: Number, height: Number}} 
+ * Hash of hashes: {imageUrl: String => {width: Number, height: Number}}
  * @private
  */
 Blockly.ImageDimensionCache.imageDimensions_ = {};
@@ -40,13 +40,21 @@ Blockly.ImageDimensionCache.IMAGE_LOADING_HEIGHT = 40;
  * If not found, calls back with default dimensions and later with an update
  * @returns {width: *, height: *} of image (default)
  */
-Blockly.ImageDimensionCache.getCachedDimensionsOrDefaultAndUpdate = function(imageUrl, onDimensionUpdate) {
-  var cachedDimensions = Blockly.ImageDimensionCache.getCachedDimensions(imageUrl);
+Blockly.ImageDimensionCache.getCachedDimensionsOrDefaultAndUpdate = function(
+  imageUrl,
+  onDimensionUpdate
+) {
+  var cachedDimensions = Blockly.ImageDimensionCache.getCachedDimensions(
+    imageUrl
+  );
   if (cachedDimensions) {
     return cachedDimensions;
   } else {
     Blockly.ImageDimensionCache.getDimensionsAsync(imageUrl, onDimensionUpdate);
-    return {width: Blockly.ImageDimensionCache.IMAGE_LOADING_WIDTH, height: Blockly.ImageDimensionCache.IMAGE_LOADING_HEIGHT};
+    return {
+      width: Blockly.ImageDimensionCache.IMAGE_LOADING_WIDTH,
+      height: Blockly.ImageDimensionCache.IMAGE_LOADING_HEIGHT
+    };
   }
 };
 
@@ -57,8 +65,15 @@ Blockly.ImageDimensionCache.getCachedDimensions = function(imageUrl) {
   return Blockly.ImageDimensionCache.imageDimensions_[imageUrl];
 };
 
-Blockly.ImageDimensionCache.storeDimensions = function(imageUrl, width, height) {
-  Blockly.ImageDimensionCache.imageDimensions_[imageUrl] = {width: width, height: height};
+Blockly.ImageDimensionCache.storeDimensions = function(
+  imageUrl,
+  width,
+  height
+) {
+  Blockly.ImageDimensionCache.imageDimensions_[imageUrl] = {
+    width: width,
+    height: height
+  };
 };
 
 /**
@@ -69,7 +84,7 @@ Blockly.ImageDimensionCache.storeDimensions = function(imageUrl, width, height) 
  */
 Blockly.ImageDimensionCache.getDimensionsAsync = function(url, callback) {
   var img = new Image();
-  img.onload = function(){
+  img.onload = function() {
     Blockly.ImageDimensionCache.storeDimensions(url, img.width, img.height);
     callback(img.width, img.height);
   };

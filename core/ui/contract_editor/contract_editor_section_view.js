@@ -5,8 +5,6 @@ goog.provide('Blockly.ContractEditorSectionView');
 /** @const */ var DOWN_TRIANGLE_CHARACTER = '\u25BC'; // ▼
 /** @const */ var RIGHT_TRIANGLE_CHARACTER = '\u25B6'; // ▶
 /** @const */ var DARK_GRAY_HEX = '#898989';
-/** @const */ var YELLOW_HEX = '#ffa400';
-/** @const */ var HIGHLIGHT_BOX_WIDTH = 10; //px
 /** @const */ var DEFAULT_HEADER_HEIGHT = 25; //px
 
 /**
@@ -17,7 +15,7 @@ goog.provide('Blockly.ContractEditorSectionView');
  *  {Function<boolean>} placeContentCallback
  *  {Function<boolean>} onCollapseCallback
  */
-Blockly.ContractEditorSectionView = function (canvas, opt_options) {
+Blockly.ContractEditorSectionView = function(canvas, opt_options) {
   this.headerText_ = opt_options.headerText;
   this.onCollapseCallback_ = opt_options.onCollapseCallback;
   this.placeContentCallback = opt_options.placeContentCallback;
@@ -26,7 +24,12 @@ Blockly.ContractEditorSectionView = function (canvas, opt_options) {
    * @type {number|null}
    * @private
    */
-  this.sectionNumber_ = opt_options.hasOwnProperty('sectionNumber') ? opt_options.sectionNumber : null;
+  this.sectionNumber_ = Object.prototype.hasOwnProperty.call(
+    opt_options,
+    'sectionNumber'
+  )
+    ? opt_options.sectionNumber
+    : null;
 
   /**
    * @type {?Blockly.SvgHighlightBox}
@@ -51,25 +54,27 @@ Blockly.ContractEditorSectionView = function (canvas, opt_options) {
   this.showHeader_ = true;
 };
 
-Blockly.ContractEditorSectionView.prototype.setHeaderColor = function (colorHex) {
-  this.header_.setColor(colorHex)
+Blockly.ContractEditorSectionView.prototype.setHeaderColor = function(
+  colorHex
+) {
+  this.header_.setColor(colorHex);
 };
 
-Blockly.ContractEditorSectionView.prototype.textForCurrentState_ = function () {
+Blockly.ContractEditorSectionView.prototype.textForCurrentState_ = function() {
   if (!this.onCollapseCallback_) {
     return this.headerText_;
   }
 
-  var displayText = "";
+  var displayText = '';
 
-  var arrowCharacter = this.collapsed_ ?
-    RIGHT_TRIANGLE_CHARACTER :
-    DOWN_TRIANGLE_CHARACTER;
+  var arrowCharacter = this.collapsed_
+    ? RIGHT_TRIANGLE_CHARACTER
+    : DOWN_TRIANGLE_CHARACTER;
 
-  displayText += arrowCharacter + " ";
+  displayText += arrowCharacter + ' ';
 
   if (this.sectionNumber_ !== null) {
-    displayText += this.sectionNumber_ + ". ";
+    displayText += this.sectionNumber_ + '. ';
   }
 
   displayText += this.headerText_;
@@ -80,7 +85,9 @@ Blockly.ContractEditorSectionView.prototype.textForCurrentState_ = function () {
 /**
  * @param {boolean} shouldBeHidden
  */
-Blockly.ContractEditorSectionView.prototype.setHidden = function (shouldBeHidden) {
+Blockly.ContractEditorSectionView.prototype.setHidden = function(
+  shouldBeHidden
+) {
   this.completelyHidden_ = shouldBeHidden;
   if (shouldBeHidden) {
     this.setCollapsed(true);
@@ -88,7 +95,7 @@ Blockly.ContractEditorSectionView.prototype.setHidden = function (shouldBeHidden
   this.refreshHeaderText_();
 };
 
-Blockly.ContractEditorSectionView.prototype.removeSectionNumber = function () {
+Blockly.ContractEditorSectionView.prototype.removeSectionNumber = function() {
   this.sectionNumber_ = null;
   this.refreshHeaderText_();
 };
@@ -98,7 +105,7 @@ Blockly.ContractEditorSectionView.prototype.removeSectionNumber = function () {
  * Will visually collapse during next placement.
  * @private
  */
-Blockly.ContractEditorSectionView.prototype.toggleCollapse = function () {
+Blockly.ContractEditorSectionView.prototype.toggleCollapse = function() {
   this.setCollapsed(!this.collapsed_);
 };
 /**
@@ -106,7 +113,9 @@ Blockly.ContractEditorSectionView.prototype.toggleCollapse = function () {
  * @param isCollapsed
  * @private
  */
-Blockly.ContractEditorSectionView.prototype.setCollapsed = function (isCollapsed) {
+Blockly.ContractEditorSectionView.prototype.setCollapsed = function(
+  isCollapsed
+) {
   this.collapsed_ = isCollapsed;
   this.header_.showSeparator(isCollapsed);
   if (this.onCollapseCallback_) {
@@ -118,15 +127,17 @@ Blockly.ContractEditorSectionView.prototype.setCollapsed = function (isCollapsed
 /**
  * @returns {boolean} whether this section is currently collapsed
  */
-Blockly.ContractEditorSectionView.prototype.isCollapsed = function () {
+Blockly.ContractEditorSectionView.prototype.isCollapsed = function() {
   return this.collapsed_;
 };
 
-Blockly.ContractEditorSectionView.prototype.refreshHeaderText_ = function () {
+Blockly.ContractEditorSectionView.prototype.refreshHeaderText_ = function() {
   this.header_.setText(this.textForCurrentState_());
 };
 
-Blockly.ContractEditorSectionView.prototype.setHighlighted = function (highlighted) {
+Blockly.ContractEditorSectionView.prototype.setHighlighted = function(
+  highlighted
+) {
   this.highlighted_ = highlighted;
 };
 
@@ -135,7 +146,9 @@ Blockly.ContractEditorSectionView.prototype.setHighlighted = function (highlight
  * @param {boolean} showHeader
  * @public
  */
-Blockly.ContractEditorSectionView.prototype.setHeaderVisible = function (showHeader) {
+Blockly.ContractEditorSectionView.prototype.setHeaderVisible = function(
+  showHeader
+) {
   this.showHeader_ = showHeader;
 };
 
@@ -146,7 +159,10 @@ Blockly.ContractEditorSectionView.prototype.setHeaderVisible = function (showHea
  * @param width
  * @returns {Number} the currentY to continue laying out at
  */
-Blockly.ContractEditorSectionView.prototype.placeAndGetNewY = function (currentY, width) {
+Blockly.ContractEditorSectionView.prototype.placeAndGetNewY = function(
+  currentY,
+  width
+) {
   if (this.completelyHidden_) {
     this.header_.setVisible(false);
     return currentY;
@@ -172,9 +188,11 @@ Blockly.ContractEditorSectionView.prototype.placeAndGetNewY = function (currentY
   return currentY;
 };
 
-Blockly.ContractEditorSectionView.prototype.placeAndGetNewYInnerSegment_ = function (currentY) {
-    if (this.placeContentCallback) {
-      currentY = this.placeContentCallback(currentY);
-    }
-    return currentY;
+Blockly.ContractEditorSectionView.prototype.placeAndGetNewYInnerSegment_ = function(
+  currentY
+) {
+  if (this.placeContentCallback) {
+    currentY = this.placeContentCallback(currentY);
+  }
+  return currentY;
 };

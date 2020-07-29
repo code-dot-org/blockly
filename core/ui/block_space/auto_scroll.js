@@ -32,7 +32,7 @@ goog.require('goog.async.AnimationDelay');
  *        per second in each direction
  * @constructor
  */
-Blockly.AutoScroll = function (blockSpace, startPanVector) {
+Blockly.AutoScroll = function(blockSpace, startPanVector) {
   /**
    * BlockSpace to scroll
    * @private {!Blockly.BlockSpace}
@@ -51,12 +51,14 @@ Blockly.AutoScroll = function (blockSpace, startPanVector) {
    * @private
    */
   this.animationDelay_ = new goog.async.AnimationDelay(
-    this.handleAnimationDelay_.bind(this), window);
+    this.handleAnimationDelay_.bind(this),
+    window
+  );
   this.lastTime_ = Date.now();
   this.animationDelay_.start();
 };
 
-Blockly.AutoScroll.prototype.stopAndDestroy = function () {
+Blockly.AutoScroll.prototype.stopAndDestroy = function() {
   this.activePanVector_ = null;
   this.animationDelay_.dispose();
   this.lastMouseX_ = null;
@@ -69,7 +71,7 @@ Blockly.AutoScroll.prototype.stopAndDestroy = function () {
  * @param {number} now - current time in ms
  * @private
  */
-Blockly.AutoScroll.prototype.handleAnimationDelay_ = function (now) {
+Blockly.AutoScroll.prototype.handleAnimationDelay_ = function(now) {
   var dt = now - this.lastTime_;
   this.lastTime_ = now;
   this.scrollTick_(dt);
@@ -81,11 +83,15 @@ Blockly.AutoScroll.prototype.handleAnimationDelay_ = function (now) {
  * @param msPassed
  * @private
  */
-Blockly.AutoScroll.prototype.scrollTick_ = function (msPassed) {
+Blockly.AutoScroll.prototype.scrollTick_ = function(msPassed) {
   var scrollDx = this.activePanVector_.x * msPassed;
   var scrollDy = this.activePanVector_.y * msPassed;
-  this.blockSpace_.scrollDeltaWithAnySelectedBlock(scrollDx, scrollDy,
-    this.lastMouseX_, this.lastMouseY_);
+  this.blockSpace_.scrollDeltaWithAnySelectedBlock(
+    scrollDx,
+    scrollDy,
+    this.lastMouseX_,
+    this.lastMouseY_
+  );
 };
 
 /**
@@ -95,11 +101,12 @@ Blockly.AutoScroll.prototype.scrollTick_ = function (msPassed) {
  * @param {number} mouseClientX
  * @param {number} mouseClientY
  */
-Blockly.AutoScroll.prototype.updateProperties = function (scrollVector,
-                                                          mouseClientX,
-                                                          mouseClientY) {
+Blockly.AutoScroll.prototype.updateProperties = function(
+  scrollVector,
+  mouseClientX,
+  mouseClientY
+) {
   this.activePanVector_ = scrollVector;
   this.lastMouseX_ = mouseClientX;
   this.lastMouseY_ = mouseClientY;
 };
-

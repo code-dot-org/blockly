@@ -29,7 +29,6 @@ goog.provide('Blockly.Generator');
 
 goog.require('Blockly.Block');
 
-
 /**
  * Name space for the generator singleton.
  */
@@ -70,7 +69,7 @@ Blockly.Generator.blocksToCode = function(name, blocks, opt_showHidden) {
   var code = [];
   var generator = Blockly.Generator.get(name);
   generator.init(blocks);
-  for (var x = 0, block; block = blocks[x]; x++) {
+  for (var x = 0, block; (block = blocks[x]); x++) {
     var line = generator.blockToCode(block, opt_showHidden);
     if (line instanceof Array) {
       // Value blocks return tuples of code and operator order.
@@ -85,12 +84,12 @@ Blockly.Generator.blocksToCode = function(name, blocks, opt_showHidden) {
       }
 
       if (block.isUnused()) {
-        line = "/*\n" + line + "*/\n";
+        line = '/*\n' + line + '*/\n';
       }
       code.push(line);
     }
   }
-  code = code.join('\n');  // Blank line between each section.
+  code = code.join('\n'); // Blank line between each section.
   code = generator.finish(code);
   // Final scrubbing of whitespace.
   code = code.replace(/^\s+\n/, '');
@@ -123,7 +122,7 @@ Blockly.Generator.xmlToCode = function(name, xml) {
 Blockly.Generator.xmlToBlocks = function(name, xml) {
   var div = document.createElement('div');
   var blockSpace = Blockly.BlockSpace.createReadOnlyBlockSpace(div, xml, {
-    disableEventBindings: true,
+    disableEventBindings: true
   });
   return blockSpace.getTopBlocks(true);
 };
@@ -137,16 +136,23 @@ Blockly.Generator.xmlToBlocks = function(name, xml) {
  *   blocks, defaults to true. Nested blocks always inherit visibility.
  * @return {string} Generated code.
  */
-Blockly.Generator.blockSpaceToCode = function(name, opt_typeFilter, opt_showHidden) {
+Blockly.Generator.blockSpaceToCode = function(
+  name,
+  opt_typeFilter,
+  opt_showHidden
+) {
   var blocksToGenerate;
   if (opt_typeFilter) {
     if (typeof opt_typeFilter == 'string') {
       opt_typeFilter = [opt_typeFilter];
     }
-    blocksToGenerate =
-      goog.array.filter(Blockly.mainBlockSpace.getTopBlocks(true), function(block) {
+    blocksToGenerate = goog.array.filter(
+      Blockly.mainBlockSpace.getTopBlocks(true),
+      function(block) {
         return goog.array.contains(opt_typeFilter, block.type);
-      }, this);
+      },
+      this
+    );
   } else {
     // Generate all top blocks.
     blocksToGenerate = Blockly.mainBlockSpace.getTopBlocks(true);
@@ -200,7 +206,10 @@ Blockly.CodeGenerator.prototype.blockToCode = function(block, opt_showHidden) {
   var generatorFunc = this[block.type];
   var code;
   if (!generatorFunc) {
-    code = Blockly.Generator.prefixLines('Unknown block: ' + block.type + '\n', '// ');
+    code = Blockly.Generator.prefixLines(
+      'Unknown block: ' + block.type + '\n',
+      '// '
+    );
   } else {
     code = generatorFunc.call(block);
   }

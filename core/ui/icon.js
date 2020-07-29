@@ -89,11 +89,15 @@ Blockly.Icon.prototype.dispose = function() {
  */
 Blockly.Icon.prototype.updateEditable = function() {
   if (this.block_.isEditable() && !this.block_.isInFlyout) {
-    Blockly.addClass_(/** @type {!Element} */ (this.iconGroup_),
-                      'blocklyIconGroup');
+    Blockly.addClass_(
+      /** @type {!Element} */ (this.iconGroup_),
+      'blocklyIconGroup'
+    );
   } else {
-    Blockly.removeClass_(/** @type {!Element} */ (this.iconGroup_),
-                         'blocklyIconGroup');
+    Blockly.removeClass_(
+      /** @type {!Element} */ (this.iconGroup_),
+      'blocklyIconGroup'
+    );
   }
 };
 
@@ -107,10 +111,9 @@ Blockly.Icon.prototype.isVisible = function() {
 
 /**
  * Clicking on the icon toggles if the bubble is visible.
- * @param {!Event} e Mouse click event.
  * @private
  */
-Blockly.Icon.prototype.iconClick_ = function(e) {
+Blockly.Icon.prototype.iconClick_ = function() {
   if (this.block_.isEditable() && !this.block_.isInFlyout) {
     this.setVisible(!this.isVisible());
   }
@@ -142,8 +145,10 @@ Blockly.Icon.prototype.renderIcon = function(cursorX) {
   if (Blockly.RTL) {
     cursorX -= diameter;
   }
-  this.iconGroup_.setAttribute('transform',
-      'translate(' + cursorX + ', ' + TOP_MARGIN + ')');
+  this.iconGroup_.setAttribute(
+    'transform',
+    'translate(' + cursorX + ', ' + TOP_MARGIN + ')'
+  );
   this.computeIconLocation();
   if (Blockly.RTL) {
     cursorX -= Blockly.BlockSvg.SEP_SPACE_X;

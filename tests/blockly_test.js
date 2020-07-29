@@ -19,20 +19,20 @@
 'use strict';
 
 function verify_DB_(msg, expected, db) {
-   var equal = (expected.length == db.length);
-   if (equal) {
-     for (var x = 0; x < expected.length; x++) {
-       if (expected[x] != db[x]) {
-         equal = false;
-         break;
-       }
-     }
-   }
-   if (equal) {
-     assertTrue(msg, true);
-   } else {
-     assertEquals(msg, expected, db);
-   }
+  var equal = expected.length == db.length;
+  if (equal) {
+    for (var x = 0; x < expected.length; x++) {
+      if (expected[x] != db[x]) {
+        equal = false;
+        break;
+      }
+    }
+  }
+  if (equal) {
+    assertTrue(msg, true);
+  } else {
+    assertEquals(msg, expected, db);
+  }
 }
 
 function test_DB_addConnection() {
@@ -179,26 +179,49 @@ function test_commonWordSuffix() {
 
 function test_printerRangeToNumbers() {
   assert('No number', goog.array.equals([], Blockly.printerRangeToNumbers('')));
-  assert('Single number', goog.array.equals([1], Blockly.printerRangeToNumbers('1')));
-  assert('Multiple numbers', goog.array.equals([1,2,3], Blockly.printerRangeToNumbers('1,2,3')));
-  assert('Numbers out of order', goog.array.equals([1,5,2], Blockly.printerRangeToNumbers('1,5,2')));
-  assert('Range inclusive', goog.array.equals([1,2,3,4,5], Blockly.printerRangeToNumbers('1-5')));
-  assert('Single numbers and a range', goog.array.equals([1,2,3,4,5], Blockly.printerRangeToNumbers('1,2-4,5')));
-  assert('Spaces in list', goog.array.equals([1,2,3,4,5], Blockly.printerRangeToNumbers('1, 2-4, 5')));
+  assert(
+    'Single number',
+    goog.array.equals([1], Blockly.printerRangeToNumbers('1'))
+  );
+  assert(
+    'Multiple numbers',
+    goog.array.equals([1, 2, 3], Blockly.printerRangeToNumbers('1,2,3'))
+  );
+  assert(
+    'Numbers out of order',
+    goog.array.equals([1, 5, 2], Blockly.printerRangeToNumbers('1,5,2'))
+  );
+  assert(
+    'Range inclusive',
+    goog.array.equals([1, 2, 3, 4, 5], Blockly.printerRangeToNumbers('1-5'))
+  );
+  assert(
+    'Single numbers and a range',
+    goog.array.equals([1, 2, 3, 4, 5], Blockly.printerRangeToNumbers('1,2-4,5'))
+  );
+  assert(
+    'Spaces in list',
+    goog.array.equals(
+      [1, 2, 3, 4, 5],
+      Blockly.printerRangeToNumbers('1, 2-4, 5')
+    )
+  );
 }
 
 function test_getBoxOverflow() {
   // top right bottom left
   var sameBoxOverflow = Blockly.getBoxOverflow(
     new goog.math.Box(0, 0, 0, 0),
-    new goog.math.Box(0, 0, 0, 0));
+    new goog.math.Box(0, 0, 0, 0)
+  );
   assertEquals(0, sameBoxOverflow.top);
   assertEquals(0, sameBoxOverflow.right);
   assertEquals(0, sameBoxOverflow.bottom);
   assertEquals(0, sameBoxOverflow.left);
   var differentBoxesOverflow = Blockly.getBoxOverflow(
     new goog.math.Box(0, 0, 0, 0),
-    new goog.math.Box(-1, 2, 3, -4));
+    new goog.math.Box(-1, 2, 3, -4)
+  );
   assertEquals(1, differentBoxesOverflow.top);
   assertEquals(2, differentBoxesOverflow.right);
   assertEquals(3, differentBoxesOverflow.bottom);
@@ -207,15 +230,24 @@ function test_getBoxOverflow() {
 
 function test_isBoxWiderThan() {
   // top right bottom left
-  assert(!Blockly.isBoxWiderThan(
-    new goog.math.Box(0, 0, 0, 0),
-    new goog.math.Box(0, 0, 0, 0)));
-  assert(Blockly.isBoxWiderThan(
-    new goog.math.Box(0, 1, 0, 0),
-    new goog.math.Box(0, 0, 0, 0)));
-  assert(!Blockly.isBoxWiderThan(
-    new goog.math.Box(0, 0, 0, 0),
-    new goog.math.Box(0, 1, 0, 0)));
+  assert(
+    !Blockly.isBoxWiderThan(
+      new goog.math.Box(0, 0, 0, 0),
+      new goog.math.Box(0, 0, 0, 0)
+    )
+  );
+  assert(
+    Blockly.isBoxWiderThan(
+      new goog.math.Box(0, 1, 0, 0),
+      new goog.math.Box(0, 0, 0, 0)
+    )
+  );
+  assert(
+    !Blockly.isBoxWiderThan(
+      new goog.math.Box(0, 0, 0, 0),
+      new goog.math.Box(0, 1, 0, 0)
+    )
+  );
 }
 
 function test_numberWithin() {
@@ -239,7 +271,6 @@ function test_numberWithin() {
   assert(!Blockly.numberWithin(5, 1, 5, false));
   assert(!Blockly.numberWithin(6, 1, 5, false));
 }
-
 
 function test_svgRectToRect() {
   /** @type SVGRect */
@@ -265,7 +296,7 @@ function test_addToNonZeroSides() {
 
 function test_parseOptions_noTopLevelProcedureAutopopulate() {
   var options = Blockly.parseOptions_({
-    toolbox: '<xml><block/></xml>',
+    toolbox: '<xml><block/></xml>'
   });
   assert(!options.topLevelProcedureAutopopulate);
 }
@@ -273,7 +304,7 @@ function test_parseOptions_noTopLevelProcedureAutopopulate() {
 function test_parseOptions_topLevelProcedureAutopopulate() {
   var options = Blockly.parseOptions_({
     toolbox: '<xml><block/></xml>',
-    topLevelProcedureAutopopulate: true,
+    topLevelProcedureAutopopulate: true
   });
   assert(options.topLevelProcedureAutopopulate);
 }
@@ -281,7 +312,7 @@ function test_parseOptions_topLevelProcedureAutopopulate() {
 function test_parseOptions_topLevelProcedureAutopopulateWithCategories() {
   var options = Blockly.parseOptions_({
     toolbox: '<xml><category name="CAT"><block/></category></xml>',
-    topLevelProcedureAutopopulate: true,
+    topLevelProcedureAutopopulate: true
   });
   assert(!options.topLevelProcedureAutopopulate);
 }

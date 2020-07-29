@@ -37,14 +37,11 @@ Blockly.Blocks.functional_parameters_get = {
     this.setHelpUrl(Blockly.Msg.VARIABLES_GET_HELPURL);
     this.setHSV(312, 0.32, 0.62);
     this.setFunctional(true);
-    var options = {
-      fixedSize: { height: 35 }
-    };
     this.appendDummyInput()
-        .appendTitle(Blockly.Msg.VARIABLES_GET_TITLE)
-        .appendTitle(fieldLabel, 'VAR')
-        .appendTitle(Blockly.Msg.VARIABLES_GET_TAIL)
-        .setAlign(Blockly.ALIGN_CENTRE);
+      .appendTitle(Blockly.Msg.VARIABLES_GET_TITLE)
+      .appendTitle(fieldLabel, 'VAR')
+      .appendTitle(Blockly.Msg.VARIABLES_GET_TAIL)
+      .setAlign(Blockly.ALIGN_CENTRE);
     this.setFunctionalOutput(true);
     this.setTooltip(Blockly.Msg.VARIABLES_GET_TOOLTIP);
   },
@@ -75,7 +72,7 @@ Blockly.Blocks.functional_parameters_get = {
     return container;
   },
   domToMutation: function(xmlElement) {
-    for (var x = 0, childNode; childNode = xmlElement.childNodes[x]; x++) {
+    for (var x = 0, childNode; (childNode = xmlElement.childNodes[x]); x++) {
       var nodeName = childNode.nodeName.toLowerCase();
       if (nodeName === 'description') {
         this.description_ = childNode.textContent;

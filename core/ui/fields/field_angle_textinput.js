@@ -23,17 +23,22 @@ goog.require('Blockly.FieldTextInput');
 Blockly.FieldAngleTextInput = function(text, opt_options) {
   this.direction = opt_options.direction;
   this.directionTitle = opt_options.directionTitle;
-  Blockly.FieldAngleTextInput.superClass_.constructor.call(this,
-      text, Blockly.FieldTextInput.numberValidator);
+  Blockly.FieldAngleTextInput.superClass_.constructor.call(
+    this,
+    text,
+    Blockly.FieldTextInput.numberValidator
+  );
 };
 goog.inherits(Blockly.FieldAngleTextInput, Blockly.FieldTextInput);
 
-Blockly.FieldAngleTextInput.prototype.getFieldHelperOptions_ = function(field_helper) {
+Blockly.FieldAngleTextInput.prototype.getFieldHelperOptions_ = function(
+  field_helper
+) {
   if (field_helper === Blockly.BlockFieldHelper.ANGLE_HELPER) {
-      return {
-        direction: this.direction,
-        directionTitle: this.directionTitle,
-        block: this.sourceBlock_
-      }
+    return {
+      direction: this.direction,
+      directionTitle: this.directionTitle,
+      block: this.sourceBlock_
+    };
   }
 };

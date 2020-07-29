@@ -37,9 +37,9 @@ Blockly.Css.Cursor = {
 };
 
 /**
-* Current cursor (cached value).
-* @type string
-*/
+ * Current cursor (cached value).
+ * @type string
+ */
 Blockly.Css.currentCursor_ = '';
 
 /**
@@ -116,7 +116,7 @@ Blockly.Css.CONTENT = [
   '  border-style: none;',
   '}',
   '.blocklyFieldAngleDropdown .goog-menu::after {',
-  '  content: \'\';',
+  "  content: '';",
   '  border-left: 1px solid #949ca2;',
   '  position: absolute;',
   '  height: 80%;',
@@ -174,7 +174,7 @@ Blockly.Css.CONTENT = [
   '#%CONTAINER_ID% .userHidden {',
   '  display: none;',
   '}',
-  '#%CONTAINER_ID% .hiddenFlyout, #blocklyDragCanvas .hiddenFlyout {',
+  '#%CONTAINER_ID% .hiddenFlyout, #blocklyDragCanvas .hiddenFlyout, .readOnlyBlockSpace .hiddenFlyout {',
   '  display: none !important;',
   '}',
   '#%CONTAINER_ID%.edit .userHidden {',
@@ -365,7 +365,7 @@ Blockly.Css.CONTENT = [
   '  stroke: #fff;',
   '}',
   '/*',
-  ' * Don\'t allow users to select text.  It gets annoying when trying to',
+  " * Don't allow users to select text.  It gets annoying when trying to",
   ' * drag a block and selected text moves instead.',
   ' */',
   '.blocklySvg text {',
@@ -788,7 +788,7 @@ Blockly.Css.CONTENT = [
   '  outline: none;',
   '  padding: 4px 0;',
   '  position: absolute;',
-  '  z-index: 20000;',  /* Arbitrary, but some apps depend on it... */
+  '  z-index: 20000;' /* Arbitrary, but some apps depend on it... */,
   '}',
 
   /* Copied from: goog/css/menuitem.css */
@@ -825,7 +825,7 @@ Blockly.Css.CONTENT = [
   '  font: normal 13px Arial, sans-serif;',
   '  list-style: none;',
   '  margin: 0;',
-     /* 28px on the left for icon or checkbox; 7em on the right for shortcut. */
+  /* 28px on the left for icon or checkbox; 7em on the right for shortcut. */
   '  padding: 4px 7em 4px 28px;',
   '  white-space: nowrap;',
   '}',
@@ -833,7 +833,7 @@ Blockly.Css.CONTENT = [
   /* BiDi override for the resting state. */
   /* #noflip */
   '.goog-menuitem.goog-menuitem-rtl {',
-     /* Flip left/right padding for BiDi. */
+  /* Flip left/right padding for BiDi. */
   '  padding-left: 7em;',
   '  padding-right: 28px;',
   '}',
@@ -876,8 +876,8 @@ Blockly.Css.CONTENT = [
   '.goog-menuitem-highlight,',
   '.goog-menuitem-hover {',
   '  background-color: #d6e9f8;',
-     /* Use an explicit top and bottom border so that the selection is visible',
-      * in high contrast mode. */
+  /* Use an explicit top and bottom border so that the selection is visible',
+   * in high contrast mode. */
   '  border-color: #d6e9f8;',
   '  border-style: dotted;',
   '  border-width: 1px 0;',
@@ -901,23 +901,23 @@ Blockly.Css.CONTENT = [
   /* #noflip */
   '.goog-menuitem-rtl .goog-menuitem-checkbox,',
   '.goog-menuitem-rtl .goog-menuitem-icon {',
-     /* Flip left/right positioning. */
+  /* Flip left/right positioning. */
   '  left: auto;',
   '  right: 6px;',
   '}',
 
   '.goog-option-selected .goog-menuitem-checkbox,',
   '.goog-option-selected .goog-menuitem-icon {',
-     /* Client apps may override the URL at which they serve the sprite. */
-     /* disable, because we want to use text instead*/
+  /* Client apps may override the URL at which they serve the sprite. */
+  /* disable, because we want to use text instead*/
   //'  background: url(//ssl.gstatic.com/editor/editortoolbar.png) no-repeat -512px 0;',
   '}',
 
   /* Keyboard shortcut ("accelerator") style. */
   '.goog-menuitem-accel {',
   '  color: #999;',
-     /* Keyboard shortcuts are untranslated; always left-to-right. */
-     /* #noflip */
+  /* Keyboard shortcuts are untranslated; always left-to-right. */
+  /* #noflip */
   '  direction: ltr;',
   '  left: auto;',
   '  padding: 0 6px;',
@@ -929,7 +929,7 @@ Blockly.Css.CONTENT = [
   /* BiDi override for shortcut style. */
   /* #noflip */
   '.goog-menuitem-rtl .goog-menuitem-accel {',
-     /* Flip left/right positioning and text alignment. */
+  /* Flip left/right positioning and text alignment. */
   '  left: 0;',
   '  right: auto;',
   '  text-align: left;',

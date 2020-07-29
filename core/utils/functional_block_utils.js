@@ -28,10 +28,10 @@ goog.require('Blockly.BlockValueType');
 
 var typesToColors = {};
 typesToColors[Blockly.BlockValueType.NONE] = [0, 0, 0]; // 000000
-typesToColors[Blockly.BlockValueType.NUMBER] = [192, 1.00, 0.99]; // 00ccff
-typesToColors[Blockly.BlockValueType.STRING] = [180, 1.00, 0.60]; // 0099999
-typesToColors[Blockly.BlockValueType.IMAGE] = [285, 1.00, 0.80]; // 9900cc
-typesToColors[Blockly.BlockValueType.BOOLEAN] = [90, 1.00, 0.4]; // 336600
+typesToColors[Blockly.BlockValueType.NUMBER] = [192, 1.0, 0.99]; // 00ccff
+typesToColors[Blockly.BlockValueType.STRING] = [180, 1.0, 0.6]; // 0099999
+typesToColors[Blockly.BlockValueType.IMAGE] = [285, 1.0, 0.8]; // 9900cc
+typesToColors[Blockly.BlockValueType.BOOLEAN] = [90, 1.0, 0.4]; // 336600
 
 /**
  * Map of colors associated with given types
@@ -49,7 +49,13 @@ Blockly.FunctionalTypeColors = typesToColors;
  * @param {boolean=} config_opt.verticallyStackInputs Inputs are stacked
  *   vertically instead of horizontally.
  */
-Blockly.FunctionalBlockUtils.initTitledFunctionalBlock = function (block, title, type, args, config_opt) {
+Blockly.FunctionalBlockUtils.initTitledFunctionalBlock = function(
+  block,
+  title,
+  type,
+  args,
+  config_opt
+) {
   config_opt = config_opt || {};
   block.setFunctional(true, {
     headerHeight: 30
@@ -57,10 +63,11 @@ Blockly.FunctionalBlockUtils.initTitledFunctionalBlock = function (block, title,
   block.setHSV.apply(block, Blockly.FunctionalTypeColors[type]);
 
   var options = {
-    fixedSize: { height: 35 },
+    fixedSize: {height: 35},
     fontSize: config_opt.titleFontSize
   };
-  block.appendDummyInput()
+  block
+    .appendDummyInput()
     .appendTitle(new Blockly.FieldLabel(title, options))
     .setAlign(Blockly.ALIGN_CENTRE);
 
@@ -80,16 +87,23 @@ Blockly.FunctionalBlockUtils.initTitledFunctionalBlock = function (block, title,
   }
 };
 
-Blockly.FunctionalBlockUtils.installStringPicker = function(blockly, generator, options) {
+Blockly.FunctionalBlockUtils.installStringPicker = function(
+  blockly,
+  generator,
+  options
+) {
   var values = options.values;
   var blockName = options.blockName;
   blockly.Blocks[blockName] = {
-    init: function () {
+    init: function() {
       this.setFunctional(true, {
         headerHeight: 0,
         rowBuffer: 3
       });
-      this.setHSV.apply(this, Blockly.FunctionalTypeColors[Blockly.BlockValueType.STRING]);
+      this.setHSV.apply(
+        this,
+        Blockly.FunctionalTypeColors[Blockly.BlockValueType.STRING]
+      );
       this.appendDummyInput()
         .appendTitle(new Blockly.FieldLabel('"'))
         .appendTitle(new blockly.FieldDropdown(values), 'VAL')

@@ -37,13 +37,17 @@ goog.require('Blockly.ImageDimensionCache');
  */
 Blockly.FieldRectangularDropdown = function(menuGenerator, buttons) {
   this.menuGenerator_ = menuGenerator;
-  let choices = this.getOptions();
+  var choices = this.getOptions();
   this.buttons_ = buttons;
   var firstTuple = choices[0];
   this.value_ = firstTuple[Blockly.FieldRectangularDropdown.TUPLE_VALUE_INDEX];
-  var firstPreviewData = firstTuple[Blockly.FieldRectangularDropdown.TUPLE_PREVIEW_DATA_INDEX];
+  var firstPreviewData =
+    firstTuple[Blockly.FieldRectangularDropdown.TUPLE_PREVIEW_DATA_INDEX];
 
-  this.size_ = {width: Blockly.FieldImage.IMAGE_LOADING_WIDTH, height: Blockly.FieldImage.IMAGE_LOADING_HEIGHT};
+  this.size_ = {
+    width: Blockly.FieldImage.IMAGE_LOADING_WIDTH,
+    height: Blockly.FieldImage.IMAGE_LOADING_HEIGHT
+  };
   this.buildDOMElements_();
   this.updatePreviewData_(firstPreviewData);
 };
@@ -53,9 +57,13 @@ Blockly.FieldRectangularDropdown.TUPLE_PREVIEW_DATA_INDEX = 0;
 Blockly.FieldRectangularDropdown.TUPLE_VALUE_INDEX = 1;
 Blockly.FieldRectangularDropdown.BORDER_MARGIN = 2;
 Blockly.FieldRectangularDropdown.DROPDOWN_MENU_BORDER = 2;
-Blockly.FieldRectangularDropdown.MENU_CSS_CLASS = 'blocklyRectangularDropdownMenu';
-Blockly.FieldRectangularDropdown.BORDER_OFFSET_X = -Blockly.FieldRectangularDropdown.BORDER_MARGIN;
-Blockly.FieldRectangularDropdown.BORDER_OFFSET_Y = Blockly.FieldImage.IMAGE_OFFSET_Y - Blockly.FieldRectangularDropdown.BORDER_MARGIN;
+Blockly.FieldRectangularDropdown.MENU_CSS_CLASS =
+  'blocklyRectangularDropdownMenu';
+Blockly.FieldRectangularDropdown.BORDER_OFFSET_X = -Blockly
+  .FieldRectangularDropdown.BORDER_MARGIN;
+Blockly.FieldRectangularDropdown.BORDER_OFFSET_Y =
+  Blockly.FieldImage.IMAGE_OFFSET_Y -
+  Blockly.FieldRectangularDropdown.BORDER_MARGIN;
 Blockly.FieldRectangularDropdown.BORDER_RECTANGLE_RADIUS = 4;
 Blockly.FieldRectangularDropdown.BORDER_EXTRA_ARROW_WIDTH = 30;
 Blockly.FieldRectangularDropdown.DROPDOWN_ARROW_WIDTH = 20;
@@ -80,37 +88,60 @@ Blockly.FieldRectangularDropdown.prototype.getOptions = function() {
 
 Blockly.FieldRectangularDropdown.prototype.buildDOMElements_ = function() {
   this.fieldGroup_ = Blockly.createSvgElement('g', {}, null);
-  this.dropdownBorderRectElement_ = Blockly.createSvgElement('rect',
-    {'rx': Blockly.FieldRectangularDropdown.BORDER_RECTANGLE_RADIUS,
-      'ry': Blockly.FieldRectangularDropdown.BORDER_RECTANGLE_RADIUS,
-      'x': Blockly.FieldRectangularDropdown.BORDER_OFFSET_X,
-      'y': Blockly.FieldRectangularDropdown.BORDER_OFFSET_Y,
-      'height': Blockly.FieldImage.IMAGE_LOADING_HEIGHT,
-      'class': 'fieldRectangularDropdownBackdrop'
-    }, this.fieldGroup_);
+  this.dropdownBorderRectElement_ = Blockly.createSvgElement(
+    'rect',
+    {
+      rx: Blockly.FieldRectangularDropdown.BORDER_RECTANGLE_RADIUS,
+      ry: Blockly.FieldRectangularDropdown.BORDER_RECTANGLE_RADIUS,
+      x: Blockly.FieldRectangularDropdown.BORDER_OFFSET_X,
+      y: Blockly.FieldRectangularDropdown.BORDER_OFFSET_Y,
+      height: Blockly.FieldImage.IMAGE_LOADING_HEIGHT,
+      class: 'fieldRectangularDropdownBackdrop'
+    },
+    this.fieldGroup_
+  );
   this.addPreviewElementTo_(this.fieldGroup_);
   this.createDropdownArrow_();
-  this.clickRectElement_ = Blockly.createSvgElement('rect',
-    {'height': Blockly.FieldImage.IMAGE_LOADING_HEIGHT + 'px',
-      'width': Blockly.FieldImage.IMAGE_LOADING_WIDTH + 'px',
-      'y': Blockly.FieldImage.IMAGE_OFFSET_Y,
-      'fill-opacity': 0}, this.fieldGroup_);
+  this.clickRectElement_ = Blockly.createSvgElement(
+    'rect',
+    {
+      height: Blockly.FieldImage.IMAGE_LOADING_HEIGHT + 'px',
+      width: Blockly.FieldImage.IMAGE_LOADING_WIDTH + 'px',
+      y: Blockly.FieldImage.IMAGE_OFFSET_Y,
+      'fill-opacity': 0
+    },
+    this.fieldGroup_
+  );
 };
 
-Blockly.FieldRectangularDropdown.prototype.addPreviewElementTo_ = function () {
-  throw Error("FieldRectangularDropdown.prototype.addPreviewElementTo_ not implemented");
+Blockly.FieldRectangularDropdown.prototype.addPreviewElementTo_ = function() {
+  throw Error(
+    'FieldRectangularDropdown.prototype.addPreviewElementTo_ not implemented'
+  );
 };
 
-Blockly.FieldRectangularDropdown.prototype.createDropdownArrow_ = function () {
-  this.dropdownArrowText_ = Blockly.createSvgElement('text',
-    {'class': 'blocklyText'}, this.fieldGroup_);
-  this.arrowCharacter_ = Blockly.createSvgElement('tspan',
-    {'class': 'blocklyArrow blocklyRectangularDropdownArrow'}, this.dropdownArrowText_);
-  this.arrowCharacter_.appendChild(document.createTextNode(Blockly.FieldRectangularDropdown.DOWN_ARROW_CHARACTER));
+Blockly.FieldRectangularDropdown.prototype.createDropdownArrow_ = function() {
+  this.dropdownArrowText_ = Blockly.createSvgElement(
+    'text',
+    {class: 'blocklyText'},
+    this.fieldGroup_
+  );
+  this.arrowCharacter_ = Blockly.createSvgElement(
+    'tspan',
+    {class: 'blocklyArrow blocklyRectangularDropdownArrow'},
+    this.dropdownArrowText_
+  );
+  this.arrowCharacter_.appendChild(
+    document.createTextNode(
+      Blockly.FieldRectangularDropdown.DOWN_ARROW_CHARACTER
+    )
+  );
 };
 
-Blockly.FieldRectangularDropdown.prototype.updatePreviewData_ = function(previewData) {
-  throw Error("FieldRectangularDropdown.prototype.updatePreviewData_ not implemented");
+Blockly.FieldRectangularDropdown.prototype.updatePreviewData_ = function() {
+  throw Error(
+    'FieldRectangularDropdown.prototype.updatePreviewData_ not implemented'
+  );
 };
 
 /**
@@ -119,10 +150,18 @@ Blockly.FieldRectangularDropdown.prototype.updatePreviewData_ = function(preview
  * @param previewRectangleHeight
  * @private
  */
-Blockly.FieldRectangularDropdown.prototype.updateDimensions_ = function(previewRectangleWidth, previewRectangleHeight) {
-  this.previewSize_ = {width: previewRectangleWidth, height: previewRectangleHeight};
-  var borderHeight = previewRectangleHeight + 2 * Blockly.FieldRectangularDropdown.BORDER_MARGIN;
-  var borderWidth = previewRectangleWidth +
+Blockly.FieldRectangularDropdown.prototype.updateDimensions_ = function(
+  previewRectangleWidth,
+  previewRectangleHeight
+) {
+  this.previewSize_ = {
+    width: previewRectangleWidth,
+    height: previewRectangleHeight
+  };
+  var borderHeight =
+    previewRectangleHeight + 2 * Blockly.FieldRectangularDropdown.BORDER_MARGIN;
+  var borderWidth =
+    previewRectangleWidth +
     2 * Blockly.FieldRectangularDropdown.BORDER_MARGIN +
     Blockly.FieldRectangularDropdown.BORDER_EXTRA_ARROW_WIDTH;
   this.updatePreviewDimensions_(previewRectangleWidth, previewRectangleHeight);
@@ -130,15 +169,31 @@ Blockly.FieldRectangularDropdown.prototype.updateDimensions_ = function(previewR
   this.clickRectElement_.setAttribute('height', borderHeight + 'px');
   this.dropdownBorderRectElement_.setAttribute('width', borderWidth + 'px');
   this.dropdownBorderRectElement_.setAttribute('height', borderHeight + 'px');
-  var previewMiddle = previewRectangleHeight / 2 - Blockly.FieldImage.IMAGE_OFFSET_Y;
-  this.dropdownArrowText_.setAttribute('x', previewRectangleWidth + Blockly.FieldRectangularDropdown.DROPDOWN_ARROW_X_OFFSET_FROM_PREVIEW_RIGHT);
-  this.dropdownArrowText_.setAttribute('y', previewMiddle + Blockly.FieldRectangularDropdown.DROPDOWN_ARROW_Y_OFFSET_FROM_PREVIEW_MIDDLE );
-  this.size_ = {height: borderHeight + Blockly.FieldImage.BELOW_IMAGE_PADDING, width: borderWidth};
+  var previewMiddle =
+    previewRectangleHeight / 2 - Blockly.FieldImage.IMAGE_OFFSET_Y;
+  this.dropdownArrowText_.setAttribute(
+    'x',
+    previewRectangleWidth +
+      Blockly.FieldRectangularDropdown
+        .DROPDOWN_ARROW_X_OFFSET_FROM_PREVIEW_RIGHT
+  );
+  this.dropdownArrowText_.setAttribute(
+    'y',
+    previewMiddle +
+      Blockly.FieldRectangularDropdown
+        .DROPDOWN_ARROW_Y_OFFSET_FROM_PREVIEW_MIDDLE
+  );
+  this.size_ = {
+    height: borderHeight + Blockly.FieldImage.BELOW_IMAGE_PADDING,
+    width: borderWidth
+  };
   this.refreshRender();
 };
 
-Blockly.FieldRectangularDropdown.prototype.updatePreviewDimensions_ = function(previewWidth, previewHeight) {
-  throw Error("FieldRectangularDropdown.prototype.updatePreviewDimensions_ not implemented");
+Blockly.FieldRectangularDropdown.prototype.updatePreviewDimensions_ = function() {
+  throw Error(
+    'FieldRectangularDropdown.prototype.updatePreviewDimensions_ not implemented'
+  );
 };
 
 /**
@@ -147,8 +202,10 @@ Blockly.FieldRectangularDropdown.prototype.updatePreviewDimensions_ = function(p
  * @returns {HTMLElement}
  * @private
  */
-Blockly.FieldRectangularDropdown.prototype.createDropdownPreviewElement_ = function(previewData) {
-  throw Error("FieldRectangularDropdown.prototype.updatePreviewDimensions_ not implemented");
+Blockly.FieldRectangularDropdown.prototype.createDropdownPreviewElement_ = function() {
+  throw Error(
+    'FieldRectangularDropdown.prototype.updatePreviewDimensions_ not implemented'
+  );
 };
 
 Blockly.FieldRectangularDropdown.prototype.pointArrowUp_ = function() {
@@ -160,25 +217,37 @@ Blockly.FieldRectangularDropdown.prototype.pointArrowDown_ = function() {
 };
 
 Blockly.FieldRectangularDropdown.prototype.setArrowDirection_ = function(up) {
-  this.arrowCharacter_.firstChild.nodeValue = up ? Blockly.FieldRectangularDropdown.UP_ARROW_CHARACTER : Blockly.FieldRectangularDropdown.DOWN_ARROW_CHARACTER;
+  this.arrowCharacter_.firstChild.nodeValue = up
+    ? Blockly.FieldRectangularDropdown.UP_ARROW_CHARACTER
+    : Blockly.FieldRectangularDropdown.DOWN_ARROW_CHARACTER;
 };
 
 Blockly.FieldRectangularDropdown.prototype.showMenu_ = function() {
   this.showWidgetDiv_();
   this.menu_ = this.createMenuWithChoices_(this.getOptions());
-  goog.events.listen(this.menu_, goog.ui.Component.EventType.ACTION, this.generateMenuItemSelectedHandler_());
-  if (this.buttons_){
-    for (let button of this.buttons_){
-      this.addMenuButton_(button);
+  goog.events.listen(
+    this.menu_,
+    goog.ui.Component.EventType.ACTION,
+    this.generateMenuItemSelectedHandler_()
+  );
+  if (this.buttons_) {
+    for (var i = 0; i < this.buttons_.length; i++) {
+      this.addMenuButton_(this.buttons_[i]);
     }
   }
   this.addPositionAndShowMenu(this.menu_);
   this.pointArrowUp_();
 };
 
-Blockly.FieldRectangularDropdown.prototype.addMenuButton_ = function(buttonData){
-  let button = new goog.ui.Button(buttonData.text);
-  this.menuButtonListenKey_ = goog.events.listen(button, goog.ui.Component.EventType.ACTION, buttonData.action);
+Blockly.FieldRectangularDropdown.prototype.addMenuButton_ = function(
+  buttonData
+) {
+  var button = new goog.ui.Button(buttonData.text);
+  this.menuButtonListenKey_ = goog.events.listen(
+    button,
+    goog.ui.Component.EventType.ACTION,
+    buttonData.action
+  );
   this.menu_.addItem(button);
 };
 
@@ -197,13 +266,18 @@ Blockly.FieldRectangularDropdown.prototype.menuAlreadyShowing_ = function() {
   );
 };
 
-Blockly.FieldRectangularDropdown.prototype.createMenuWithChoices_ = function(choices) {
+Blockly.FieldRectangularDropdown.prototype.createMenuWithChoices_ = function(
+  choices
+) {
   var menu = new goog.ui.Menu();
   for (var x = 0; x < choices.length; x++) {
-    var previewData = choices[x][Blockly.FieldRectangularDropdown.TUPLE_PREVIEW_DATA_INDEX];
+    var previewData =
+      choices[x][Blockly.FieldRectangularDropdown.TUPLE_PREVIEW_DATA_INDEX];
     var value = choices[x][Blockly.FieldRectangularDropdown.TUPLE_VALUE_INDEX];
-    var isCurrentSelection = (value === this.value_);
-    var dropdownPreviewElement = this.createDropdownPreviewElement_(previewData);
+    var isCurrentSelection = value === this.value_;
+    var dropdownPreviewElement = this.createDropdownPreviewElement_(
+      previewData
+    );
     var menuItem = new goog.ui.MenuItem(dropdownPreviewElement);
     menuItem.setValue(value);
     var singleColumnLayout = chooseNumberOfColumns(choices.length) === 1;
@@ -217,11 +291,11 @@ Blockly.FieldRectangularDropdown.prototype.createMenuWithChoices_ = function(cho
 };
 
 function chooseNumberOfColumns(numItems) {
-  if (numItems <= 7)  {
+  if (numItems <= 7) {
     return 1;
   }
   return Math.floor(Math.sqrt(numItems));
-};
+}
 
 Blockly.FieldRectangularDropdown.prototype.generateMenuItemSelectedHandler_ = function() {
   var fieldRectanglularDropdown = this;
@@ -232,18 +306,36 @@ Blockly.FieldRectangularDropdown.prototype.generateMenuItemSelectedHandler_ = fu
       if (value !== null && value !== undefined) {
         fieldRectanglularDropdown.setValue(value);
         if (this.sourceBlock_) {
-          let sourceValue = this.getPreviewDataForValue_(value);
-          let root = this.sourceBlock_.getRootBlock();
-          let shadowBlocks = this.sourceBlock_.getShadowBlocks();
-          let updatedShadowBlocks = [];
-          shadowBlocks.forEach(function (block) {
-            let field = block.inputList[0] && block.inputList[0].titleRow[1];
-            if (field && block.getRootBlock() === root) {
+          var sourceValue = this.getPreviewDataForValue_(value);
+          var root = this.sourceBlock_.getRootBlock();
+          if (root.miniFlyout) {
+            var miniToolboxBlocks = root.miniFlyout.blockSpace_.topBlocks_;
+            var socketIndex = root
+              .getConnections_()
+              .filter(function(connection) {
+                return connection.type === Blockly.INPUT_VALUE;
+              })
+              .map(function(connection) {
+                return connection.targetBlock();
+              })
+              .indexOf(this.sourceBlock_);
+            if (socketIndex !== -1) {
+              var field =
+                miniToolboxBlocks[socketIndex].inputList[0].titleRow[1];
               field.setText(sourceValue);
-              updatedShadowBlocks.push(block);
             }
-          })
-          this.sourceBlock_.setShadowBlocks(updatedShadowBlocks);
+
+            var shadowBlocks = this.sourceBlock_.getShadowBlocks();
+            var updatedShadowBlocks = [];
+            shadowBlocks.forEach(function(block) {
+              var field = block.inputList[0] && block.inputList[0].titleRow[1];
+              if (field && block.getRootBlock() === root) {
+                field.setText(sourceValue);
+                updatedShadowBlocks.push(block);
+              }
+            });
+            this.sourceBlock_.setShadowBlocks(updatedShadowBlocks);
+          }
         }
       }
     }
@@ -254,27 +346,31 @@ Blockly.FieldRectangularDropdown.prototype.generateMenuItemSelectedHandler_ = fu
 /**
  * @override
  */
-Blockly.FieldRectangularDropdown.prototype.generateWidgetDisposeHandler_ = function () {
-  var superWidgetDisposeHandler_ = Blockly.FieldRectangularDropdown.superClass_.generateWidgetDisposeHandler_.call(this);
+Blockly.FieldRectangularDropdown.prototype.generateWidgetDisposeHandler_ = function() {
+  var superWidgetDisposeHandler_ = Blockly.FieldRectangularDropdown.superClass_.generateWidgetDisposeHandler_.call(
+    this
+  );
   return function() {
     superWidgetDisposeHandler_();
     this.hideMenu_();
   }.bind(this);
 };
 
-Blockly.FieldRectangularDropdown.prototype.addPositionAndShowMenu = function (menu) {
+Blockly.FieldRectangularDropdown.prototype.addPositionAndShowMenu = function(
+  menu
+) {
   // Record windowSize and scrollOffset before adding menu.
   var widgetDiv = Blockly.WidgetDiv.DIV;
 
   // IE will scroll the bottom of the page into view to show this element
   // before we move it, so hide it until we've repositioned.
-  widgetDiv.style.visibility = "hidden";
+  widgetDiv.style.visibility = 'hidden';
   menu.render(widgetDiv);
   menu.setAllowAutoFocus(true);
   var menuDom = menu.getElement();
   Blockly.addClass_(menuDom, 'blocklyDropdownMenu');
   Blockly.addClass_(menuDom, Blockly.FieldRectangularDropdown.MENU_CSS_CLASS);
-  Blockly.addClass_(menuDom, 'goog-menu-noaccel');  // display menu items without shortcuts
+  Blockly.addClass_(menuDom, 'goog-menu-noaccel'); // display menu items without shortcuts
   var backdropColour = this.calculateBackdropColourWithoutAlpha_();
   menuDom.style.borderColor = backdropColour;
   menuDom.style.background = backdropColour;
@@ -285,39 +381,49 @@ Blockly.FieldRectangularDropdown.prototype.addPositionAndShowMenu = function (me
     var marginWidth = 4;
     var widthPerMenuItem = this.previewSize_.width + marginWidth;
     menuDom.style.width =
-      widthPerMenuItem * numberOfColumns // all items + their left margins
-      + marginWidth // right margin
-      + "px";
+      widthPerMenuItem * numberOfColumns + // all items + their left margins
+      marginWidth + // right margin
+      'px';
     Blockly.addClass_(menuDom, 'blocklyGridDropdownMenu');
   }
 
   this.positionWidgetDiv();
 
-  widgetDiv.style.visibility = "visible";
+  widgetDiv.style.visibility = 'visible';
 };
 
 /**
  * @override
  */
-Blockly.FieldRectangularDropdown.prototype.positionWidgetDiv = function () {
+Blockly.FieldRectangularDropdown.prototype.positionWidgetDiv = function() {
   var size = goog.style.getSize(this.menu_.getElement());
   var numberOfColumns = chooseNumberOfColumns(this.menu_.getChildCount());
   var positionBelow = numberOfColumns > 1;
 
-  var menuPosition = this.calculateMenuPosition_(this.previewElement_, positionBelow);
+  var menuPosition = this.calculateMenuPosition_(
+    this.previewElement_,
+    positionBelow
+  );
 
   var windowSize = goog.dom.getViewportSize();
-  
-  if(menuPosition.x + size.width > windowSize.width) {
-  	menuPosition.x -= size.width - (size.width / numberOfColumns);
+
+  if (menuPosition.x + size.width > windowSize.width) {
+    menuPosition.x -= size.width - size.width / numberOfColumns;
   }
-  if(menuPosition.y + size.height > windowSize.height) {
-  	menuPosition.y -= size.height + (size.height / Math.ceil(this.menu_.getChildCount() / numberOfColumns)); 
+  if (menuPosition.y + size.height > windowSize.height) {
+    menuPosition.y -=
+      size.height +
+      size.height / Math.ceil(this.menu_.getChildCount() / numberOfColumns);
   }
-  
+
   var scrollOffset = goog.style.getViewportPageOffset(document);
 
-  Blockly.WidgetDiv.position(menuPosition.x, menuPosition.y, windowSize, scrollOffset);
+  Blockly.WidgetDiv.position(
+    menuPosition.x,
+    menuPosition.y,
+    windowSize,
+    scrollOffset
+  );
 };
 
 /**
@@ -327,14 +433,22 @@ Blockly.FieldRectangularDropdown.prototype.positionWidgetDiv = function () {
  * @returns {{x: number, y: number}}
  * @private
  */
-Blockly.FieldRectangularDropdown.prototype.calculateMenuPosition_ = function (dropdownTargetElement, positionBelow) {
-  var previewTopLeft = Blockly.getAbsoluteXY_(dropdownTargetElement, this.getRootSVGElement_());
+Blockly.FieldRectangularDropdown.prototype.calculateMenuPosition_ = function(
+  dropdownTargetElement,
+  positionBelow
+) {
+  var previewTopLeft = Blockly.getAbsoluteXY_(
+    dropdownTargetElement,
+    this.getRootSVGElement_()
+  );
   var menuTopLeft = {
     x: previewTopLeft.x - Blockly.FieldRectangularDropdown.DROPDOWN_MENU_BORDER,
     y: previewTopLeft.y - Blockly.FieldRectangularDropdown.DROPDOWN_MENU_BORDER
   };
   if (positionBelow) {
-    menuTopLeft.y += this.previewSize_.height + Blockly.FieldRectangularDropdown.DROPDOWN_MENU_BORDER;
+    menuTopLeft.y +=
+      this.previewSize_.height +
+      Blockly.FieldRectangularDropdown.DROPDOWN_MENU_BORDER;
   }
   return menuTopLeft;
 };
@@ -372,11 +486,17 @@ Blockly.FieldRectangularDropdown.prototype.getCurrentPreviewData_ = function() {
   return this.getPreviewDataForValue_(this.value_);
 };
 
-Blockly.FieldRectangularDropdown.prototype.getPreviewDataForValue_ = function(value) {
+Blockly.FieldRectangularDropdown.prototype.getPreviewDataForValue_ = function(
+  value
+) {
   var choices = this.getOptions();
   for (var x = 0; x < choices.length; x++) {
-    if (choices[x][Blockly.FieldRectangularDropdown.TUPLE_VALUE_INDEX] == value) {
-      return choices[x][Blockly.FieldRectangularDropdown.TUPLE_PREVIEW_DATA_INDEX];
+    if (
+      choices[x][Blockly.FieldRectangularDropdown.TUPLE_VALUE_INDEX] == value
+    ) {
+      return choices[x][
+        Blockly.FieldRectangularDropdown.TUPLE_PREVIEW_DATA_INDEX
+      ];
     }
   }
   return null;
@@ -392,12 +512,22 @@ Blockly.FieldRectangularDropdown.prototype.init = function(block) {
   }
   this.sourceBlock_ = block;
   this.sourceBlock_.getSvgRoot().appendChild(this.fieldGroup_);
-  this.mouseUpWrapper_ = Blockly.bindEvent_(this.getClickTarget(), 'mouseup', this, this.onMouseUp_);
-  this.mouseDownWrapper_ = Blockly.bindEvent_(this.getClickTarget(), 'mousedown', this, this.onMouseDown_);
+  this.mouseUpWrapper_ = Blockly.bindEvent_(
+    this.getClickTarget(),
+    'mouseup',
+    this,
+    this.onMouseUp_
+  );
+  this.mouseDownWrapper_ = Blockly.bindEvent_(
+    this.getClickTarget(),
+    'mousedown',
+    this,
+    this.onMouseDown_
+  );
   this.updateDropdownArrowColour_();
 };
 
-Blockly.FieldRectangularDropdown.prototype.updateDropdownArrowColour_ = function () {
+Blockly.FieldRectangularDropdown.prototype.updateDropdownArrowColour_ = function() {
   if (!this.sourceBlock_) {
     throw 'Cannot update dropdown arrow colour before added to block';
   }
@@ -420,16 +550,18 @@ Blockly.FieldRectangularDropdown.prototype.onMouseUp_ = function(e) {
     return;
   }
 
-  if (Blockly.isRightButton(e) ||
-      Blockly.Block.isFreelyDragging() ||
-      !this.sourceBlock_.isEditable()) {
+  if (
+    Blockly.isRightButton(e) ||
+    Blockly.Block.isFreelyDragging() ||
+    !this.sourceBlock_.isEditable()
+  ) {
     return;
   }
 
   this.showMenu_();
 };
 
-Blockly.FieldRectangularDropdown.prototype.onMouseDown_ = function(e) {
+Blockly.FieldRectangularDropdown.prototype.onMouseDown_ = function() {
   if (this.menuAlreadyShowing_()) {
     // Menu is being closed, don't re-open if they click the arrow
     this.doNotOpenEditorNextMouseUp_ = true;
@@ -448,5 +580,9 @@ Blockly.FieldRectangularDropdown.prototype.calculateBackdropColourWithoutAlpha_ 
   var blockColour = this.sourceBlock_.getHexColour();
   var backdropOverlayColour = '#ffffff';
   var backdropOverlayOpacity = 0.6; // Match this with .fieldRectangularDropdownBackdrop in core/css.js
-  return Blockly.mixColoursWithForegroundOpacity(backdropOverlayColour, blockColour, backdropOverlayOpacity);
+  return Blockly.mixColoursWithForegroundOpacity(
+    backdropOverlayColour,
+    blockColour,
+    backdropOverlayOpacity
+  );
 };

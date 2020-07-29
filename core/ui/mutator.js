@@ -29,7 +29,6 @@ goog.provide('Blockly.Mutator');
 goog.require('Blockly.Bubble');
 goog.require('Blockly.Icon');
 
-
 /**
  * Class for a mutator dialog.
  * @param {!Array.<string>} quarkNames List of names of sub-blocks for flyout.
@@ -41,7 +40,7 @@ Blockly.Mutator = function(quarkNames) {
   this.quarkXml_ = [];
   // Convert the list of names into a list of XML objects for the flyout.
   for (var x = 0; x < quarkNames.length; x++) {
-    var element = goog.dom.createDom('block', {'type': quarkNames[x]});
+    var element = goog.dom.createDom('block', {type: quarkNames[x]});
     this.quarkXml_[x] = element;
   }
 };
@@ -69,16 +68,26 @@ Blockly.Mutator.prototype.createIcon = function() {
   <text class="blocklyIconMark" x="8" y="12">★</text>
   */
   var quantum = Blockly.Icon.RADIUS / 2;
-  var iconShield = Blockly.createSvgElement('rect',
-      {'class': 'blocklyIconShield',
-       'width': 4 * quantum,
-       'height': 4 * quantum,
-       'rx': quantum,
-       'ry': quantum}, this.iconGroup_);
-  this.iconMark_ = Blockly.createSvgElement('text',
-      {'class': 'blocklyIconMark',
-       'x': Blockly.Icon.RADIUS,
-       'y': 2 * Blockly.Icon.RADIUS - 4}, this.iconGroup_);
+  Blockly.createSvgElement(
+    'rect',
+    {
+      class: 'blocklyIconShield',
+      width: 4 * quantum,
+      height: 4 * quantum,
+      rx: quantum,
+      ry: quantum
+    },
+    this.iconGroup_
+  );
+  this.iconMark_ = Blockly.createSvgElement(
+    'text',
+    {
+      class: 'blocklyIconMark',
+      x: Blockly.Icon.RADIUS,
+      y: 2 * Blockly.Icon.RADIUS - 4
+    },
+    this.iconGroup_
+  );
   this.iconMark_.appendChild(document.createTextNode('\u2605'));
 };
 
@@ -95,17 +104,26 @@ Blockly.Mutator.prototype.createEditor_ = function() {
     [BlockSpace]
   </svg>
   */
-  this.svgDialog_ = Blockly.createSvgElement('svg',
-      {'x': Blockly.Bubble.BORDER_WIDTH, 'y': Blockly.Bubble.BORDER_WIDTH},
-      null);
-  this.svgBackground_ = Blockly.createSvgElement('rect',
-      {'class': 'blocklyMutatorBackground',
-       'height': '100%', 'width': '100%'}, this.svgDialog_);
+  this.svgDialog_ = Blockly.createSvgElement(
+    'svg',
+    {x: Blockly.Bubble.BORDER_WIDTH, y: Blockly.Bubble.BORDER_WIDTH},
+    null
+  );
+  this.svgBackground_ = Blockly.createSvgElement(
+    'rect',
+    {class: 'blocklyMutatorBackground', height: '100%', width: '100%'},
+    this.svgDialog_
+  );
 
   var mutator = this;
   var blockSpaceEditor = this.block_.blockSpace.blockSpaceEditor;
-  this.blockSpace_ = new Blockly.BlockSpace(blockSpaceEditor,
-      function() {return mutator.getFlyoutMetrics_();}, null);
+  this.blockSpace_ = new Blockly.BlockSpace(
+    blockSpaceEditor,
+    function() {
+      return mutator.getFlyoutMetrics_();
+    },
+    null
+  );
   this.blockSpace_.flyout_ = new Blockly.Flyout(blockSpaceEditor);
   this.blockSpace_.flyout_.autoClose = false;
   this.svgDialog_.appendChild(this.blockSpace_.flyout_.createDom());
@@ -128,18 +146,24 @@ Blockly.Mutator.prototype.resizeBubble_ = function() {
   } else {
     width = blockSpaceSize.width + blockSpaceSize.x;
   }
-  var height = Math.max(blockSpaceSize.height + doubleBorderWidth * 3,
-                        flyoutMetrics.contentHeight + 20);
+  var height = Math.max(
+    blockSpaceSize.height + doubleBorderWidth * 3,
+    flyoutMetrics.contentHeight + 20
+  );
   width += doubleBorderWidth * 3;
   // Only resize if the size difference is significant.  Eliminates shuddering.
-  if (Math.abs(this.blockSpaceWidth_ - width) > doubleBorderWidth ||
-      Math.abs(this.blockSpaceHeight_ - height) > doubleBorderWidth) {
+  if (
+    Math.abs(this.blockSpaceWidth_ - width) > doubleBorderWidth ||
+    Math.abs(this.blockSpaceHeight_ - height) > doubleBorderWidth
+  ) {
     // Record some layout information for getFlyoutMetrics_.
     this.blockSpaceWidth_ = width;
     this.blockSpaceHeight_ = height;
     // Resize the bubble.
-    this.bubble_.setBubbleSize(width + doubleBorderWidth,
-                               height + doubleBorderWidth);
+    this.bubble_.setBubbleSize(
+      width + doubleBorderWidth,
+      height + doubleBorderWidth
+    );
     this.svgDialog_.setAttribute('width', this.blockSpaceWidth_);
     this.svgDialog_.setAttribute('height', this.blockSpaceHeight_);
   }
@@ -150,8 +174,15 @@ Blockly.Mutator.prototype.resizeBubble_ = function() {
     this.blockSpace_.getCanvas().setAttribute('transform', translation);
   }
 
-  var offset = Blockly.convertCoordinates(Blockly.RTL ? this.blockSpaceWidth_ : 0, 0, this.svgDialog_, false);
-  this.blockSpace_.getDragCanvas().setAttribute('transform', 'translate(' + offset.x + ',' + offset.y + ')');
+  var offset = Blockly.convertCoordinates(
+    Blockly.RTL ? this.blockSpaceWidth_ : 0,
+    0,
+    this.svgDialog_,
+    false
+  );
+  this.blockSpace_
+    .getDragCanvas()
+    .setAttribute('transform', 'translate(' + offset.x + ',' + offset.y + ')');
 };
 
 /**
@@ -166,16 +197,23 @@ Blockly.Mutator.prototype.setVisible = function(visible) {
   if (visible) {
     this.createEditor_();
     // Create the bubble.
-    this.bubble_ = new Blockly.Bubble(this.block_.blockSpace,
-        this.svgDialog_, this.block_.svg_.svgGroup_,
-        this.iconX_, this.iconY_, null, null, this.blockSpace_.getDragCanvas());
+    this.bubble_ = new Blockly.Bubble(
+      this.block_.blockSpace,
+      this.svgDialog_,
+      this.block_.svg_.svgGroup_,
+      this.iconX_,
+      this.iconY_,
+      null,
+      null,
+      this.blockSpace_.getDragCanvas()
+    );
     var thisObj = this;
     this.blockSpace_.flyout_.init(this.blockSpace_, false);
     this.blockSpace_.flyout_.show(this.quarkXml_);
 
     this.rootBlock_ = this.block_.decompose(this.blockSpace_);
     var blocks = this.rootBlock_.getDescendants();
-    for (var i = 0, child; child = blocks[i]; i++) {
+    for (var i = 0, child; (child = blocks[i]); i++) {
       child.render();
     }
     // The root block should not be dragable or deletable.
@@ -191,14 +229,24 @@ Blockly.Mutator.prototype.setVisible = function(visible) {
     if (this.block_.saveConnections) {
       this.block_.saveConnections(this.rootBlock_);
       this.sourceListener_ = Blockly.bindEvent_(
-          this.block_.blockSpace.getCanvas(),
-          'blocklyBlockSpaceChange', this.block_,
-          function() {thisObj.block_.saveConnections(thisObj.rootBlock_)});
+        this.block_.blockSpace.getCanvas(),
+        'blocklyBlockSpaceChange',
+        this.block_,
+        function() {
+          thisObj.block_.saveConnections(thisObj.rootBlock_);
+        }
+      );
     }
     this.resizeBubble_();
     // When the mutator's blockSpace changes, update the source block.
-    Blockly.bindEvent_(this.blockSpace_.getCanvas(), 'blocklyBlockSpaceChange',
-        this.block_, function() {thisObj.blockSpaceChanged_();});
+    Blockly.bindEvent_(
+      this.blockSpace_.getCanvas(),
+      'blocklyBlockSpaceChange',
+      this.block_,
+      function() {
+        thisObj.blockSpaceChanged_();
+      }
+    );
     this.updateColour();
   } else {
     // Dispose of the bubble.
@@ -233,7 +281,7 @@ Blockly.Mutator.prototype.blockSpaceChanged_ = function() {
   if (!Blockly.Block.isDragging()) {
     var blocks = this.blockSpace_.getTopBlocks(false);
     var MARGIN = 20;
-    for (var b = 0, block; block = blocks[b]; b++) {
+    for (var b = 0, block; (block = blocks[b]); b++) {
       var blockXY = block.getRelativeToSurfaceXY();
       var blockHW = block.getHeightWidth();
       if (blockXY.y + blockHW.height < MARGIN) {

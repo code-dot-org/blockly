@@ -25,7 +25,6 @@
 
 goog.provide('Blockly.Names');
 
-
 /**
  * Class for a database of entity names (variables, functions, etc).
  * @param {string} reservedWords A comma-separated string of words that are
@@ -103,8 +102,10 @@ Blockly.Names.prototype.getName = function(name, type, specificType) {
  */
 Blockly.Names.prototype.checkSpecificType = function(name, type, specificType) {
   var normalized = Blockly.Names.PREFIX_ + name.toLowerCase() + '_' + type;
-  return (normalized in this.dbSpecificType_ &&
-          this.dbSpecificType_[normalized] === specificType);
+  return (
+    normalized in this.dbSpecificType_ &&
+    this.dbSpecificType_[normalized] === specificType
+  );
 };
 
 /**
@@ -117,11 +118,13 @@ Blockly.Names.prototype.checkSpecificType = function(name, type, specificType) {
  *     ('VARIABLE', 'PROCEDURE', 'BUILTIN', etc...).
  * @return {string} An entity name legal for the exported language.
  */
-Blockly.Names.prototype.getDistinctName = function(name, type) {
+Blockly.Names.prototype.getDistinctName = function(name) {
   var safeName = this.safeName_(name);
   var i = '';
-  while (this.dbReverse_[Blockly.Names.PREFIX_ + safeName + i] ||
-      (Blockly.Names.PREFIX_ + safeName + i) in this.reservedDict_) {
+  while (
+    this.dbReverse_[Blockly.Names.PREFIX_ + safeName + i] ||
+    Blockly.Names.PREFIX_ + safeName + i in this.reservedDict_
+  ) {
     // Collision with existing name.  Create a unique name.
     i = i ? i + 1 : 2;
   }

@@ -7,7 +7,7 @@ goog.provide('Blockly.FieldIcon');
 
 goog.require('Blockly.FieldLabel');
 
-Blockly.FieldIcon = function(text) {
+Blockly.FieldIcon = function() {
   Blockly.FieldIcon.superClass_.constructor.apply(this, arguments);
   Blockly.addClass_(this.fieldGroup_, 'blocklyIconGroup');
   Blockly.addClass_(this.borderRect_, 'blocklyIconShield');
@@ -24,5 +24,4 @@ Blockly.FieldIcon.prototype.EDITABLE = false;
  * To be overridden by the instance.
  * @private
  */
-Blockly.FieldIcon.prototype.showEditor_ = function() {
-};
+Blockly.FieldIcon.prototype.showEditor_ = function() {};

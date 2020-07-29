@@ -17,8 +17,6 @@
  * limitations under the License.
  */
 
-/* global Blockly, goog */
-
 /**
  * @fileoverview XML reader and writer.
  * @author fraser@google.com (Neil Fraser)
@@ -30,15 +28,15 @@ goog.provide('Blockly.Xml');
 // TODO(scr): Fix circular dependencies
 // goog.require('Blockly.Block');
 
-
 /**
  * Encode a block tree as XML.
  * @param {!Object} blockSpace The SVG blockSpace.
  * @return {!Element} XML document.
  */
 Blockly.Xml.blockSpaceToDom = function(blockSpace) {
-  var xml = Blockly.isMsie() ? document.createElementNS(null, 'xml') :
-                               document.createElement("xml");
+  var xml = Blockly.isMsie()
+    ? document.createElementNS(null, 'xml')
+    : document.createElement('xml');
   var blocks = blockSpace.getTopBlocks(true);
   for (var i = 0, block; i < blocks.length; i++) {
     block = blocks[i];
@@ -146,7 +144,9 @@ Blockly.Xml.blockToDom = function(block, ignoreChildBlocks) {
   }
 
   if (Blockly.editBlocks) {
-    var limit = block.blockSpace.blockSpaceEditor.blockLimits.getLimit(block.type);
+    var limit = block.blockSpace.blockSpaceEditor.blockLimits.getLimit(
+      block.type
+    );
     if (limit) {
       element.setAttribute('limit', limit);
     }
@@ -159,8 +159,11 @@ Blockly.Xml.blockToDom = function(block, ignoreChildBlocks) {
   if (block.nextConnection && !ignoreChildBlocks) {
     var nextBlock = block.nextConnection.targetBlock();
     if (nextBlock) {
-      container = goog.dom.createDom('next', null,
-          Blockly.Xml.blockToDom(nextBlock));
+      container = goog.dom.createDom(
+        'next',
+        null,
+        Blockly.Xml.blockToDom(nextBlock)
+      );
       element.appendChild(container);
     }
   }
@@ -177,7 +180,7 @@ Blockly.Xml.blockToDom = function(block, ignoreChildBlocks) {
 Blockly.Xml.domToText = function(dom) {
   var oSerializer = new XMLSerializer();
   var text = oSerializer.serializeToString(dom);
-  var re = new RegExp(" xmlns=\"http://www.w3.org/1999/xhtml\"", 'g');
+  var re = new RegExp(' xmlns="http://www.w3.org/1999/xhtml"', 'g');
   return text.replace(re, '');
 };
 
@@ -222,8 +225,11 @@ Blockly.Xml.textToDom = function(text) {
   var oParser = new DOMParser();
   var dom = oParser.parseFromString(text, 'text/xml');
   // The DOM should have one and only one top-level node, an XML tag.
-  if (!dom || !dom.firstChild ||
-      dom.firstChild.nodeName.toLowerCase() != 'xml') {
+  if (
+    !dom ||
+    !dom.firstChild ||
+    dom.firstChild.nodeName.toLowerCase() != 'xml'
+  ) {
     // Whatever we got back from the parser is not XML.
     throw 'Blockly.Xml.textToDom did not obtain a valid XML tree.';
   }
@@ -255,12 +261,16 @@ Blockly.Xml.domToBlockSpace = function(blockSpace, xml) {
   //  the flow of the other blocks.
   var cursor = {
     x: Blockly.RTL ? width - paddingLeft : paddingLeft,
-    y: paddingTop,
+    y: paddingTop
   };
 
-  var positionBlock = function (block) {
-    var padding = block.blockly_block.getSvgPadding() ||
-        {top: 0, right: 0, bottom: 0, left: 0};
+  var positionBlock = function(block) {
+    var padding = block.blockly_block.getSvgPadding() || {
+      top: 0,
+      right: 0,
+      bottom: 0,
+      left: 0
+    };
 
     var heightWidth = block.blockly_block.getHeightWidth();
 
@@ -273,10 +283,11 @@ Blockly.Xml.domToBlockSpace = function(blockSpace, xml) {
 
     if (isNaN(block.y)) {
       block.y = cursor.y + padding.top;
-      cursor.y += heightWidth.height +
-          Blockly.BlockSvg.SEP_SPACE_Y +
-          padding.bottom +
-          padding.top;
+      cursor.y +=
+        heightWidth.height +
+        Blockly.BlockSvg.SEP_SPACE_Y +
+        padding.bottom +
+        padding.top;
     }
 
     block.blockly_block.moveTo(block.x, block.y);
@@ -304,19 +315,25 @@ Blockly.Xml.domToBlockSpace = function(blockSpace, xml) {
     }
   }
 
-  blocks.filter(function (block) {
-    return block.blockly_block.isVisible();
-  }).forEach(positionBlock);
+  blocks
+    .filter(function(block) {
+      return block.blockly_block.isVisible();
+    })
+    .forEach(positionBlock);
 
-  blocks.filter(function (block) {
-    return !block.blockly_block.isVisible();
-  }).forEach(positionBlock);
+  blocks
+    .filter(function(block) {
+      return !block.blockly_block.isVisible();
+    })
+    .forEach(positionBlock);
 
   if (Blockly.topLevelProcedureAutopopulate) {
     blockSpace.blockSpaceEditor.updateFlyout();
   }
 
-  blockSpace.events.dispatchEvent(Blockly.BlockSpace.EVENTS.EVENT_BLOCKS_IMPORTED);
+  blockSpace.events.dispatchEvent(
+    Blockly.BlockSpace.EVENTS.EVENT_BLOCKS_IMPORTED
+  );
   blockSpace.render();
   return blocks;
 };
@@ -357,11 +374,15 @@ Blockly.Xml.domToBlock = function(blockSpace, xmlBlock) {
   if (block.unknownBlock) {
     block.setEditable(false);
   }
-  var next_connection_disabled = xmlBlock.getAttribute('next_connection_disabled');
+  var next_connection_disabled = xmlBlock.getAttribute(
+    'next_connection_disabled'
+  );
   if (next_connection_disabled) {
     block.setNextConnectionDisabled(next_connection_disabled === 'true');
   }
-  var can_disconnect_from_parent = xmlBlock.getAttribute('can_disconnect_from_parent');
+  var can_disconnect_from_parent = xmlBlock.getAttribute(
+    'can_disconnect_from_parent'
+  );
   if (can_disconnect_from_parent) {
     block.setCanDisconnectFromParent(can_disconnect_from_parent === 'true');
   }
@@ -371,16 +392,21 @@ Blockly.Xml.domToBlock = function(blockSpace, xmlBlock) {
   }
   var userCreated = xmlBlock.getAttribute('usercreated');
   if (userCreated) {
-    block.userCreated = (userCreated === 'true');
+    block.userCreated = userCreated === 'true';
   }
   var inputCount = xmlBlock.getAttribute('inputcount');
   if (inputCount) {
     block.setInputCount(inputCount);
   }
   var limit = xmlBlock.getAttribute('limit');
-  var shouldShowLimits = Blockly.editBlocks ? !blockSpace.isFlyout : blockSpace.isFlyout;
+  var shouldShowLimits = Blockly.editBlocks
+    ? !blockSpace.isFlyout
+    : blockSpace.isFlyout;
   if (limit && shouldShowLimits) {
-    blockSpace.blockSpaceEditor.blockLimits.setLimit(block.type, parseInt(limit));
+    blockSpace.blockSpaceEditor.blockLimits.setLimit(
+      block.type,
+      parseInt(limit)
+    );
   }
 
   var blockChild = null;
@@ -428,20 +454,22 @@ Blockly.Xml.domToBlock = function(blockSpace, xmlBlock) {
           input = block.appendValueInput(name);
           console.warn('Unknown block input: "' + name + '" not found.');
         }
-        // Fall through.
+      // Fall through.
       case 'statement':
         if (!input) {
           input = block.appendStatementInput(name);
           console.warn('Unknown statement: "' + name + '" not found.');
         }
-        // Fall through.
+      // Fall through.
       case 'functional_input':
         if (!input) {
           input = block.appendFunctionalInput(name);
           console.warn('Unknown functional input: "' + name + '" not found.');
         }
-        if (firstRealGrandchild &&
-            firstRealGrandchild.nodeName.toLowerCase() == 'block') {
+        if (
+          firstRealGrandchild &&
+          firstRealGrandchild.nodeName.toLowerCase() == 'block'
+        ) {
           blockChild = Blockly.Xml.domToBlock(blockSpace, firstRealGrandchild);
           if (block.unknownBlock) {
             // Any blocks connected to an `unknown` block should be movable, so
@@ -470,8 +498,10 @@ Blockly.Xml.domToBlock = function(blockSpace, xmlBlock) {
         }
         break;
       case 'next':
-        if (firstRealGrandchild &&
-            firstRealGrandchild.nodeName.toLowerCase() == 'block') {
+        if (
+          firstRealGrandchild &&
+          firstRealGrandchild.nodeName.toLowerCase() == 'block'
+        ) {
           if (!block.nextConnection) {
             if (block.unknownBlock) {
               block.setNextStatement(true);
@@ -498,7 +528,7 @@ Blockly.Xml.domToBlock = function(blockSpace, xmlBlock) {
         }
         break;
       default:
-        // Unknown tag; ignore.  Same principle as HTML parsers.
+      // Unknown tag; ignore.  Same principle as HTML parsers.
     }
   }
 

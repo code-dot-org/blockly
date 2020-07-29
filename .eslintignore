@@ -1,0 +1,3 @@
+node_modules
+dist
+/tests/test_dependency_map.js

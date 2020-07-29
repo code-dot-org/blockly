@@ -27,7 +27,6 @@ goog.provide('Blockly.Bubble');
 
 goog.require('Blockly.BlockSpace');
 
-
 /**
  * Class for UI bubble.
  * @param {!Blockly.BlockSpace} blockSpace The blockSpace on which to draw the
@@ -40,14 +39,21 @@ goog.require('Blockly.BlockSpace');
  * @param {?number} bubbleHeight Height of bubble, or null if not resizable.
  * @constructor
  */
-Blockly.Bubble = function(blockSpace, content, shape,
-                          anchorX, anchorY,
-                          bubbleWidth, bubbleHeight, dragCanvas) {
+Blockly.Bubble = function(
+  blockSpace,
+  content,
+  shape,
+  anchorX,
+  anchorY,
+  bubbleWidth,
+  bubbleHeight,
+  dragCanvas
+) {
   var angle = Blockly.Bubble.ARROW_ANGLE;
   if (Blockly.RTL) {
     angle = -angle;
   }
-  this.arrow_radians_ = angle / 360 * Math.PI * 2;
+  this.arrow_radians_ = (angle / 360) * Math.PI * 2;
 
   this.blockSpace_ = blockSpace;
   this.content_ = content;
@@ -61,7 +67,7 @@ Blockly.Bubble = function(blockSpace, content, shape,
     var bBox;
     try {
       bBox = content.getBBox();
-    } catch(e) {
+    } catch (e) {
       // IE9 sometimes throws an exception above when rendering the
       // function inputs box, presumably because the content hasn't
       // been rendered yet. In this case, a later call to resizeBubble_
@@ -79,11 +85,19 @@ Blockly.Bubble = function(blockSpace, content, shape,
   this.rendered_ = true;
 
   if (!blockSpace.isReadOnly()) {
-    Blockly.bindEvent_(this.bubbleBack_, 'mousedown', this,
-                       this.bubbleMouseDown_);
+    Blockly.bindEvent_(
+      this.bubbleBack_,
+      'mousedown',
+      this,
+      this.bubbleMouseDown_
+    );
     if (this.resizeGroup_) {
-      Blockly.bindEvent_(this.resizeGroup_, 'mousedown', this,
-                         this.resizeMouseDown_);
+      Blockly.bindEvent_(
+        this.resizeGroup_,
+        'mousedown',
+        this,
+        this.resizeMouseDown_
+      );
     }
   }
 };
@@ -215,29 +229,57 @@ Blockly.Bubble.prototype.createDom_ = function(content, hasResize) {
   </g>
   */
   this.bubbleGroup_ = Blockly.createSvgElement('g', {}, null);
-  var bubbleEmboss = Blockly.createSvgElement('g',
-      {'filter': 'url(#blocklyEmboss)'}, this.bubbleGroup_);
+  var bubbleEmboss = Blockly.createSvgElement(
+    'g',
+    {filter: 'url(#blocklyEmboss)'},
+    this.bubbleGroup_
+  );
   this.bubbleArrow_ = Blockly.createSvgElement('path', {}, bubbleEmboss);
-  this.bubbleBack_ = Blockly.createSvgElement('rect',
-      {'class': 'blocklyDraggable', 'x': 0, 'y': 0,
-      'rx': Blockly.Bubble.BORDER_WIDTH, 'ry': Blockly.Bubble.BORDER_WIDTH},
-      bubbleEmboss);
+  this.bubbleBack_ = Blockly.createSvgElement(
+    'rect',
+    {
+      class: 'blocklyDraggable',
+      x: 0,
+      y: 0,
+      rx: Blockly.Bubble.BORDER_WIDTH,
+      ry: Blockly.Bubble.BORDER_WIDTH
+    },
+    bubbleEmboss
+  );
   if (hasResize) {
-    this.resizeGroup_ = Blockly.createSvgElement('g',
-        {'class': Blockly.RTL ? 'blocklyResizeSW' : 'blocklyResizeSE'},
-        this.bubbleGroup_);
+    this.resizeGroup_ = Blockly.createSvgElement(
+      'g',
+      {class: Blockly.RTL ? 'blocklyResizeSW' : 'blocklyResizeSE'},
+      this.bubbleGroup_
+    );
     var resizeSize = 2 * Blockly.Bubble.BORDER_WIDTH;
-    Blockly.createSvgElement('polygon',
-        {'points': '0,x x,x x,0'.replace(/x/g, resizeSize.toString())},
-        this.resizeGroup_);
-    Blockly.createSvgElement('line',
-        {'class': 'blocklyResizeLine',
-        'x1': resizeSize / 3, 'y1': resizeSize - 1,
-        'x2': resizeSize - 1, 'y2': resizeSize / 3}, this.resizeGroup_);
-    Blockly.createSvgElement('line',
-        {'class': 'blocklyResizeLine',
-        'x1': resizeSize * 2 / 3, 'y1': resizeSize - 1,
-        'x2': resizeSize - 1, 'y2': resizeSize * 2 / 3}, this.resizeGroup_);
+    Blockly.createSvgElement(
+      'polygon',
+      {points: '0,x x,x x,0'.replace(/x/g, resizeSize.toString())},
+      this.resizeGroup_
+    );
+    Blockly.createSvgElement(
+      'line',
+      {
+        class: 'blocklyResizeLine',
+        x1: resizeSize / 3,
+        y1: resizeSize - 1,
+        x2: resizeSize - 1,
+        y2: resizeSize / 3
+      },
+      this.resizeGroup_
+    );
+    Blockly.createSvgElement(
+      'line',
+      {
+        class: 'blocklyResizeLine',
+        x1: (resizeSize * 2) / 3,
+        y1: resizeSize - 1,
+        x2: resizeSize - 1,
+        y2: (resizeSize * 2) / 3
+      },
+      this.resizeGroup_
+    );
   } else {
     this.resizeGroup_ = null;
   }
@@ -270,10 +312,18 @@ Blockly.Bubble.prototype.bubbleMouseDown_ = function(e) {
   }
   this.dragDeltaY = this.relativeTop_ - e.clientY;
 
-  Blockly.Bubble.onMouseUpWrapper_ = Blockly.bindEvent_(document,
-      'mouseup', this, Blockly.Bubble.unbindDragEvents_);
-  Blockly.Bubble.onMouseMoveWrapper_ = Blockly.bindEvent_(document,
-      'mousemove', this, this.bubbleMouseMove_);
+  Blockly.Bubble.onMouseUpWrapper_ = Blockly.bindEvent_(
+    document,
+    'mouseup',
+    this,
+    Blockly.Bubble.unbindDragEvents_
+  );
+  Blockly.Bubble.onMouseMoveWrapper_ = Blockly.bindEvent_(
+    document,
+    'mousemove',
+    this,
+    this.bubbleMouseMove_
+  );
   this.blockSpace_.blockSpaceEditor.hideChaff();
   // This event has been handled.  No need to bubble up to the document.
   e.stopPropagation();
@@ -318,10 +368,18 @@ Blockly.Bubble.prototype.resizeMouseDown_ = function(e) {
   }
   this.resizeDeltaHeight = this.height_ - e.clientY;
 
-  Blockly.Bubble.onMouseUpWrapper_ = Blockly.bindEvent_(document,
-      'mouseup', this, Blockly.Bubble.unbindDragEvents_);
-  Blockly.Bubble.onMouseMoveWrapper_ = Blockly.bindEvent_(document,
-      'mousemove', this, this.resizeMouseMove_);
+  Blockly.Bubble.onMouseUpWrapper_ = Blockly.bindEvent_(
+    document,
+    'mouseup',
+    this,
+    Blockly.Bubble.unbindDragEvents_
+  );
+  Blockly.Bubble.onMouseMoveWrapper_ = Blockly.bindEvent_(
+    document,
+    'mousemove',
+    this,
+    this.resizeMouseMove_
+  );
   this.blockSpace_.blockSpaceEditor.hideChaff();
   // This event has been handled.  No need to bubble up to the document.
   e.stopPropagation();
@@ -394,35 +452,50 @@ Blockly.Bubble.prototype.layoutBubble_ = function() {
   if (this.blockSpace_.scrollbarPair) {
     // Fetch the blockSpace's metrics, if they exist.
     var metrics = this.blockSpace_.getMetrics();
-    if (this.anchorX_ + relativeLeft <
-        Blockly.BlockSvg.SEP_SPACE_X + metrics.viewLeft) {
+    if (
+      this.anchorX_ + relativeLeft <
+      Blockly.BlockSvg.SEP_SPACE_X + metrics.viewLeft
+    ) {
       // Slide the bubble right until it is onscreen.
-      relativeLeft = Blockly.BlockSvg.SEP_SPACE_X + metrics.viewLeft -
-          this.anchorX_;
-    } else if (metrics.viewLeft + metrics.viewWidth <
-        this.anchorX_ + relativeLeft + this.width_ +
+      relativeLeft =
+        Blockly.BlockSvg.SEP_SPACE_X + metrics.viewLeft - this.anchorX_;
+    } else if (
+      metrics.viewLeft + metrics.viewWidth <
+      this.anchorX_ +
+        relativeLeft +
+        this.width_ +
         Blockly.BlockSvg.SEP_SPACE_X +
-        Blockly.Scrollbar.scrollbarThickness) {
+        Blockly.Scrollbar.scrollbarThickness
+    ) {
       // Slide the bubble left until it is onscreen.
-      relativeLeft = metrics.viewLeft + metrics.viewWidth - this.anchorX_ -
-          this.width_ - Blockly.BlockSvg.SEP_SPACE_X -
-          Blockly.Scrollbar.scrollbarThickness;
+      relativeLeft =
+        metrics.viewLeft +
+        metrics.viewWidth -
+        this.anchorX_ -
+        this.width_ -
+        Blockly.BlockSvg.SEP_SPACE_X -
+        Blockly.Scrollbar.scrollbarThickness;
     }
-    if (this.anchorY_ + relativeTop <
-        Blockly.BlockSvg.SEP_SPACE_Y + metrics.viewTop) {
+    if (
+      this.anchorY_ + relativeTop <
+      Blockly.BlockSvg.SEP_SPACE_Y + metrics.viewTop
+    ) {
       // Slide the bubble below the block.
-        if (navigator.userAgent.indexOf("MSIE") >= 0 || navigator.userAgent.indexOf("Trident") >= 0) {
-            (this.shape_).style.display = "inline";   /* reqd for IE */
-            var bBox = {
-                x: (this.shape_).getBBox().x,
-                y: (this.shape_).getBBox().y,
-                width: (this.shape_).scrollWidth,
-                height: (this.shape_).scrollHeight
-            };
-        }
-        else {
-            var bBox = /** @type {SVGLocatable} */ (this.shape_).getBBox();
-        }
+      var bBox;
+      if (
+        navigator.userAgent.indexOf('MSIE') >= 0 ||
+        navigator.userAgent.indexOf('Trident') >= 0
+      ) {
+        this.shape_.style.display = 'inline'; /* reqd for IE */
+        bBox = {
+          x: this.shape_.getBBox().x,
+          y: this.shape_.getBBox().y,
+          width: this.shape_.scrollWidth,
+          height: this.shape_.scrollHeight
+        };
+      } else {
+        bBox = /** @type {SVGLocatable} */ (this.shape_).getBBox();
+      }
       relativeTop = bBox.height;
     }
   }
@@ -442,11 +515,21 @@ Blockly.Bubble.prototype.positionBubble_ = function() {
     left = this.anchorX_ + this.relativeLeft_;
   }
   var top = this.relativeTop_ + this.anchorY_;
-  this.bubbleGroup_.setAttribute('transform',
-      'translate(' + left + ', ' + top + ')');
+  this.bubbleGroup_.setAttribute(
+    'transform',
+    'translate(' + left + ', ' + top + ')'
+  );
 
-  var offset = Blockly.convertCoordinates(Blockly.RTL ? this.blockSpaceWidth_ : 0, 0, this.content_, false);
-  this.dragCanvas_.setAttribute('transform', 'translate(' + offset.x + ',' + offset.y + ')');
+  var offset = Blockly.convertCoordinates(
+    Blockly.RTL ? this.blockSpaceWidth_ : 0,
+    0,
+    this.content_,
+    false
+  );
+  this.dragCanvas_.setAttribute(
+    'transform',
+    'translate(' + offset.x + ',' + offset.y + ')'
+  );
 };
 
 /**
@@ -475,13 +558,23 @@ Blockly.Bubble.prototype.setBubbleSize = function(width, height) {
     if (Blockly.RTL) {
       // Mirror the resize group.
       var resizeSize = 2 * Blockly.Bubble.BORDER_WIDTH;
-      this.resizeGroup_.setAttribute('transform', 'translate(' +
-          resizeSize + ', ' +
-          (height - doubleBorderWidth) + ') scale(-1 1)');
+      this.resizeGroup_.setAttribute(
+        'transform',
+        'translate(' +
+          resizeSize +
+          ', ' +
+          (height - doubleBorderWidth) +
+          ') scale(-1 1)'
+      );
     } else {
-      this.resizeGroup_.setAttribute('transform', 'translate(' +
-          (width - doubleBorderWidth) + ', ' +
-          (height - doubleBorderWidth) + ')');
+      this.resizeGroup_.setAttribute(
+        'transform',
+        'translate(' +
+          (width - doubleBorderWidth) +
+          ', ' +
+          (height - doubleBorderWidth) +
+          ')'
+      );
     }
   }
   if (this.rendered_) {
@@ -533,8 +626,8 @@ Blockly.Bubble.prototype.renderArrow_ = function() {
 
     // Calculate the thickness of the base of the arrow.
     var bubbleSize = this.getBubbleSize();
-    var thickness = (bubbleSize.width + bubbleSize.height) /
-                    Blockly.Bubble.ARROW_THICKNESS;
+    var thickness =
+      (bubbleSize.width + bubbleSize.height) / Blockly.Bubble.ARROW_THICKNESS;
     thickness = Math.min(thickness, bubbleSize.width, bubbleSize.height) / 2;
 
     // Back the tip of the arrow off of the anchor.
@@ -553,18 +646,40 @@ Blockly.Bubble.prototype.renderArrow_ = function() {
     if (swirlAngle > Math.PI * 2) {
       swirlAngle -= Math.PI * 2;
     }
-    var swirlRise = Math.sin(swirlAngle) *
-        hypotenuse / Blockly.Bubble.ARROW_BEND;
-    var swirlRun = Math.cos(swirlAngle) *
-        hypotenuse / Blockly.Bubble.ARROW_BEND;
+    var swirlRise =
+      (Math.sin(swirlAngle) * hypotenuse) / Blockly.Bubble.ARROW_BEND;
+    var swirlRun =
+      (Math.cos(swirlAngle) * hypotenuse) / Blockly.Bubble.ARROW_BEND;
 
     steps.push('M' + baseX1 + ',' + baseY1);
-    steps.push('C' + (baseX1 + swirlRun) + ',' + (baseY1 + swirlRise) +
-               ' ' + relAnchorX + ',' + relAnchorY +
-               ' ' + relAnchorX + ',' + relAnchorY);
-    steps.push('C' + relAnchorX + ',' + relAnchorY +
-               ' ' + (baseX2 + swirlRun) + ',' + (baseY2 + swirlRise) +
-               ' ' + baseX2 + ',' + baseY2);
+    steps.push(
+      'C' +
+        (baseX1 + swirlRun) +
+        ',' +
+        (baseY1 + swirlRise) +
+        ' ' +
+        relAnchorX +
+        ',' +
+        relAnchorY +
+        ' ' +
+        relAnchorX +
+        ',' +
+        relAnchorY
+    );
+    steps.push(
+      'C' +
+        relAnchorX +
+        ',' +
+        relAnchorY +
+        ' ' +
+        (baseX2 + swirlRun) +
+        ',' +
+        (baseY2 + swirlRise) +
+        ' ' +
+        baseX2 +
+        ',' +
+        baseY2
+    );
   }
   steps.push('z');
   this.bubbleArrow_.setAttribute('d', steps.join(' '));

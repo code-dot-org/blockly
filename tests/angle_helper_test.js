@@ -9,20 +9,20 @@ function test_snap() {
 
   for (var i = 0; i < 360; i++) {
     var expected;
-    switch(true) {
-      case (i < 23):
+    switch (true) {
+      case i < 23:
         expected = 0;
         break;
-      case (i < 68):
+      case i < 68:
         expected = 45;
         break;
-      case (i < 136):
+      case i < 136:
         expected = 90;
         break;
-      case (i < 226):
+      case i < 226:
         expected = 180;
         break;
-      case (i < 315):
+      case i < 315:
         expected = 270;
         break;
       default:
@@ -39,24 +39,29 @@ function test_describeArc() {
   var center = new goog.math.Vec2(0, 0);
 
   function evaluate(startAngle, endAngle, expected) {
-    var actual = Blockly.AngleHelper.describeArc(center, 100, startAngle, endAngle);
+    var actual = Blockly.AngleHelper.describeArc(
+      center,
+      100,
+      startAngle,
+      endAngle
+    );
     assertEquals(expected, actual);
   }
 
   var tests = [
-    [0, 0, "M 100.00 0.00 A 100 100 0 0 1 100.00 0.00 L 0 0"],
-    [0, 45, "M 100.00 0.00 A 100 100 0 0 1 70.71 70.71 L 0 0"],
-    [0, 90, "M 100.00 0.00 A 100 100 0 0 1 0.00 100.00 L 0 0"],
-    [0, 180, "M 100.00 0.00 A 100 100 0 0 1 -100.00 0.00 L 0 0"],
-    [0, 270, "M 100.00 0.00 A 100 100 0 1 1 -0.00 -100.00 L 0 0"],
-    [0, 360, "M 100.00 0.00 A 100 100 0 1 1 100.00 -0.00 L 0 0"],
-    [0, 450, "M 100.00 0.00 A 100 100 0 1 1 0.00 100.00 L 0 0"],
-    [0, -45, "M 100.00 0.00 A 100 100 0 0 0 70.71 -70.71 L 0 0"],
-    [0, -90, "M 100.00 0.00 A 100 100 0 0 0 0.00 -100.00 L 0 0"],
-    [0, -180, "M 100.00 0.00 A 100 100 0 0 0 -100.00 -0.00 L 0 0"],
-    [0, -270, "M 100.00 0.00 A 100 100 0 1 0 -0.00 100.00 L 0 0"],
-    [0, -360, "M 100.00 0.00 A 100 100 0 1 0 100.00 0.00 L 0 0"],
-    [0, -450, "M 100.00 0.00 A 100 100 0 1 0 0.00 -100.00 L 0 0"]
+    [0, 0, 'M 100.00 0.00 A 100 100 0 0 1 100.00 0.00 L 0 0'],
+    [0, 45, 'M 100.00 0.00 A 100 100 0 0 1 70.71 70.71 L 0 0'],
+    [0, 90, 'M 100.00 0.00 A 100 100 0 0 1 0.00 100.00 L 0 0'],
+    [0, 180, 'M 100.00 0.00 A 100 100 0 0 1 -100.00 0.00 L 0 0'],
+    [0, 270, 'M 100.00 0.00 A 100 100 0 1 1 -0.00 -100.00 L 0 0'],
+    [0, 360, 'M 100.00 0.00 A 100 100 0 1 1 100.00 -0.00 L 0 0'],
+    [0, 450, 'M 100.00 0.00 A 100 100 0 1 1 0.00 100.00 L 0 0'],
+    [0, -45, 'M 100.00 0.00 A 100 100 0 0 0 70.71 -70.71 L 0 0'],
+    [0, -90, 'M 100.00 0.00 A 100 100 0 0 0 0.00 -100.00 L 0 0'],
+    [0, -180, 'M 100.00 0.00 A 100 100 0 0 0 -100.00 -0.00 L 0 0'],
+    [0, -270, 'M 100.00 0.00 A 100 100 0 1 0 -0.00 100.00 L 0 0'],
+    [0, -360, 'M 100.00 0.00 A 100 100 0 1 0 100.00 0.00 L 0 0'],
+    [0, -450, 'M 100.00 0.00 A 100 100 0 1 0 0.00 -100.00 L 0 0']
   ];
 
   tests.forEach(function(test) {
@@ -74,11 +79,11 @@ function test_picker_initial_location() {
     [/* angle */ 225, /* handle X */ 23.83, /* handle Y */ 23.83],
     [/* angle */ 270, /* handle X */ 50, /* handle Y */ 13],
     [/* angle */ 315, /* handle X */ 76.16, /* handle Y */ 23.83]
-  ]
+  ];
   var assertWithin = function(val1, val2, threshold) {
     assert(Math.abs(val1 - val2) < threshold);
-  }
-  tests.forEach(function (test) {
+  };
+  tests.forEach(function(test) {
     var angleHelper = new Blockly.AngleHelper('turnRight', {
       angle: test[0],
       width: 100,
@@ -105,11 +110,11 @@ function test_picker_update_location() {
     [/* angle */ 225, /* handle X */ 23.83, /* handle Y */ 23.83],
     [/* angle */ 270, /* handle X */ 50, /* handle Y */ 13],
     [/* angle */ 315, /* handle X */ 76.16, /* handle Y */ 23.83]
-  ]
+  ];
   var assertWithin = function(val1, val2, threshold) {
     assert(Math.abs(val1 - val2) < threshold);
-  }
-  tests.forEach(function (test) {
+  };
+  tests.forEach(function(test) {
     angleHelper.setAngle(test[0]);
     assertWithin(angleHelper.picker_.handleCenter.x, test[1], 0.01);
     assertWithin(angleHelper.picker_.handleCenter.y, test[2], 0.01);
@@ -126,13 +131,28 @@ function test_start_drag() {
   angleHelper.init();
   var tests = [
     // outside both handles
-    [/* mouseX */ 75, /* mouseY */ 75, /* picker */ true, /* background */ false],
+    [
+      /* mouseX */ 75,
+      /* mouseY */ 75,
+      /* picker */ true,
+      /* background */ false
+    ],
     // inside background handle
-    [/* mouseX */ 95, /* mouseY */ 50, /* picker */ false, /* background */ true],
+    [
+      /* mouseX */ 95,
+      /* mouseY */ 50,
+      /* picker */ false,
+      /* background */ true
+    ],
     // inside picker handle
-    [/* mouseX */ 87, /* mouseY */ 50, /* picker */ true, /* background */ false]
+    [
+      /* mouseX */ 87,
+      /* mouseY */ 50,
+      /* picker */ true,
+      /* background */ false
+    ]
   ];
-  tests.forEach(function (test) {
+  tests.forEach(function(test) {
     angleHelper.startDrag_({clientX: test[0], clientY: test[1]});
     assertEquals(angleHelper.picker_.isDragging, test[2]);
     assertEquals(angleHelper.background_.isDragging, test[3]);
@@ -162,9 +182,9 @@ function test_update_drag() {
   ];
   var assertWithin = function(val1, val2, threshold) {
     assert(Math.abs(val1 - val2) < threshold);
-  }
-  
-  tests.forEach(function (test) {
+  };
+
+  tests.forEach(function(test) {
     angleHelper.background_.isDragging = true;
     angleHelper.updateDrag_({
       clientX: test[1],
@@ -176,8 +196,8 @@ function test_update_drag() {
     angleHelper.background_.isDragging = false;
   });
   angleHelper.init();
-  
-  tests.forEach(function (test) {
+
+  tests.forEach(function(test) {
     angleHelper.background_.angle = 20;
     angleHelper.picker_.isDragging = true;
     angleHelper.updateDrag_({
@@ -189,6 +209,7 @@ function test_update_drag() {
     assertWithin(
       angleHelper.picker_.angle,
       goog.math.standardAngle(test[0] - angleHelper.background_.angle),
-      0.1);
-  })
+      0.1
+    );
+  });
 }

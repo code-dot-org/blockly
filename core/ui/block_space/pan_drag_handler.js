@@ -28,7 +28,7 @@ goog.provide('Blockly.PanDragHandler');
  * @param {!Blockly.BlockSpace} blockSpace
  * @constructor
  */
-Blockly.PanDragHandler = function (blockSpace) {
+Blockly.PanDragHandler = function(blockSpace) {
   /**
    * @private {Blockly.BlockSpace}
    */
@@ -105,24 +105,34 @@ Blockly.PanDragHandler = function (blockSpace) {
  * @param {function} [onDragTargetMouseDown] - optional function called when
  *        click on the drag target begins (used for hideChaff by BSE)
  */
-Blockly.PanDragHandler.prototype.bindBeginPanDragHandler = function (target,
-    onDragTargetMouseDown) {
+Blockly.PanDragHandler.prototype.bindBeginPanDragHandler = function(
+  target,
+  onDragTargetMouseDown
+) {
   this.unbindBeginPanDragHandler();
   this.target_ = target;
   this.onTargetMouseDown_ = onDragTargetMouseDown;
   this.mouseDownEventBindData_ = Blockly.bindEvent_(
-      target, 'mousedown', this, this.onPanDragTargetMouseDown_);
+    target,
+    'mousedown',
+    this,
+    this.onPanDragTargetMouseDown_
+  );
 
   // Also block the context menu on the pan-drag target element
   this.contextMenuBlockEventBindData_ = Blockly.bindEvent_(
-      target, 'contextmenu', null, Blockly.blockContextMenu);
+    target,
+    'contextmenu',
+    null,
+    Blockly.blockContextMenu
+  );
 };
 
 /**
  * Unbinds previously bound handler to begin pan-drag.  Safe to call if no
  * such handler is bound.
  */
-Blockly.PanDragHandler.prototype.unbindBeginPanDragHandler = function () {
+Blockly.PanDragHandler.prototype.unbindBeginPanDragHandler = function() {
   if (this.mouseDownEventBindData_) {
     Blockly.unbindEvent_(this.mouseDownEventBindData_);
     this.mouseDownEventBindData_ = null;
@@ -142,7 +152,7 @@ Blockly.PanDragHandler.prototype.unbindBeginPanDragHandler = function () {
  * goes after the initial mousedown.
  * @private
  */
-Blockly.PanDragHandler.prototype.bindDuringPanDragHandlers_ = function () {
+Blockly.PanDragHandler.prototype.bindDuringPanDragHandlers_ = function() {
   this.unbindDuringPanDragHandlers_();
 
   // We bind against "capture" (instead of the default "bubble") so that we
@@ -150,16 +160,26 @@ Blockly.PanDragHandler.prototype.bindDuringPanDragHandlers_ = function () {
   // pretty much override everything.
   var onCapture = true;
   this.mouseMoveEventBindData_ = Blockly.bindEvent_(
-      window, 'mousemove', this, this.onPanDragMouseMove_, onCapture);
+    window,
+    'mousemove',
+    this,
+    this.onPanDragMouseMove_,
+    onCapture
+  );
   this.mouseUpEventBindData_ = Blockly.bindEvent_(
-      window, 'mouseup', this, this.onPanDragMouseUp_, onCapture);
+    window,
+    'mouseup',
+    this,
+    this.onPanDragMouseUp_,
+    onCapture
+  );
 };
 
 /**
  * Unbinds mousemove and mouseup handlers that only apply during pan-drag mode.
  * @private
  */
-Blockly.PanDragHandler.prototype.unbindDuringPanDragHandlers_ = function () {
+Blockly.PanDragHandler.prototype.unbindDuringPanDragHandlers_ = function() {
   if (this.mouseMoveEventBindData_) {
     Blockly.unbindEvent_(this.mouseMoveEventBindData_);
     this.mouseMoveEventBindData_ = null;
@@ -177,7 +197,7 @@ Blockly.PanDragHandler.prototype.unbindDuringPanDragHandlers_ = function () {
  * @param {!Event} e
  * @private
  */
-Blockly.PanDragHandler.prototype.onPanDragTargetMouseDown_ = function (e) {
+Blockly.PanDragHandler.prototype.onPanDragTargetMouseDown_ = function(e) {
   if (this.onTargetMouseDown_) {
     this.onTargetMouseDown_();
   }
@@ -189,12 +209,15 @@ Blockly.PanDragHandler.prototype.onPanDragTargetMouseDown_ = function (e) {
     Blockly.selected.unselect();
   }
 
-  var blockNonInteractive = Blockly.selected && !Blockly.selected.isMovable() &&
-      !Blockly.selected.isEditable();
+  var blockNonInteractive =
+    Blockly.selected &&
+    !Blockly.selected.isMovable() &&
+    !Blockly.selected.isEditable();
 
   // On left-click on scrollable area, begin scroll-drag
   // In readonly mode, we scroll-drag when clicking through a block, too.
-  var shouldDrag = clickIsOnTarget || blockNonInteractive || this.blockSpace_.isReadOnly();
+  var shouldDrag =
+    clickIsOnTarget || blockNonInteractive || this.blockSpace_.isReadOnly();
   var isLeftClick = !Blockly.isRightButton(e);
 
   if (this.blockSpace_.scrollbarPair && isLeftClick && shouldDrag) {
@@ -212,7 +235,7 @@ Blockly.PanDragHandler.prototype.onPanDragTargetMouseDown_ = function (e) {
  * @param {!Event} e
  * @private
  */
-Blockly.PanDragHandler.prototype.beginDragScroll_ = function (e) {
+Blockly.PanDragHandler.prototype.beginDragScroll_ = function(e) {
   // Record the current mouse position.
   this.startMouseX_ = e.clientX;
   this.startMouseY_ = e.clientY;
@@ -228,7 +251,7 @@ Blockly.PanDragHandler.prototype.beginDragScroll_ = function (e) {
  * @param {!Event} e
  * @private
  */
-Blockly.PanDragHandler.prototype.onPanDragMouseMove_ = function (e) {
+Blockly.PanDragHandler.prototype.onPanDragMouseMove_ = function(e) {
   // Prevent text selection on page
   Blockly.removeAllRanges();
 
@@ -241,7 +264,8 @@ Blockly.PanDragHandler.prototype.onPanDragMouseMove_ = function (e) {
 
   this.blockSpace_.scrollTo(
     this.startScrollX_ + scrollDx,
-    this.startScrollY_ + scrollDy);
+    this.startScrollY_ + scrollDy
+  );
   e.stopPropagation();
   e.preventDefault();
 };
@@ -252,7 +276,7 @@ Blockly.PanDragHandler.prototype.onPanDragMouseMove_ = function (e) {
  * @param {!Event} e
  * @private
  */
-Blockly.PanDragHandler.prototype.onPanDragMouseUp_ = function (e) {
+Blockly.PanDragHandler.prototype.onPanDragMouseUp_ = function(e) {
   this.unbindDuringPanDragHandlers_();
   e.stopPropagation();
   e.preventDefault();

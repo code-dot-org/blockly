@@ -24,8 +24,11 @@ Blockly.FieldAngleDropdown = function(opt_options) {
   this.angleHelper = null;
   this.direction = opt_options.direction;
   this.directionTitleName = opt_options.directionTitleName;
-  Blockly.FieldAngleDropdown.superClass_.constructor.call(this,
-      opt_options.menuGenerator, opt_options.opt_changeHandler);
+  Blockly.FieldAngleDropdown.superClass_.constructor.call(
+    this,
+    opt_options.menuGenerator,
+    opt_options.opt_changeHandler
+  );
 };
 goog.inherits(Blockly.FieldAngleDropdown, Blockly.FieldDropdown);
 
@@ -43,7 +46,7 @@ Blockly.FieldAngleDropdown.prototype.getAngleDirection_ = function() {
   }
 
   // Turn right (clockwise) by default.
-  return 'turnRight'
+  return 'turnRight';
 };
 
 Blockly.FieldAngleDropdown.prototype.showEditor_ = function() {
@@ -65,13 +68,13 @@ Blockly.FieldAngleDropdown.prototype.showEditor_ = function() {
   container.appendChild(svgContainer);
 
   this.angleHelper = new Blockly.AngleHelper(this.getAngleDirection_(), {
-    onUpdate: function () {
+    onUpdate: function() {
       this.setValue(this.angleHelper.getAngle().toString());
-      this.menu_.getItems().forEach(function (menuItem) {
+      this.menu_.getItems().forEach(function(menuItem) {
         menuItem.setChecked(menuItem.getValue() === this.value_);
       }, this);
     }.bind(this),
-    snapPoints: this.getOptions().map(function (option) {
+    snapPoints: this.getOptions().map(function(option) {
       return parseInt(option[1]);
     }),
     arcColour: this.sourceBlock_.getHexColour(),
@@ -83,15 +86,19 @@ Blockly.FieldAngleDropdown.prototype.showEditor_ = function() {
 
   this.angleHelper.init(svgContainer);
 
-  goog.events.listen(this.menu_, goog.ui.Component.EventType.HIGHLIGHT, function (e) {
-    var menuItem = e.target;
-    if (menuItem) {
-      var value = menuItem.getValue();
-      this.angleHelper.animateAngleChange(parseInt(value));
-    }
-  }.bind(this));
+  goog.events.listen(
+    this.menu_,
+    goog.ui.Component.EventType.HIGHLIGHT,
+    function(e) {
+      var menuItem = e.target;
+      if (menuItem) {
+        var value = menuItem.getValue();
+        this.angleHelper.animateAngleChange(parseInt(value));
+      }
+    }.bind(this)
+  );
   return div;
-}
+};
 
 Blockly.FieldAngleDropdown.prototype.dispose = function() {
   if (this.angleHelper) {

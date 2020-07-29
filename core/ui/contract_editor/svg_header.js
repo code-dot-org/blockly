@@ -11,7 +11,7 @@ goog.provide('Blockly.SvgHeader');
  * @param {Object=} opt_options
  * @constructor
  */
-Blockly.SvgHeader = function (parent, opt_options) {
+Blockly.SvgHeader = function(parent, opt_options) {
   var options = opt_options || {
     backgroundColor: '#000',
     headerText: 'Default Header'
@@ -19,18 +19,24 @@ Blockly.SvgHeader = function (parent, opt_options) {
 
   var extraStyle = options.onMouseDown ? '' : 'pointer-events: none;';
 
-  this.svgGroup_ = Blockly.createSvgElement('g',
-    {style: extraStyle},
-    parent,
-    {belowExisting: true});
-  this.rectangleElement_ = Blockly.createSvgElement('rect',
-    {'fill': options.backgroundColor, 'style': extraStyle},
-    this.svgGroup_);
-  this.separatorElement_ = Blockly.createSvgElement('rect',
-  {'fill': '#FFF', 'style': extraStyle + 'opacity:.3;'},
-    this.svgGroup_);
-  this.textElement_ = Blockly.createSvgElement('text',
-    {'class': 'contractEditorHeaderText', 'style': extraStyle}, this.svgGroup_);
+  this.svgGroup_ = Blockly.createSvgElement('g', {style: extraStyle}, parent, {
+    belowExisting: true
+  });
+  this.rectangleElement_ = Blockly.createSvgElement(
+    'rect',
+    {fill: options.backgroundColor, style: extraStyle},
+    this.svgGroup_
+  );
+  this.separatorElement_ = Blockly.createSvgElement(
+    'rect',
+    {fill: '#FFF', style: extraStyle + 'opacity:.3;'},
+    this.svgGroup_
+  );
+  this.textElement_ = Blockly.createSvgElement(
+    'text',
+    {class: 'contractEditorHeaderText', style: extraStyle},
+    this.svgGroup_
+  );
   if (options.headerText) {
     this.textElement_.textContent = options.headerText;
   }
@@ -39,11 +45,11 @@ Blockly.SvgHeader = function (parent, opt_options) {
   }
 };
 
-Blockly.SvgHeader.prototype.showSeparator = function (shouldShow) {
+Blockly.SvgHeader.prototype.showSeparator = function(shouldShow) {
   goog.style.setElementShown(this.separatorElement_, shouldShow);
 };
 
-Blockly.SvgHeader.prototype.setColor = function (colorHex) {
+Blockly.SvgHeader.prototype.setColor = function(colorHex) {
   this.rectangleElement_.setAttribute('fill', colorHex);
 };
 
@@ -52,12 +58,18 @@ Blockly.SvgHeader.prototype.setColor = function (colorHex) {
  * @param width {Number}
  * @param height {Number}
  */
-Blockly.SvgHeader.prototype.setPositionSize = function (yOffset, width, height) {
-  this.svgGroup_.setAttribute('transform', 'translate(' + 0 + ',' + yOffset + ')');
+Blockly.SvgHeader.prototype.setPositionSize = function(yOffset, width, height) {
+  this.svgGroup_.setAttribute(
+    'transform',
+    'translate(' + 0 + ',' + yOffset + ')'
+  );
   this.rectangleElement_.setAttribute('width', width + 2); // 2 is extra for overlap, sometimes <1px spacing
   this.separatorElement_.setAttribute('width', width);
   this.separatorElement_.setAttribute('height', SEPARATOR_LINE_HEIGHT);
-  this.separatorElement_.setAttribute('transform', 'translate(' + 0 + ',' + (height - 1) + ')');
+  this.separatorElement_.setAttribute(
+    'transform',
+    'translate(' + 0 + ',' + (height - 1) + ')'
+  );
   this.rectangleElement_.setAttribute('height', height);
   this.textElement_.setAttribute('x', TEXT_PADDING_LEFT);
   var rectangleMiddleY = height / 2;
@@ -67,14 +79,14 @@ Blockly.SvgHeader.prototype.setPositionSize = function (yOffset, width, height) 
   this.textElement_.setAttribute('y', rectangleMiddleY + thirdTextHeight);
 };
 
-Blockly.SvgHeader.prototype.setText = function (text) {
+Blockly.SvgHeader.prototype.setText = function(text) {
   this.textElement_.textContent = text;
 };
 
-Blockly.SvgHeader.prototype.setVisible = function (visible) {
+Blockly.SvgHeader.prototype.setVisible = function(visible) {
   goog.style.setElementShown(this.svgGroup_, visible);
 };
 
-Blockly.SvgHeader.prototype.removeSelf = function () {
+Blockly.SvgHeader.prototype.removeSelf = function() {
   goog.dom.removeNode(this.svgGroup_);
 };

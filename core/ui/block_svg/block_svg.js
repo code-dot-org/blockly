@@ -105,14 +105,6 @@ Blockly.BlockSvg.prototype.initChildren = function() {
       this.svgGroup_
     );
   }
-  this.svgOverlay_ = Blockly.createSvgElement(
-    'path',
-    {
-      class: 'overlay',
-      opacity: '0'
-    },
-    this.svgGroup_
-  );
   this.svgPathLight_ = Blockly.createSvgElement(
     'path',
     {class: 'blocklyPathLight'},
@@ -703,7 +695,6 @@ Blockly.BlockSvg.prototype.dispose = function() {
   this.svgTypeHints_ = null;
   this.svgPathLight_ = null;
   this.svgPathDark_ = null;
-  this.svgOverlay_ = null;
   // dispose of children
   this.removeUnusedFrame();
   // Break circular references.
@@ -1385,9 +1376,6 @@ Blockly.BlockSvg.prototype.renderDraw_ = function(iconWidth, inputRows) {
   this.svgPath_.setAttribute('d', pathString);
   if (this.svgPathFill_) {
     this.svgPathFill_.setAttribute('d', pathString);
-  }
-  if (this.svgOverlay_) {
-    this.svgOverlay_.setAttribute('d', pathString);
   }
   if (this.svgTypeHints_) {
     var g = this.svgTypeHints_;

@@ -76,7 +76,7 @@ Blockly.FieldRectangularDropdown.DROPDOWN_ARROW_Y_OFFSET_FROM_PREVIEW_MIDDLE =
 Blockly.FieldRectangularDropdown.CHECKMARK_OVERHANG = 0; // Horizontal distance that a selection menu checkmark overhangs the dropdown.
 Blockly.FieldRectangularDropdown.DOWN_ARROW_CHARACTER = '\u25BC'; // ▾
 Blockly.FieldRectangularDropdown.UP_ARROW_CHARACTER = '\u25B2';
-Blockly.FieldRectangularDropdown.prototype.CURSOR = 'default';
+Blockly.FieldRectangularDropdown.prototype.CURSOR = 'pointer';
 Blockly.FieldRectangularDropdown.prototype.EDITABLE = true;
 
 Blockly.FieldRectangularDropdown.prototype.getOptions = function() {

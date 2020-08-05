@@ -88,7 +88,7 @@ Blockly.FieldDropdown.NO_OPTIONS_MESSAGE = 'uninitialized';
 /**
  * Mouse cursor style when over the hotspot that initiates the editor.
  */
-Blockly.FieldDropdown.prototype.CURSOR = 'default';
+Blockly.FieldDropdown.prototype.CURSOR = 'pointer';
 
 /**
  * Create a dropdown menu under the text.

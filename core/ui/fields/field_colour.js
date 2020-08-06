@@ -61,7 +61,7 @@ goog.inherits(Blockly.FieldColour, Blockly.Field);
 /**
  * Mouse cursor style when over the hotspot that initiates the editor.
  */
-Blockly.FieldColour.prototype.CURSOR = 'default';
+Blockly.FieldColour.prototype.CURSOR = 'pointer';
 
 /**
  * Close the colour picker is this input is being deleteh

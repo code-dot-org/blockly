@@ -11,7 +11,7 @@ Blockly.FieldIcon = function() {
   Blockly.FieldIcon.superClass_.constructor.apply(this, arguments);
   Blockly.addClass_(this.fieldGroup_, 'blocklyIconGroup');
   Blockly.addClass_(this.borderRect_, 'blocklyIconShield');
-  this.textElement_.setAttribute('style', 'font-size:9pt; cursor:default;');
+  this.textElement_.setAttribute('style', 'font-size:9pt; cursor:pointer;');
 };
 goog.inherits(Blockly.FieldIcon, Blockly.Field);
 

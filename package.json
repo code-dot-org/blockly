@@ -38,7 +38,7 @@
     "eslint-plugin-es5": "^1.4.1",
     "eslint-plugin-prettier": "^3.0.1",
     "google-closure-compiler": "~20180610.0.2",
-    "google-closure-library": "~20170124.0.0",
+    "google-closure-library": "~20190301.0.0",
     "karma": "^2.0.4",
     "karma-chrome-launcher": "^2.2.0",
     "karma-coverage": "^1.1.2",

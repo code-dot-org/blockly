@@ -8,8 +8,8 @@ locales_dir=$core_dir/i18n/locales
 
 locales=$(ls $locales_dir)
 
+echo "Copying blockly locale files from blockly to apps for locales: $locales"
 for locale in $locales; do
-
   js_locale=$(echo $locale | tr '[:upper:]' '[:lower:]' | tr '-' '_')
 
   src=$locales_dir/$locale/core.json
@@ -22,8 +22,6 @@ for locale in $locales; do
   mkdir -p $(dirname $blockly_dest)
   mkdir -p $(dirname $apps_dest)
 
-  echo "$src => $blockly_dest, $apps_dest"
   $core_dir/i18n/codeorg-json-to-js.pl $js_locale < $src > $blockly_dest
   $core_dir/i18n/codeorg-json-to-js.pl $js_locale < $src > $apps_dest
-
 done

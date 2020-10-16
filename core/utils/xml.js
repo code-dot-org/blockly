@@ -155,6 +155,10 @@ Blockly.Xml.blockToDom = function(block, ignoreChildBlocks) {
     element.setAttribute('id', block.htmlId);
   }
 
+  if (block.miniFlyout && block.isMiniFlyoutOpen) {
+    element.setAttribute('miniflyoutopen', true);
+  }
+
   // Don't follow connections if we're ignoring child blocks
   if (block.nextConnection && !ignoreChildBlocks) {
     var nextBlock = block.nextConnection.targetBlock();
@@ -407,6 +411,13 @@ Blockly.Xml.domToBlock = function(blockSpace, xmlBlock) {
       block.type,
       parseInt(limit)
     );
+  }
+
+  var isMiniFlyoutOpen = xmlBlock.getAttribute('miniflyoutopen');
+  if (isMiniFlyoutOpen) {
+    block.isMiniFlyoutOpen = isMiniFlyoutOpen === 'true';
+  } else {
+    block.isMiniFlyoutOpen = false;
   }
 
   var blockChild = null;

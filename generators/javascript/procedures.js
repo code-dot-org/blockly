@@ -31,6 +31,9 @@ Blockly.JavaScript.procedures_defreturn = function() {
   var title = this.getTitle_('NAME');
   var functionName;
   if (title.id) {
+    // Sprite Lab shared functions use an id field on the title
+    // so that we can translate the block text without changing
+    // the generated code.
     functionName = title.id;
   } else {
     // If the title doesn't have an id, use the title value

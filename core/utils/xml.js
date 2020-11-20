@@ -451,8 +451,14 @@ Blockly.Xml.domToBlock = function(blockSpace, xmlBlock) {
           block.setFieldConfig(name, config);
         }
         block.setTitleValue(xmlChild.textContent, name);
+        const title = block.getTitle_(name);
         if (xmlChild.id) {
-          block.getTitle_(name).id = xmlChild.id;
+          title.id = xmlChild.id;
+        } else if (block.type === 'behavior_definition') {
+          // If the XML element doesn't have an id, set the title id
+          // to match the behavior name. This is needed for backwards
+          // compatibility.
+          title.id = xmlChild.textContent;
         }
         break;
       case 'value':

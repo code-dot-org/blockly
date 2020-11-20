@@ -291,6 +291,8 @@ Blockly.Procedures.createCallerBlock = function(
     procedureDefinitionInfo.callType
   );
   newCallBlock.setTitleValue(procedureDefinitionInfo.name, title);
+  var title_ = newCallBlock.getTitle_(title);
+  title_.id = procedureDefinitionInfo.id;
   var tempIds = [];
   for (var t = 0; t < procedureDefinitionInfo.parameterNames.length; t++) {
     tempIds[t] = 'ARG' + t;

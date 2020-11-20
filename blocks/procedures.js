@@ -224,6 +224,7 @@ Blockly.Block.createProcedureDefinitionBlock = function(config) {
     getProcedureInfo: function() {
       return {
         name: this.getTitleValue('NAME'),
+        id: this.getTitle_('NAME').id,
         parameterNames: this.parameterNames_,
         parameterIDs: this.paramIds_,
         parameterTypes: this.parameterTypes_,

@@ -7,14 +7,14 @@ steps:
   image: circleci/node:6.13-browsers
   pull: always
   environment:
-#    CODECOV_TOKEN:
-#      from_secret: CODECOV_TOKEN
+#   CODECOV_TOKEN:
+#     from_secret: CODECOV_TOKEN
   commands:
    - sudo chown -R circleci:circleci .
    - npm install
    - npm run test:coverage
    # TODO: (suresh) Temporarily disable CodeCov until we provision a new API key.
-#   - npm run report-coverage
+#  - npm run report-coverage
 
 trigger:
   branch:
@@ -24,6 +24,6 @@ trigger:
 
 ---
 kind: signature
-hmac: 1c489bf8dcfa89d44d2996b8dab25faee0f970c68eb4725b7e8a30f12c23120f
+hmac: a5a2f5fe702df5da79b6c7701fd1cf5ea7eec082000ef2160f5cbb1aec15f978
 
 ...

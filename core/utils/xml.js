@@ -454,7 +454,10 @@ Blockly.Xml.domToBlock = function(blockSpace, xmlBlock) {
         const title = block.getTitle_(name);
         if (xmlChild.id) {
           title.id = xmlChild.id;
-        } else if (block.type === 'behavior_definition') {
+        } else if (
+          block.type === 'behavior_definition' ||
+          block.type === 'gamelab_behavior_get'
+        ) {
           // If the XML element doesn't have an id, set the title id
           // to match the behavior name. This is needed for backwards
           // compatibility.

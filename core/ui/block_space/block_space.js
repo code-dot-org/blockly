@@ -330,7 +330,12 @@ Blockly.BlockSpace.prototype.findFunction = function(functionName) {
       goog.array.contains(
         Blockly.Procedures.DEFINITION_BLOCK_TYPES,
         block.type
-      ) && Blockly.Names.equals(functionName, block.getTitleValue('NAME'))
+      ) &&
+      Blockly.Names.equals(
+        functionName,
+        // Use title id as function name if present, or title value if not.
+        block.getTitle_('NAME').id || block.getTitleValue('NAME')
+      )
     );
   });
 };

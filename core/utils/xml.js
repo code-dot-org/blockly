@@ -74,6 +74,9 @@ Blockly.Xml.blockToDom = function(block, ignoreChildBlocks) {
       if (title.config) {
         container.setAttribute('config', title.config);
       }
+      if (title.id) {
+        container.setAttribute('id', title.id);
+      }
       element.appendChild(container);
     }
   }
@@ -448,6 +451,18 @@ Blockly.Xml.domToBlock = function(blockSpace, xmlBlock) {
           block.setFieldConfig(name, config);
         }
         block.setTitleValue(xmlChild.textContent, name);
+        const title = block.getTitle_(name);
+        if (xmlChild.id) {
+          title.id = xmlChild.id;
+        } else if (
+          block.type === 'behavior_definition' ||
+          block.type === 'gamelab_behavior_get'
+        ) {
+          // If the XML element doesn't have an id, set the title id
+          // to match the behavior name. This is needed for backwards
+          // compatibility.
+          title.id = xmlChild.textContent;
+        }
         break;
       case 'value':
         if (!input) {

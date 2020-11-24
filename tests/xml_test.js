@@ -26,14 +26,21 @@ function test_xml_title_without_id() {
     '<block type="gamelab_behavior_get">' +
     '<title name="VAR">growing</title>' +
     '</block>' +
+    '<block type="another_type">' +
+    '<title name="VAR">growing</title>' +
+    '</block>' +
     '</xml>';
   Blockly.Xml.domToBlockSpace(blockSpace, Blockly.Xml.textToDom(blockXml));
   var behaviorDefinitionBlock = blockSpace.getTopBlocks()[0];
   // Adds id to title if block type is behavior_definition
   assertEquals(behaviorDefinitionBlock.getTitle_('NAME').id, 'growing');
 
-  var otherBlock = blockSpace.getTopBlocks()[1];
-  // Does not add id to title if block type is not behavior_definition
+  var behaviorDefinitionBlock = blockSpace.getTopBlocks()[1];
+  // Adds id to title if block type is gamelab_behavior_get
+  assertEquals(behaviorDefinitionBlock.getTitle_('VAR').id, 'growing');
+
+  var otherBlock = blockSpace.getTopBlocks()[2];
+  // Does not add id to title if block type is not behavior_definition or gamelab_behavior_get
   assertEquals(otherBlock.getTitle_('VAR').id, undefined);
 }
 

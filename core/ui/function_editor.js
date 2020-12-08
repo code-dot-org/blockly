@@ -717,6 +717,9 @@ Blockly.FunctionEditor.prototype.create_ = function() {
       this.container_.querySelector('#functionNameText').value = value;
     }
     this.functionDefinitionBlock.setTitleValue(value, 'NAME');
+    if (this.functionDefinitionBlock.userCreated) {
+      this.functionDefinitionBlock.getTitle_('NAME').id = value;
+    }
   }
 
   Blockly.bindEvent_(this.contractDiv_, 'mousedown', null, function() {

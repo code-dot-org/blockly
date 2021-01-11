@@ -186,7 +186,7 @@ Blockly.Procedures.rename = function(text) {
   for (var x = 0; x < blocks.length; x++) {
     var func = blocks[x].renameProcedure;
     if (func) {
-      func.call(blocks[x], this.text_, text);
+      func.call(blocks[x], this.text_, text, this.sourceBlock_.userCreated);
     }
   }
   this.sourceBlock_.blockSpace.blockSpaceEditor.svgResize();

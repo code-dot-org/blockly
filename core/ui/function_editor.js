@@ -197,6 +197,7 @@ Blockly.FunctionEditor.prototype.openAndEditFunction = function(functionName) {
   if (!targetFunctionDefinitionBlock) {
     throw new Error("Can't find definition block to edit");
   }
+  var functionDisplayName = targetFunctionDefinitionBlock.getTitleValue('NAME');
 
   this.show();
   this.setupUIForBlock_(targetFunctionDefinitionBlock);
@@ -209,7 +210,9 @@ Blockly.FunctionEditor.prototype.openAndEditFunction = function(functionName) {
   this.populateParamToolbox_();
   this.setupUIAfterBlockInEditor_();
 
-  this.container_.querySelector('#functionNameText').value = functionName;
+  this.container_.querySelector(
+    '#functionNameText'
+  ).value = functionDisplayName;
   this.container_.querySelector('#functionDescriptionText').value =
     this.functionDefinitionBlock.description_ || '';
   this.deleteButton_.setVisible(targetFunctionDefinitionBlock.userCreated);

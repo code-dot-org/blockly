@@ -635,6 +635,28 @@ Blockly.Flyout.prototype.show = function(xmlList) {
     this.layoutXmlToBlocks_(xmlList, blocks, gaps, margin);
   }
 
+  // If RTL, calculate the flyout content width
+  // to adjust the cursor, accounting for padding
+  if(Blockly.RTL) {
+    var offsets = [];
+    for (var i = 0, block; (block = blocks[i]); i++) {
+      var blockHW = block.getHeightWidth();
+      if (initialX - blockHW.width < 0){
+        initialX = this.width_;
+      }
+      var offset = blockHW.width + gaps[i] / 2;
+      initialX -= offset;
+      offsets.push(initialX);
+    }
+    var index_min_x = offsets.indexOf(Math.min(...offsets));
+    var min_x = offsets[index_min_x];
+    var rtl_offset = min_x + gaps[index_min_x];
+    var viewWidth = this.targetBlockSpace_.getMetrics().viewWidth;
+    cursor.x = viewWidth - rtl_offset;
+    initialX = cursor.x;
+    this.width_ = cursor.x;
+  }
+
   // Lay out the blocks vertically.
   for (var i = 0, block; (block = blocks[i]); i++) {
     var allBlocks = block.getDescendants();

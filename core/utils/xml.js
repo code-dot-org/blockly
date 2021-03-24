@@ -275,13 +275,13 @@ Blockly.Xml.domToBlockSpace = function(blockSpace, xml) {
     var heightWidth = block.blockly_block.getHeightWidth();
 
     var cursor = {
-      x: !Blockly.RTL
-          ? paddingLeft
-          : inline
-            ? heightWidth.width - paddingLeft
-            : width - paddingLeft,
+      x: paddingLeft,
       y: paddingTop
     };
+
+    if(Blockly.RTL) {
+      cursor.x = inline ? heightWidth.width - paddingLeft : width - paddingLeft;
+    }
 
     if (isNaN(block.x)) {
       block.x = cursor.x;

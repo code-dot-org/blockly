@@ -69,8 +69,7 @@ Blockly.FieldImageDropdown.prototype.addPreviewElementTo_ = function(
     {
       height: Blockly.FieldImage.IMAGE_LOADING_HEIGHT + 'px',
       width: Blockly.FieldImage.IMAGE_LOADING_WIDTH + 'px',
-      y: Blockly.FieldImage.IMAGE_OFFSET_Y,
-      preserveAspectRatio: 'xMidYMid slice'
+      y: Blockly.FieldImage.IMAGE_OFFSET_Y
     },
     parentElement
   );

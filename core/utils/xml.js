@@ -263,6 +263,10 @@ Blockly.Xml.domToBlockSpace = function(blockSpace, xml) {
   //  otherwise, the block "flows" with the other blocks from top to
   //  bottom. Any block positioned absolutely with Y does not influence
   //  the flow of the other blocks.
+  var cursor = {
+    x: paddingLeft,
+    y: paddingTop
+  };
 
   var positionBlock = function(block) {
     var padding = block.blockly_block.getSvgPadding() || {
@@ -273,11 +277,6 @@ Blockly.Xml.domToBlockSpace = function(blockSpace, xml) {
     };
 
     var heightWidth = block.blockly_block.getHeightWidth();
-
-    var cursor = {
-      x: paddingLeft,
-      y: paddingTop
-    };
 
     if(Blockly.RTL) {
       cursor.x = inline ? heightWidth.width - paddingLeft : width - paddingLeft;

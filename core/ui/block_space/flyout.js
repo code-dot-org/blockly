@@ -648,7 +648,7 @@ Blockly.Flyout.prototype.show = function(xmlList) {
       initialX -= offset;
       offsets.push(initialX);
     }
-    var index_min_x = offsets.indexOf(Math.min(...offsets));
+    var index_min_x = offsets.indexOf(Math.min.apply(Math, offsets));
     var min_x = offsets[index_min_x];
     var rtl_offset = min_x + gaps[index_min_x];
     var viewWidth = this.targetBlockSpace_.getMetrics().viewWidth;

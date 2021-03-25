@@ -502,6 +502,10 @@ Blockly.FieldRectangularDropdown.prototype.getPreviewDataForValue_ = function(
   return null;
 };
 
+Blockly.FieldRectangularDropdown.prototype.onAnimationsChanged = function() {
+  this.refreshPreview_();
+};
+
 /**
  * Install this field on a block
  *  * @param {!Blockly.Block} block The block containing this field.
@@ -511,6 +515,12 @@ Blockly.FieldRectangularDropdown.prototype.init = function(block) {
     throw 'Field has already been initialized once.';
   }
   this.sourceBlock_ = block;
+  this.sourceBlock_.blockSpace.events.listen(
+    Blockly.BlockSpace.EVENTS.ANIMATIONS_CHANGED,
+    this.onAnimationsChanged,
+    false,
+    this
+  );
   this.sourceBlock_.getSvgRoot().appendChild(this.fieldGroup_);
   this.mouseUpWrapper_ = Blockly.bindEvent_(
     this.getClickTarget(),

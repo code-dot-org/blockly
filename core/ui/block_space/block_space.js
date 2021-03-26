@@ -142,6 +142,12 @@ Blockly.BlockSpace.EVENTS.BLOCK_SPACE_SCROLLED = 'blockSpaceScrolled';
 Blockly.BlockSpace.EVENTS.RUN_BUTTON_CLICKED = 'runButtonClicked';
 
 /**
+ * Fired by Code Studio when animation assets change.
+ * @type {string}
+ */
+Blockly.BlockSpace.EVENTS.ANIMATIONS_CHANGED = 'animationsChanged';
+
+/**
  * Angle away from the horizontal to sweep for blocks.  Order of execution is
  * generally top to bottom, but a small angle changes the scan to give a bit of
  * a left to right bias (reversed in RTL).  Units are in degrees.

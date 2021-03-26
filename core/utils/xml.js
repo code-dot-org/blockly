@@ -247,6 +247,7 @@ Blockly.Xml.textToDom = function(text) {
 Blockly.Xml.domToBlockSpace = function(blockSpace, xml) {
   var metrics = blockSpace.getMetrics();
   var width = metrics ? metrics.viewWidth : 0;
+  var inline = blockSpace.blockSpaceEditor.inline_;
 
   var paddingLeft = blockSpace.blockSpaceEditor.shouldHavePadding()
     ? Blockly.BlockSpace.AUTO_LAYOUT_PADDING_LEFT
@@ -263,7 +264,7 @@ Blockly.Xml.domToBlockSpace = function(blockSpace, xml) {
   //  bottom. Any block positioned absolutely with Y does not influence
   //  the flow of the other blocks.
   var cursor = {
-    x: Blockly.RTL ? width - paddingLeft : paddingLeft,
+    x: paddingLeft,
     y: paddingTop
   };
 
@@ -276,6 +277,10 @@ Blockly.Xml.domToBlockSpace = function(blockSpace, xml) {
     };
 
     var heightWidth = block.blockly_block.getHeightWidth();
+
+    if(Blockly.RTL) {
+      cursor.x = inline ? heightWidth.width - paddingLeft : width - paddingLeft;
+    }
 
     if (isNaN(block.x)) {
       block.x = cursor.x;

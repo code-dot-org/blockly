@@ -181,11 +181,9 @@ Blockly.FieldDropdown.prototype.positionWidgetDiv = function() {
   }
 
   if (Blockly.RTL) {
-    xy.x += borderBBox.width;
-    xy.x += Blockly.FieldDropdown.CHECKMARK_OVERHANG; // Width of checkmark.
     // Don't go offscreen left.
-    if (xy.x < scrollOffset.x + menuSize.width) {
-      xy.x = scrollOffset.x + menuSize.width;
+    if (xy.x < scrollOffset.x) {
+      xy.x = scrollOffset.x + Blockly.FieldDropdown.CHECKMARK_OVERHANG;
     }
   } else {
     xy.x -= Blockly.FieldDropdown.CHECKMARK_OVERHANG; // Width of checkmark.

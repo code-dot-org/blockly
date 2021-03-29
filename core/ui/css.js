@@ -255,6 +255,7 @@ Blockly.Css.CONTENT = [
   '  left: -1px;',
   '  border: 1px solid #fff;',
   '  z-index: 10;',
+  '  direction: ltr;',
   '}',
   '#blocklyDragCanvas.isDragging {',
   '  display: block;',

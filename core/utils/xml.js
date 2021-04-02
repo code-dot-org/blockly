@@ -278,7 +278,7 @@ Blockly.Xml.domToBlockSpace = function(blockSpace, xml) {
 
     var heightWidth = block.blockly_block.getHeightWidth();
 
-    if(Blockly.RTL) {
+    if (Blockly.RTL) {
       cursor.x = inline ? heightWidth.width - paddingLeft : width - paddingLeft;
     }
 
@@ -456,7 +456,7 @@ Blockly.Xml.domToBlock = function(blockSpace, xmlBlock) {
           block.setFieldConfig(name, config);
         }
         block.setTitleValue(xmlChild.textContent, name);
-        const title = block.getTitle_(name);
+        var title = block.getTitle_(name);
         if (xmlChild.id) {
           title.id = xmlChild.id;
         } else if (

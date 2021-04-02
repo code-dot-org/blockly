@@ -35,7 +35,7 @@ function test_xml_title_without_id() {
   // Adds id to title if block type is behavior_definition
   assertEquals(behaviorDefinitionBlock.getTitle_('NAME').id, 'growing');
 
-  var behaviorDefinitionBlock = blockSpace.getTopBlocks()[1];
+  behaviorDefinitionBlock = blockSpace.getTopBlocks()[1];
   // Adds id to title if block type is gamelab_behavior_get
   assertEquals(behaviorDefinitionBlock.getTitle_('VAR').id, 'growing');
 

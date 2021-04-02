@@ -637,11 +637,14 @@ Blockly.Flyout.prototype.show = function(xmlList) {
 
   // If RTL, calculate the flyout content width
   // to adjust the cursor, accounting for padding
-  if(Blockly.RTL) {
+  if (Blockly.RTL) {
     var offsets = [];
-    for (var i = 0, block; (block = blocks[i]); i++) {
+    var i;
+    var block;
+    for (i = 0; i < blocks.length; i++) {
+      block = blocks[i];
       var blockHW = block.getHeightWidth();
-      if (initialX - blockHW.width < 0){
+      if (initialX - blockHW.width < 0) {
         initialX = this.width_;
       }
       var offset = blockHW.width + gaps[i] / 2;
@@ -658,7 +661,8 @@ Blockly.Flyout.prototype.show = function(xmlList) {
   }
 
   // Lay out the blocks vertically.
-  for (var i = 0, block; (block = blocks[i]); i++) {
+  for (i = 0; i < blocks.length; i++) {
+    block = blocks[i];
     var allBlocks = block.getDescendants();
     for (var j = 0, child; (child = allBlocks[j]); j++) {
       // Mark blocks as being inside a flyout.  This is used to detect and

@@ -8,7 +8,7 @@
     "url": "http://github.com/code-dot-org/blockly.git"
   },
   "engines": {
-    "node": "^8.15.0",
+    "node": "^14.16",
     "npm": "^6.4.1"
   },
   "files": [

@@ -231,12 +231,34 @@ Blockly.FieldRectangularDropdown.prototype.showMenu_ = function() {
     this.generateMenuItemSelectedHandler_()
   );
   if (this.buttons_) {
-    for (var i = 0; i < this.buttons_.length; i++) {
+    // Force buttons to a new row by adding blank elements if needed
+    var items = this.menu_.getChildCount();
+    var columns = chooseNumberOfColumns(items);
+    var numInLastRow = items % columns;
+    var numBlankToAdd = 0;
+    if (numInLastRow > 0) {
+      numBlankToAdd = columns - numInLastRow;
+    }
+    var i;
+    for (i = 0; i < numBlankToAdd; i++) {
+      this.addBlankMenuItem_();
+    }
+
+    for (i = 0; i < this.buttons_.length; i++) {
       this.addMenuButton_(this.buttons_[i]);
     }
   }
   this.addPositionAndShowMenu(this.menu_);
   this.pointArrowUp_();
+};
+
+Blockly.FieldRectangularDropdown.prototype.addBlankMenuItem_ = function() {
+  var item = document.createElement('div');
+  item.style.width = this.previewSize_.width + 'px';
+  item.style.height = this.previewSize_.height + 'px';
+  var menuItem = new goog.ui.MenuItem(item);
+  menuItem.setEnabled(false);
+  this.menu_.addItem(menuItem);
 };
 
 Blockly.FieldRectangularDropdown.prototype.addMenuButton_ = function(

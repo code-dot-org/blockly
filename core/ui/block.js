@@ -1694,7 +1694,7 @@ Blockly.Block.prototype.setParent = function(newParent) {
       sourceBlock = block.blockToShadow_(block.getRootBlock());
       block.shadowBlockValue_(sourceBlock);
     });
-    this.blockSpace.render();
+    newParent.render();
   } else if (newParent && newParent.getRootBlock().miniFlyout) {
     // Add a block stack to an event stack
     shadowBlocks = getShadowBlocksInStack(this);

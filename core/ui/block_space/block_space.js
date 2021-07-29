@@ -727,7 +727,7 @@ Blockly.BlockSpace.prototype.clear = function() {
  * Render all blocks this blockSpace.
  */
 Blockly.BlockSpace.prototype.render = function() {
-  var renderList = this.getAllBlocks();
+  var renderList = this.getAllVisibleBlocks();
   for (var x = 0, block; x < renderList.length; x++) {
     block = renderList[x];
     if (!block.getChildren().length) {

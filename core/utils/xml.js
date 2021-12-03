@@ -69,7 +69,14 @@ Blockly.Xml.blockToDom = function(block, ignoreChildBlocks) {
   }
   function titleToDom(title) {
     if (title.name && title.EDITABLE) {
-      var container = goog.dom.createDom('title', null, title.getValue());
+      /**
+       * <title> was renamed to <field> in Google Blockly in 2013.
+       * By creating <field> elements here as well, we will make it easier to
+       * migrate to using Google Blockly everywhere.
+       * Both Google Blockly and this fork will still be able to deserialize
+       * block XML that has <title> tags.
+       */
+      var container = goog.dom.createDom('field', null, title.getValue());
       container.setAttribute('name', title.name);
       if (title.config) {
         container.setAttribute('config', title.config);
@@ -444,6 +451,9 @@ Blockly.Xml.domToBlock = function(blockSpace, xmlBlock) {
         }
         break;
       case 'title':
+      // title was renamed to field. See comment in titleToDom for more detail.
+      // fall through
+      case 'field':
         /**
          * XML example:
          * <block type="draw_move_by_constant">

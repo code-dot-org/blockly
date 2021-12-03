@@ -56,3 +56,30 @@ function test_block_title_with_id() {
   var xml = Blockly.Xml.blockToDom(block);
   assertEquals(xml.childNodes[0].getAttribute('id'), 'title id');
 }
+
+function test_serialize_field() {
+  var containerDiv = Blockly.Test.initializeBlockSpaceEditor();
+  var blockSpace = Blockly.mainBlockSpace;
+
+  var block = new Blockly.Block(blockSpace, 'text');
+  block.initSvg();
+  block.setTitleValue('field value', 'TEXT');
+  block.getTitle_('TEXT').id = 'field id';
+  var xmlString = Blockly.Xml.domToText(Blockly.Xml.blockToDom(block));
+  var expectedXml =
+    '<block type="text"><field name="TEXT" id="field id">field value</field></block>';
+  assertEquals(xmlString, expectedXml);
+}
+
+function test_deserialize_field() {
+  var container = Blockly.Test.initializeBlockSpaceEditor();
+  var blockSpace = Blockly.mainBlockSpace;
+  var blockXml =
+    '<xml>' +
+    '<block type="text"><field name="TEXT" id="field id">field value</field></block>' +
+    '</xml>';
+  Blockly.Xml.domToBlockSpace(blockSpace, Blockly.Xml.textToDom(blockXml));
+  var block = blockSpace.getTopBlocks()[0];
+  assertEquals(block.getTitleValue('TEXT'), 'field value');
+  assertEquals(block.getTitle_('TEXT').id, 'field id');
+}

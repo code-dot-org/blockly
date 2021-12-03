@@ -450,7 +450,7 @@ function test_locked_serialization() {
     '<xml>' +
     '<block type="text_print"></block>' +
     '<block type="text">' +
-    '<title name="TEXT"></title>' +
+    '<field name="TEXT"></field>' +
     '</block>' +
     '</xml>';
   Blockly.Xml.domToBlockSpace(

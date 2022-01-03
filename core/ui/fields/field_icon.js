@@ -25,3 +25,8 @@ Blockly.FieldIcon.prototype.EDITABLE = false;
  * @private
  */
 Blockly.FieldIcon.prototype.showEditor_ = function() {};
+
+Blockly.FieldIcon.prototype.setReadOnly = function() {
+  Blockly.addClass_(this.fieldGroup_, 'readonly');
+  this.textElement_.setAttribute('style', 'font-size:9pt; cursor:default;');
+};

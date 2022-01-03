@@ -67,6 +67,11 @@ Blockly.Xml.blockToDom = function(block, ignoreChildBlocks) {
       element.appendChild(mutation);
     }
   }
+
+  if (block.miniFlyoutBlocks && block.isMiniFlyoutOpen) {
+    element.setAttribute('miniFlyout', 'open');
+  }
+
   function titleToDom(title) {
     if (title.name && title.EDITABLE) {
       /**
@@ -422,6 +427,11 @@ Blockly.Xml.domToBlock = function(blockSpace, xmlBlock) {
       block.type,
       parseInt(limit)
     );
+  }
+  var miniFlyout = xmlBlock.getAttribute('miniflyout');
+  if (miniFlyout == 'open') {
+    block.isMiniFlyoutOpen = true;
+    block.setTitleValue('-', 'toggle');
   }
 
   var blockChild = null;

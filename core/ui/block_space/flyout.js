@@ -281,6 +281,12 @@ Blockly.Flyout.prototype.getHeight = function() {
  */
 Blockly.Flyout.prototype.setMetrics_ = function(yRatio) {
   var metrics = this.getMetrics_();
+
+  // If the flyout is now hidden, don't do anything else.
+  if (metrics === null) {
+    return;
+  }
+
   if (goog.isNumber(yRatio.y)) {
     // TODO(bjordan+bbuchanan): needs to change?
     this.blockSpace_.yOffsetFromView =

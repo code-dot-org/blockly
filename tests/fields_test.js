@@ -171,11 +171,12 @@ function test_image_dropdown_menu_button() {
   // Generate menu
   imgDropdown.showMenu_();
 
-  // Check menu has items 'Foo 123', 'Bar 456', and 'TestButton' button
+  // Check menu has items 'Foo 123', 'Bar 456', two empty items,
+  // and 'TestButton' button
   var menu = imgDropdown.menu_;
-  assertEquals(3, menu.getItemCount());
+  assertEquals(5, menu.getItemCount());
   // Buttons are added at the end of the menu
-  var button = menu.getItemAt(2);
+  var button = menu.getItemAt(4);
   assertEquals('TestButton', button.getContent());
 
   // Elements stay remains in menu after menu is hidden

@@ -313,10 +313,8 @@ Blockly.FieldRectangularDropdown.prototype.createMenuWithChoices_ = function(
 };
 
 function chooseNumberOfColumns(numItems) {
-  if (numItems <= 7) {
-    return 1;
-  }
-  return Math.floor(Math.sqrt(numItems));
+  // Minimum of 4, maximum of square root of item count.
+  return Math.max(4, Math.floor(Math.sqrt(numItems)));
 }
 
 Blockly.FieldRectangularDropdown.prototype.generateMenuItemSelectedHandler_ = function() {

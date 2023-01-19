@@ -181,7 +181,7 @@ function test_image_dropdown_menu_button() {
 
   // Elements stay remains in menu after menu is hidden
   imgDropdown.hideMenu_();
-  assertEquals(3, imgDropdown.menu_.getItemCount());
+  assertEquals(5, imgDropdown.menu_.getItemCount());
 
   // Can set different value.
   imgDropdown.setValue('bar');

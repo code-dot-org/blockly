@@ -55,11 +55,8 @@ def get_json(filename):
   Returns:
       A dictionary mapping each JSON key to its value.
   """
-  try:
-    f = open(filename)
+  with open(filename) as f:
     return json.load(f)
-  finally:
-    f.close()
 
 
 def get_prefix_count(prefix, arr):

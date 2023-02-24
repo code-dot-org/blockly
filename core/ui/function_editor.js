@@ -1039,6 +1039,7 @@ Blockly.FunctionEditor.prototype.setupParametersToolbox_ = function() {
 };
 
 Blockly.FunctionEditor.prototype.addEditorFrame_ = function() {
+  var noToolboxPadMagicNumber = 36;
   // if we are in readOnly mode, don't pad. Otherwise, pad left
   // based on the size of either the Toolbox or the Flyout
   var left = this.modalBlockSpace.isReadOnly()
@@ -1046,9 +1047,7 @@ Blockly.FunctionEditor.prototype.addEditorFrame_ = function() {
     : Blockly.hasCategories
     ? goog.dom.getElementByClass('blocklyToolboxDiv').getBoundingClientRect()
         .width
-    : goog.dom
-        .getElementByClass('blocklyFlyoutBackground')
-        .getBoundingClientRect().width;
+    : noToolboxPadMagicNumber;
   var top = 0;
   this.frameBase_ = Blockly.createSvgElement(
     'rect',

@@ -1047,7 +1047,15 @@ Blockly.FunctionEditor.prototype.addEditorFrame_ = function() {
     : Blockly.hasCategories
     ? goog.dom.getElementByClass('blocklyToolboxDiv').getBoundingClientRect()
         .width
+    : Blockly.mainBlockSpace.blockSpaceEditor.getToolboxWidth()
+    ? goog.dom
+        .getElementByClass('blocklyFlyoutBackground')
+        .getBoundingClientRect().width
     : noToolboxPadMagicNumber;
+
+  console.log('BLOCKLY CONSOLE:');
+  console.log(Blockly.mainBlockSpace.blockSpaceEditor.getToolboxWidth());
+
   var top = 0;
   this.frameBase_ = Blockly.createSvgElement(
     'rect',

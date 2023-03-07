@@ -1039,19 +1039,16 @@ Blockly.FunctionEditor.prototype.setupParametersToolbox_ = function() {
 };
 
 Blockly.FunctionEditor.prototype.addEditorFrame_ = function() {
-  var noToolboxPad =
+  var toolboxPad =
     Blockly.modalBlockSpace.getMetrics().absoluteLeft -
     FRAME_MARGIN_SIDE -
     Blockly.Bubble.BORDER_WIDTH -
     1;
   // if we are in readOnly mode, don't pad. Otherwise, pad left
-  // based on the size of either the Toolbox or the Flyout
-  var toolboxWidth = Blockly.mainBlockSpace.blockSpaceEditor.getToolboxWidth();
-  var left = this.modalBlockSpace.isReadOnly()
-    ? 0
-    : toolboxWidth
-    ? toolboxWidth
-    : noToolboxPad;
+  // based on the logic above.
+  // Previously we just used the size of either the Toolbox or the Flyout
+  // but this was causing problems in levels with blocks with their own flyouts.
+  var left = this.modalBlockSpace.isReadOnly() ? 0 : toolboxPad;
   var top = 0;
   this.frameBase_ = Blockly.createSvgElement(
     'rect',

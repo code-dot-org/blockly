@@ -20,6 +20,56 @@ goog.require('goog.structs.LinkedMap');
 /** @const */ var FRAME_MARGIN_TOP = 10;
 /** @const */ var FRAME_HEADER_HEIGHT = 25;
 
+function getAllBehaviorPickerBlocks() {
+  var allBlocks = Blockly.mainBlockSpace.getAllBlocks();
+  var allBehaviorPickerBlocks = allBlocks.filter(function(block) {
+    return block.type === 'gamelab_behaviorPicker';
+  });
+  return allBehaviorPickerBlocks;
+}
+
+function updateBehaviorPickerFields(block, behaviorId, newValue) {
+  if (block.type !== 'gamelab_behaviorPicker') {
+    return;
+  }
+  var fieldValue = block.getFieldValue('BEHAVIOR');
+  if (
+    getAllBehaviorsIds().indexOf(fieldValue) === -1 &&
+    getAllBehaviorsIds().indexOf(newValue) > -1
+  ) {
+    // Update user-defined behaviors based on the updated value
+    block.setTitleValue(newValue, 'BEHAVIOR');
+  } else if (
+    fieldValue === behaviorId &&
+    getAllBehaviorsIds().indexOf(behaviorId) > -1
+  ) {
+    // Refresh non-user-defined behaviors based on the persistent id value
+    block.setTitleValue(behaviorId, 'BEHAVIOR');
+  }
+}
+
+function resetDeletedBehaviorPickerFields(block, behaviorName) {
+  if (block.type !== 'gamelab_behaviorPicker') {
+    return;
+  }
+  var fieldValue = block.getFieldValue('BEHAVIOR');
+  if (fieldValue === behaviorName) {
+    // Update user-defined behaviors based on the updated value
+    block.setTitleValue(Blockly.FieldDropdown.NO_OPTIONS_MESSAGE, 'BEHAVIOR');
+  }
+}
+
+function getAllBehaviorsIds() {
+  return Blockly.mainBlockSpace
+    .getAllBlocks()
+    .filter(function(block) {
+      return block.type === 'behavior_definition';
+    })
+    .map(function(block) {
+      return block.getProcedureInfo().id;
+    });
+}
+
 /**
  * Class for a modal function editor.
  * @constructor
@@ -723,6 +773,13 @@ Blockly.FunctionEditor.prototype.create_ = function() {
     if (this.functionDefinitionBlock.userCreated) {
       this.functionDefinitionBlock.getTitle_('NAME').id = value;
     }
+    if (Blockly.Blocks.gamelab_behaviorPicker) {
+      var behaviorId = this.functionDefinitionBlock.getTitle_('NAME').id;
+      var behaviorPickerBlocks = getAllBehaviorPickerBlocks();
+      behaviorPickerBlocks.forEach(function(block) {
+        updateBehaviorPickerFields(block, behaviorId, value);
+      });
+    }
   }
 
   Blockly.bindEvent_(this.contractDiv_, 'mousedown', null, function() {
@@ -1027,6 +1084,12 @@ Blockly.FunctionEditor.prototype.onDeleteConfirmed = function(functionName) {
   examples.concat(functionDefinition).forEach(function(block) {
     block.dispose(false, false, true);
   });
+  if (Blockly.Blocks.gamelab_behaviorPicker) {
+    var behaviorPickerBlocks = getAllBehaviorPickerBlocks();
+    behaviorPickerBlocks.forEach(function(block) {
+      resetDeletedBehaviorPickerFields(block, functionName);
+    });
+  }
 };
 
 Blockly.FunctionEditor.prototype.setupParametersToolbox_ = function() {

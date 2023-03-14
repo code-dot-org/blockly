@@ -20,6 +20,68 @@ goog.require('goog.structs.LinkedMap');
 /** @const */ var FRAME_MARGIN_TOP = 10;
 /** @const */ var FRAME_HEADER_HEIGHT = 25;
 
+function getAllBehaviorPickerBlocks() {
+  var allBlocks = Blockly.mainBlockSpace.getAllBlocks();
+  var allBehaviorPickerBlocks = allBlocks.filter(function(block) {
+    return block.type === 'gamelab_behaviorPicker';
+  });
+  return allBehaviorPickerBlocks;
+}
+
+function updateBehaviorPickerFields(block, behaviorId, newValue) {
+  // When a change is made to a behavior name, we might need to update blocks
+  // that are showing the old name. For shared behaviors, the id does not change.
+  // For user-defined behaviors, the new name becomes the new id.
+  if (block.type !== 'gamelab_behaviorPicker') {
+    return;
+  }
+  var fieldValue = block.getFieldValue('BEHAVIOR');
+  if (
+    fieldValue === behaviorId &&
+    getAllBehaviorsIds().indexOf(behaviorId) > -1
+  ) {
+    // Refresh non-user-defined behaviors based on the persistent id value.
+    // Selecting the same id again will update the field with the correct user-facing name.
+    block.setTitleValue(behaviorId, 'BEHAVIOR');
+    return;
+  } else if (
+    getAllBehaviorsIds().indexOf(fieldValue) === -1 &&
+    getAllBehaviorsIds().indexOf(newValue) > -1
+  ) {
+    // Update user-defined behaviors based on the updated value
+    block.setTitleValue(newValue, 'BEHAVIOR');
+    return;
+  } else {
+    // The block is selecting another valid behavior option and should not be altered.
+    return;
+  }
+}
+
+function resetDeletedBehaviorPickerFields(block, behaviorName) {
+  // When a user-defined behavior is deleted, we might need to update blocks
+  // that are showing the deleted name. If we find blocks like this, we can set
+  // them to the default option.
+  if (block.type !== 'gamelab_behaviorPicker') {
+    return;
+  }
+  var fieldValue = block.getFieldValue('BEHAVIOR');
+  if (fieldValue === behaviorName) {
+    // Select the default 'unitialized' option. (Shows "Create a behavior...")
+    block.setTitleValue(Blockly.FieldDropdown.NO_OPTIONS_MESSAGE, 'BEHAVIOR');
+  }
+}
+
+function getAllBehaviorsIds() {
+  return Blockly.mainBlockSpace
+    .getAllBlocks()
+    .filter(function(block) {
+      return block.type === 'behavior_definition';
+    })
+    .map(function(block) {
+      return block.getProcedureInfo().id;
+    });
+}
+
 /**
  * Class for a modal function editor.
  * @constructor
@@ -723,6 +785,13 @@ Blockly.FunctionEditor.prototype.create_ = function() {
     if (this.functionDefinitionBlock.userCreated) {
       this.functionDefinitionBlock.getTitle_('NAME').id = value;
     }
+    if (Blockly.Blocks.gamelab_behaviorPicker) {
+      var behaviorId = this.functionDefinitionBlock.getTitle_('NAME').id;
+      var behaviorPickerBlocks = getAllBehaviorPickerBlocks();
+      behaviorPickerBlocks.forEach(function(block) {
+        updateBehaviorPickerFields(block, behaviorId, value);
+      });
+    }
   }
 
   Blockly.bindEvent_(this.contractDiv_, 'mousedown', null, function() {
@@ -1027,6 +1096,12 @@ Blockly.FunctionEditor.prototype.onDeleteConfirmed = function(functionName) {
   examples.concat(functionDefinition).forEach(function(block) {
     block.dispose(false, false, true);
   });
+  if (Blockly.Blocks.gamelab_behaviorPicker) {
+    var behaviorPickerBlocks = getAllBehaviorPickerBlocks();
+    behaviorPickerBlocks.forEach(function(block) {
+      resetDeletedBehaviorPickerFields(block, functionName);
+    });
+  }
 };
 
 Blockly.FunctionEditor.prototype.setupParametersToolbox_ = function() {

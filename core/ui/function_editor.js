@@ -29,32 +29,44 @@ function getAllBehaviorPickerBlocks() {
 }
 
 function updateBehaviorPickerFields(block, behaviorId, newValue) {
+  // When a change is made to a behavior name, we might need to update blocks
+  // that are showing the old name. For shared behaviors, the id does not change.
+  // For user-defined behaviors, the new name becomes the new id.
   if (block.type !== 'gamelab_behaviorPicker') {
     return;
   }
   var fieldValue = block.getFieldValue('BEHAVIOR');
   if (
+    fieldValue === behaviorId &&
+    getAllBehaviorsIds().indexOf(behaviorId) > -1
+  ) {
+    // Refresh non-user-defined behaviors based on the persistent id value.
+    // Selecting the same id again will update the field with the correct user-facing name.
+    block.setTitleValue(behaviorId, 'BEHAVIOR');
+    return;
+  } else if (
     getAllBehaviorsIds().indexOf(fieldValue) === -1 &&
     getAllBehaviorsIds().indexOf(newValue) > -1
   ) {
     // Update user-defined behaviors based on the updated value
     block.setTitleValue(newValue, 'BEHAVIOR');
-  } else if (
-    fieldValue === behaviorId &&
-    getAllBehaviorsIds().indexOf(behaviorId) > -1
-  ) {
-    // Refresh non-user-defined behaviors based on the persistent id value
-    block.setTitleValue(behaviorId, 'BEHAVIOR');
+    return;
+  } else {
+    // The block is selecting another valid behavior option and should not be altered.
+    return;
   }
 }
 
 function resetDeletedBehaviorPickerFields(block, behaviorName) {
+  // When a user-defined behavior is deleted, we might need to update blocks
+  // that are showing the deleted name. If we find blocks like this, we can set
+  // them to the default option.
   if (block.type !== 'gamelab_behaviorPicker') {
     return;
   }
   var fieldValue = block.getFieldValue('BEHAVIOR');
   if (fieldValue === behaviorName) {
-    // Update user-defined behaviors based on the updated value
+    // Select the default 'unitialized' option. (Shows "Create a behavior...")
     block.setTitleValue(Blockly.FieldDropdown.NO_OPTIONS_MESSAGE, 'BEHAVIOR');
   }
 }

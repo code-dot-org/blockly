@@ -89,8 +89,7 @@ Blockly.FieldParameter.dropdownChange = function(text) {
       onConfirm: null,
       onCancel: function() {
         Blockly.Variables.deleteVariable(oldVar, this.sourceBlock_.blockSpace);
-      }.bind(this),
-      cancelButtonClass: 'red-delete-button'
+      }.bind(this)
     });
   }
   return null;

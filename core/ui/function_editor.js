@@ -1082,7 +1082,8 @@ Blockly.FunctionEditor.prototype.onDeletePressed = function() {
     cancelText: this.getMsg('DELETE'),
     confirmText: this.getMsg('KEEP'),
     onConfirm: null,
-    onCancel: this.onDeleteConfirmed.bind(this, functionName)
+    onCancel: this.onDeleteConfirmed.bind(this, functionName),
+    cancelButtonClass: 'red-delete-button'
   });
 };
 

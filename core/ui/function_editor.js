@@ -1080,6 +1080,7 @@ Blockly.FunctionEditor.prototype.onDeletePressed = function() {
   Blockly.showSimpleDialog({
     bodyText: deleteMessage,
     cancelText: this.getMsg('DELETE'),
+    isDangerCancel: true,
     confirmText: this.getMsg('KEEP'),
     onConfirm: null,
     onCancel: this.onDeleteConfirmed.bind(this, functionName)

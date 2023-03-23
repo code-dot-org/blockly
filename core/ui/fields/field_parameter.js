@@ -85,6 +85,7 @@ Blockly.FieldParameter.dropdownChange = function(text) {
     Blockly.showSimpleDialog({
       bodyText: Blockly.Msg.DELETE_PARAMETER_TITLE.replace('%1', oldVar),
       cancelText: Blockly.Msg.DELETE,
+      isDangerCancel: true,
       confirmText: Blockly.Msg.KEEP,
       onConfirm: null,
       onCancel: function() {

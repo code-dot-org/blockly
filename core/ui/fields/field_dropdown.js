@@ -47,6 +47,10 @@ Blockly.FieldDropdown = function(
   opt_changeHandler,
   opt_alwaysCallChangeHandler
 ) {
+  console.log('inside Google field dropdown constructor');
+  console.log(menuGenerator);
+  console.log(opt_alwaysCallChangeHandler);
+
   this.menuGenerator_ = menuGenerator || [
     [
       Blockly.FieldDropdown.NO_OPTIONS_MESSAGE,
@@ -95,17 +99,21 @@ Blockly.FieldDropdown.prototype.CURSOR = 'pointer';
  * @private
  */
 Blockly.FieldDropdown.prototype.showEditor_ = function(container) {
+  console.log('showEditor');
   this.showWidgetDiv_();
   var thisField = this;
+  console.log('this', this);
 
   function callback(e) {
     var menuItem = e.target;
     if (menuItem) {
       var value = menuItem.getValue();
       if (thisField.changeHandler_ && !thisField.alwaysCallChangeHandler_) {
+        console.log('changeHandler used in callback');
         // Call any change handler, and allow it to override. This happens
         // inside setValue if alwaysCallChangeHandler_ is true.
         var override = thisField.changeHandler_(value);
+        console.log('override', override);
         if (override !== undefined) {
           value = override;
         }
@@ -272,14 +280,18 @@ Blockly.FieldDropdown.prototype.getValue = function() {
  */
 Blockly.FieldDropdown.prototype.setValue = function(newValue) {
   if (this.alwaysCallChangeHandler_ && this.changeHandler_) {
+    console.log('in setValue with changehandler');
     var override = this.changeHandler_(newValue);
+    console.log('override', override);
     if (override !== undefined) {
       newValue = override;
     }
   }
   this.value_ = newValue;
+  console.log('newValue', newValue);
   // Look up and display the human-readable text.
   var options = this.getOptions();
+  console.log('options', options);
   for (var x = 0; x < options.length; x++) {
     // Options are tuples of human-readable text and language-neutral values.
     if (options[x][1] == newValue) {
@@ -289,6 +301,7 @@ Blockly.FieldDropdown.prototype.setValue = function(newValue) {
   }
   // Value not found.  Add it, maybe it will become valid once set
   // (like variable names).
+  console.log('newValue', newValue);
   this.setText(newValue);
 };
 

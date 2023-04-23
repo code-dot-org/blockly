@@ -433,6 +433,7 @@ Blockly.Field.prototype.handleBlockSpaceScrolled = function() {
 
 Blockly.Field.prototype.showWidgetDiv_ = function() {
   Blockly.WidgetDiv.show(this, this.generateWidgetDisposeHandler_());
+  console.log('inside showWidgetDiv_ - this', this);
 
   // if we are attached to a block, recalculate our position when the
   // block's blockspace gets scrolled.

@@ -57,6 +57,7 @@ Blockly.WidgetDiv.dispose_ = null;
  *   is closed.
  */
 Blockly.WidgetDiv.show = function(newOwner, dispose) {
+  console.log('WidgetDiv.show');
   Blockly.WidgetDiv.hide();
   Blockly.WidgetDiv.owner_ = newOwner;
   Blockly.WidgetDiv.dispose_ = dispose;

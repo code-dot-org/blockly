@@ -782,6 +782,9 @@ Blockly.FunctionEditor.prototype.create_ = function() {
       this.container_.querySelector('#functionNameText').value = value;
     }
     this.functionDefinitionBlock.setTitleValue(value, 'NAME');
+    if (this.functionDefinitionBlock.type === 'behavior_definition') {
+      this.functionDefinitionBlock.getTitle_('NAME').id = value;
+    }
     if (Blockly.Blocks.gamelab_behaviorPicker) {
       var behaviorId = this.functionDefinitionBlock.getTitle_('NAME').id;
       var behaviorPickerBlocks = getAllBehaviorPickerBlocks();
@@ -1093,9 +1096,6 @@ Blockly.FunctionEditor.prototype.onDeleteConfirmed = function(functionName) {
   examples.concat(functionDefinition).forEach(function(block) {
     block.dispose(false, false, true);
   });
-  if (this.functionDefinitionBlock.type === 'behavior_definition') {
-    this.functionDefinitionBlock.getTitle_('NAME').id = value;
-  }
   if (Blockly.Blocks.gamelab_behaviorPicker) {
     var behaviorPickerBlocks = getAllBehaviorPickerBlocks();
     behaviorPickerBlocks.forEach(function(block) {

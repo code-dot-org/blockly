@@ -782,7 +782,8 @@ Blockly.FunctionEditor.prototype.create_ = function() {
       this.container_.querySelector('#functionNameText').value = value;
     }
     this.functionDefinitionBlock.setTitleValue(value, 'NAME');
-    if (this.functionDefinitionBlock.type === 'behavior_definition') {
+    console.log("this.functionDefinitionBlock.type", this.functionDefinitionBlock.type);
+    if (this.functionDefinitionBlock.userCreated && this.functionDefinitionBlock.type === 'behavior_definition') {
       this.functionDefinitionBlock.getTitle_('NAME').id = value;
     }
     if (Blockly.Blocks.gamelab_behaviorPicker) {

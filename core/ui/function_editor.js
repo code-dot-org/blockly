@@ -1093,6 +1093,9 @@ Blockly.FunctionEditor.prototype.onDeleteConfirmed = function(functionName) {
   examples.concat(functionDefinition).forEach(function(block) {
     block.dispose(false, false, true);
   });
+  if (this.functionDefinitionBlock.type === 'behavior_definition') {
+    this.functionDefinitionBlock.getTitle_('NAME').id = value;
+  }
   if (Blockly.Blocks.gamelab_behaviorPicker) {
     var behaviorPickerBlocks = getAllBehaviorPickerBlocks();
     behaviorPickerBlocks.forEach(function(block) {

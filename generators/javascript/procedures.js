@@ -30,8 +30,8 @@ goog.require('Blockly.JavaScript');
 Blockly.JavaScript.procedures_defreturn = function() {
   var title = this.getTitle_('NAME');
   var functionName;
-  if (title.id) {
-    // Sprite Lab shared functions use an id field on the title
+  if (title.id && this.type === 'behavior_definition') {
+    // Sprite Lab shared behaviors use an id field on the title
     // so that we can translate the block text without changing
     // the generated code.
     functionName = title.id;

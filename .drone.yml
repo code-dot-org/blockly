@@ -7,8 +7,8 @@ steps:
   image: circleci/node:6.13-browsers
   pull: always
   environment:
-#   CODECOV_TOKEN:
-#     from_secret: CODECOV_TOKEN
+   CODECOV_TOKEN:
+     from_secret: CODECOV_TOKEN
   commands:
    - sudo chown -R circleci:circleci .
    - npm install

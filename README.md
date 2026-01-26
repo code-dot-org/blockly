@@ -5,7 +5,7 @@ Code.org-specific curriculum that were not yet available with mainline Blockly o
 
 ## Archival note
 
-Code.org has fully migrated to mainline Blockly, and this fork is no longer used or published. This repository is archived to preserve istorical reference only. It is not maintained, tested, or supported.
+Code.org has fully migrated to mainline Blockly, and this fork is no longer used or published. This repository is archived to preserve historical reference only. It is not maintained, tested, or supported.
 
 ## Major additions and changes in this fork
 
